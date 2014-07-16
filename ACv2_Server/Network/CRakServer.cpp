@@ -15,9 +15,15 @@ CRakServer::~CRakServer()
 RakNet::StartupResult CRakServer::Startup(const char* szHostAddress, t_port usPort, unsigned short iConnections)
 {
 	m_pSocketDescriptor = new RakNet::SocketDescriptor(usPort, szHostAddress);
+	
+#ifdef WIN32
+	 #define THREAD_PRIORITY THREAD_PRIORITY_NORMAL
+#else
+	 #define THREAD_PRIORITY SCHED_OTHER
+#endif
 
-	RakNet::StartupResult iResult = m_pPeer->Startup(iConnections, m_pSocketDescriptor, 1, THREAD_PRIORITY_NORMAL);
-	if (iResult == RakNet::StartupResult::RAKNET_STARTED)
+	RakNet::StartupResult iResult = m_pPeer->Startup(iConnections, m_pSocketDescriptor, 1, THREAD_PRIORITY);
+	if (iResult == RakNet::RAKNET_STARTED)
 		m_pPeer->SetMaximumIncomingConnections(iConnections);
 
 	return iResult;
@@ -45,7 +51,7 @@ unsigned int CRakServer::SendRPC(unsigned short usRPCId, const RakNet::SystemAdd
 	if (pBitStream)
 		bitStream.Write((char*)pBitStream->GetData(), pBitStream->GetNumberOfBytesUsed());
 
-	return Send(Network::ePacketType::PACKET_RPC, systemAddress, &bitStream, priority, reliability, cOrderingChannel, bBroadcast);
+	return Send(Network::PACKET_RPC, systemAddress, &bitStream, priority, reliability, cOrderingChannel, bBroadcast);
 }
 
 RakNet::Packet* CRakServer::Receive()

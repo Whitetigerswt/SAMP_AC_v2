@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-#ifndef SAMPGDK_A_OBJECTS_H
-#define SAMPGDK_A_OBJECTS_H
+#ifndef SAMPGDK_A_VEHICLES_H
+#define SAMPGDK_A_VEHICLES_H
 
-#include <sampgdk/a_samp.h>
-#include <sampgdk/bool.h>
-#include <sampgdk/export.h>
+#include "a_samp.h"
+#include "bool.h"
+#include "export.h"
 
-#include <sampgdk/a_objects-decl.h>
+#include "a_vehicles-decl.h"
 
-#endif /* !SAMPGDK_A_OBJECTS_H */
+#endif /* !SAMPGDK_A_VEHICLES_H */

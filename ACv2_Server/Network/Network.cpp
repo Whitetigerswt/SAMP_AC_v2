@@ -1,11 +1,16 @@
 #include "Network.h"
-#include "../SDK/sampgdk/include/sampgdk/a_players.h"
+#include "../GDK/a_players.h"
 #include "../../Shared/Network/CRPC.h"
 #include "CRPCCallback.h"
 #include "../../Shared/RakNet/SuperFastHash.h"
 #include "Callback.h"
 #include "../CPlayer.h"
 #include "../Utility.h"
+
+#ifdef LINUX
+#include <pthread.h>
+#else
+#endif
 
 namespace Network
 {
@@ -27,8 +32,12 @@ namespace Network
 	void Initialize(const char* szHostAddress, t_port usPort, int iConnections)
 	{
 		pRakServer = new CRakServer();
-		if (pRakServer->Startup(szHostAddress, usPort, iConnections) != RakNet::StartupResult::RAKNET_STARTED)
-			return;
+		if (pRakServer->Startup(szHostAddress, usPort, iConnections) != RakNet::RAKNET_STARTED)
+#ifdef LINUX
+			pthread_exit(0);
+#else
+			ExitThread(0);	
+#endif
 
 		Utility::Printf("Initialized AC server.");
 		bInitialized = true;
@@ -123,18 +132,13 @@ namespace Network
 				CPlayer* pPlayer = new CPlayer(*it);
 				unhandledConnections.erase(it);
 				players[uiPlayerid] = pPlayer;
-				pPlayer->GetConnectionInfo()->SetState(eClientConnectionState::CONNECTED);
+				pPlayer->GetConnectionInfo()->SetState(CONNECTED);
 
 				return true;
 			}
 		}
 
 		return false;
-	}
-
-	std::string GetMyIPAddress()
-	{
-
 	}
 
 	bool IsConnectionHandled(const RakNet::SystemAddress& systemAddress)
@@ -145,7 +149,7 @@ namespace Network
 	unsigned int PlayerSend(ePacketType packetType, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
 	{
 		CPlayer* pPlayer = GetPlayerFromPlayerid(uiPlayerId);
-		if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != eClientConnectionState::CONNECTED)
+		if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != CONNECTED)
 			return 0;
 
 		return pRakServer->Send(packetType, pPlayer->GetConnectionInfo()->GetSystemAddress(), pBitStream, priority, reliability, cOrderingChannel);
@@ -154,7 +158,7 @@ namespace Network
 	unsigned int PlayerSendRPC(unsigned short usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
 	{
 		CPlayer* pPlayer = GetPlayerFromPlayerid(uiPlayerId);
-		if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != eClientConnectionState::CONNECTED)
+		if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != CONNECTED)
 			return 0;
 
 		return pRakServer->SendRPC(usRPCId, pPlayer->GetConnectionInfo()->GetSystemAddress(), pBitStream, priority, reliability, cOrderingChannel);
@@ -166,7 +170,7 @@ namespace Network
 		{
 			CPlayer* pPlayer = it->second;
 
-			if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != eClientConnectionState::CONNECTED)
+			if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != CONNECTED)
 				continue;
 
 			pRakServer->Send(packetType, pPlayer->GetConnectionInfo()->GetSystemAddress(), pBitStream, priority, reliability, cOrderingChannel);
@@ -179,7 +183,7 @@ namespace Network
 		{
 			CPlayer* pPlayer = it->second;
 
-			if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != eClientConnectionState::CONNECTED)
+			if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != CONNECTED)
 				continue;
 
 			pRakServer->SendRPC(usRPCId, pPlayer->GetConnectionInfo()->GetSystemAddress(), pBitStream, priority, reliability, cOrderingChannel);
@@ -212,7 +216,7 @@ namespace Network
 				}
 				else
 				{
-					pRakServer->Send(ePacketType::PACKET_CONNECTION_REJECTED, pPacket->systemAddress);
+					pRakServer->Send(PACKET_CONNECTION_REJECTED, pPacket->systemAddress);
 					pRakServer->CloseConnection(pPacket->systemAddress);
 				}
 

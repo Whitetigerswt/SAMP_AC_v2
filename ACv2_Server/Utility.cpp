@@ -1,5 +1,11 @@
 #include "Utility.h"
 #include <ctime>
+#include <cstdarg>
+#include <cstdio>
+
+#ifdef __linux
+#include <unistd.h>
+#endif
 
 extern void* pAMXFunctions;
 
@@ -10,11 +16,12 @@ namespace Utility
 
 	void Initialize(void** ppData)
 	{
-		m_szPath = new char[MAX_PATH + 1];
 #ifdef WIN32
+		m_szPath = new char[MAX_PATH + 1];
 		GetModuleFileNameA((HINSTANCE)&__ImageBase, m_szPath, MAX_PATH + 1);
 #else
-		readlink("/proc/self/exe", szAppPath, sizeof(szAppPath));
+		m_szPath = new char[4096 + 1];
+		readlink("/proc/self/exe", m_szPath, sizeof(m_szPath));
 #endif
 		pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 		logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
@@ -29,6 +36,6 @@ namespace Utility
 		vsnprintf(szBuffer, sizeof(szBuffer), szFormat, vaArgs);
 		va_end(vaArgs);
 
-		return logprintf("[SAMP_AC_V2] [%u] %s", (unsigned __int32)time(NULL), szBuffer);
+		logprintf("[SAMP_AC_V2] %s", szBuffer);
 	}
 }

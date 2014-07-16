@@ -17,8 +17,8 @@
 #ifndef SAMPGDK_AMX_H
 #define SAMPGDK_AMX_H
 
-#include <sampgdk/bool.h>
-#include <sampgdk/platform.h>
+#include "bool.h"
+#include "platform.h"
 
 /* stdint.h */
 #if !defined HAVE_STDINT_H
@@ -58,8 +58,8 @@
   #pragma GCC diagnostic ignored "-Wattributes"
 #endif
 
-#include "../../../samp-sdk/amx/amx.h"
-#include "../../../samp-sdk/plugincommon.h"
+#include "../SDK/samp-sdk/amx/amx.h"
+#include "../SDK/samp-sdk/plugincommon.h"
 
 #if defined __INTEL_COMPILER
   /* ... */

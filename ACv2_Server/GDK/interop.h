@@ -18,8 +18,8 @@
 
 #include <stdarg.h>
 
-#include <sampgdk/bool.h>
-#include <sampgdk/export.h>
+#include "bool.h"
+#include "export.h"
 
 /**
  * \addtogroup interop

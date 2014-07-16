@@ -18,9 +18,9 @@
 
 #include <stdarg.h>
 
-#include <sampgdk/bool.h>
-#include <sampgdk/export.h>
-#include <sampgdk/sdk.h>
+#include "bool.h"
+#include "export.h"
+#include "sdk.h"
 
 /**
  * \defgroup core      Core

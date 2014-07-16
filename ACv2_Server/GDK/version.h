@@ -16,7 +16,7 @@
 #ifndef SAMPGDK_VERSION_H
 #define SAMPGDK_VERSION_H
 
-#include <sampgdk/export.h>
+#include "export.h"
 
 /**
  * \addtogroup version

@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-#ifndef SAMPGDK_A_PLAYERS_H
-#define SAMPGDK_A_PLAYERS_H
+#ifndef SAMPGDK_A_OBJECTS_H
+#define SAMPGDK_A_OBJECTS_H
 
-#include <sampgdk/a_samp.h>
-#include <sampgdk/bool.h>
-#include <sampgdk/export.h>
+#include "a_samp.h"
+#include "bool.h"
+#include "export.h"
 
-#include <sampgdk/a_players-decl.h>
+#include "a_objects-decl.h"
 
-#endif /* !SAMPGDK_A_PLAYERS_H */
+#endif /* !SAMPGDK_A_OBJECTS_H */

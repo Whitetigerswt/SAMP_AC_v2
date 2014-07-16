@@ -16,8 +16,8 @@
 #ifndef SAMPGDK_EXPORT_H
 #define SAMPGDK_EXPORT_H
 
-#include <sampgdk/platform.h>
-#include <sampgdk/sdk.h>
+#include "platform.h"
+#include "sdk.h"
 
 #undef SAMPGDK_EXPORT
 #undef SAMPGDK_CALL

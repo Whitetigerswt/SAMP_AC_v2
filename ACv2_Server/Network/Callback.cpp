@@ -92,25 +92,26 @@ namespace Callback
 
 		switch (type)
 		{
-		case eCallbackType::ON_PLAYER_CONNECT:
+		case ON_PLAYER_CONNECT:
 		{
-			cell* pPlayerId = nullptr;
+			cell* pPlayerId = NULL;
 			amx_GetAddr(pAmx, pParams[0], &pPlayerId);
 			OnPlayerConnect(*pPlayerId);
 			delete pPlayerId;
 
 			break;
 		}
-		case eCallbackType::ON_PLAYER_DISCONNECT:
+		case ON_PLAYER_DISCONNECT:
 		{
-			cell* pPlayerId = nullptr;
-			cell* pReason = nullptr;
+			cell* pPlayerId = NULL;
+			cell* pReason = NULL;
 
 			amx_GetAddr(pAmx, pParams[0], &pPlayerId);
 			amx_GetAddr(pAmx, pParams[1], &pReason);
 
 			OnPlayerDisconnect(*pPlayerId, *pReason);
 			delete pPlayerId;
+			delete pReason;
 
 			break;
 		}
@@ -124,7 +125,7 @@ namespace Callback
 	void OnPlayerConnect(unsigned int uiPlayerid)
 	{
 		if (Network::HandleConnection(uiPlayerid))
-			Network::PlayerSend(Network::ePacketType::PACKET_PLAYER_REGISTERED, uiPlayerid);
+			Network::PlayerSend(Network::PACKET_PLAYER_REGISTERED, uiPlayerid);
 	}
 
 	void OnPlayerDisconnect(unsigned int uiPlayerid, unsigned int uiReason)
@@ -132,7 +133,7 @@ namespace Callback
 		if (Network::IsPlayerConnectedToAC(uiPlayerid))
 		{
 			if (uiReason)
-				Network::PlayerSend(Network::ePacketType::PACKET_PLAYER_PROPER_DISCONNECT, uiPlayerid);
+				Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, uiPlayerid);
 
 			Network::CloseConnection(uiPlayerid);
 		}

@@ -2,8 +2,8 @@
 #include "Utility.h"
 #include "../Shared/RakNet/BitStream.h"
 #include "../Shared/Network/CRPC.h"
-#include "SDK/sampgdk/include/sampgdk/core.h"
-#include "SDK/sampgdk/include/sampgdk/a_players.h"
+#include "GDK/core.h"
+#include "GDK/a_players.h"
 #include "Network/Callback.h"
 
 /*cell AMX_NATIVE_CALL CallbackProc(AMX* pAmx, cell* pParams)

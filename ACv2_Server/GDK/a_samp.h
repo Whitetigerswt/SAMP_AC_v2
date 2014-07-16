@@ -16,8 +16,8 @@
 #ifndef SAMPGDK_A_SAMP_H
 #define SAMPGDK_A_SAMP_H
 
-#include <sampgdk/bool.h>
-#include <sampgdk/export.h>
+#include "bool.h"
+#include "export.h"
 
 /**
  * \brief Defines the signature of a timer callback function.
@@ -29,6 +29,6 @@
  */
 typedef void (SAMPGDK_CALL *TimerCallback)(int timerid, void *param);
 
-#include <sampgdk/a_samp-decl.h>
+#include "a_samp-decl.h"
 
 #endif /* !SAMPGDK_A_SAMP_H */
