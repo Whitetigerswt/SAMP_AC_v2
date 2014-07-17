@@ -1,5 +1,6 @@
 #include "Callback.h"
 #include "Network.h"
+#include "../Utility.h"
 
 namespace Callback
 {
@@ -125,7 +126,9 @@ namespace Callback
 	void OnPlayerConnect(unsigned int uiPlayerid)
 	{
 		if (Network::HandleConnection(uiPlayerid))
+		{
 			Network::PlayerSend(Network::PACKET_PLAYER_REGISTERED, uiPlayerid);
+		}
 	}
 
 	void OnPlayerDisconnect(unsigned int uiPlayerid, unsigned int uiReason)

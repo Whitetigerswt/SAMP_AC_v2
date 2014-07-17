@@ -18,7 +18,6 @@ public:
 	RakNet::Packet* Receive();
 	void DeallocatePacket(RakNet::Packet* pPacket);
 	void CloseConnection(const RakNet::SystemAddress& pSystemAddress);
-	std::string GetMyIP();
 
 private:
 	RakNet::RakPeer* m_pPeer;

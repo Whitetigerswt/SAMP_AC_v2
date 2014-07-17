@@ -27,7 +27,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -68,7 +68,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ACV2_SERVER_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;SAMPGDK_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -77,8 +77,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;$(ProjectDir)\SDK\sampgdk\lib\sampgdk4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;$(ProjectDir)\GDK\lib\sampgdk4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>plugin.def</ModuleDefinitionFile>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -361,6 +363,23 @@
     <ClInclude Include="..\Shared\RakNet\XBox360Includes.h" />
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h" />
     <ClInclude Include="CPlayer.h" />
+    <ClInclude Include="GDK\a_http-decl.h" />
+    <ClInclude Include="GDK\a_http.h" />
+    <ClInclude Include="GDK\a_objects-decl.h" />
+    <ClInclude Include="GDK\a_objects.h" />
+    <ClInclude Include="GDK\a_players-decl.h" />
+    <ClInclude Include="GDK\a_players.h" />
+    <ClInclude Include="GDK\a_samp-decl.h" />
+    <ClInclude Include="GDK\a_samp.h" />
+    <ClInclude Include="GDK\a_vehicles-decl.h" />
+    <ClInclude Include="GDK\a_vehicles.h" />
+    <ClInclude Include="GDK\bool.h" />
+    <ClInclude Include="GDK\core.h" />
+    <ClInclude Include="GDK\export.h" />
+    <ClInclude Include="GDK\interop.h" />
+    <ClInclude Include="GDK\platform.h" />
+    <ClInclude Include="GDK\sdk.h" />
+    <ClInclude Include="GDK\version.h" />
     <ClInclude Include="Network\Callback.h" />
     <ClInclude Include="Network\CClientSocketInfo.h" />
     <ClInclude Include="Network\CRakServer.h" />
@@ -370,23 +389,6 @@
     <ClInclude Include="SDK\samp-sdk\amx\amx.h" />
     <ClInclude Include="SDK\samp-sdk\amx\sclinux.h" />
     <ClInclude Include="SDK\samp-sdk\plugincommon.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_http-decl.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_http.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_objects-decl.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_objects.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_players-decl.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_players.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_samp-decl.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_samp.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_vehicles-decl.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_vehicles.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\bool.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\core.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\export.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\interop.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\platform.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\sdk.h" />
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\version.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>

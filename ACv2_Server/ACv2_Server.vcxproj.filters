@@ -35,7 +35,7 @@
       <UniqueIdentifier>{ac9fc14a-16f8-46ee-96f1-133d9b1c264a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\SDK\samp-gdk">
-      <UniqueIdentifier>{40801c7d-781a-4968-a39a-62fd43cda55b}</UniqueIdentifier>
+      <UniqueIdentifier>{02d1c414-56ba-4703-babd-4ca308570f71}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -902,55 +902,55 @@
     <ClInclude Include="Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_http.h">
+    <ClInclude Include="GDK\a_http.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_http-decl.h">
+    <ClInclude Include="GDK\a_http-decl.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_objects.h">
+    <ClInclude Include="GDK\a_objects.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_objects-decl.h">
+    <ClInclude Include="GDK\a_objects-decl.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_players.h">
+    <ClInclude Include="GDK\a_players.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_players-decl.h">
+    <ClInclude Include="GDK\a_players-decl.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_samp.h">
+    <ClInclude Include="GDK\a_samp.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_samp-decl.h">
+    <ClInclude Include="GDK\a_samp-decl.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_vehicles.h">
+    <ClInclude Include="GDK\a_vehicles.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\a_vehicles-decl.h">
+    <ClInclude Include="GDK\a_vehicles-decl.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\bool.h">
+    <ClInclude Include="GDK\bool.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\core.h">
+    <ClInclude Include="GDK\core.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\export.h">
+    <ClInclude Include="GDK\export.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\interop.h">
+    <ClInclude Include="GDK\interop.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\platform.h">
+    <ClInclude Include="GDK\platform.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\sdk.h">
+    <ClInclude Include="GDK\sdk.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\sampgdk\include\sampgdk\version.h">
+    <ClInclude Include="GDK\version.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
   </ItemGroup>

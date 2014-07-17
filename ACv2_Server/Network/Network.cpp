@@ -152,6 +152,7 @@ namespace Network
 		if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != CONNECTED)
 			return 0;
 
+
 		return pRakServer->Send(packetType, pPlayer->GetConnectionInfo()->GetSystemAddress(), pBitStream, priority, reliability, cOrderingChannel);
 	}
 
@@ -209,7 +210,10 @@ namespace Network
 			{
 				Utility::Printf("Incoming AC connection: %s", pPacket->systemAddress.ToString());
 
-				if (Callback::Execute("OnPlayerACConnect", "is", pPacket->systemAddress.GetPort(), pPacket->systemAddress.ToString(false)))
+				CClientSocketInfo* pSockInfo = new CClientSocketInfo(pPacket->systemAddress, pPacket->guid);
+				unhandledConnections.push_back(pSockInfo);
+
+				/*if (Callback::Execute("OnPlayerACConnect", "is", pPacket->systemAddress.GetPort(), pPacket->systemAddress.ToString(false)))
 				{
 					CClientSocketInfo* pSockInfo = new CClientSocketInfo(pPacket->systemAddress, pPacket->guid);
 					unhandledConnections.push_back(pSockInfo);
@@ -218,7 +222,7 @@ namespace Network
 				{
 					pRakServer->Send(PACKET_CONNECTION_REJECTED, pPacket->systemAddress);
 					pRakServer->CloseConnection(pPacket->systemAddress);
-				}
+				}*/
 
 				//TODO: read sa-mp's ban list, reject connection if IP is banned
 			}

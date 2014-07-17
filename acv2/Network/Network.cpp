@@ -58,14 +58,22 @@ namespace Network
 	void Process()
 	{
 		if (!IsInitialized())
+		{
+			CLog log = CLog("log.txt");
+			log.Write("Not initialized");
 			return;
+		}
 
 		RakNet::Packet* pPacket;
 
 		while ((pPacket = pRakClient->Receive()))
 		{
 			if (!pPacket->length)
+			{
+				CLog log = CLog("NoPacketLength.txt");
+				log.Write("empty packet");
 				return;
+			}
 
 			CLog NetworkLog = CLog("networklog.txt");
 			NetworkLog.Write("Received packet: " + std::to_string((long long)pPacket->data[0]) + ", local: " + std::to_string((long long)pPacket->wasGeneratedLocally));

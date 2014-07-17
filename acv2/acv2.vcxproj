@@ -47,8 +47,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.asi</TargetExt>
-    <IncludePath>C:\Users\Whitetiger\Documents\Visual Studio 2013\Projects\acv2\Shared;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Shared\Boost\libs\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(WindowsSDK_IncludePath);C:\Users\Whitetiger\Documents\Visual Studio 2013\Projects\acv2\acv2;C:\Users\Whitetiger\Documents\Visual Studio 2013\Projects\acv2\Shared;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)acv2\libs\;$(SolutionDir)Shared\Boost\libs\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -70,7 +70,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ACV2_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ACV2_EXPORTS;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;DIRECTINPUT_VERSION#0x0800;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -79,7 +79,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;libboost_thread-vc100-mt-s-1_55.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;libboost_thread-vc100-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -197,9 +197,15 @@
     <ClCompile Include="..\Shared\RakNet\VitaIncludes.cpp" />
     <ClCompile Include="..\Shared\RakNet\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp" />
+    <ClCompile Include="CDirectX.cpp" />
     <ClCompile Include="CLoader.cpp" />
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CParseCommandLine.cpp" />
+    <ClCompile Include="DirectX Hooks\CD3D9DeviceProxy.cpp" />
+    <ClCompile Include="DirectX Hooks\CD3D9Proxy.cpp" />
+    <ClCompile Include="DirectX Hooks\CDInput8DeviceProxy.cpp" />
+    <ClCompile Include="DirectX Hooks\CDInput8Proxy.cpp" />
+    <ClCompile Include="DirectX Hooks\CMessageProxy.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -493,9 +499,90 @@
     <ClInclude Include="..\Shared\RakNet\WSAStartupSingleton.h" />
     <ClInclude Include="..\Shared\RakNet\XBox360Includes.h" />
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h" />
+    <ClInclude Include="CDirectX.h" />
     <ClInclude Include="CLoader.h" />
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CParseCommandLine.h" />
+    <ClInclude Include="Detours\detours.h" />
+    <ClInclude Include="DirectX Hooks\CD3D9DeviceProxy.h" />
+    <ClInclude Include="DirectX Hooks\CD3D9Proxy.h" />
+    <ClInclude Include="DirectX Hooks\CDInput8DeviceProxy.h" />
+    <ClInclude Include="DirectX Hooks\CDInput8Proxy.h" />
+    <ClInclude Include="DirectX Hooks\CMessageProxy.h" />
+    <ClInclude Include="DirectX\audiodefs.h" />
+    <ClInclude Include="DirectX\comdecl.h" />
+    <ClInclude Include="DirectX\D2D1.h" />
+    <ClInclude Include="DirectX\D2D1Helper.h" />
+    <ClInclude Include="DirectX\D2DBaseTypes.h" />
+    <ClInclude Include="DirectX\D2Derr.h" />
+    <ClInclude Include="DirectX\D3D10.h" />
+    <ClInclude Include="DirectX\D3D10effect.h" />
+    <ClInclude Include="DirectX\d3d10misc.h" />
+    <ClInclude Include="DirectX\d3d10sdklayers.h" />
+    <ClInclude Include="DirectX\D3D10shader.h" />
+    <ClInclude Include="DirectX\D3D10_1.h" />
+    <ClInclude Include="DirectX\D3D10_1shader.h" />
+    <ClInclude Include="DirectX\D3D11.h" />
+    <ClInclude Include="DirectX\D3D11SDKLayers.h" />
+    <ClInclude Include="DirectX\D3D11Shader.h" />
+    <ClInclude Include="DirectX\d3d9.h" />
+    <ClInclude Include="DirectX\d3d9caps.h" />
+    <ClInclude Include="DirectX\d3d9types.h" />
+    <ClInclude Include="DirectX\D3Dcommon.h" />
+    <ClInclude Include="DirectX\D3Dcompiler.h" />
+    <ClInclude Include="DirectX\D3DCSX.h" />
+    <ClInclude Include="DirectX\D3DX10.h" />
+    <ClInclude Include="DirectX\d3dx10async.h" />
+    <ClInclude Include="DirectX\D3DX10core.h" />
+    <ClInclude Include="DirectX\D3DX10math.h" />
+    <ClInclude Include="DirectX\D3DX10mesh.h" />
+    <ClInclude Include="DirectX\D3DX10tex.h" />
+    <ClInclude Include="DirectX\D3DX11.h" />
+    <ClInclude Include="DirectX\D3DX11async.h" />
+    <ClInclude Include="DirectX\D3DX11core.h" />
+    <ClInclude Include="DirectX\D3DX11tex.h" />
+    <ClInclude Include="DirectX\d3dx9.h" />
+    <ClInclude Include="DirectX\d3dx9anim.h" />
+    <ClInclude Include="DirectX\d3dx9core.h" />
+    <ClInclude Include="DirectX\d3dx9effect.h" />
+    <ClInclude Include="DirectX\d3dx9math.h" />
+    <ClInclude Include="DirectX\d3dx9mesh.h" />
+    <ClInclude Include="DirectX\d3dx9shader.h" />
+    <ClInclude Include="DirectX\d3dx9shape.h" />
+    <ClInclude Include="DirectX\d3dx9tex.h" />
+    <ClInclude Include="DirectX\d3dx9xof.h" />
+    <ClInclude Include="DirectX\Dcommon.h" />
+    <ClInclude Include="DirectX\dinput.h" />
+    <ClInclude Include="DirectX\dinputd.h" />
+    <ClInclude Include="DirectX\dsconf.h" />
+    <ClInclude Include="DirectX\dsetup.h" />
+    <ClInclude Include="DirectX\dsound.h" />
+    <ClInclude Include="DirectX\DWrite.h" />
+    <ClInclude Include="DirectX\dxdiag.h" />
+    <ClInclude Include="DirectX\DxErr.h" />
+    <ClInclude Include="DirectX\dxfile.h" />
+    <ClInclude Include="DirectX\DXGI.h" />
+    <ClInclude Include="DirectX\DXGIFormat.h" />
+    <ClInclude Include="DirectX\DXGIType.h" />
+    <ClInclude Include="DirectX\dxsdkver.h" />
+    <ClInclude Include="DirectX\gameux.h" />
+    <ClInclude Include="DirectX\PIXPlugin.h" />
+    <ClInclude Include="DirectX\rmxfguid.h" />
+    <ClInclude Include="DirectX\rmxftmpl.h" />
+    <ClInclude Include="DirectX\rpcsal.h" />
+    <ClInclude Include="DirectX\X3DAudio.h" />
+    <ClInclude Include="DirectX\xact3.h" />
+    <ClInclude Include="DirectX\xact3d3.h" />
+    <ClInclude Include="DirectX\xact3wb.h" />
+    <ClInclude Include="DirectX\XAPO.h" />
+    <ClInclude Include="DirectX\XAPOBase.h" />
+    <ClInclude Include="DirectX\XAPOFX.h" />
+    <ClInclude Include="DirectX\XAudio2.h" />
+    <ClInclude Include="DirectX\XAudio2fx.h" />
+    <ClInclude Include="DirectX\XDSP.h" />
+    <ClInclude Include="DirectX\XInput.h" />
+    <ClInclude Include="DirectX\xma2defs.h" />
+    <ClInclude Include="DirectX\xnamath.h" />
     <ClInclude Include="Network\CRakClient.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
     <ClInclude Include="Network\Network.h" />
@@ -507,6 +594,13 @@
     <None Include="..\Shared\RakNet\RakNet.vcproj" />
     <None Include="..\Shared\RakNet\RakNet_vc8.vcproj" />
     <None Include="..\Shared\RakNet\RakNet_vc9.vcproj" />
+    <None Include="DirectX\D3DX10math.inl" />
+    <None Include="DirectX\d3dx9math.inl" />
+    <None Include="DirectX\D3DX_DXGIFormatConvert.inl" />
+    <None Include="DirectX\xnamathconvert.inl" />
+    <None Include="DirectX\xnamathmatrix.inl" />
+    <None Include="DirectX\xnamathmisc.inl" />
+    <None Include="DirectX\xnamathvector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

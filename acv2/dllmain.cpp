@@ -1,4 +1,4 @@
-#include <WinSock2.h>
+//#include <WinSock2.h>
 #include <Windows.h>
 #include "CLoader.h"
 #include "../Shared/Boost/thread.hpp"
@@ -11,6 +11,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:		
+		
 		boost::thread theThread(&CLoader::Initialize);
 		break;
 	}

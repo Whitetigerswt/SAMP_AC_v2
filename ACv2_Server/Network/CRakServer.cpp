@@ -68,10 +68,3 @@ void CRakServer::CloseConnection(const RakNet::SystemAddress& pSystemAddress)
 {
 	return m_pPeer->CloseConnection(pSystemAddress, true, 0xFF);
 }
-
-std::string CRakServer::GetMyIP()
-{
-	RakNet::RakPeerInterface *server = RakNet::RakPeerInterface::GetInstance();
-	RakNet::SystemAddress sa = server->GetInternalID();
-	return sa.ToString();
-}
