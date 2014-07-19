@@ -7,7 +7,8 @@ public:
 	CLog(char* filename);
 	~CLog();
 	void Write(std::string logline);
-	void Write(std::string logline, int notime);
+	//void Write(std::string logline, int notime);
+	void Write(const char* format, ...);
 private:
 	std::ofstream m_stream;
 };

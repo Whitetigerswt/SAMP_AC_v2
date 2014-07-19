@@ -1,5 +1,6 @@
 #include "CLog.h"
 #include <ctime>
+#include <Windows.h>
 
 CLog::CLog(char* filename) {
 	m_stream.open(filename, std::ofstream::out | std::ofstream::app);
@@ -13,8 +14,19 @@ void CLog::Write(std::string logline){
 	m_stream << logline << std::endl;
 }
 
-void CLog::Write(std::string logline, int notime){
+/*void CLog::Write(std::string logline, int notime){
 	m_stream << logline;
+}*/
+
+void CLog::Write(const char* format, ...)
+{
+	va_list vaArgs;
+	char szBuffer[2048];
+	va_start(vaArgs, format);
+	vsnprintf(szBuffer, sizeof(szBuffer), format, vaArgs);
+	va_end(vaArgs);
+
+	m_stream << szBuffer << std::endl;
 }
 
 CLog::~CLog(){

@@ -13,6 +13,7 @@ enum eRPC : unsigned short
 	// -- CLIENT RPCs --
 
 	// -- SERVER RPCs --
+	ON_PROCESS_STARTED
 
 };
 

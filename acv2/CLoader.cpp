@@ -3,6 +3,7 @@
 #include "CParseCommandLine.h"
 #include "Network/Network.h"
 #include "CLog.h"
+#include "CProcessList.h"
 
 #include <map>
 #include <Detours/detours.h>
@@ -17,5 +18,12 @@ void CLoader::Initialize()
 	Network::Connect();
 
 	CDirectX::HookD3DFunctions();
+
+	CProcessList Processes = CProcessList();
+	while (true)
+	{
+		Processes.Scan();
+		Sleep(1000);
+	}
 }
 

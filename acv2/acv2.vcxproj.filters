@@ -411,6 +411,12 @@
     <ClCompile Include="CDirectX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CCheats.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CProcessList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h">
@@ -1512,6 +1518,15 @@
       <Filter>Header Files\Detours</Filter>
     </ClInclude>
     <ClInclude Include="CDirectX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CCheats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CProcessList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
