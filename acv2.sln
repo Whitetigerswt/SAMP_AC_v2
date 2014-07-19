@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ACv2_Client", "acv2\acv2.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ACv2_Server", "ACv2_Server\ACv2_Server.vcxproj", "{9E73D900-9F62-4D7C-ADF7-E67FECDA8FAE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samp_elevator", "samp_elevator\samp_elevator.vcxproj", "{A7E60327-6947-4472-BE62-4744087B1CE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{9E73D900-9F62-4D7C-ADF7-E67FECDA8FAE}.Debug|Win32.Build.0 = Debug|Win32
 		{9E73D900-9F62-4D7C-ADF7-E67FECDA8FAE}.Release|Win32.ActiveCfg = Release|Win32
 		{9E73D900-9F62-4D7C-ADF7-E67FECDA8FAE}.Release|Win32.Build.0 = Release|Win32
+		{A7E60327-6947-4472-BE62-4744087B1CE1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A7E60327-6947-4472-BE62-4744087B1CE1}.Debug|Win32.Build.0 = Debug|Win32
+		{A7E60327-6947-4472-BE62-4744087B1CE1}.Release|Win32.ActiveCfg = Release|Win32
+		{A7E60327-6947-4472-BE62-4744087B1CE1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

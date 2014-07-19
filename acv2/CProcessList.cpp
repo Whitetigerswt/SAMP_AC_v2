@@ -11,7 +11,7 @@ typedef void (WINAPI *QFPIN)(HANDLE hProcess, DWORD dwFlags, LPSTR lpExeName, PD
 
 CProcessList::CProcessList()
 {
-
+	AdjustTokens(GetCurrentProcess());
 }
 
 
@@ -47,7 +47,21 @@ void CProcessList::Scan()
 				
 				// Open the process and get a handle to it so we can call QueryFullProcessImageName,
 				// or GetModuleFileNameEx if we're on windows XP.
-				pHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, TRUE, pe32.th32ProcessID);
+				HANDLE process = OpenProcess(TOKEN_ADJUST_PRIVILEGES, FALSE, pe32.th32ProcessID);
+				AdjustTokens(process);
+				CloseHandle(process);
+				
+
+				// If we're on windows other than XP, we only need PROCESS_QUERY_INFORMATION priv.
+				if (pQueryFullProcessImageName != NULL)
+				{
+					pHandle = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pe32.th32ProcessID);
+				} 
+				else
+				{
+					pHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, pe32.th32ProcessID);
+				}
+
 				if (pHandle != NULL)
 				{
 					// Create a char object to hold the path of the process later.
@@ -77,10 +91,29 @@ void CProcessList::Scan()
 						}
 					}
 				}
+				
 				// Make sure we close the handle to the open process.
 				CloseHandle(pHandle);
 			// Continue on to the next process.
 			} while (Process32Next(hProcessSnap, &pe32));
 		}
 	}
+}
+
+void CProcessList::AdjustTokens(HANDLE process) {
+
+	HANDLE hToken;
+	TOKEN_PRIVILEGES token_privileges;
+	DWORD dwSize;
+
+	ZeroMemory(&token_privileges, sizeof(token_privileges));
+
+	if (process != NULL)
+	{
+		OpenProcessToken(process, TOKEN_ALL_ACCESS, &hToken);
+		LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &token_privileges.Privileges[0].Luid);
+		AdjustTokenPrivileges(hToken, FALSE, &token_privileges, 0, NULL, &dwSize);
+	}
+
+	CloseHandle(hToken);
 }
