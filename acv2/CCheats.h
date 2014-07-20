@@ -69,6 +69,9 @@ public:
 	// PROMISE: A returned list of cheats.
 	std::map<std::string, std::string> CCheats::GetCheatList();
 
+	// PURPOSE: Send the file md5's and paths back to the server (after a disconnect or initial connect)
+	// REQUIRES: A non-empty file list
+	// PROMISE: File list sent to the server.
 	void ResendFiles();
 
 	// TODO: Add RPC to send cheats

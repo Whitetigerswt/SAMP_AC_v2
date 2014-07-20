@@ -8,5 +8,6 @@ public:
 	static void Initialize();
 
 private:
+	static void ResendFileInformation();
 
 };

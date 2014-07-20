@@ -3,7 +3,6 @@
 #include "CRPCCallback.h"
 #include "../../Shared/RakNet/MessageIdentifiers.h"
 #include "../CLog.h"
-#include <Boost\thread.hpp>
 
 namespace Network
 {
@@ -60,8 +59,6 @@ namespace Network
 	{
 		if (!IsInitialized())
 		{
-			CLog log = CLog("log.txt");
-			log.Write("Not initialized");
 			return;
 		}
 
@@ -71,8 +68,6 @@ namespace Network
 		{
 			if (!pPacket->length)
 			{
-				CLog log = CLog("NoPacketLength.txt");
-				log.Write("empty packet");
 				return;
 			}
 
@@ -87,7 +82,7 @@ namespace Network
 			{
 				bConnected = true;
 				bServerHasPlugin = true;
-				boost::thread RPCThread(&CRPCCallback::Initialize);
+				CRPCCallback::Initialize();
 
 				break;
 			}
