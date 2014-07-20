@@ -1,0 +1,1 @@
+#define ADDRESS_LOADED *(int*)0xC8D4C0

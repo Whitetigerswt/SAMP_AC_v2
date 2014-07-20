@@ -3,6 +3,7 @@
 #include "CRPCCallback.h"
 #include "../../Shared/RakNet/MessageIdentifiers.h"
 #include "../CLog.h"
+#include <Boost\thread.hpp>
 
 namespace Network
 {
@@ -86,7 +87,7 @@ namespace Network
 			{
 				bConnected = true;
 				bServerHasPlugin = true;
-				CRPCCallback::Initialize();
+				boost::thread RPCThread(&CRPCCallback::Initialize);
 
 				break;
 			}

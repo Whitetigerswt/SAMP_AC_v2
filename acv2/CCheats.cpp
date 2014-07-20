@@ -25,11 +25,12 @@ void CCheats::Add(std::string md5)
 
 void CCheats::Remove(std::string md5)
 {
-	for (unsigned int i = 0; i < m_CheatList.size(); ++i)
+	for (std::vector<std::string>::iterator i = m_CheatList.begin(); i != m_CheatList.end(); ++i)
 	{
-		if (m_CheatList.at(i).compare(md5) == 0)
+		if ((*i).compare(md5) == 0)
 		{
-			Remove(i);
+			int distance = std::distance(m_CheatList.begin(), i);
+			Remove(distance);
 		}
 	}
 }
@@ -50,10 +51,10 @@ bool CCheats::IsCheat(std::string path)
 		std::string md5 = objmd5.digestFile((char*)path.c_str());
 
 		// Search the cheat list to check if this file is a cheat.
-		for (unsigned int i = 0; i < m_CheatList.size(); ++i)
+		for (std::vector<std::string>::iterator i = m_CheatList.begin(); i != m_CheatList.end(); ++i)
 		{
 			// Compare the MD5 of the file we calculated, to an index in our cheat list of MD5s.
-			if (m_CheatList.at(i).compare(md5) == 0)
+			if ((*i).compare(md5) == 0)
 			{
 				return true;
 			}
@@ -94,20 +95,50 @@ void CCheats::AddFile(std::string file)
 {
 	m_FilePaths.push_back(file);
 
-	RakNet::BitStream bitStream;
-	bitStream.Write(file.c_str());
-	bitStream.Write(GetFileMD5(file).c_str());
+	OnFileExecuted(file.c_str(), GetFileMD5(file.c_str()).c_str());
+}
 
-	Network::SendRPC(ON_FILE_EXECUTED, &bitStream);
+void CCheats::AddFile(std::string file, std::string md5)
+{
+	m_FilePaths.push_back(file);
+
+	OnFileExecuted(file.c_str(), md5.c_str());
+}
+
+void CCheats::OnFileExecuted(const char* file, const char* md5)
+{
+	if (strlen(file) > 3) 
+	{
+		std::string szFile(file);
+		int i = szFile.rfind("\\");
+		szFile = szFile.substr(i + 1, std::string::npos);
+
+		RakNet::BitStream bitStream;
+		bitStream.Write(szFile.c_str());
+		bitStream.Write(md5);
+
+		Network::SendRPC(ON_FILE_EXECUTED, &bitStream);
+	}
+}
+
+void CCheats::ResendFiles()
+{
+	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
+	{
+		std::string file(*i);
+		OnFileExecuted(file.c_str(), GetFileMD5(file).c_str());
+		Sleep(100);
+	}
 }
 
 void CCheats::RemoveFile(std::string file)
 {
-	for (unsigned int i = 0; i < m_FilePaths.size(); ++i)
+	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
 	{
-		if (m_FilePaths.at(i).compare(file) == 0)
+		if ((*i).compare(file) == 0)
 		{
-			RemoveFile(i);
+			int distance = std::distance(m_FilePaths.begin(), i);
+			RemoveFile(distance);
 		}
 	}
 }
@@ -128,10 +159,10 @@ std::map<std::string, std::string> CCheats::GetCheatList()
 	// Create std::map as the result.
 	std::map<std::string, std::string> result;
 
-	for (unsigned int i = 0; i < m_FilePaths.size(); ++i)
+	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
 	{
 		// Get the file's MD5
-		std::string md5 = GetFileMD5(m_FilePaths.at(i));
+		std::string md5 = GetFileMD5((*i));
 
 		// make sure the MD5 returned isn't empty.
 		if (!md5.empty())
@@ -141,7 +172,7 @@ std::map<std::string, std::string> CCheats::GetCheatList()
 			{
 				// Add the md5 as the key.
 				// Add the process path as the value.
-				result.insert(std::pair<std::string, std::string>(md5, m_FilePaths.at(i)));
+				result.insert(std::pair<std::string, std::string>(md5, (*i)));
 			}
 		}
 	}
@@ -151,9 +182,9 @@ std::map<std::string, std::string> CCheats::GetCheatList()
 
 bool CCheats::DoesFileExist(std::string file)
 {
-	for (unsigned int i = 0; i < m_FilePaths.size(); ++i)
+	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
 	{
-		if (m_FilePaths.at(i).compare(file) == 0)
+		if ((*i).compare(file) == 0)
 		{
 			return true;
 		}

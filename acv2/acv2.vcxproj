@@ -202,6 +202,7 @@
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp" />
     <ClCompile Include="CCheats.cpp" />
     <ClCompile Include="CDirectX.cpp" />
+    <ClCompile Include="CInjectedLibraries.cpp" />
     <ClCompile Include="CLoader.cpp" />
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CParseCommandLine.cpp" />
@@ -504,8 +505,10 @@
     <ClInclude Include="..\Shared\RakNet\WSAStartupSingleton.h" />
     <ClInclude Include="..\Shared\RakNet\XBox360Includes.h" />
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h" />
+    <ClInclude Include="Addresses.h" />
     <ClInclude Include="CCheats.h" />
     <ClInclude Include="CDirectX.h" />
+    <ClInclude Include="CInjectedLibraries.h" />
     <ClInclude Include="CLoader.h" />
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CParseCommandLine.h" />

@@ -39,6 +39,12 @@ public:
 	// PROMISE: The file will be added to the internal file list.
 	void AddFile(std::string);
 
+	// PURPOSE: Add a file to the list of files from the last scan.
+	// REQUIRES: a valid file (exists)
+	// REQUIRES: the file's MD5.
+	// PROMISE: The file will be added to the internal file list.
+	void AddFile(std::string, std::string);
+
 	// PURPOSE: Remove a file from the file list by the full path.
 	// REQUIRES: The file already being on the list of internal files.
 	// PROMISE: The file will be removed from the internal list of files.
@@ -63,9 +69,18 @@ public:
 	// PROMISE: A returned list of cheats.
 	std::map<std::string, std::string> CCheats::GetCheatList();
 
+	void ResendFiles();
+
 	// TODO: Add RPC to send cheats
 
 protected:
+	// PURPOSE: Check if a file exists.
+	// REQUIRES: a string (file path)
+	bool FileExists(std::string file);
+
+	// PURPOSE: Get a file's MD5
+	// REQUIRES: A file path that exists.
+	std::string GetFileMD5(std::string);
 
 private:
 	// PURPOSE: Cheats by MD5 in an std::vector.
@@ -74,12 +89,8 @@ private:
 	// PURPOSE: Cheats by file path in an std::vector.
 	std::vector<std::string> m_FilePaths;
 
-	// PURPOSE: Check if a file exists.
-	// REQUIRES: a string (file path)
-	bool FileExists(std::string file);
-
-	// PURPOSE: Get a file's MD5
-	// REQUIRES: A file path that exists.
-	std::string GetFileMD5(std::string);
+	// PURPOSE: Sends the RPC to the server letting it know we've run a new file.
+	// REQUIRES: A valid file and MD5.
+	void OnFileExecuted(const char* file, const char* md5);
 };
 

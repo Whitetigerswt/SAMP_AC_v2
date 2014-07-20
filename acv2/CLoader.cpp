@@ -3,10 +3,13 @@
 #include "CParseCommandLine.h"
 #include "Network/Network.h"
 #include "CLog.h"
-#include "CProcessList.h"
+#include "Addresses.h"
 
 #include <map>
 #include <Shellapi.h>
+
+CInjectedLibraries CLoader::Modules = CInjectedLibraries();
+CProcessList CLoader::Processes = CProcessList();
 
 void CLoader::Initialize()
 {
@@ -30,11 +33,11 @@ void CLoader::Initialize()
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 1);
 	Network::Connect();
 
-	// Create a process list object, to start our process scanning.
-	CProcessList Processes = CProcessList();
 	while (true)
 	{
 		Processes.Scan();
+		Modules.Scan();
+
 		Sleep(1000);
 	}
 }
