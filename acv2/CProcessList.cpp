@@ -20,8 +20,6 @@ CProcessList::~CProcessList()
 
 }
 
-
-
 void CProcessList::Scan()
 {
 
@@ -102,18 +100,27 @@ void CProcessList::Scan()
 
 void CProcessList::AdjustTokens(HANDLE process) {
 
+	// Create our variables to be used in the function.
 	HANDLE hToken;
 	TOKEN_PRIVILEGES token_privileges;
 	DWORD dwSize;
 
+	// Make sure the memory is empty.
 	ZeroMemory(&token_privileges, sizeof(token_privileges));
 
+	// Make sure the HANDLE passed as a parameter is valid.
 	if (process != NULL)
 	{
+		// Open the process, so we can change the tokens.
 		OpenProcessToken(process, TOKEN_ALL_ACCESS, &hToken);
+
+		// Check the current value of SE_DEBUG_NAME
 		LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &token_privileges.Privileges[0].Luid);
+
+		// Set the SE_DEBUG_NAME value to true.
 		AdjustTokenPrivileges(hToken, FALSE, &token_privileges, 0, NULL, &dwSize);
 	}
 
+	// Close the hToken handle, but not the process handle!
 	CloseHandle(hToken);
 }

@@ -74,7 +74,7 @@ std::string CCheats::GetFileMD5(std::string file)
 
 		return md5;
 	}
-	return "";
+	return "NULL";
 }
 
 bool CCheats::FileExists(std::string name)
@@ -98,7 +98,7 @@ void CCheats::AddFile(std::string file)
 	bitStream.Write(file.c_str());
 	bitStream.Write(GetFileMD5(file).c_str());
 
-	Network::SendRPC(ON_PROCESS_STARTED, &bitStream);
+	Network::SendRPC(ON_FILE_EXECUTED, &bitStream);
 }
 
 void CCheats::RemoveFile(std::string file)

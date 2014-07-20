@@ -6,30 +6,32 @@
 #include "CProcessList.h"
 
 #include <map>
-#include <Detours/detours.h>
 #include <Shellapi.h>
-#include "../Shared/Boost/thread.hpp"
 
 void CLoader::Initialize()
 {
+	// Load the command line in a string (mostly the host, and port so we can connect later)
 	std::map < std::string, std::string > cmdline;
 	cmdline = CParseCommandLine::parseCmdLine(GetCommandLineA());
 
+	// Hook the D3D9Device functions.
 	CDirectX::HookD3DFunctions();
 
-	while (*(int*)0xC8D4C0 < 6)
+	// Wait until the game is loaded.
+	while (ADDRESS_LOADED < 6)
 	{
 		Sleep(5);
 	}
 
-	CProcessList Processes = CProcessList();
+	// Force process elevation once the game has loaded. This will terminate the current process and run a new one.
 	CheckElevation();
 
-	Sleep(1000);
-
+	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 1);
 	Network::Connect();
 
+	// Create a process list object, to start our process scanning.
+	CProcessList Processes = CProcessList();
 	while (true)
 	{
 		Processes.Scan();
@@ -44,7 +46,6 @@ void CLoader::CheckElevation()
 	{
 		// If it's not, we need to elevate it.
 		// run our elevator .exe program
-		CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 
 		SHELLEXECUTEINFO sei = { sizeof(sei) };
 		sei.lpVerb = "runas";
@@ -53,6 +54,8 @@ void CLoader::CheckElevation()
 		sei.lpParameters = GetCommandLineA();
 
 		ShellExecuteEx(&sei);
+
+		// Exit process since we're not elevated, and the elevator.exe will create a new process with elevation permissions.
 		ExitProcess(0);
 	}
 }

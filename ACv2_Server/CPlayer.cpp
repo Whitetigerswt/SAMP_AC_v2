@@ -16,7 +16,7 @@ CClientSocketInfo* CPlayer::GetConnectionInfo()
 	return m_pSockInfo;
 }
 
-void CPlayer::OnProcessStarted(char* processpath, char* md5)
+void CPlayer::OnFileExecuted(char* processpath, char* md5)
 {
 	Utility::Printf("OnProcessStarted - %s - %s", processpath, md5);
 }
