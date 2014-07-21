@@ -4,7 +4,7 @@
 #include "../Shared/Network/CRPC.h"
 #include "GDK/core.h"
 #include "GDK/a_players.h"
-#include "Network/Callback.h"
+#include "Callback.h"
 
 /*cell AMX_NATIVE_CALL CallbackProc(AMX* pAmx, cell* pParams)
 {

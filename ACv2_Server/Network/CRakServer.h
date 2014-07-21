@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../Shared/RakNet/RakPeer.h"
-#include "../../Shared/RakNet/MessageIdentifiers.h"
+#include <RakPeer.h>
+#include <MessageIdentifiers.h>
 #include "../../Shared/Network/Network.h"
 
 class CRakServer
@@ -23,4 +23,7 @@ private:
 	RakNet::RakPeer* m_pPeer;
 	RakNet::SocketDescriptor* m_pSocketDescriptor;
 
+	/*cat::EasyHandshake handshake;
+	char public_key[cat::EasyHandshake::PUBLIC_KEY_BYTES];
+	char private_key[cat::EasyHandshake::PRIVATE_KEY_BYTES];*/
 };

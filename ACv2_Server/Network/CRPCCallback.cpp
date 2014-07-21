@@ -1,6 +1,6 @@
 #include "CRPCCallback.h"
 #include "../Utility.h"
-#include "Callback.h"
+#include "../Callback.h"
 #include "Network.h"
 #include "../CPlayer.h"
 
@@ -9,7 +9,7 @@
 void CRPCCallback::Initialize()
 {
 	// Add RPC Callback functions.
-	CRPC::Add(eRPC::ON_FILE_EXECUTED, OnFileExecuted);
+	CRPC::Add(ON_FILE_EXECUTED, OnFileExecuted);
 }
 
 

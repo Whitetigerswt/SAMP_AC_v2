@@ -22,7 +22,7 @@
 static const int HASH_BITS = 256;
 static const int HASH_BYTES = HASH_BITS / 8;
 static const int STRENGTHENING_FACTOR = 256;
-#include <cat/crypt/hash/Skein.hpp>
+#include "cat/crypt/hash/Skein.hpp"
 #endif
 
 using namespace RakNet;

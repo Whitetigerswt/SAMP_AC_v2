@@ -1,6 +1,6 @@
 #include "Callback.h"
-#include "Network.h"
-#include "../Utility.h"
+#include "Network/Network.h"
+#include "Utility.h"
 
 namespace Callback
 {
@@ -83,62 +83,26 @@ namespace Callback
 		return iReturnValue;
 	}
 
-	cell Process(AMX* pAmx, eCallbackType type, cell* pParams)
+
+	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
-		// limit callbacks
-		if (!amx_allowed)
-			amx_allowed = pAmx;
-		else if (amx_allowed != pAmx)
-			return 0;
-
-		switch (type)
+		if (Network::HandleConnection(playerid))
 		{
-		case ON_PLAYER_CONNECT:
-		{
-			cell* pPlayerId = NULL;
-			amx_GetAddr(pAmx, pParams[0], &pPlayerId);
-			OnPlayerConnect(*pPlayerId);
-			delete pPlayerId;
-
-			break;
+			Network::PlayerSend(Network::PACKET_PLAYER_REGISTERED, playerid);
 		}
-		case ON_PLAYER_DISCONNECT:
-		{
-			cell* pPlayerId = NULL;
-			cell* pReason = NULL;
 
-			amx_GetAddr(pAmx, pParams[0], &pPlayerId);
-			amx_GetAddr(pAmx, pParams[1], &pReason);
-
-			OnPlayerDisconnect(*pPlayerId, *pReason);
-			delete pPlayerId;
-			delete pReason;
-
-			break;
-		}
-		default:
-			break;
-
-		}
-		return 1;
+		return true;
 	}
 
-	void OnPlayerConnect(unsigned int uiPlayerid)
+	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerDisconnect(int playerid, int reason)
 	{
-		if (Network::HandleConnection(uiPlayerid))
+		if (Network::IsPlayerConnectedToAC(playerid))
 		{
-			Network::PlayerSend(Network::PACKET_PLAYER_REGISTERED, uiPlayerid);
-		}
-	}
+			if (reason)
+				Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, playerid);
 
-	void OnPlayerDisconnect(unsigned int uiPlayerid, unsigned int uiReason)
-	{
-		if (Network::IsPlayerConnectedToAC(uiPlayerid))
-		{
-			if (uiReason)
-				Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, uiPlayerid);
-
-			Network::CloseConnection(uiPlayerid);
+			Network::CloseConnection(playerid);
 		}
+		return true;
 	}
 }

@@ -37,6 +37,9 @@
     <Filter Include="Source Files\SDK\samp-gdk">
       <UniqueIdentifier>{02d1c414-56ba-4703-babd-4ca308570f71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shared\RakNet\cat">
+      <UniqueIdentifier>{39b0037e-5788-4192-92d1-6203a26011f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp">
@@ -387,9 +390,6 @@
     <ClCompile Include="..\Shared\Network\CRPC.cpp">
       <Filter>Source Files\Shared\Network</Filter>
     </ClCompile>
-    <ClCompile Include="Network\Callback.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="CPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -397,6 +397,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="plugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Callback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -893,9 +896,6 @@
     <ClInclude Include="..\Shared\Network\CRPC.h">
       <Filter>Source Files\Shared\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Network\Callback.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="CPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -952,6 +952,9 @@
     </ClInclude>
     <ClInclude Include="GDK\version.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
+    </ClInclude>
+    <ClInclude Include="Callback.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

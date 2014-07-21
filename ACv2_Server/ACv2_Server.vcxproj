@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)SDK\sampgdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Shared\RakNet;$(ProjectDir)SDK\sampgdk\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -195,8 +195,8 @@
     <ClCompile Include="..\Shared\RakNet\VitaIncludes.cpp" />
     <ClCompile Include="..\Shared\RakNet\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp" />
+    <ClCompile Include="Callback.cpp" />
     <ClCompile Include="CPlayer.cpp" />
-    <ClCompile Include="Network\Callback.cpp" />
     <ClCompile Include="Network\CClientSocketInfo.cpp" />
     <ClCompile Include="Network\CRakServer.cpp" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
@@ -362,6 +362,7 @@
     <ClInclude Include="..\Shared\RakNet\WSAStartupSingleton.h" />
     <ClInclude Include="..\Shared\RakNet\XBox360Includes.h" />
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h" />
+    <ClInclude Include="Callback.h" />
     <ClInclude Include="CPlayer.h" />
     <ClInclude Include="GDK\a_http-decl.h" />
     <ClInclude Include="GDK\a_http.h" />
@@ -380,7 +381,6 @@
     <ClInclude Include="GDK\platform.h" />
     <ClInclude Include="GDK\sdk.h" />
     <ClInclude Include="GDK\version.h" />
-    <ClInclude Include="Network\Callback.h" />
     <ClInclude Include="Network\CClientSocketInfo.h" />
     <ClInclude Include="Network\CRakServer.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
