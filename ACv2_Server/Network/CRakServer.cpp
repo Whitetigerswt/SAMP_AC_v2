@@ -22,6 +22,16 @@ RakNet::StartupResult CRakServer::Startup(const char* szHostAddress, t_port usPo
 	 #define THREAD_PRIORITY SCHED_OTHER
 #endif
 
+	if (!handshake.GenerateServerKey(public_key, private_key))
+	{
+		Utility::Printf("Network Error: Unable to generate Server/Client Key pair.");
+	}
+
+	if (!m_pPeer->InitializeSecurity(public_key, private_key, false))
+	{
+		Utility::Printf("Network Error: Invalid public or private key");
+	}
+
 	RakNet::StartupResult iResult = m_pPeer->Startup(iConnections, m_pSocketDescriptor, 1, THREAD_PRIORITY);
 	if (iResult == RakNet::RAKNET_STARTED)
 		m_pPeer->SetMaximumIncomingConnections(iConnections);

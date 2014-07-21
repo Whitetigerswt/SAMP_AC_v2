@@ -31,7 +31,10 @@ RakNet::ConnectionAttemptResult CRakClient::Connect(const char* szAddress, unsig
 
 	m_pSystemAddress = new RakNet::SystemAddress(szAddress, usPort);
 
-	return m_pPeer->Connect(szAddress, usPort, szPassword, szPassword ? strlen(szPassword) : NULL);
+	RakNet::PublicKey pk;
+	pk.publicKeyMode = RakNet::PKM_ACCEPT_ANY_PUBLIC_KEY;
+
+	return m_pPeer->Connect(szAddress, usPort, szPassword, szPassword ? strlen(szPassword) : NULL, &pk);
 }
 
 RakNet::SystemAddress* CRakClient::GetRemoteAddress()
