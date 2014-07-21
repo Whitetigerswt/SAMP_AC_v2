@@ -1,6 +1,16 @@
 #include "Callback.h"
 #include "Network/Network.h"
 #include "Utility.h"
+#include "GDK\a_players.h"
+#include "CAntiCheat.h"
+#include "CPlayer.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#ifdef WIN32
+#define snprintf sprintf_s
+#endif
 
 namespace Callback
 {
@@ -83,12 +93,23 @@ namespace Callback
 		return iReturnValue;
 	}
 
-
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
 		if (Network::HandleConnection(playerid))
 		{
 			Network::PlayerSend(Network::PACKET_PLAYER_REGISTERED, playerid);
+		}
+
+		if (!Network::IsPlayerConnectedToAC(playerid))
+		{
+			SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for not running Whitetiger's Anti-Cheat (v2)");
+
+			char msg[160], name[MAX_PLAYER_NAME];
+			GetPlayerName(playerid, name, sizeof(name));
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for not running Whitetiger's Anti-Cheat (v2)", name);
+			SendClientMessageToAll(-1, msg);
+
+			Kick(playerid);
 		}
 
 		return true;
@@ -105,4 +126,6 @@ namespace Callback
 		}
 		return true;
 	}
+
+	
 }

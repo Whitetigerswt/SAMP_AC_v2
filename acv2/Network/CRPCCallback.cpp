@@ -1,6 +1,7 @@
 #include "CRPCCallback.h"
 #include "../CLog.h"
 #include "../CLoader.h"
+
 #include <Boost\thread.hpp>
 
 

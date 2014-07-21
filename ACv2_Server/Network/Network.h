@@ -6,7 +6,7 @@
 #include "CRakServer.h"
 #include "CClientSocketInfo.h"
 #include "../../Shared/Network/Network.h"
-#include "../CPlayer.h"
+#include "../CAntiCheat.h"
 
 namespace Network
 {
@@ -16,8 +16,8 @@ namespace Network
 	bool IsInitialized();
 
 	std::list<CClientSocketInfo*>& GetUnhandledConnections();
-	std::map<unsigned int, CPlayer*>& GetPlayers();
-	CPlayer* GetPlayerFromPlayerid(unsigned int uiPlayerid);
+	std::map<unsigned int, CAntiCheat*>& GetPlayers();
+	CAntiCheat* GetPlayerFromPlayerid(unsigned int uiPlayerid);
 	int GetPlayeridFromSystemAddress(const RakNet::SystemAddress& systemAddress);
 	bool IsPlayerConnectedToAC(unsigned int uiPlayerid);
 

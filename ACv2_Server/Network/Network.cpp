@@ -4,7 +4,7 @@
 #include "CRPCCallback.h"
 #include "../../Shared/RakNet/SuperFastHash.h"
 #include "../Callback.h"
-#include "../CPlayer.h"
+#include "../CAntiCheat.h"
 #include "../Utility.h"
 
 #ifdef LINUX
@@ -17,7 +17,7 @@ namespace Network
 	static CRakServer* pRakServer;
 	static bool bInitialized = false;
 	static std::list<CClientSocketInfo*> unhandledConnections;
-	static std::map<unsigned int, CPlayer*> players;
+	static std::map<unsigned int, CAntiCheat*> players;
 
 	/*void Initialize(const std::string& szHostAddress, t_port usPort, int iConnections)
 	{
@@ -60,12 +60,12 @@ namespace Network
 		return unhandledConnections;
 	}
 
-	std::map<unsigned int, CPlayer*>& GetPlayers()
+	std::map<unsigned int, CAntiCheat*>& GetPlayers()
 	{
 		return players;
 	}
 
-	CPlayer* GetPlayerFromPlayerid(unsigned int uiPlayerid)
+	CAntiCheat* GetPlayerFromPlayerid(unsigned int uiPlayerid)
 	{
 		return players[uiPlayerid];
 	}
@@ -79,7 +79,7 @@ namespace Network
 	{
 		// todo: turn address into an int
 		//SuperFastHash((const char*)& systemAddress.address.addr4.sin_addr.s_addr, sizeof(systemAddress.address.addr4.sin_addr.s_addr));
-		for (std::map<unsigned int, CPlayer*>::iterator it = players.begin(); it != players.end(); ++it)
+		for (std::map<unsigned int, CAntiCheat*>::iterator it = players.begin(); it != players.end(); ++it)
 		{
 			if (!strcmp(systemAddress.ToString(false), (*it).second->GetConnectionInfo()->GetSystemAddress().ToString(false)))
 				return (*it).first;
@@ -129,7 +129,7 @@ namespace Network
 		{
 			if (!strcmp(szIP, (*it)->GetSystemAddress().ToString(false)))
 			{
-				CPlayer* pPlayer = new CPlayer(*it);
+				CAntiCheat* pPlayer = new CAntiCheat(*it, uiPlayerid);
 				unhandledConnections.erase(it);
 				players[uiPlayerid] = pPlayer;
 				pPlayer->GetConnectionInfo()->SetState(CONNECTED);
@@ -148,7 +148,7 @@ namespace Network
 
 	unsigned int PlayerSend(ePacketType packetType, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
 	{
-		CPlayer* pPlayer = GetPlayerFromPlayerid(uiPlayerId);
+		CAntiCheat* pPlayer = GetPlayerFromPlayerid(uiPlayerId);
 		if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != CONNECTED)
 			return 0;
 
@@ -158,7 +158,7 @@ namespace Network
 
 	unsigned int PlayerSendRPC(unsigned short usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
 	{
-		CPlayer* pPlayer = GetPlayerFromPlayerid(uiPlayerId);
+		CAntiCheat* pPlayer = GetPlayerFromPlayerid(uiPlayerId);
 		if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != CONNECTED)
 			return 0;
 
@@ -167,9 +167,9 @@ namespace Network
 
 	void Broadcast(ePacketType packetType, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
 	{
-		for (std::map<unsigned int, CPlayer*>::iterator it = players.begin(); it != players.end(); ++it)
+		for (std::map<unsigned int, CAntiCheat*>::iterator it = players.begin(); it != players.end(); ++it)
 		{
-			CPlayer* pPlayer = it->second;
+			CAntiCheat* pPlayer = it->second;
 
 			if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != CONNECTED)
 				continue;
@@ -180,9 +180,9 @@ namespace Network
 
 	void BroadcastRPC(unsigned short usRPCId, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
 	{
-		for (std::map<unsigned int, CPlayer*>::iterator it = players.begin(); it != players.end(); ++it)
+		for (std::map<unsigned int, CAntiCheat*>::iterator it = players.begin(); it != players.end(); ++it)
 		{
-			CPlayer* pPlayer = it->second;
+			CAntiCheat* pPlayer = it->second;
 
 			if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != CONNECTED)
 				continue;

@@ -27,6 +27,7 @@
 !readme.md
 !LICENSE
 !makefile
+!acv2/libs/detours.pdb
 !.gitkeep
 !*.cpp
 !*.h

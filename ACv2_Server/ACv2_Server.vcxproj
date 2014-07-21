@@ -195,6 +195,7 @@
     <ClCompile Include="..\Shared\RakNet\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp" />
     <ClCompile Include="Callback.cpp" />
+    <ClCompile Include="CAntiCheat.cpp" />
     <ClCompile Include="CPlayer.cpp" />
     <ClCompile Include="Network\CClientSocketInfo.cpp" />
     <ClCompile Include="Network\CRakServer.cpp" />
@@ -362,6 +363,7 @@
     <ClInclude Include="..\Shared\RakNet\XBox360Includes.h" />
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h" />
     <ClInclude Include="Callback.h" />
+    <ClInclude Include="CAntiCheat.h" />
     <ClInclude Include="CPlayer.h" />
     <ClInclude Include="GDK\a_http-decl.h" />
     <ClInclude Include="GDK\a_http.h" />
