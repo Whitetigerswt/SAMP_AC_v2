@@ -11,9 +11,13 @@ Compiling
 
 Windows
 ----------
-Open acv2.sln with Visual Studio 2013
+```
+Open acv2.sln with Visual Studio 2013 (Though you will need Visual studio 2010 to compile)
 Compile
-That should be all that's required.
+```
+That should be all that's required. SAMP GDK May need to be recompiled. CMake on windows can generate the visual studio solutions. be sure to generate the solutions in Visual studio 2010
+
+
 
 Linux
 ----------
@@ -23,6 +27,6 @@ Linux
 3) sudo apt-get update
 4) sudo apt-get upgrade
 5) make sure all software updates have been completed.
-6) The Shared/libs folder should contain 5 files "libsampgdk.a, libsubhook.a, libsampgdk.so, libsampgdk.so.4, libsampgdk.so.4.0.0-beta2" where libsampgdk.so.4 and libsamp.gdk.so are symbolically linked to libsampgdk.so.4.0.0-beta2. These files can be downloaded from the samp GDK respository (releases) and the .a files can be downloaded from SA-MP+ Repository
+6) Compile SAMP GDK as statically linked, the instructions for doing that are in the SampGDK repository.
 7) cd into ACv2_Server folder && run "make"
 ```
