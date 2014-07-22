@@ -13,6 +13,10 @@ public:
 	// REQUIERS: The client is using AC.
 	void OnFileExecuted(char* processpath, char* md5);
 
+	// PURPOSE: Callback for when an MD5 hash has been returned after an MD5_Memory function was called.
+	// REQUIRES: The client is using AC.
+	void OnMD5Calculated(int address, int size, char* md5);
+
 	CClientSocketInfo* GetConnectionInfo();
 
 private:

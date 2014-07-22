@@ -16,4 +16,8 @@ private:
 	// REQUIRES: NULL
 	static RPC_CALLBACK OnFileExecuted(RPC_ARGS);
 
+	// PURPOSE: RPC Callback for eRPC::ON_MD5_CALCULATED
+	// REQUIRES: NULL
+	static RPC_CALLBACK OnMD5Calculated(RPC_ARGS);
+
 };

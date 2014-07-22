@@ -10,6 +10,7 @@ void CRPCCallback::Initialize()
 {
 	// Add RPC Callback functions.
 	CRPC::Add(ON_FILE_EXECUTED, OnFileExecuted);
+	CRPC::Add(ON_MD5_CALCULATED, OnMD5Calculated);
 }
 
 
@@ -28,5 +29,21 @@ RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 	{
 		// Call the main OnFileExecuted function.
 		Network::GetPlayerFromPlayerid(iExtra)->OnFileExecuted((char*)processpath, (char*)md5);
+	}
+}
+
+RPC_CALLBACK CRPCCallback::OnMD5Calculated(RakNet::BitStream &bsData, int iExtra)
+{
+	// Create variables
+	int address, size;
+	unsigned char md5[128];
+
+	// Reset string value
+	memset(md5, 0, sizeof(md5));
+
+	// Read values sent from client.
+	if (bsData.Read(address) && bsData.Read(size) && bsData.Read((char*)md5))
+	{
+		Network::GetPlayerFromPlayerid(iExtra)->OnMD5Calculated(address, size, (char*)md5);
 	}
 }

@@ -17,6 +17,15 @@ cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 	return Network::IsPlayerConnectedToAC(pParams[1]);
 }
 
+cell AMX_NATIVE_CALL MD5_MemoryProc(AMX* pAmx, cell* pParams)
+{
+	RakNet::BitStream bitStream;
+	bitStream.WriteCasted<int, cell>(pParams[2]);
+	bitStream.WriteCasted<int, cell>(pParams[3]);
+
+	return Network::PlayerSendRPC(MD5_MEMORY_REGION, pParams[1], &bitStream);
+}
+
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
 	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
@@ -44,6 +53,7 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload()
 AMX_NATIVE_INFO PluginNatives[] =
 {
 	{ "IsPlayerUsingSampAC", IsPlayerUsingSAMPACProc },
+	{ "MD5_Memory", MD5_MemoryProc },
 	{ 0, 0 }
 };
 

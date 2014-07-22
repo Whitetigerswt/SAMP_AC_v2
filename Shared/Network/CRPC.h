@@ -11,9 +11,11 @@ typedef RPC_CALLBACK(*RPCFunct_t)(RPC_ARGS);
 enum eRPC : unsigned short
 {
 	// -- CLIENT RPCs --
+	MD5_MEMORY_REGION,
 
 	// -- SERVER RPCs --
-	ON_FILE_EXECUTED
+	ON_FILE_EXECUTED,
+	ON_MD5_CALCULATED
 
 };
 

@@ -159,8 +159,12 @@ namespace Network
 	unsigned int PlayerSendRPC(unsigned short usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
 	{
 		CAntiCheat* pPlayer = GetPlayerFromPlayerid(uiPlayerId);
+		Utility::Printf("Before if checks");
+
 		if (!pPlayer || pPlayer->GetConnectionInfo()->GetState() != CONNECTED)
 			return 0;
+
+		Utility::Printf("Didn't make it past the if checks");
 
 		return pRakServer->SendRPC(usRPCId, pPlayer->GetConnectionInfo()->GetSystemAddress(), pBitStream, priority, reliability, cOrderingChannel);
 	}
