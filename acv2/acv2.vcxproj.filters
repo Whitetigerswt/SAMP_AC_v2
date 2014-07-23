@@ -423,6 +423,12 @@
     <ClCompile Include="Misc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CClientUpdater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CDirectoryScanner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h">
@@ -1542,6 +1548,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Misc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CClientUpdater.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CDirectoryScanner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

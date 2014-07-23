@@ -15,8 +15,13 @@ extern "C" IMAGE_DOS_HEADER __ImageBase;
 #else
 #endif
 
+#define AC_UPDATE_CHECK 5024
+#define AC_UPDATE_URL "http://whitetigerswt.github.io/SAMP_AC_v2/SAMP_AC_v2_Server_Updater.html"
+#define CURRENT_VERSION 0.1f
+
 namespace Utility
 {
 	void Initialize(void** ppData);
 	void Printf(const char* szFormat, ...);
+	void CheckForUpdate();
 }

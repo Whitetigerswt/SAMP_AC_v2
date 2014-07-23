@@ -73,13 +73,14 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ACV2_EXPORTS;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NO_BOOST_DATE_TIME_INLINE;DIRECTINPUT_VERSION#0x0800;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;psapi.lib;libboost_thread-vc100-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc100-mt-s-1_55.lib;libboost_filesystem-vc100-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -201,6 +202,8 @@
     <ClCompile Include="..\Shared\RakNet\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp" />
     <ClCompile Include="CCheats.cpp" />
+    <ClCompile Include="CClientUpdater.cpp" />
+    <ClCompile Include="CDirectoryScanner.cpp" />
     <ClCompile Include="CDirectX.cpp" />
     <ClCompile Include="CInjectedLibraries.cpp" />
     <ClCompile Include="CLoader.cpp" />
@@ -508,6 +511,8 @@
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h" />
     <ClInclude Include="Addresses.h" />
     <ClInclude Include="CCheats.h" />
+    <ClInclude Include="CClientUpdater.h" />
+    <ClInclude Include="CDirectoryScanner.h" />
     <ClInclude Include="CDirectX.h" />
     <ClInclude Include="CInjectedLibraries.h" />
     <ClInclude Include="CLoader.h" />

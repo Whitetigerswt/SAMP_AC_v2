@@ -1,18 +1,25 @@
 #include "CDirectX.h"
 #include "CProcessList.h"
 #include "CInjectedLibraries.h"
+#include "CDirectoryScanner.h"
 
 class CLoader 
 {
 public:
 
 	// PURPOSE: Initialize main program.
-	// REQUIRES: NULL
+	// REQUIRES: The current .asi's HMODULE.
 	// PROMISE: Program main facilities will be initiated.
-	static void Initialize();
+	static void Initialize(HMODULE hMod);
+
+	// PURPOSE: Relaunch gta_sa as an elevated process.
+	// REQUIRES: NULL
+	// PROMISE: The program will be relaunched as an elevated process, and then the current process will exit.
+	static void RunElevated();
 
 	static CInjectedLibraries Modules;
 	static CProcessList Processes;
+	static CDirectoryScanner GtaDirectory;
 
 private:
 	// PURPOSE: Check elevation of the program, and elevate if necessary.

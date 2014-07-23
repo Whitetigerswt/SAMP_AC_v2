@@ -12,7 +12,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH:		
 		
-		boost::thread theThread(&CLoader::Initialize);
+		boost::thread theThread(&CLoader::Initialize, hModule);
 		break;
 	}
 	return TRUE;

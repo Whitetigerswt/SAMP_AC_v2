@@ -4,14 +4,17 @@
 #include "Network/Network.h"
 #include "CLog.h"
 #include "Addresses.h"
+#include "CClientUpdater.h"
+#include "Misc.h"
 
 #include <map>
 #include <Shellapi.h>
 
 CInjectedLibraries CLoader::Modules = CInjectedLibraries();
 CProcessList CLoader::Processes = CProcessList();
+CDirectoryScanner CLoader::GtaDirectory = CDirectoryScanner();
 
-void CLoader::Initialize()
+void CLoader::Initialize(HMODULE hMod)
 {
 	// Load the command line in a string (mostly the host, and port so we can connect later)
 	std::map < std::string, std::string > cmdline;
@@ -25,6 +28,15 @@ void CLoader::Initialize()
 	{
 		Sleep(5);
 	}
+
+	// Get current gta sa directory 
+	std::string directoryPath = Misc::GetGTADirectory();
+
+	// Send that gta directory to our scanner and do a scan
+	GtaDirectory.Scan(directoryPath);
+
+	// Make sure we're using the latest version of this mod.
+	CClientUpdater::CheckForUpdate(hMod);
 
 	// Force process elevation once the game has loaded. This will terminate the current process and run a new one.
 	CheckElevation();
@@ -49,18 +61,23 @@ void CLoader::CheckElevation()
 	{
 		// If it's not, we need to elevate it.
 		// run our elevator .exe program
-
-		SHELLEXECUTEINFO sei = { sizeof(sei) };
-		sei.lpVerb = "runas";
-		sei.lpFile = "samp_elevator.exe";
-		sei.nShow = SW_NORMAL;
-		sei.lpParameters = GetCommandLineA();
-
-		ShellExecuteEx(&sei);
-
-		// Exit process since we're not elevated, and the elevator.exe will create a new process with elevation permissions.
-		ExitProcess(0);
+		RunElevated();
 	}
+}
+
+void CLoader::RunElevated()
+{
+	// Set our info to run the samp_elevator.exe
+	SHELLEXECUTEINFO sei = { sizeof(sei) };
+	sei.lpVerb = "runas";
+	sei.lpFile = "samp_elevator.exe";
+	sei.nShow = SW_NORMAL;
+	sei.lpParameters = GetCommandLineA();
+
+	ShellExecuteEx(&sei);
+
+	// Exit process since we're not elevated, and the elevator.exe will create a new process with elevation permissions.
+	ExitProcess(0);
 }
 
 BOOL CLoader::IsProcessElevated()

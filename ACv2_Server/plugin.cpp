@@ -40,6 +40,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	Utility::Initialize(ppData);
 	Utility::Printf("SAMP Anti-Cheat v2.0 Has loaded successfully.");
+	Utility::CheckForUpdate();
 	Network::Initialize("", 7776, 500);
 	return sampgdk::Load(ppData);
 }

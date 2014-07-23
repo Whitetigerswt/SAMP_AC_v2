@@ -29,6 +29,27 @@ namespace Misc
 		return result;
 	}
 
+	std::string GetGTADirectory()
+	{
+		// Create a new variable to hold the location to gta_sa.exe - but not the directory.
+		char exe_path[MAX_PATH + 1];
+		
+		// Get the path of the gta_sa.exe and place it into our exe_path variable.
+		GetModuleFileName(NULL, exe_path, sizeof(exe_path));
 
+		// Change it to an std::string.
+		std::string szExePath(exe_path);
+
+		// Find the last instances of \, so we can remove everything after it and have our GTA directory.
+		int i = szExePath.rfind("\\");
+
+		// Create a new variable to hold the directory path after we've cut out the gta_sa.exe part.
+		std::string DirectoryPath;
+		
+		// Put the directory path in our directory path variable.
+		DirectoryPath = szExePath.substr(0, i);
+
+		return DirectoryPath;
+	}
 
 }
