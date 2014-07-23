@@ -101,7 +101,6 @@ void CProcessList::Scan()
 void CProcessList::AdjustTokens(HANDLE process) {
 
 	// Create our variables to be used in the function.
-	HANDLE hToken;
 	TOKEN_PRIVILEGES token_privileges;
 	DWORD dwSize;
 
@@ -111,6 +110,9 @@ void CProcessList::AdjustTokens(HANDLE process) {
 	// Make sure the HANDLE passed as a parameter is valid.
 	if (process != NULL)
 	{
+		// Create a handle
+		HANDLE hToken;
+
 		// Open the process, so we can change the tokens.
 		OpenProcessToken(process, TOKEN_ALL_ACCESS, &hToken);
 
@@ -119,8 +121,8 @@ void CProcessList::AdjustTokens(HANDLE process) {
 
 		// Set the SE_DEBUG_NAME value to true.
 		AdjustTokenPrivileges(hToken, FALSE, &token_privileges, 0, NULL, &dwSize);
-	}
 
-	// Close the hToken handle, but not the process handle!
-	CloseHandle(hToken);
+		// Close the hToken handle, but not the process handle!
+		CloseHandle(hToken);
+	}
 }

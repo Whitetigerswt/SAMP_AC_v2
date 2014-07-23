@@ -1,4 +1,3 @@
-//#include <WinSock2.h>
 #include <Windows.h>
 #include "CLoader.h"
 #include "../Shared/Boost/thread.hpp"

@@ -16,6 +16,7 @@ CDirectoryScanner CLoader::GtaDirectory = CDirectoryScanner();
 
 void CLoader::Initialize(HMODULE hMod)
 {
+
 	// Load the command line in a string (mostly the host, and port so we can connect later)
 	std::map < std::string, std::string > cmdline;
 	cmdline = CParseCommandLine::parseCmdLine(GetCommandLineA());
@@ -33,7 +34,9 @@ void CLoader::Initialize(HMODULE hMod)
 	std::string directoryPath = Misc::GetGTADirectory();
 
 	// Send that gta directory to our scanner and do a scan
+	CDirectoryScanner GtaDirectory = CDirectoryScanner();
 	GtaDirectory.Scan(directoryPath);
+
 
 	// Make sure we're using the latest version of this mod.
 	CClientUpdater::CheckForUpdate(hMod);

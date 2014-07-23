@@ -43,13 +43,13 @@
 template <class T>
 int GetNumberOfDigits(T number, unsigned int base = 10)
 {
-    int digits = 0;
-    if (number < 0) digits = 1; // remove this line if '-' counts as a digit
-    while (number) {
-        number /= base;
-        digits++;
-    }
-    return digits;
+	int digits = 0;
+	if (number < 0) digits = 1; // remove this line if '-' counts as a digit
+	while (number) {
+		number /= base;
+		digits++;
+	}
+	return digits;
 }
 
 enum eIMG_file_ResourceTypes : DWORD
@@ -62,7 +62,7 @@ enum eIMG_file_ResourceTypes : DWORD
 	RESOURCE_XPFL = 0x24
 };
 
-enum eIMG_FileOrder
+enum class eIMG_FileOrder
 {
 	INVALID,
 
@@ -70,12 +70,12 @@ enum eIMG_FileOrder
 	IFP,
 	TXD,
 	COL,
-	IPL,		
+	IPL,
 	CUT,
 	DAT
 };
 
-enum eIMG_version 
+enum eIMG_version
 {
 	IMG_VERSION_UNDEFINED,
 	IMG_VERSION_1,	// GTA III, GTA VC, GTA III Mobile
@@ -113,7 +113,7 @@ private:
 	// Gets file size in blocks
 	size_t IMG_Entry::GetFilesizeInBlocks();
 
-public:	
+public:
 	IMG* IMG_Instance;
 
 	// For reading/writing
@@ -128,7 +128,7 @@ public:
 	const char* IMG_Entry::GetFilename();
 
 	// Writes a filename without extension to sufficiently long buffer
-	void IMG_Entry::GetFilenameWithoutExtension(char* filenameWithoutExtension);
+	void IMG_Entry::GetFilenameWithoutExtension(char* filenameWithoutExtension, int size);
 
 	// Returns file order ID
 	eIMG_FileOrder IMG_Entry::GetFileOrderIDbyExtension();
@@ -180,8 +180,8 @@ public:
 	{
 		AssociatedFilesMatch(DWORD FileID, DWORD IPL_num)
 		{
-			this -> FileID = FileID;
-			this -> IPL_num = IPL_num;
+			this->FileID = FileID;
+			this->IPL_num = IPL_num;
 		}
 
 		DWORD FileID;
@@ -202,14 +202,14 @@ private:
 
 	// File entries
 	tIMGentriesContainer ListOfEntries;
-	private:
+private:
 
 	typedef std::vector<tIMGEntryIterator> tRelatedFilesContainer;
 
 	FILE* IMG_Handle;
 	FILE* DIR_Handle;
 
-	char IMG_fullPath [MAX_PATH];
+	char IMG_fullPath[MAX_PATH];
 	char* IMG_filename;
 
 	// Size of all filenames, only usable, when IMG version 3
@@ -244,7 +244,7 @@ private:
 
 	// writes version 1 or 2 header
 	void IMG::WriteListOfEntriesVersion1And2(FILE* file);
-	
+
 	// Does action when the list of entries needs to be saved
 	void IMG::DoModifiedListOfEntriesActions();
 
@@ -264,7 +264,7 @@ private:
 	void IMG::SortListOfEntriesByPositionAndSize(IMG::tIMGentriesContainer& list);
 
 #ifdef IMG_DEBUG
-	public:
+public:
 #endif
 	// Finds a first free space for target file
 	unsigned __int64 IMG::FindFirstEmptySpaceForFile(size_t filesize, tRelatedFilesContainer* overwrittenFileIndexes = NULL);
@@ -276,7 +276,7 @@ public:
 
 	char* GTAIV_encryption_key;
 
-	#pragma pack(push, 1)
+#pragma pack(push, 1)
 	struct IMG_version2_tableItem		// size: 32 bytes
 	{
 		DWORD Position;				// In blocks
@@ -284,9 +284,9 @@ public:
 		WORD SizeFirstPriority;		// In blocks
 		char Name[24];				// NULL terminated
 	};
-	#pragma pack(pop)
+#pragma pack(pop)
 
-	#pragma pack(push, 1)
+#pragma pack(push, 1)
 	struct IMG_version3_header		// size: 20 bytes
 	{
 		DWORD MagicID;
@@ -296,7 +296,7 @@ public:
 		WORD SingleTableItemSize;	// should be 0x10 (16)
 		WORD Unknown;
 	};
-	#pragma pack(pop)
+#pragma pack(pop)
 
 	struct IMG_version3_tableItem		// size: 20 bytes
 	{
@@ -308,7 +308,7 @@ public:
 	};
 
 	eIMG_version archiveVersion;
-	
+
 	// true if archive was modified in any way, but rebuilding didn't happen
 	bool bHasArchiveBeenModifiedAndNotRebuiltYet;
 
@@ -374,16 +374,16 @@ public:
 
 	// Gets size of unused space in .img file
 	unsigned __int64 IMG::GetSizeOfUnusedSpace();
-	
+
 	// Retrieves the number of files inside of IMG archive
 	DWORD IMG::GetFileCount();
-	
+
 	// Adds or replaces file if exists
 	IMG::tIMGEntryIterator IMG::AddOrReplaceFile(const char* name, const void* ptr, size_t size);
-	
+
 	// Adds file
 	IMG::tIMGEntryIterator IMG::AddFile(const char* name, const void* ptr, size_t size);
-	
+
 	// Replaces file depending on iterator
 	void IMG::ReplaceSingleFile(tIMGEntryIterator IMGentryIt, const void* ptr, size_t size);
 
@@ -395,7 +395,7 @@ private:
 	void IMG::SetArchiveFormat(eIMG_version version);
 
 public:
-	
+
 	// Renames a file
 	bool IMG::RenameFile(tIMGEntryIterator fileInfo, const char* NewName);
 
@@ -423,7 +423,7 @@ public:
 	// Access file by name
 	// Returns a reference to the last element in the vector container.
 	IMG::tIMGEntryReference IMG::GetFileRefByName(const char* name);
-	
+
 	// Return iterator to beginning
 	IMG::tIMGEntryIterator IMG::begin();
 

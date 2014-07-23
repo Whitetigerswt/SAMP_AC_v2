@@ -127,5 +127,10 @@ namespace Callback
 		return true;
 	}
 
-	
+	PLUGIN_EXPORT bool PLUGIN_CALL OnGameModeInit()
+	{
+		Utility::CheckForUpdate();
+
+		return true;
+	}
 }

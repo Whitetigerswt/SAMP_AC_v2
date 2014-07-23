@@ -29,7 +29,6 @@ void CDirectoryScanner::Scan(std::string path)
 		// We can't calculate the MD5 of a directory...
 		if (boost::filesystem::is_directory(pFile))
 		{
-
 			continue;
 		}
 		else if (boost::filesystem::file_size(pFile) < 3000000)
@@ -43,11 +42,46 @@ void CDirectoryScanner::Scan(std::string path)
 		}
 	}
 	// todo change "models/gta3.img" to that address that litteraly reads models/gta3.img in gta_sa.exe memory
-	path.append("models/gta3.img");
+
+	path.append("\\models\\gta3.img");
 	img_scan(path);
 }
 
 void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 {
-	// todo
+	// Open IMG archive file.
+	IMG img = IMG();
+	img.OpenArchive(path_to_gta3_img.c_str());
+
+	// Make sure it was opened successfully.
+	if (img.IsArchiveOpened())
+	{
+		// Create vars to hold data about each IMG entry.
+		char* filecontents = NULL;
+		char* filename = new char[256];
+		
+		// Loop through all IMG entrys.
+		for (auto& entry = img.begin(); entry != img.end(); ++entry)
+		{
+
+			// Get the file name, with a max size of 256
+			(*entry).GetFilenameWithoutExtension(filename, 256);
+
+			// allocate enough memory to hold all of the file contents in the entry.
+			filecontents = (char*)malloc(sizeof(char)*(*entry).GetFilesize());
+
+			// Get all of the file contents
+			(*entry).ReadEntireFile((void*)filecontents);
+
+			// MD5 each entry
+			// NOTE: maybe switch to something more efficent than md5 for this. There is roughly 2,000 files.
+			MD5 md5obj = MD5();
+			std::string md5 = md5obj.digestMemory((BYTE*)filecontents, (*entry).GetFilesize());
+
+			// todo
+
+			free(filecontents);
+		}
+		delete filename;
+	}
 }

@@ -42,7 +42,7 @@ namespace Utility
 		logprintf("[SAMP_AC_V2] %s", szBuffer);
 	}
 
-	void OnHTTPResponse(int index, int response_code, const char * data)
+	PLUGIN_EXPORT void PLUGIN_CALL OnHTTPResponse(int index, int response_code, const char * data)
 	{
 		switch (index) 
 		{
@@ -53,17 +53,18 @@ namespace Utility
 				sscanf(data, "%f %s", &version, site);
 				if (version > CURRENT_VERSION)
 				{
-					Utility::Printf("---------------------------------------");
+					Utility::Printf("_____________________________________________________________");
 					Utility::Printf("SAMP_AC Server plugin is out of date, and will not continue to work after this point.");
-					Utility::Printf("The current version is %f and the latest version is %f!", CURRENT_VERSION, version);
+					Utility::Printf("The current version is %.2f and the latest version is %.2f!", CURRENT_VERSION, version);
 					Utility::Printf("You can download the latest version for both Windows and Linux at: %s", site);
 					Utility::Printf("To continue using this plugin, you must update it.");
 					Utility::Printf("If you no longer wish to use this plugin, remove it from the server.cfg and adjust your scripts accordingly.");
 					Utility::Printf("The server will now close.");
-					Utility::Printf("---------------------------------------");
+					Utility::Printf("_____________________________________________________________");
 
 					exit(0);
 				}
+				delete site;
 				break;
 			}
 		}

@@ -26,7 +26,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -80,13 +80,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc100-mt-s-1_55.lib;libboost_filesystem-vc100-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_55.lib;libboost_filesystem-vc120-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <EnableUAC>false</EnableUAC>
       <UACUIAccess>true</UACUIAccess>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -223,6 +224,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="GTASA_CRC32.cpp" />
+    <ClCompile Include="IMG.cpp" />
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="Network\CRakClient.cpp" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
@@ -599,6 +602,8 @@
     <ClInclude Include="DirectX\XInput.h" />
     <ClInclude Include="DirectX\xma2defs.h" />
     <ClInclude Include="DirectX\xnamath.h" />
+    <ClInclude Include="GTASA_CRC32.h" />
+    <ClInclude Include="IMG.h" />
     <ClInclude Include="md5.h" />
     <ClInclude Include="Misc.h" />
     <ClInclude Include="Network\CRakClient.h" />

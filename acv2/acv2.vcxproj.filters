@@ -37,6 +37,9 @@
     <Filter Include="Header Files\Detours">
       <UniqueIdentifier>{e2f70d04-4415-4630-9537-77d84ea29619}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\IMG Reader">
+      <UniqueIdentifier>{19750be9-a420-4fa3-9075-98db08c937ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -428,6 +431,12 @@
     </ClCompile>
     <ClCompile Include="CDirectoryScanner.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GTASA_CRC32.cpp">
+      <Filter>Source Files\IMG Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="IMG.cpp">
+      <Filter>Source Files\IMG Reader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1555,6 +1564,12 @@
     </ClInclude>
     <ClInclude Include="CDirectoryScanner.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GTASA_CRC32.h">
+      <Filter>Source Files\IMG Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="IMG.h">
+      <Filter>Source Files\IMG Reader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
