@@ -13,9 +13,12 @@
 CInjectedLibraries CLoader::Modules = CInjectedLibraries();
 CProcessList CLoader::Processes = CProcessList();
 CDirectoryScanner CLoader::GtaDirectory = CDirectoryScanner();
+bool CLoader::isLoaded = false;
 
 void CLoader::Initialize(HMODULE hMod)
 {
+	// Record that we're loaded
+	isLoaded = true;
 
 	// Load the command line in a string (mostly the host, and port so we can connect later)
 	std::map < std::string, std::string > cmdline;
@@ -30,14 +33,6 @@ void CLoader::Initialize(HMODULE hMod)
 		Sleep(5);
 	}
 
-	// Get current gta sa directory 
-	std::string directoryPath = Misc::GetGTADirectory();
-
-	// Send that gta directory to our scanner and do a scan
-	CDirectoryScanner GtaDirectory = CDirectoryScanner();
-	GtaDirectory.Scan(directoryPath);
-
-
 	// Make sure we're using the latest version of this mod.
 	CClientUpdater::CheckForUpdate(hMod);
 
@@ -47,6 +42,13 @@ void CLoader::Initialize(HMODULE hMod)
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 1);
 	Network::Connect();
+
+	// Get current gta sa directory 
+	std::string directoryPath = Misc::GetGTADirectory();
+
+	// Send that gta directory to our scanner and do a scan
+	CDirectoryScanner GtaDirectory = CDirectoryScanner();
+	GtaDirectory.Scan(directoryPath);
 
 	while (true)
 	{
@@ -127,4 +129,9 @@ Cleanup:
 	}
 
 	return fIsElevated;
+}
+
+bool CLoader::IsLoaded()
+{
+	return isLoaded;
 }

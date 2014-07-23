@@ -17,6 +17,10 @@ public:
 	// PROMISE: The program will be relaunched as an elevated process, and then the current process will exit.
 	static void RunElevated();
 
+	// PURPOSE: Check if we've already loaded
+	// REQUIRES: NULL
+	static bool IsLoaded();
+
 	static CInjectedLibraries Modules;
 	static CProcessList Processes;
 	static CDirectoryScanner GtaDirectory;
@@ -30,5 +34,7 @@ private:
 	// PURPOSE: Determine if the process is elevated.
 	// REQUIRES: NULL
 	static BOOL IsProcessElevated();
+
+	static bool isLoaded;
 
 };

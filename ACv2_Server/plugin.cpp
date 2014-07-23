@@ -26,6 +26,19 @@ cell AMX_NATIVE_CALL MD5_MemoryProc(AMX* pAmx, cell* pParams)
 	return Network::PlayerSendRPC(MD5_MEMORY_REGION, pParams[1], &bitStream);
 }
 
+cell AMX_NATIVE_CALL SetPlayerCanEnableACProc(AMX* pAmx, cell* pParams)
+{
+	CAntiCheat::ToggleCanEnableAC(pParams[1], !!pParams[2]);
+
+	return 1;
+}
+
+cell AMX_NATIVE_CALL CanPlayerEnableACProc(AMX* pAmx, cell* pParams)
+{
+	return CAntiCheat::CanEnableAC(pParams[1]);
+}
+
+
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
 	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
@@ -53,6 +66,8 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload()
 AMX_NATIVE_INFO PluginNatives[] =
 {
 	{ "IsPlayerUsingSampAC", IsPlayerUsingSAMPACProc },
+	{ "CanPlayerEnableAC", CanPlayerEnableACProc },
+	{ "SetPlayerCanEnableAC", SetPlayerCanEnableACProc },
 	{ "MD5_Memory", MD5_MemoryProc },
 	{ 0, 0 }
 };

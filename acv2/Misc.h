@@ -1,6 +1,6 @@
 #include <Windows.h>
 #include <string>
-
+#include <vector>
 
 namespace Misc
 {

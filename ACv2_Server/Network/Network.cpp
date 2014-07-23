@@ -97,6 +97,8 @@ namespace Network
 
 	void CloseUnhandledConnection(const RakNet::SystemAddress& systemAddress)
 	{
+		Callback::OnACClosed(systemAddress.ToString(false));
+
 		pRakServer->CloseConnection(systemAddress);
 		CleanupUnhandledConnection(systemAddress);
 	}
@@ -105,6 +107,8 @@ namespace Network
 	{
 		delete players[uiPlayerid];
 		players.erase(uiPlayerid);
+
+		Callback::OnACClosed(uiPlayerid);
 	}
 
 	void CleanupUnhandledConnection(const RakNet::SystemAddress& systemAddress)

@@ -17,6 +17,8 @@ namespace Callback
 	static AMX* amx_allowed = NULL;
 	static std::list<AMX*> amxPointers;
 
+	static bool ACToggle = false;
+
 	std::list<AMX*>& GetAMXList()
 	{
 		return amxPointers;
@@ -93,6 +95,36 @@ namespace Callback
 		return iReturnValue;
 	}
 
+	void OnACClosed(unsigned int playerid)
+	{
+		if (IsPlayerConnected(playerid) && ACToggle)
+		{
+			char str[144], name[MAX_PLAYER_NAME];
+			GetPlayerName(playerid, name, sizeof(name));
+			snprintf(str, sizeof(str), "{FF0000}%s{FFFFFF} has been kicked from the server (AC Lost Connection)", name);
+			Kick(playerid);
+		}
+	}
+
+	void OnACClosed(std::string ip)
+	{
+		for (int i = 0; i < MAX_PLAYERS; ++i)
+		{
+			if (IsPlayerConnected(i))
+			{
+				char IP[MAX_PLAYER_NAME];
+				GetPlayerIp(i, IP, sizeof(IP));
+
+				std::string userip(IP);
+
+				if (ip.compare(userip) == 0)
+				{
+					OnACClosed(i);
+				}
+			}
+		}
+	}
+
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
 		if (Network::HandleConnection(playerid))
@@ -100,7 +132,7 @@ namespace Callback
 			Network::PlayerSend(Network::PACKET_PLAYER_REGISTERED, playerid);
 		}
 
-		if (!Network::IsPlayerConnectedToAC(playerid))
+		if (!Network::IsPlayerConnectedToAC(playerid) && ACToggle)
 		{
 			SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for not running Whitetiger's Anti-Cheat (v2)");
 
@@ -108,6 +140,8 @@ namespace Callback
 			GetPlayerName(playerid, name, sizeof(name));
 			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for not running Whitetiger's Anti-Cheat (v2)", name);
 			SendClientMessageToAll(-1, msg);
+
+			Utility::Printf("%s has been kicked from the server for not connecting with AC while AC is on.", name);
 
 			Kick(playerid);
 		}
@@ -132,5 +166,44 @@ namespace Callback
 		Utility::CheckForUpdate();
 
 		return true;
+	}
+	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid, const char* params)
+	{
+		if (!strcmp(params, "/actoggle") && CAntiCheat::CanEnableAC(playerid))
+		{
+			ACToggle = !ACToggle;
+
+			char str[144], name[MAX_PLAYER_NAME];
+			GetPlayerName(playerid, name, sizeof(name));
+
+			snprintf(str, sizeof(str), "{FF0000}%s{0000FF} has {FFFFFF}%s{0000FF} SAMP_AC_v2.", name, ACToggle == true ? "Enabled" : "Disabled");
+
+			SendClientMessageToAll(-1, str);
+
+			for (int i = 0; i < MAX_PLAYERS; ++i)
+			{
+				if (IsPlayerConnected(i) && !Network::IsPlayerConnectedToAC(i))
+				{
+					Kick(i);
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	PLUGIN_EXPORT bool PLUGIN_CALL OnRconLoginAttempt(const char* ip, const char* port, bool success)
+	{
+		if (!success) return true;
+
+		for (int i = 0; i < MAX_PLAYERS; ++i)
+		{
+			char IP[MAX_PLAYER_NAME];
+			GetPlayerIp(i, IP, sizeof(IP));
+			if (!strcmp(ip, IP))
+			{
+				CAntiCheat::ToggleCanEnableAC(i, true);
+			}
+		}
 	}
 }

@@ -1,6 +1,7 @@
 #include <Windows.h>
+#include <Boost\thread.hpp>
+
 #include "CLoader.h"
-#include "../Shared/Boost/thread.hpp"
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -9,10 +10,14 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 {
 	switch (ul_reason_for_call)
 	{
-	case DLL_PROCESS_ATTACH:		
-		
-		boost::thread theThread(&CLoader::Initialize, hModule);
-		break;
+		case DLL_PROCESS_ATTACH:
+		{
+			if (!CLoader::IsLoaded())
+			{
+				boost::thread theThread(&CLoader::Initialize, hModule);
+				break;
+			}
+		}
 	}
 	return TRUE;
 }

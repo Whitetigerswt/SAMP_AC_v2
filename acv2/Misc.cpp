@@ -1,6 +1,11 @@
 #include "Misc.h"
 #include "md5.h"
 #include "CLog.h"
+#include "Addresses.h"
+
+#include <winternl.h>
+#include <TlHelp32.h>
+#include <Windows.h>
 
 namespace Misc
 {
@@ -51,5 +56,4 @@ namespace Misc
 
 		return DirectoryPath;
 	}
-
 }

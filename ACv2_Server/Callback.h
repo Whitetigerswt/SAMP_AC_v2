@@ -15,4 +15,8 @@ namespace Callback
 	cell Execute(const char* szFunction, const char* szFormat, ...);
 
 	std::list<AMX*>& GetAMXList();
+
+	void OnACClosed(std::string ip);
+	void OnACClosed(unsigned int playerid);
+
 }
