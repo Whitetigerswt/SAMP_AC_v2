@@ -1,7 +1,7 @@
 #include "CAntiCheat.h"
 #include "Utility.h"
-#include "GDK\a_players.h"
-#include "Network\Network.h"
+#include "GDK/a_players.h"
+#include "Network/Network.h"
 #include "Callback.h"
 
 std::vector<int> CAntiCheat::Admins;

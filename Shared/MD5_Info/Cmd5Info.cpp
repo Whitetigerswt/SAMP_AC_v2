@@ -33,8 +33,8 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 		http::client::request request(url);
 		http::client::response response = client.get(request);
 
-		//std::string data = body(request);
-		//return data;
+		std::string data = body(request);
+		return data;
 	}
 	catch (std::exception)
 	{

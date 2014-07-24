@@ -1,7 +1,7 @@
 
 #include <map>
 #include <vector>
-#include <curl\curl.h>
+#include <string>
 
 #define AC_IMG_MD5_INFO "http://whitetigerswt.github.io/SAMP_AC_v2"
 class Cmd5Info

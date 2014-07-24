@@ -2,6 +2,7 @@
 
 #include <list>
 #include "SDK/samp-sdk/amx/amx.h"
+#include <string>
 
 struct PAWNArray
 {
