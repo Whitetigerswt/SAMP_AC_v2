@@ -9,6 +9,7 @@
 
 #include <map>
 #include <Shellapi.h>
+#include <Boost\thread.hpp>
 
 CInjectedLibraries CLoader::Modules = CInjectedLibraries();
 CProcessList CLoader::Processes = CProcessList();
@@ -25,7 +26,7 @@ void CLoader::Initialize(HMODULE hMod)
 	cmdline = CParseCommandLine::parseCmdLine(GetCommandLineA());
 
 	// Hook the D3D9Device functions.
-	CDirectX::HookD3DFunctions();
+	CDirectX::HookD3DFunctions();	
 
 	// Wait until the game is loaded.
 	while (ADDRESS_LOADED < 6)
@@ -42,13 +43,6 @@ void CLoader::Initialize(HMODULE hMod)
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 1);
 	Network::Connect();
-
-	// Get current gta sa directory 
-	std::string directoryPath = Misc::GetGTADirectory();
-
-	// Send that gta directory to our scanner and do a scan
-	CDirectoryScanner GtaDirectory = CDirectoryScanner();
-	GtaDirectory.Scan(directoryPath);
 
 	while (true)
 	{

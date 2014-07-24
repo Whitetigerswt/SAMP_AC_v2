@@ -40,6 +40,9 @@
     <Filter Include="Source Files\IMG Reader">
       <UniqueIdentifier>{19750be9-a420-4fa3-9075-98db08c937ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shared\MD5 Info">
+      <UniqueIdentifier>{f79f29ea-7cad-4d8c-91eb-871af6b5a879}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -437,6 +440,9 @@
     </ClCompile>
     <ClCompile Include="IMG.cpp">
       <Filter>Source Files\IMG Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp">
+      <Filter>Source Files\Shared\MD5 Info</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1570,6 +1576,9 @@
     </ClInclude>
     <ClInclude Include="IMG.h">
       <Filter>Source Files\IMG Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h">
+      <Filter>Source Files\Shared\MD5 Info</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

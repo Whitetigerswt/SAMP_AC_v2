@@ -6,11 +6,17 @@
 
 #include <string>
 
+#ifndef MAX_PATH
+#define MAX_PATH 260
+#endif
+
 void CRPCCallback::Initialize()
 {
 	// Add RPC Callback functions.
 	CRPC::Add(ON_FILE_EXECUTED, OnFileExecuted);
 	CRPC::Add(ON_MD5_CALCULATED, OnMD5Calculated);
+	CRPC::Add(ON_FILE_CALCULATED, OnFileCalculated);
+	CRPC::Add(ON_IMG_FILE_MODIFIED, OnImgFileModified);
 }
 
 
@@ -45,5 +51,33 @@ RPC_CALLBACK CRPCCallback::OnMD5Calculated(RakNet::BitStream &bsData, int iExtra
 	if (bsData.Read(address) && bsData.Read(size) && bsData.Read((char*)md5))
 	{
 		Network::GetPlayerFromPlayerid(iExtra)->OnMD5Calculated(address, size, (char*)md5);
+	}
+}
+
+RPC_CALLBACK CRPCCallback::OnFileCalculated(RakNet::BitStream &bsData, int iExtra)
+{
+	unsigned char path[MAX_PATH + 1];
+	unsigned char md5[33];
+
+	memset(path, 0, sizeof(path));
+	memset(md5, 0, sizeof(md5));
+
+	if(bsData.Read((char*)path) && bsData.Read((char*)md5)) 
+	{
+		Network::GetPlayerFromPlayerid(iExtra)->OnFileCalculated((char*)path, (char*)md5);
+	}
+}
+
+RPC_CALLBACK CRPCCallback::OnImgFileModified(RakNet::BitStream &bsData, int iExtra)
+{
+	unsigned char path[MAX_PATH + 1];
+	unsigned char md5[33];
+
+	memset(path, 0, sizeof(path));
+	memset(md5, 0, sizeof(md5));
+
+	if (bsData.Read((char*)path) && bsData.Read((char*)md5))
+	{
+		Network::GetPlayerFromPlayerid(iExtra)->OnImgFileModified((char*)path, (char*)md5);
 	}
 }

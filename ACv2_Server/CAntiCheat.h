@@ -18,6 +18,14 @@ public:
 	// REQUIRES: The client is using AC.
 	void OnMD5Calculated(int address, int size, char* md5);
 
+	// PURPOSE: Callback for when a file in the gta_sa path's md5 is calculated.
+	// REQUIRES: The client is using AC.
+	void OnFileCalculated(char* path, char* md5);
+
+	// PURPOSE: Callback for when a file in gta3.img is modified.
+	// REQUIRES: The client is using AC.
+	void OnImgFileModified(char* filename, char* md5);
+
 	// PURPOSE: Toggles whether the player can turn AC on or off
 	// REQUIRES: NULL
 	static void ToggleCanEnableAC(int playerid, bool toggle);

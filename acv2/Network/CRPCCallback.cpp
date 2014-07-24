@@ -3,6 +3,7 @@
 #include "../CLoader.h"
 #include "../Misc.h"
 #include "Network.h"
+#include "../Misc.h"
 
 #include <Boost\thread.hpp>
 
@@ -15,8 +16,15 @@ void CRPCCallback::Initialize()
 
 void CRPCCallback::ResendFileInformation()
 {
+	// Send the server the processes and modules that were loaded while we weren't connected.
 	CLoader::Processes.ResendFiles();
 	CLoader::Modules.ResendFiles();
+
+	// Get current gta sa directory 
+	std::string directoryPath = Misc::GetGTADirectory();
+
+	// Scan out directory path and send the server our results.
+	CLoader::GtaDirectory.Scan(directoryPath);
 }
 
 void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)

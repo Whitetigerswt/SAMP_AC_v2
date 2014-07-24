@@ -91,6 +91,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp" />
     <ClCompile Include="..\Shared\Network\CRPC.cpp" />
     <ClCompile Include="..\Shared\RakNet\Base64Encoder.cpp" />
     <ClCompile Include="..\Shared\RakNet\BitStream.cpp" />
@@ -356,6 +357,7 @@
     <ClInclude Include="..\Shared\Boost\visit_each.hpp" />
     <ClInclude Include="..\Shared\Boost\wave.hpp" />
     <ClInclude Include="..\Shared\Boost\weak_ptr.hpp" />
+    <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h" />
     <ClInclude Include="..\Shared\Network\CRPC.h" />
     <ClInclude Include="..\Shared\Network\Network.h" />
     <ClInclude Include="..\Shared\RakNet\AutopatcherPatchContext.h" />

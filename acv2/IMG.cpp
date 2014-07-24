@@ -78,21 +78,14 @@ IMG::~IMG()
 	this->CloseArchive();
 }
 
-#include "CLog.h"
-
 // Opens IMG archive, assumes IMG archive to exist.
 // Detects archive type automatically
 bool IMG::OpenArchive(const char* path)
 {
 	this->CloseArchive();
 
-
-	CLog log = CLog("insideimg.txt");
-	log.Write(path);
-
 	if (this->IMG_Handle = fopen(path, "rb"))
 	{
-		log.Write("Success opening the file!");
 		GetFullPathNameA(path, _countof(this->IMG_fullPath), this->IMG_fullPath, &this->IMG_filename);
 
 		unsigned long int version;

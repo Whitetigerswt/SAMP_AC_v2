@@ -205,5 +205,6 @@ namespace Callback
 				CAntiCheat::ToggleCanEnableAC(i, true);
 			}
 		}
+		return true;
 	}
 }

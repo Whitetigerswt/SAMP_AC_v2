@@ -20,4 +20,12 @@ private:
 	// REQUIRES: NULL
 	static RPC_CALLBACK OnMD5Calculated(RPC_ARGS);
 
+	// PURPOSE: RPC Callback for eRPC::ON_FILE_CALCULATED
+	// REQUIRES: NULL
+	static RPC_CALLBACK OnFileCalculated(RPC_ARGS);
+
+	// PURPOSE: RPC Callback for eRPC::ON_IMG_FILE_MODIFIED.
+	// REQUIRES: NULL
+	static RPC_CALLBACK OnImgFileModified(RPC_ARGS);
+
 };
