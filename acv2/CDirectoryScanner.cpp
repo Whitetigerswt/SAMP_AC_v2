@@ -108,9 +108,6 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 				continue;
 			}
 
-			CLog log = CLog("md5s_checked.txt");
-			log.Write("We're checking file: %s", filename);
-
 			if (md5.compare(g_mGta3ImgDefaults[filename]) != 0)
 			{
 				RakNet::BitStream bitStream;
@@ -120,8 +117,6 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 
 				Network::SendRPC(ON_IMG_FILE_MODIFIED, &bitStream);
 			}
-
-			// todo
 
 			free(filecontents);
 		}
