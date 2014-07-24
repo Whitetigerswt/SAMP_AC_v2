@@ -11,6 +11,26 @@
 #define BOOST_SYSTEM_CONFIG_HPP
 
 #include <boost/config.hpp>
+
+// These #defines added by the separate Boost.Asio package.
+#if !defined(BOOST_SYMBOL_IMPORT)
+# if defined(BOOST_HAS_DECLSPEC)
+#  define BOOST_SYMBOL_IMPORT __declspec(dllimport)
+# else // defined(BOOST_HAS_DECLSPEC)
+#  define BOOST_SYMBOL_IMPORT
+# endif // defined(BOOST_HAS_DECLSPEC)
+#endif // !defined(BOOST_SYMBOL_IMPORT)
+#if !defined(BOOST_SYMBOL_EXPORT)
+# if defined(BOOST_HAS_DECLSPEC)
+#  define BOOST_SYMBOL_EXPORT __declspec(dllexport)
+# else // defined(BOOST_HAS_DECLSPEC)
+#  define BOOST_SYMBOL_EXPORT
+# endif // defined(BOOST_HAS_DECLSPEC)
+#endif // !defined(BOOST_SYMBOL_EXPORT)
+#if !defined(BOOST_SYMBOL_VISIBLE)
+# define BOOST_SYMBOL_VISIBLE
+#endif // !defined(BOOST_SYMBOL_VISIBLE)
+
 #include <boost/system/api_config.hpp>  // for BOOST_POSIX_API or BOOST_WINDOWS_API
 
 // This header implements separate compilation features as described in
