@@ -40,4 +40,6 @@
 !*.def
 !*.txt
 !*.filters
+!*.so
+!*.a
 !*/
