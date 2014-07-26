@@ -88,10 +88,10 @@ void CProcessList::Scan()
 							AddFile(path);
 						}
 					}
+					// Make sure we close the handle to the open process.
+					CloseHandle(pHandle);
 				}
 				
-				// Make sure we close the handle to the open process.
-				CloseHandle(pHandle);
 			// Continue on to the next process.
 			} while (Process32Next(hProcessSnap, &pe32));
 		}

@@ -140,6 +140,7 @@ void FortunaFactory::PollInvariantSources(int pool_index)
 	    SYSTEM_INFO sys_info;
 	    TCHAR computer_name[MAX_COMPUTERNAME_LENGTH + 1];
 	    HW_PROFILE_INFO hw_profile;
+		//DWORD win_ver;
 	    DWORD reg_quota[2];
 	    STARTUPINFO startup_info;
 	    MEMORYSTATUS mem_status;
@@ -179,6 +180,9 @@ void FortunaFactory::PollInvariantSources(int pool_index)
 
     // Hardware profile
     GetCurrentHwProfileA(&Sources.hw_profile);
+
+    // Windows version
+    //Sources.win_ver = GetVersion();
 
     // Registry quota
     GetSystemRegistryQuota(&Sources.reg_quota[0], &Sources.reg_quota[1]);

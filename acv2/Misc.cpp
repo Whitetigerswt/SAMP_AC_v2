@@ -17,7 +17,8 @@ namespace Misc
 		char mem[256];
 
 		// Unprotect the memory
-		VirtualProtect((void*)address, size, PAGE_EXECUTE_READWRITE, NULL);
+		DWORD oldProt;
+		VirtualProtect((void*)address, size, PAGE_EXECUTE_READWRITE, &oldProt);
 
 		// Copy the memory at the specified address to our buffer
 		memcpy((void*)mem, (void*)address, size);

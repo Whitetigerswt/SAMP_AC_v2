@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-#define AC_IMG_MD5_INFO "http://whitetigerswt.github.io/SAMP_AC_v2"
+#define AC_IMG_MD5_INFO "http://whitetigerswt.github.io/SAMP_AC_v2/gta3img.html"
 class Cmd5Info
 {
 public:

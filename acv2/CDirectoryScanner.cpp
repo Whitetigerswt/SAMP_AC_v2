@@ -82,12 +82,13 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 		// Create vars to hold data about each IMG entry.
 		char* filecontents = NULL;
 
-		CLog log = CLog("gta3.img.txt");
+		CLog log = CLog("gta32.img.txt");
+
+		g_mGta3ImgDefaults = Cmd5Info::GetIMGMD5s();
 		
 		// Loop through all IMG entrys.
 		for (auto& entry = img.begin(); entry != img.end(); ++entry)
 		{
-
 			// Get the file name
 			const char* filename = (*entry).GetFilename();
 
@@ -101,15 +102,18 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 			MD5 md5obj = MD5();
 			std::string md5 = md5obj.digestMemory((BYTE*)filecontents, (*entry).GetFilesize());
 
-			g_mGta3ImgDefaults = Cmd5Info::GetIMGMD5s();
-
+			// Make sure the filename has an entry in the files we're checking
 			if (g_mGta3ImgDefaults[filename].empty()) 
 			{
+				// Free memory!
+				free(filecontents);
 				continue;
 			}
 
+			// Compare the md5 calculated to the list of files we got from the "Internet"
 			if (md5.compare(g_mGta3ImgDefaults[filename]) != 0)
 			{
+				// Tell the server that the MD5 doesn't match on this file.
 				RakNet::BitStream bitStream;
 
 				bitStream.Write(filename);
@@ -118,6 +122,7 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 				Network::SendRPC(ON_IMG_FILE_MODIFIED, &bitStream);
 			}
 
+			// Free memory!
 			free(filecontents);
 		}
 	}

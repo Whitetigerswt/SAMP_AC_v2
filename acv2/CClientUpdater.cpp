@@ -23,39 +23,48 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 	// and the www.google.com is where to download the latest version
 	HINTERNET hNet = InternetOpenA("Mozilla/5.0", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
 	if (hNet == NULL)
+	{
 		return;
+	}
 
 	HINTERNET hNetFile = InternetOpenUrlA(hNet, UPDATE_URL, 0, 0, 0, 0);
 
 	if (hNetFile == NULL)
+	{
 		return;
+	}
 
 	// Prepare to read the result of the webpage into a buffer.
-	char szLatestVersion[256];
+	char szLatestVersion[256] = { 0 };
 	DWORD dwBytesRead = 0;
-	do {
+	do
+	{
 		InternetReadFile(hNetFile, (LPVOID)szLatestVersion, sizeof(szLatestVersion), &dwBytesRead);
 	} while (dwBytesRead > 0);
 
-	// Remove all cache, so we get the latest version.
-	DeleteUrlCacheEntry(szLatestVersion);
-
-	// We need to format our variables so we have the version by itself, and the download link by itself.
-	float version;
-	char* downloadLink = new char[256];
-	sscanf_s(szLatestVersion, "%f %s", &version, downloadLink);
-
-	// Convert the download link to an std::string, cause they're easier to deal with...
-	std::string szDownloadLink(downloadLink);
-
-	// No memory leaks!
-	delete downloadLink;
-
-	// Compare the version on the web page to our #define of CURRENT_VERSION.
-	if (version > CURRENT_VERSION)
+	// Make sure szLatestVersion isn't empty.
+	if (strlen(szLatestVersion) > 0)
 	{
-		// If it's greater than our define, we need to update.
-		UpdateClient(szDownloadLink, hMod);
+		// Remove all cache, so we get the latest version.
+		DeleteUrlCacheEntry(szLatestVersion);
+
+		// We need to format our variables so we have the version by itself, and the download link by itself.
+		float version = 0.0f;
+		char* downloadLink = new char[256];
+		sscanf_s(szLatestVersion, "%f %s", &version, downloadLink);
+
+		// Convert the download link to an std::string, cause they're easier to deal with...
+		std::string szDownloadLink(downloadLink);
+
+		// No memory leaks!
+		delete[] downloadLink;
+
+		// Compare the version on the web page to our #define of CURRENT_VERSION.
+		if (version > CURRENT_VERSION)
+		{
+			// If it's greater than our define, we need to update.
+			UpdateClient(szDownloadLink, hMod);
+		}
 	}
 }
 
@@ -89,7 +98,7 @@ void CClientUpdater::UpdateClient(std::string downloadLink, HMODULE hMod)
 	else
 	{
 		// Else an error occured and provide the link to the user so they can update manually.
-		sprintf_s(currentFile, sizeof(currentFile), "SAMP AC has failed at installing an update. You will need to update manually to keep using this mod.\n\nYou can download the latest version here: %s", downloadLink);
+		sprintf_s(currentFile, sizeof(currentFile), "SAMP AC has failed at installing an update. You will need to update manually to keep using this mod.\n\nYou can download the latest version here: %s", downloadLink.c_str());
 		MessageBoxA(NULL, currentFile, "An error occured while updating", MB_OK | MB_ICONEXCLAMATION);
 	}
 }

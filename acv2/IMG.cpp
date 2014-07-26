@@ -189,7 +189,7 @@ bool IMG::OpenArchive(const char* path)
 
 					if (fread(Filenames, FilenamesSize, 1, this->IMG_Handle) != 1)
 					{
-						delete Filenames;
+						delete[] Filenames;
 						return false;
 					}
 
@@ -208,7 +208,7 @@ bool IMG::OpenArchive(const char* path)
 						CurrentFilename += i + 1;
 					}
 
-					delete Filenames;
+					delete[] Filenames;
 
 					return true;
 				}
@@ -364,7 +364,7 @@ bool IMG::RebuildArchive()
 			entry->Position = (DWORD)(_ftelli64(newIMGhandle) / IMG_BLOCK_SIZE);
 			fwrite(loadedFile, 1, size, newIMGhandle);
 
-			delete loadedFile;
+			delete[] loadedFile;
 		}
 
 		this->WriteListOfEntries(newIMGhandle);
@@ -373,11 +373,12 @@ bool IMG::RebuildArchive()
 		fclose(this->IMG_Handle);
 
 		remove(this->IMG_fullPath);
-		rename(temporaryImgFilepath, this->IMG_fullPath);
+		if (rename(temporaryImgFilepath, this->IMG_fullPath))
+		{
+			this->bHasArchiveBeenModifiedAndNotRebuiltYet = false;
 
-		this->bHasArchiveBeenModifiedAndNotRebuiltYet = false;
-
-		return (this->IMG_Handle = this->IMG_Handle = fopen(this->IMG_fullPath, "rb+")) != 0;
+			return (this->IMG_Handle = this->IMG_Handle = fopen(this->IMG_fullPath, "rb+")) != 0;
+		}
 	}
 
 	return false;
@@ -555,6 +556,8 @@ void IMG::DoRelatedFilesLoop(tRelatedFilesContainer& RelatedFiles, tIMGEntryIter
 	unsigned __int64 iPositionOfNewFiles = PositionOfNewFiles;
 
 	char* pNewFiles = new char[SizeOfAllReplacedFiles];
+	pNewFiles = "";
+
 	char* iNewFiles = pNewFiles;
 
 	for (tIMGEntryIterator& entry : RelatedFiles)
@@ -566,7 +569,7 @@ void IMG::DoRelatedFilesLoop(tRelatedFilesContainer& RelatedFiles, tIMGEntryIter
 
 			iNewFiles += allignedSize;
 
-			if (archiveVersion == IMG_VERSION_3_UNENCRYPTED || archiveVersion == IMG_VERSION_3_UNENCRYPTED)
+			if (archiveVersion == IMG_VERSION_3_UNENCRYPTED)
 				entry->SizeInBytes = size;
 			else
 			{
@@ -613,7 +616,7 @@ void IMG::SetArchiveFormat(eIMG_version version)
 
 	this->bUseManualWritingOfEntries = false;
 
-	if (this->archiveVersion == IMG_VERSION_3_ENCRYPTED || this->archiveVersion == IMG_VERSION_3_UNENCRYPTED)
+	if (this->archiveVersion == IMG_VERSION_3_ENCRYPTED)
 		this->IMG_ENTRY_MAX_FILE_NAME_LENGTH = _countof(((IMG_Entry*)0)->Name) - 1;
 	else
 		this->IMG_ENTRY_MAX_FILE_NAME_LENGTH = _countof(((IMG_version2_tableItem*)0)->Name) - 1;
@@ -625,14 +628,14 @@ bool IMG::RenameFile(tIMGEntryIterator fileInfo, const char* NewName)
 	if (!this->IsFileNameValid(NewName))
 		return false;
 
-	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED || archiveVersion == IMG_VERSION_3_UNENCRYPTED)
+	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED)
 		this->FilenamesSize -= strlen(fileInfo->Name) + 1;
 
 	strcpy(fileInfo->Name, NewName);
 
 	fileInfo->UpdateFileNameHash();
 
-	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED || archiveVersion == IMG_VERSION_3_UNENCRYPTED)
+	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED)
 		this->FilenamesSize += strlen(fileInfo->Name) + 1;
 
 	this->DoModifiedArchiveActions();
@@ -643,7 +646,7 @@ bool IMG::RenameFile(tIMGEntryIterator fileInfo, const char* NewName)
 // Remove a file
 IMG::tIMGEntryConstIterator IMG::RemoveFile(tIMGEntryConstIterator _Where)
 {
-	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED || archiveVersion == IMG_VERSION_3_UNENCRYPTED)
+	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED)
 		FilenamesSize -= strlen(_Where->Name) + 1;
 
 	tIMGEntryConstIterator result = this->ListOfEntries.erase(_Where);
@@ -659,7 +662,7 @@ IMG::tIMGEntryConstIterator IMG::RemoveFiles(
 	tIMGEntryConstIterator _Last_arg
 	)
 {
-	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED || archiveVersion == IMG_VERSION_3_UNENCRYPTED)
+	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED)
 	{
 		for (tIMGEntryConstIterator it = _First_arg; it != _Last_arg; it++)
 			FilenamesSize -= strlen(it->Name) + 1;
@@ -713,12 +716,15 @@ bool IMG::IsFileNameValid(const char* name)
 errno_t IMG::GetFilenameForImportedFile(const char* lpFileName, char* lpFilePart, DWORD nBufferLength)
 {
 	char FullPath[_MAX_PATH];
-	char* FileName;
+	char* FileName = "";
 
-	GetFullPathNameA(lpFileName, _countof(FullPath), FullPath, &FileName);
+	int len = GetFullPathNameA(lpFileName, _countof(FullPath), FullPath, &FileName);
 
-	size_t ThisSize = nBufferLength > IMG_ENTRY_MAX_FILE_NAME_LENGTH + 1 ? IMG_ENTRY_MAX_FILE_NAME_LENGTH + 1 : nBufferLength;
-	return strncpy_s(lpFilePart, ThisSize, FileName, _TRUNCATE);
+	if (len != 0 && len != _countof(FullPath))
+	{
+		size_t ThisSize = nBufferLength > IMG_ENTRY_MAX_FILE_NAME_LENGTH + 1 ? IMG_ENTRY_MAX_FILE_NAME_LENGTH + 1 : nBufferLength;
+		return strncpy_s(lpFilePart, ThisSize, FileName, _TRUNCATE);
+	}
 }
 
 // Access file by name
@@ -1027,7 +1033,7 @@ void IMG::WriteListOfEntriesVersion1And2(FILE* file)
 	);
 
 	fwrite(pBuffer, sizeof(IMG_version2_tableItem), this->ListOfEntries.size(), file);
-	delete pBuffer;
+	delete[] pBuffer;
 }
 
 // Does action when the list of entries needs to be saved
@@ -1086,7 +1092,7 @@ void IMG::WriteListOfEntries(FILE* imgHandle)
 
 		this->TestIfPositionIsValid(imgHandle);
 	}
-	else if (archiveVersion == IMG_VERSION_3_UNENCRYPTED || archiveVersion == IMG_VERSION_3_UNENCRYPTED)
+	else if (archiveVersion == IMG_VERSION_3_UNENCRYPTED)
 	{
 		fseek(imgHandle, 0, SEEK_SET);
 
@@ -1124,7 +1130,7 @@ void IMG::WriteListOfEntries(FILE* imgHandle)
 
 		fwrite(pBeginning, BeginningSizeAlligned, 1, imgHandle);
 
-		delete pBeginning;
+		delete[] pBeginning;
 	}
 }
 
