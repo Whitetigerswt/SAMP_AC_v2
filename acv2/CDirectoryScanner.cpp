@@ -1,4 +1,5 @@
 #include "CDirectoryScanner.h"
+#include <boost/network/protocol/http/client.hpp>
 #include "CLog.h"
 #include "IMG.h"
 #include <md5.h>
@@ -23,38 +24,6 @@ CDirectoryScanner::~CDirectoryScanner()
 
 void CDirectoryScanner::Scan(std::string path)
 {
-
-	// Create a new MD5 object, cause we need to calculate all md5's of the files
-	MD5 md5obj = MD5();
-
-	// Loop through all folders and files recursively.
-	for (boost::filesystem::recursive_directory_iterator end, dir(path); dir != end; ++dir) 
-	{
-		// Turn it into a path object, because it's easier to deal with.
-		boost::filesystem::path pFile = (*dir).path();
-		
-		// We can't calculate the MD5 of a directory...
-		if (boost::filesystem::is_directory(pFile) || !pFile.has_extension())
-		{
-			continue;
-		}
-		else if (!pFile.filename().generic_string().compare("gta3.img") == 0)
-		{
-			// It's a file we can calculate the MD5 of.
-			std::string md5(MD5_Specific_File(pFile.generic_string()));
-
-			// We have an md5 of the file, now let's insert everything we know into our map.
-			g_mFiles.insert(std::pair<std::string, std::string>(pFile.generic_string(), md5));
-
-			RakNet::BitStream bitStream;
-
-			// Remove main GTA SA path so we only pass a relative one to the server, simplifying server results and saving bandwidth.
-			bitStream.Write(pFile.generic_string().substr(Misc::GetGTADirectory().length() + 1).c_str());
-			bitStream.Write(md5.c_str());
-
-			Network::SendRPC(ON_FILE_CALCULATED, &bitStream);
-		}
-	}
 	// todo change "models/gta3.img" to that address that litteraly reads models/gta3.img in gta_sa.exe memory
 
 	path.append("\\models\\gta3.img");
@@ -63,10 +32,22 @@ void CDirectoryScanner::Scan(std::string path)
 
 std::string CDirectoryScanner::MD5_Specific_File(std::string path)
 {
+	// Create an MD5 object so we can calculate MD5's
 	MD5 md5obj = MD5();
+
+	// Get the GTA directory and store it in a string.
+	std::string gtadir = Misc::GetGTADirectory();
+
+	// Replace the $(GtaDirectory) macro with the actual GTA directory.
+	boost::replace_first(path, "$(GtaDirectory)", gtadir);
+
+	// Calculate the MD5 of the file and store it in a C-style char value.
 	char* CStyleMD5 = md5obj.digestFile((char*)path.c_str());
+
+	// Convert the result to an std::string
 	std::string md5(CStyleMD5);
 
+	// And return it.
 	return md5;
 }
 
@@ -82,9 +63,7 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 		// Create vars to hold data about each IMG entry.
 		char* filecontents = NULL;
 
-		CLog log = CLog("gta32.img.txt");
-
-		g_mGta3ImgDefaults = Cmd5Info::GetIMGMD5s();
+		std::map<std::string, std::string> Gta3ImgDefaults = Cmd5Info::GetIMGMD5s();
 		
 		// Loop through all IMG entrys.
 		for (auto& entry = img.begin(); entry != img.end(); ++entry)
@@ -103,7 +82,7 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 			std::string md5 = md5obj.digestMemory((BYTE*)filecontents, (*entry).GetFilesize());
 
 			// Make sure the filename has an entry in the files we're checking
-			if (g_mGta3ImgDefaults[filename].empty()) 
+			if (Gta3ImgDefaults[filename].empty())
 			{
 				// Free memory!
 				free(filecontents);
@@ -111,7 +90,7 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 			}
 
 			// Compare the md5 calculated to the list of files we got from the "Internet"
-			if (md5.compare(g_mGta3ImgDefaults[filename]) != 0)
+			if (md5.compare(Gta3ImgDefaults[filename]) != 0)
 			{
 				// Tell the server that the MD5 doesn't match on this file.
 				RakNet::BitStream bitStream;

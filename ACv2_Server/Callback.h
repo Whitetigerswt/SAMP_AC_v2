@@ -12,12 +12,22 @@ struct PAWNArray
 
 namespace Callback
 {
-	// push arguments in reversed order
+	// PURPOSE: Execute a PAWN callback.
+	// REQUIRES: A public function name, and whatever arguments.
+	// PROMISE: That public function will be called in all PAWN scripts.
+	// NOTES: Arguments pushed in reverse order.
 	cell Execute(const char* szFunction, const char* szFormat, ...);
 
+	// PURPOSE: Get a list of loaded AMX scripts (all gamemodes and filterscripts)
+	// REQUIRES: an std::list to hold it all.
 	std::list<AMX*>& GetAMXList();
 
+	// PURPOSE: Callback for when a player closes their AC by IP.
+	// REQUIRES: Nothing, this function should not be called manually.
 	void OnACClosed(std::string ip);
+
+	// PURPOSE: Callback for when a player closes their AC by playerid.
+	// REQUIRES: Nothing, this function should not be called manually.
 	void OnACClosed(unsigned int playerid);
 
 }

@@ -4,7 +4,9 @@
 #include <sstream>
 #include <iostream>
 
-#include "CLog.h"
+#ifndef WIN32
+#define MAX_PATH 260
+#endif
 
 using namespace boost::network;
 
@@ -47,7 +49,6 @@ std::vector<std::string> Cmd5Info::GetBadExecutableFiles()
 	// Create a vector to hold our results.
 	std::vector<std::string> exeBadFiles;
 
-
 	// Get website body holding our MD5 info for all bad executable files.
 	// This will output something like "md5\nmd5\nmd5"
 	std::string html = GetWebsiteText(AC_EXECUTABLE_MD5_INFO);
@@ -72,12 +73,12 @@ std::vector<std::string> Cmd5Info::GetBadExecutableFiles()
 	return exeBadFiles;
 }
 
-std::map<std::string, std::vector<std::string> > Cmd5Info::GetGtaDirectoryFiles()
+std::vector<std::string> Cmd5Info::GetGtaDirectoryFilesMd5()
 {
-	// Create an std::map
-	std::map<std::string, std::vector<std::string> > gtaDirFiles;
+	// Create a vector to hold our results.
+	std::vector<std::string> dirMd5Info;
 
-	// Get website body holding our MD5 info for all bad executable files.
+	// Get website body holding our MD5 info for all bad md5's
 	// This will output something like "md5\nmd5\nmd5"
 	std::string html = GetWebsiteText(AC_DIR_MD5_INFO);
 
@@ -87,28 +88,47 @@ std::map<std::string, std::vector<std::string> > Cmd5Info::GetGtaDirectoryFiles(
 	// one string becomes "md5"
 	boost::split(split_html, html, boost::is_any_of("\n"));
 
-	// Loop through every instance of "filename,md5"
+	// Loop through every instance of "md5"
 	for (std::vector<std::string>::iterator it = split_html.begin(); it != split_html.end(); ++it)
 	{
-		std::string szLine((*it));
-		std::vector<std::string> md5_list;
-
-		std::size_t i = szLine.find(",");
-
-		std::string filename = szLine.substr(0, 1);
-
-		boost::split(md5_list, filename, boost::is_any_of(","));
-
-		std::vector<std::string> final_list;
-		for (std::vector<std::string>::iterator iterator = md5_list.begin(); iterator != md5_list.end(); ++iterator)
+		// insert it into our std::vector the results.
+		if (!it->empty())
 		{
-			std::string szMD5((*iterator));
-			final_list.push_back(szMD5);
+			dirMd5Info.push_back((*it));
 		}
-
-		gtaDirFiles.insert(std::pair<std::string, std::vector<std::string> >(filename, final_list));
 	}
-	return gtaDirFiles;
+
+	// Return the vector of all md5's
+	return dirMd5Info;
+}
+
+std::vector<std::string> Cmd5Info::GetGtaDirectoryFilesNames()
+{
+	// Create a vector to hold our results.
+	std::vector<std::string> dirNameInfo;
+
+	// Get website body holding our MD5 info for all bad names
+	// This will output something like "md5\nmd5\nmd5"
+	std::string html = GetWebsiteText(AC_DIR_NAME_INFO);
+
+	std::vector<std::string> split_html;
+
+	// split the string into an std::vector by every "\n" in the string
+	// one string becomes "md5"
+	boost::split(split_html, html, boost::is_any_of("\n"));
+
+	// Loop through every instance of "md5"
+	for (std::vector<std::string>::iterator it = split_html.begin(); it != split_html.end(); ++it)
+	{
+		// insert it into our std::vector the results.
+		if (!it->empty())
+		{
+			dirNameInfo.push_back((*it));
+		}
+	}
+
+	// Return the vector of all md5's
+	return dirNameInfo;
 }
 
 std::string Cmd5Info::GetWebsiteText(std::string url)

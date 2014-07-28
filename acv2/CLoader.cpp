@@ -35,9 +35,6 @@ void CLoader::Initialize(HMODULE hMod)
 		Sleep(5);
 	}
 
-	Cmd5Info::GetBadExecutableFiles();
-	Cmd5Info::GetGtaDirectoryFiles();
-
 	// Make sure we're using the latest version of this mod.
 	CClientUpdater::CheckForUpdate(hMod);
 

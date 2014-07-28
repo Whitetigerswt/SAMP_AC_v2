@@ -13,9 +13,6 @@ public:
 	std::string MD5_Specific_File(std::string path);
 private:
 	void img_scan(std::string path_to_gta3_img);
-
-	std::map<std::string, std::string> g_mFiles;
-	std::map<std::string, std::string> g_mGta3ImgDefaults;
 };
 
 

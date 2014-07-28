@@ -26,6 +26,10 @@ public:
 	// REQUIRES: The client is using AC.
 	void OnImgFileModified(char* filename, char* md5);
 
+	// PURPOSE: Send an RPC to client to md5 files.
+	// REQUIRES: The client is using AC.
+	void CheckGTAFiles(int playerid);
+
 	// PURPOSE: Toggles whether the player can turn AC on or off
 	// REQUIRES: NULL
 	static void ToggleCanEnableAC(int playerid, bool toggle);
@@ -38,6 +42,19 @@ public:
 
 private:
 	CClientSocketInfo* m_pSockInfo;
+
+	// PURPOSE: Remember the player's playerID.
 	int ID;
-	static std::vector<int> Admins;
+
+	// PURPOSE: a static list of all the players allowed to use the /actoggle command, and other AC options
+	static std::vector<int> m_Admins;
+
+	// PURPOSE: Hold all the file names that we scan in the gta directory everytime a player connects.
+	static std::vector<std::string> m_FileNames;
+
+	// PURPOSE: A list of md5's of files that should be found in the player's GTA directory
+	static std::vector<std::string> m_MD5s;
+
+	// PURPOSE: A list of processes that are not allowed to be used while the AC is enabled.
+	static std::vector<std::string> m_ProcessMD5s;
 };

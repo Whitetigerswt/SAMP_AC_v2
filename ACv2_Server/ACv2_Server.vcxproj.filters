@@ -40,6 +40,9 @@
     <Filter Include="Source Files\Shared\RakNet\cat">
       <UniqueIdentifier>{39b0037e-5788-4192-92d1-6203a26011f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shared\MD5 Info">
+      <UniqueIdentifier>{7fae54c2-50db-4ff3-a46b-2ad8076031ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp">
@@ -404,6 +407,9 @@
     </ClCompile>
     <ClCompile Include="CPlayer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp">
+      <Filter>Source Files\Shared\MD5 Info</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -961,6 +967,9 @@
     </ClInclude>
     <ClInclude Include="CPlayer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h">
+      <Filter>Source Files\Shared\MD5 Info</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
