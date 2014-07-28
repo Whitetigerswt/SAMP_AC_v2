@@ -17,6 +17,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_MD5_CALCULATED, OnMD5Calculated);
 	CRPC::Add(ON_FILE_CALCULATED, OnFileCalculated);
 	CRPC::Add(ON_IMG_FILE_MODIFIED, OnImgFileModified);
+	CRPC::Add(ON_MACRO_DETECTED, OnMacroDetected);
 }
 
 
@@ -79,5 +80,15 @@ RPC_CALLBACK CRPCCallback::OnImgFileModified(RakNet::BitStream &bsData, int iExt
 	if (bsData.Read((char*)path) && bsData.Read((char*)md5))
 	{
 		Network::GetPlayerFromPlayerid(iExtra)->OnImgFileModified((char*)path, (char*)md5);
+	}
+}
+
+RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra)
+{
+	int vKey;
+
+	if (bsData.Read(vKey))
+	{
+		Network::GetPlayerFromPlayerid(iExtra)->OnMacroDetected(vKey);
 	}
 }

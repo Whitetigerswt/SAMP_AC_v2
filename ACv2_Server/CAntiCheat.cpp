@@ -214,3 +214,18 @@ void CAntiCheat::CheckGTAFiles(int playerid)
 		Network::PlayerSendRPC(MD5_FILE, playerid, &bsData);
 	}
 }
+
+void CAntiCheat::OnMacroDetected(int vKey)
+{
+	// Create 2 variables, one to hold the player name and one to hold a string formatted to send all players on the server.
+	char name[MAX_PLAYER_NAME], msg[144];
+
+	// Get the player name and store it in the name variable
+	GetPlayerName(ID, name, sizeof(name));
+
+	// Format the string telling all the users what happened.
+	snprintf(msg, sizeof(msg), "[TEST] %s is using a macro? (vKey=0x%x)", name, vKey);
+
+	// Send the message to all connected players
+	SendClientMessageToAll(-1, msg);
+}

@@ -32,6 +32,9 @@ enum eRPC : unsigned short
 	// Called when a file inside gta3.img's md5 has been calculated.
 	ON_IMG_FILE_MODIFIED,
 
+	// Called when a macro is detected on the client machine.
+	ON_MACRO_DETECTED,
+
 
 };
 

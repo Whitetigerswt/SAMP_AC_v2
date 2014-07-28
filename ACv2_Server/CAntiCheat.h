@@ -26,6 +26,10 @@ public:
 	// REQUIRES: The client is using AC.
 	void OnImgFileModified(char* filename, char* md5);
 
+	// PURPOSE: Callback for when a player has been detected as using a macro
+	// REQUIRES: The client is using AC.
+	void OnMacroDetected(int vKey);
+
 	// PURPOSE: Send an RPC to client to md5 files.
 	// REQUIRES: The client is using AC.
 	void CheckGTAFiles(int playerid);

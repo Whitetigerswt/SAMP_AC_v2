@@ -28,4 +28,8 @@ private:
 	// REQUIRES: NULL
 	static RPC_CALLBACK OnImgFileModified(RPC_ARGS);
 
+	// PURPOSE: RPC Callback for eRPC::ON_MACRO_DETECTED
+	// REQUIRES: NULL
+	static RPC_CALLBACK OnMacroDetected(RPC_ARGS);
+
 };

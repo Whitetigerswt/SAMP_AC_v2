@@ -1,5 +1,10 @@
 #include "CMessageProxy.h"
 #include "../CDirectX.h"
+#include <Windows.h>
+#include "../CLog.h"
+#include <RakNet\BitStream.h>
+#include "../Network/Network.h"
+#include "../../Shared/Network/CRPC.h"
 
 HWND CMessageProxy::m_hWindowOrig;
 WNDPROC CMessageProxy::m_wProcOrig;
@@ -50,10 +55,26 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
 		{
+			if (GetAsyncKeyState(vKey) & 0x8000)
+			{
+				return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		case WM_HOTKEY:
+		{
+			return 0;
+		}
+		default:
+		{
 
 		}
 	}
 	return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
+
 }
 
 BOOL CMessageProxy::OnSetCursorPos(int iX, int iY)
