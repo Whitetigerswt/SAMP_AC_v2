@@ -4,6 +4,7 @@
 #include "GDK/a_players.h"
 #include "CAntiCheat.h"
 #include "CPlayer.h"
+#include "../Shared/Network/CRPC.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,6 +94,21 @@ namespace Callback
 		delete[] pReturnValues;
 
 		return iReturnValue;
+	}
+	
+	void SAMPGDK_CALL CheckPlayersMemory(int timerid, void *params) 
+	{
+		int playerid = (int)params;
+		if (IsPlayerConnected(playerid) && Network::IsPlayerConnectedToAC(playerid))
+		{
+			RakNet::BitStream bsData;
+			bsData.Write(0xC8C418);
+			bsData.Write(0x460);
+
+			Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData);
+
+			SetTimer(60000, 0, CheckPlayersMemory, (void*)playerid);
+		}
 	}
 
 	void OnACClosed(unsigned int playerid)
@@ -186,6 +202,9 @@ namespace Callback
 
 		// Send the client the files we need them to return md5's to.
 		ac->CheckGTAFiles(playerid);
+
+		// Check memory pretty frequently in a new timer.
+		SetTimer(1, 0, CheckPlayersMemory, (void*)playerid);
 
 		return true;
 	}

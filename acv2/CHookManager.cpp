@@ -1,4 +1,4 @@
-#include "CCleoManager.h"
+#include "CHookManager.h"
 #include "CPatch.h"
 #include "Addresses.h"
 #include "CMem.h"
@@ -6,7 +6,7 @@
 
 static DWORD LoadScriptsJmpBack = 0x05DE687;
 
-void CCleoManager::Load()
+void CHookManager::Load()
 {
 	DWORD dwOldProt;
 
@@ -23,9 +23,13 @@ void CCleoManager::Load()
 
 	VirtualProtect((void*)FUNC_Scripts_Init2, 5, PAGE_EXECUTE_READWRITE, &dwOldProt);
 	CPatch::RedirectCall(FUNC_Scripts_Init2, LoadScripts);
+
+	// Prevent Infinite ammo patch
+	VirtualProtect(VAR_INF_AMMO, 2, PAGE_EXECUTE_READWRITE, &dwOldProt);
+	memcpy(VAR_INF_AMMO, "\x90\x90", 2);
 }
 
-HOOK CCleoManager::LoadScripts()
+HOOK CHookManager::LoadScripts()
 {
 	__asm
 	{

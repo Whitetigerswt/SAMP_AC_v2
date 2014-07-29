@@ -205,7 +205,7 @@
     <ClCompile Include="..\Shared\RakNet\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp" />
     <ClCompile Include="CCheats.cpp" />
-    <ClCompile Include="CCleoManager.cpp" />
+    <ClCompile Include="CHookManager.cpp" />
     <ClCompile Include="CClientUpdater.cpp" />
     <ClCompile Include="CDirectoryScanner.cpp" />
     <ClCompile Include="CDirectX.cpp" />
@@ -519,7 +519,7 @@
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h" />
     <ClInclude Include="Addresses.h" />
     <ClInclude Include="CCheats.h" />
-    <ClInclude Include="CCleoManager.h" />
+    <ClInclude Include="CHookManager.h" />
     <ClInclude Include="CClientUpdater.h" />
     <ClInclude Include="CDirectoryScanner.h" />
     <ClInclude Include="CDirectX.h" />

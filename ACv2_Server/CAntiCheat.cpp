@@ -81,14 +81,24 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 
 void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 {
-	Utility::Printf("OnMD5Calculated - 0x%x - %d - %s", address, size, md5);
+	if (address == 0xC8C418)
+	{
+		if (strcmp(md5, "af82edadc0d8d2f6488e8dc615c34627") != 0)
+		{
+			char msg[144], name[MAX_PLAYER_NAME];
+
+			GetPlayerName(ID, name, sizeof(name));
+
+			snprintf(msg, sizeof(msg), "[TEST] %s has modified weapon.dat info", name);
+
+			SendClientMessageToAll(-1, msg);
+		}
+	}
 	Callback::Execute("OnMD5Calculated", "sii", md5, size, address);
 }
 
 void CAntiCheat::OnFileCalculated(char* path, char* md5)
-{
-	Utility::Printf("OnFileCalculated - %s - %s", path, md5);
-	
+{	
 	// Create a new variable that can contain a true/false value so we know if a file matches N MD5 from our list
 	bool found = false;
 

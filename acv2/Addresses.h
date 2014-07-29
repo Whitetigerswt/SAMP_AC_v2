@@ -7,3 +7,4 @@
 #define FUNC_Init_SCM2						(void*)0x5BA340
 #define FUNC_Scripts_Init1					0x53BDE1
 #define FUNC_Scripts_Init2					0x5BA345
+#define VAR_INF_AMMO						(void*)0x7428A6

@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include <Boost\thread.hpp>
 
-#include "CCleoManager.h"
+#include "CHookManager.h"
 #include "CLoader.h"
 
 BOOL APIENTRY DllMain( HMODULE hModule,
@@ -16,7 +16,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 			if (!CLoader::IsLoaded())
 			{
 				// Load the CLEO hooks so CLEO will not load scripts properly.
-				CCleoManager::Load();
+				CHookManager::Load();
 				
 				// Do the main loading procedure in a new thread.
 				boost::thread theThread(&CLoader::Initialize, hModule);

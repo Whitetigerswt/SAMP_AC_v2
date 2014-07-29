@@ -3,7 +3,7 @@
 
 #define HOOK __declspec(naked) void
 
-class CCleoManager
+class CHookManager
 {
 public:
 	static void Load();

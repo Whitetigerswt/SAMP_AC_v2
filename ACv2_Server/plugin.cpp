@@ -52,13 +52,14 @@ cell AMX_NATIVE_CALL CanPlayerEnableACProc(AMX* pAmx, cell* pParams)
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
-	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
+	return sampgdk::Supports() | SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
 	// Handle network related processing.
 	Network::Process();
+	return sampgdk::ProcessTick();
 }
 
 PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
