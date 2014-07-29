@@ -7,6 +7,7 @@
 #include "CClientUpdater.h"
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
+#include "CCleoManager.h"
 
 #include <map>
 #include <Shellapi.h>
@@ -32,6 +33,7 @@ void CLoader::Initialize(HMODULE hMod)
 	// Wait until the game is loaded.
 	while (ADDRESS_LOADED < 6)
 	{
+		CCleoManager::Load();
 		Sleep(5);
 	}
 

@@ -444,6 +444,12 @@
     <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp">
       <Filter>Source Files\Shared\MD5 Info</Filter>
     </ClCompile>
+    <ClCompile Include="CCleoManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CMem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h">
@@ -1579,6 +1585,15 @@
     </ClInclude>
     <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h">
       <Filter>Source Files\Shared\MD5 Info</Filter>
+    </ClInclude>
+    <ClInclude Include="CCleoManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPatch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CMem.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
