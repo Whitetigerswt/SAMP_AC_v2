@@ -8,6 +8,7 @@
 #include "../Shared/Network/CRPC.h"
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
+#include "Addresses.h"
 
 #include <Boost\filesystem.hpp>
 
@@ -26,7 +27,12 @@ void CDirectoryScanner::Scan(std::string path)
 {
 	// todo change "models/gta3.img" to that address that litteraly reads models/gta3.img in gta_sa.exe memory
 
-	path.append("\\models\\gta3.img");
+	path.append("\\");
+	char* gta3img = new char[16];
+	memcpy(gta3img, VAR_GTA3_IMG_PATH, 15);
+	path.append(gta3img);
+	delete[] gta3img;
+
 	img_scan(path);
 }
 
@@ -60,6 +66,8 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 	// Make sure it was opened successfully.
 	if (img.IsArchiveOpened())
 	{
+		CLog log = CLog("hello.txt");
+		log.Write("Successfully opened");
 		// Create vars to hold data about each IMG entry.
 		char* filecontents = NULL;
 

@@ -27,6 +27,62 @@ void CHookManager::Load()
 	// Prevent Infinite ammo patch
 	VirtualProtect(VAR_INF_AMMO, 2, PAGE_EXECUTE_READWRITE, &dwOldProt);
 	memcpy(VAR_INF_AMMO, "\x90\x90", 2);
+
+	// Check data file integrity.
+	VerifyFilePaths();
+}
+
+void CHookManager::VerifyFilePaths()
+{
+	// These addresses tell gta_sa where to find the data files
+	// We need to verify they're the same so the game doesn't try to cheat and load the wrong files ;)
+
+	CheckMemoryAddr(VAR_GTA3_IMG_PATH, 15, "MODELS\\GTA3.IMG");
+	CheckMemoryAddr(VAR_ANIM_IMG_PATH, 12, "ANIM\\PED.IFP");
+	CheckMemoryAddr(VAR_WEAPON_DAT_PATH, 15, "DATA\\WEAPON.DAT");
+	CheckMemoryAddr(VAR_CARMODS_DAT_PATH, 16, "DATA\\CARMODS.DAT");
+	CheckMemoryAddr(VAR_ANIMGRP_DAT_PATH, 16, "DATA\\ANIMGRP.DAT");
+	CheckMemoryAddr(VAR_MELEE_DAT_PATH, 14, "DATA\\melee.dat");
+	CheckMemoryAddr(VAR_CLOTHES_DAT_PATH, 16, "DATA\\CLOTHES.DAT");
+	CheckMemoryAddr(VAR_OBJECT_DAT_PATH, 15, "DATA\\OBJECT.DAT");
+	CheckMemoryAddr(VAR_DEFAULT_DAT_PATH, 16, "DATA\\DEFAULT.DAT");
+	CheckMemoryAddr(VAR_SURFACE_DAT_PATH, 16, "data\\surface.dat");
+	CheckMemoryAddr(VAR_GTA_DAT_PATH, 12, "DATA\\GTA.DAT");
+	CheckMemoryAddr(VAR_WATER_DAT_PATH, 14, "DATA\\water.dat");
+	CheckMemoryAddr(VAR_WATER1_DAT_PATH, 15, "DATA\\water1.dat");
+	CheckMemoryAddr(VAR_FURNITUR_DAT_PATH, 17, "data\\furnitur.dat");
+	CheckMemoryAddr(VAR_PROCOBJ_DAT_PATH, 16, "data\\procobj.dat");
+	CheckMemoryAddr(VAR_HANDLING_CFG_PATH, 12, "HANDLING.CFG");
+	CheckMemoryAddr(VAR_PEDSTATS_DAT_PATH, 17, "DATA\\PEDSTATS.DAT");
+	CheckMemoryAddr(VAR_FONTS_TXD_PATH, 16, "MODELS\\FONTS.TXD");
+	CheckMemoryAddr(VAR_PEDS_COLL_PATH, 20, "models\\coll\\peds.col");
+	CheckMemoryAddr(VAR_STATDISP_PATH, 17, "DATA\\STATDISP.DAT");
+	CheckMemoryAddr(VAR_ARSTATS_DAT_PATH, 17, "DATA\\AR_STATS.DAT");
+	CheckMemoryAddr(VAR_SURFINFO_DAT_PATH, 17, "data\\surfinfo.dat");
+}
+
+void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
+{
+	DWORD dwOldProt;
+
+	// Unprotect memory
+	VirtualProtect(address, size, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+	// Create new variable to hold the string that we're going to read from the address.
+	char* memory = new char[size];
+
+	// Get the string at the address.
+	memcpy(memory, address, size);
+
+	// Compare the string with what it's suppose to match
+	if (strcmp(memory, tomatch) != 0)
+	{
+		// And if it doesn't match, copy what it's suppose to match into the address.
+		memcpy(address, tomatch, size);
+	}
+	
+	// Free memory.
+	delete[] memory;
 }
 
 HOOK CHookManager::LoadScripts()

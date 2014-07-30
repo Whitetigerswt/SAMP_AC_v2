@@ -8,7 +8,6 @@
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "CHookManager.h"
-//#include "MD5.h"
 
 #include <map>
 #include <Shellapi.h>
@@ -34,7 +33,10 @@ void CLoader::Initialize(HMODULE hMod)
 	// Wait until the game is loaded.
 	while (ADDRESS_LOADED < 6)
 	{
+		// Stop CLEO from loading, and other memory hooks.
 		CHookManager::Load();
+
+		// Wait until the game is loaded in an infinite loop.
 		Sleep(5);
 	}
 
@@ -47,6 +49,9 @@ void CLoader::Initialize(HMODULE hMod)
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 1);
 	Network::Connect();
+
+	// Setup memory one more time.
+	CHookManager::Load();
 
 	while (true)
 	{
