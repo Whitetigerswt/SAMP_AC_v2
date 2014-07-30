@@ -30,4 +30,8 @@ namespace Callback
 	// REQUIRES: Nothing, this function should not be called manually.
 	void OnACClosed(unsigned int playerid);
 
+	// PURPOSE: Callback to kick a player on a delay (So they will see the SendClientMessage's before they get kicked)
+	// REQUIRES: Nothing.
+	void KickPlayer(int timerid, void* params);
+
 }

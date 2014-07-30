@@ -47,7 +47,7 @@ void CLoader::Initialize(HMODULE hMod)
 	CheckElevation();
 
 	// Connect to AC Network.
-	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 1);
+	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 500);
 	Network::Connect();
 
 	// Setup memory one more time.

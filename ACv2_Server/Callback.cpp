@@ -95,6 +95,11 @@ namespace Callback
 
 		return iReturnValue;
 	}
+
+	void SAMPGDK_CALL KickPlayer(int timerid, void *params)
+	{
+		Kick((int)params);
+	}
 	
 	void SAMPGDK_CALL CheckPlayersMemory(int timerid, void *params) 
 	{
@@ -136,7 +141,7 @@ namespace Callback
 			SendClientMessageToAll(-1, str);
 
 			// Kick the user from the server.
-			Kick(playerid);
+			SetTimer(3000, 0, Callback::KickPlayer, (void*)playerid);
 		}
 	}
 
@@ -200,7 +205,7 @@ namespace Callback
 			Utility::Printf("%s has been kicked from the server for not connecting with AC while AC is on.", name);
 
 			// Finally, kick the player.
-			Kick(playerid);
+			SetTimer(3000, 0, Callback::KickPlayer, (void*)playerid);
 		}
 
 		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
@@ -238,6 +243,10 @@ namespace Callback
 		// Check for an update to this plugin version.
 		Utility::CheckForUpdate();
 
+		// Initialize raknet server to be connected to by the AC.
+
+		Network::Initialize("", GetServerVarAsInt("port") - 500, GetServerVarAsInt("maxplayers"));
+
 		return true;
 	}
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid, const char* params)
@@ -271,7 +280,7 @@ namespace Callback
 					if (IsPlayerConnected(i) && !Network::IsPlayerConnectedToAC(i))
 					{
 						// Kick them from the server!
-						Kick(i);
+						SetTimer(3000, 0, Callback::KickPlayer, (void*)i);
 					}
 				}
 			}

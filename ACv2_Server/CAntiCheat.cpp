@@ -74,9 +74,10 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 			Utility::Printf("%s has been kicked from the server for using illegal file: \"%s\"", name, processpath);
 
 			// Kick the player from the server.
-			Kick(ID);
+			SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 		}
 	}
+	Callback::Execute("OnFileExecuted", "iss", ID, processpath, md5);
 }
 
 void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
@@ -155,7 +156,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 		Utility::Printf("%s has been kicked for modifying %s", name, path);
 
 		// And kick the player.
-		Kick(ID);
+		SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 	}
 }
 
@@ -176,7 +177,7 @@ void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 	SendClientMessageToAll(-1, msg);
 
 	// Kick the player who has the modified file.
-	Kick(ID);
+	SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 }
 
 bool CAntiCheat::CanEnableAC(int playerid)

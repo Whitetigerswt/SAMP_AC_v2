@@ -4,6 +4,8 @@
 #include "../../Shared/RakNet/MessageIdentifiers.h"
 #include "../CLog.h"
 
+#include <boost\thread.hpp>
+
 namespace Network
 {
 	static CRakClient* pRakClient;
@@ -40,9 +42,14 @@ namespace Network
 
 	void Connect()
 	{
-		if (IsInitialized())
-			pRakClient->Connect(strAddress.c_str(), usPort, NULL);
-
+		RakNet::ConnectionAttemptResult rs;
+		do
+		{
+			if (IsInitialized())
+			{
+				rs = pRakClient->Connect(strAddress.c_str(), usPort, NULL);
+			}
+		} while (IsInitialized() && rs != RakNet::ALREADY_CONNECTED_TO_ENDPOINT);
 	}
 
 	bool IsConnected()
@@ -70,9 +77,6 @@ namespace Network
 			{
 				return;
 			}
-
-			CLog NetworkLog = CLog("networklog.txt");
-			NetworkLog.Write("Received packet: " + std::to_string((long long)pPacket->data[0]) + ", local: " + std::to_string((long long)pPacket->wasGeneratedLocally));
 
 			RakNet::BitStream bitStream(&pPacket->data[1], pPacket->length - 1, false);
 
@@ -108,7 +112,7 @@ namespace Network
 				bConnected = false;
 
 				if (ServerHasPlugin())
-					Connect();
+					boost::thread ConnectionThread(&Connect);
 
 				break;
 			}

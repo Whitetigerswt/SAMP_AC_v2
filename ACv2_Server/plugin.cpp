@@ -70,9 +70,6 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Print out that we've loaded successfully.
 	Utility::Printf("SAMP Anti-Cheat v2.0 Has loaded successfully.");
 
-	// Initialize raknet server to be connected to by the AC.
-	Network::Initialize("", 7776, 500);
-
 	// Load sampGDK.
 	return sampgdk::Load(ppData);
 }
