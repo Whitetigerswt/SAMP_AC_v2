@@ -94,7 +94,21 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 			SendClientMessageToAll(-1, msg);
 		}
 	}
-	Callback::Execute("OnMD5Calculated", "sii", md5, size, address);
+	else if (address == 0xC2B9DC)
+	{
+		if (strcmp(md5, "12c0520d9b5442fbecccfa81ebbf2603") != 0)
+		{
+			char msg[144], name[MAX_PLAYER_NAME];
+
+			GetPlayerName(ID, name, sizeof(name));
+
+			snprintf(msg, sizeof(msg), "[TEST] %s has modified handling.cfg info", name);
+
+			SendClientMessageToAll(-1, msg);
+		}
+	}
+
+	Callback::Execute("OnMD5Calculated", "iiis", ID, address, size, md5);
 }
 
 void CAntiCheat::OnFileCalculated(char* path, char* md5)

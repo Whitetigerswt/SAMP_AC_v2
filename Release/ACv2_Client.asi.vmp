@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+	<Protection
+		InputFileName=".\ACv2_Client.asi"
+		Options="8136"
+		CheckKernelDebugger="true"
+		CompressionMode="1"
+		VMExecutorCount="10"
+		WaterMarkName="a"
+		>
+		<Messages
+		/>
+		<Folders
+		/>
+		<Procedures
+		/>
+	</Protection>
+	<DLLBox
+	/>
+	<Script
+	/>
+</Document>

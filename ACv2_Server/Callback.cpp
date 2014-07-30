@@ -107,6 +107,12 @@ namespace Callback
 
 			Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData);
 
+			RakNet::BitStream bsData2;
+			bsData2.Write(0xC2B9DC);
+			bsData2.Write(0xAF00);
+
+			Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData2);
+
 			SetTimer(60000, 0, CheckPlayersMemory, (void*)playerid);
 		}
 	}
