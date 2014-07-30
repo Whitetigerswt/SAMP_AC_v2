@@ -5,6 +5,8 @@
 #include <Windows.h>
 
 static DWORD LoadScriptsJmpBack = 0x05DE687;
+static DWORD ShotgunBullet1JmpBack = 0x073FC6A;
+static DWORD LoadBulletJmpBack = 0x73FC0B;
 
 void CHookManager::Load()
 {
@@ -27,6 +29,21 @@ void CHookManager::Load()
 	// Prevent Infinite ammo patch
 	VirtualProtect(VAR_INF_AMMO, 2, PAGE_EXECUTE_READWRITE, &dwOldProt);
 	memcpy(VAR_INF_AMMO, "\x90\x90", 2);
+
+	// Prevent infinite oxygen patch
+	VirtualProtect(VAR_INF_OXYGEN, 2, PAGE_EXECUTE_READWRITE, &dwOldProt);
+	memcpy(VAR_INF_OXYGEN, "\x90\x90", 2);
+
+	// Prevent infinite hp patch
+	VirtualProtect(VAR_INF_HP, 1, PAGE_EXECUTE_READWRITE, &dwOldProt);
+	memcpy(VAR_INF_HP, "\xEB", 1);
+
+	// Prevent Full Weapon Aiming patch
+	VirtualProtect(VAR_FULL_WEAPON_AIMING, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+	memcpy(VAR_FULL_WEAPON_AIMING, "\x90\x90\x90\x90\x90\x90", 6);
+
+	CMem::ApplyJmp(FUNC_ShotgunBullet, (DWORD)LoadShotgunBullet, 11);
+	CMem::ApplyJmp(FUNC_DeagleBullet, (DWORD)LoadBullet, 7);
 
 	// Check data file integrity.
 	VerifyFilePaths();
@@ -92,5 +109,27 @@ HOOK CHookManager::LoadScripts()
 		xor eax, eax
 		add ecx, 16h
 		jmp[LoadScriptsJmpBack]
+	}
+}
+
+float fDefaultBulletOffset = 1.4f;
+
+HOOK CHookManager::LoadShotgunBullet()
+{
+	__asm
+	{
+		mov[esp + 1Ch], 00000000
+			fld[fDefaultBulletOffset]
+		jmp[ShotgunBullet1JmpBack]
+	}
+}
+
+HOOK CHookManager::LoadBullet()
+{
+	__asm
+	{
+		fld[fDefaultBulletOffset]
+		mov[esp+24h], edx
+		jmp[LoadBulletJmpBack]
 	}
 }

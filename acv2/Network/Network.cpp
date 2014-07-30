@@ -45,11 +45,11 @@ namespace Network
 		RakNet::ConnectionAttemptResult rs;
 		do
 		{
-			if (IsInitialized())
+			if (IsInitialized() && bServerHasPlugin)
 			{
 				rs = pRakClient->Connect(strAddress.c_str(), usPort, NULL);
 			}
-		} while (IsInitialized() && rs != RakNet::ALREADY_CONNECTED_TO_ENDPOINT);
+		} while (IsInitialized() && rs != RakNet::ALREADY_CONNECTED_TO_ENDPOINT && bServerHasPlugin);
 	}
 
 	bool IsConnected()

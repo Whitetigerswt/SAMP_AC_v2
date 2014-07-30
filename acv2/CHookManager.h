@@ -12,6 +12,8 @@ private:
 	static void LoadScripts();
 	static void CheckMemoryAddr(void* address, int size, char* tomatch);
 	static void VerifyFilePaths();
+	static void LoadShotgunBullet();
+	static void LoadBullet();
 	
 };
 

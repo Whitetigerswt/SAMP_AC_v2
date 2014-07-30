@@ -5,10 +5,16 @@
 #define FUNC_CRunningScript_AddScriptToList (void*)0x464C00
 #define FUNC_Init_SCM1						(void*)0x53BDD7
 #define FUNC_Init_SCM2						(void*)0x5BA340
+#define FUNC_ShotgunBullet					(BYTE*)0x73FC5F 
+#define FUNC_DeagleBullet					(BYTE*)0x73FC04 
 #define FUNC_Scripts_Init1					0x53BDE1
 #define FUNC_Scripts_Init2					0x5BA345
 
 #define VAR_INF_AMMO						(void*)0x7428A6
+#define VAR_INF_OXYGEN						(void*)0x60A8E2
+#define VAR_INF_HP							(void*)0x4B322C
+#define VAR_FULL_WEAPON_AIMING				(void*)0x6446BD
+
 #define VAR_GTA3_IMG_PATH					(void*)0x858AF4
 #define VAR_ANIM_IMG_PATH					(void*)0x85C718
 #define VAR_WEAPON_DAT_PATH					(void*)0x86AA28
