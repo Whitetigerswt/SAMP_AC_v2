@@ -1,39 +1,7 @@
+#pragma once
+
 #define ADDRESS_LOADED *(int*)0xC8D4C0
 #define GET_HWND *(HWND*)0xC97C1C
 #define PLAYER_POINTER *(int*)0xB6F5F0
 
-#define FUNC_CRunningScript_AddScriptToList (void*)0x464C00
-#define FUNC_Init_SCM1						(void*)0x53BDD7
-#define FUNC_Init_SCM2						(void*)0x5BA340
-#define FUNC_ShotgunBullet					(BYTE*)0x73FC5F 
-#define FUNC_DeagleBullet					(BYTE*)0x73FC04 
-#define FUNC_Scripts_Init1					0x53BDE1
-#define FUNC_Scripts_Init2					0x5BA345
-
-#define VAR_INF_AMMO						(void*)0x7428A6
-#define VAR_INF_OXYGEN						(void*)0x60A8E2
-#define VAR_INF_HP							(void*)0x4B322C
-#define VAR_FULL_WEAPON_AIMING				(void*)0x6446BD
-
 #define VAR_GTA3_IMG_PATH					(void*)0x858AF4
-#define VAR_ANIM_IMG_PATH					(void*)0x85C718
-#define VAR_WEAPON_DAT_PATH					(void*)0x86AA28
-#define VAR_CARMODS_DAT_PATH				(void*)0x869668
-#define VAR_ANIMGRP_DAT_PATH				(void*)0x86A7F4
-#define VAR_MELEE_DAT_PATH					(void*)0x86AAB4
-#define VAR_CLOTHES_DAT_PATH				(void*)0x8671F8
-#define VAR_OBJECT_DAT_PATH					(void*)0x869B20
-#define VAR_DEFAULT_DAT_PATH				(void*)0x863A90
-#define VAR_SURFACE_DAT_PATH				(void*)0x864318
-#define VAR_GTA_DAT_PATH					(void*)0x863B10
-#define VAR_WATER_DAT_PATH					(void*)0x872148
-#define VAR_WATER1_DAT_PATH					(void*)0x872158
-#define VAR_FURNITUR_DAT_PATH				(void*)0x86AF80
-#define VAR_PROCOBJ_DAT_PATH				(void*)0x867014
-#define VAR_HANDLING_CFG_PATH				(void*)0x86A964
-#define VAR_PEDSTATS_DAT_PATH				(void*)0x86A698
-#define VAR_FONTS_TXD_PATH					(void*)0x86A648
-#define VAR_PEDS_COLL_PATH					(void*)0x86A51C
-#define VAR_STATDISP_PATH					(void*)0x863F80
-#define VAR_ARSTATS_DAT_PATH				(void*)0x863FA0
-#define VAR_SURFINFO_DAT_PATH				(void*)0x864DB4

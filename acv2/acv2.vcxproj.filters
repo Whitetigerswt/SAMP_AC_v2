@@ -1598,6 +1598,9 @@
     <ClInclude Include="VMProtectSDK.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Hooks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Shared\RakNet\CMakeLists.txt">

@@ -611,6 +611,7 @@
     <ClInclude Include="DirectX\xma2defs.h" />
     <ClInclude Include="DirectX\xnamath.h" />
     <ClInclude Include="GTASA_CRC32.h" />
+    <ClInclude Include="Hooks.h" />
     <ClInclude Include="IMG.h" />
     <ClInclude Include="md5.h" />
     <ClInclude Include="Misc.h" />
