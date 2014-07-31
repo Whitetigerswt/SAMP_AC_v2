@@ -16,6 +16,7 @@ private:
 	static void LoadBullet();
 
 	static float CameraXPos;
+	static float CameraYPos;
 
 	static void CameraXWriteHook1();
 	static void CameraXWriteHook2();
@@ -46,7 +47,34 @@ private:
 	static void CameraXAccessHook19();
 	static void CameraXAccessHook20();
 
+	static void CameraYWriteHook1();
+	static void CameraYWriteHook2();
+	static void CameraYWriteHook3();
+	static void CameraYWriteHook4();
+	static void CameraYWriteHook5();
+	static void CameraYWriteHook6();
+	static void CameraYWriteHook7();
+	static void CameraYWriteHook8();
+	static void CameraYWriteHook9();
+	static void CameraYWriteHook10();
+	static void CameraYWriteHook11();
 
+	static void CameraYAccessHook1();
+	static void CameraYAccessHook2();
+	static void CameraYAccessHook3();
+	static void CameraYAccessHook4();
+	static void CameraYAccessHook5();
+	static void CameraYAccessHook6();
+	static void CameraYAccessHook7();
+	static void CameraYAccessHook8();
+	static void CameraYAccessHook9();
+	static void CameraYAccessHook10();
+	static void CameraYAccessHook11();
+	static void CameraYAccessHook12();
+	static void CameraYAccessHook13();
+	static void CameraYAccessHook14();
+	static void CameraYAccessHook15();
+	static void CameraYAccessHook16();
 	
 };
 
