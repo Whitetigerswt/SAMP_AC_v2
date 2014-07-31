@@ -17,6 +17,7 @@ std::vector<std::string> CAntiCheat::m_ProcessMD5s;
 
 CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m_pSockInfo(socketInfo), ID(playerid)
 {
+
 	// If m_FileNames is empty, that's a problem.
 	if (m_FileNames.empty())
 	{

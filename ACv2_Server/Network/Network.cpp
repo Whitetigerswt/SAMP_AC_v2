@@ -81,8 +81,8 @@ namespace Network
 		//SuperFastHash((const char*)& systemAddress.address.addr4.sin_addr.s_addr, sizeof(systemAddress.address.addr4.sin_addr.s_addr));
 		for (std::map<unsigned int, CAntiCheat*>::iterator it = players.begin(); it != players.end(); ++it)
 		{
-			if (!strcmp(systemAddress.ToString(false), (*it).second->GetConnectionInfo()->GetSystemAddress().ToString(false)))
-				return (*it).first;
+			if (!strcmp(systemAddress.ToString(false), it->second->GetConnectionInfo()->GetSystemAddress().ToString(false)))
+				return it->first;
 
 		}
 
@@ -131,7 +131,9 @@ namespace Network
 
 		for (std::list<CClientSocketInfo*>::iterator it = unhandledConnections.begin(); it != unhandledConnections.end(); ++it)
 		{
-			if (!strcmp(szIP, (*it)->GetSystemAddress().ToString(false)))
+			std::string ip((*it)->GetSystemAddress().ToString(false));
+
+			if (!strcmp(szIP, ip.c_str()))
 			{
 				CAntiCheat* pPlayer = new CAntiCheat(*it, uiPlayerid);
 				unhandledConnections.erase(it);

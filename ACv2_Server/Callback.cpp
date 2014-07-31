@@ -181,6 +181,15 @@ namespace Callback
 		{
 			// If it was successful, send this player a greeting packet!
 			Network::PlayerSend(Network::PACKET_PLAYER_REGISTERED, playerid);
+
+			// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
+			CAntiCheat* ac = Network::GetPlayerFromPlayerid(playerid);
+
+			// Send the client the files we need them to return md5's to.
+			ac->CheckGTAFiles(playerid);
+
+			// Check memory pretty frequently in a new timer.
+			SetTimer(1, 0, CheckPlayersMemory, (void*)playerid);
 		}
 
 		// If the player is not running the AC, and /actoggle has been turned on (aka AC is on)
@@ -206,16 +215,7 @@ namespace Callback
 
 			// Finally, kick the player.
 			SetTimer(3000, 0, Callback::KickPlayer, (void*)playerid);
-		}
-
-		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
-		CAntiCheat* ac = Network::GetPlayerFromPlayerid(playerid);
-
-		// Send the client the files we need them to return md5's to.
-		ac->CheckGTAFiles(playerid);
-
-		// Check memory pretty frequently in a new timer.
-		SetTimer(1, 0, CheckPlayersMemory, (void*)playerid);
+		} 
 
 		return true;
 	}
