@@ -9,7 +9,7 @@ public:
 	static void Load();
 	static void Monitor();
 private:
-	static void LoadScripts();
+	static void LoadScriptsHook();
 	static void CheckMemoryAddr(void* address, int size, char* tomatch);
 	static void VerifyFilePaths();
 	static void LoadShotgunBullet();
@@ -39,6 +39,12 @@ private:
 	static void CameraXAccessHook12();
 	static void CameraXAccessHook13();
 	static void CameraXAccessHook14();
+	static void CameraXAccessHook15();
+	static void CameraXAccessHook16();
+	static void CameraXAccessHook17();
+	static void CameraXAccessHook18();
+	static void CameraXAccessHook19();
+	static void CameraXAccessHook20();
 
 
 	

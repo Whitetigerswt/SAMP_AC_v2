@@ -5,15 +5,243 @@
 		Options="8136"
 		CheckKernelDebugger="true"
 		CompressionMode="1"
-		VMExecutorCount="10"
-		WaterMarkName="a"
+		WaterMarkName="ac"
 		>
 		<Messages
 		/>
 		<Folders
 		/>
-		<Procedures
-		/>
+		<Procedures>
+			<Procedure
+				MapAddress="MD5::MD5Transform(unsigned long * const,unsigned char * const)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="MD5::Decode(unsigned long *,unsigned char *,unsigned int)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="MD5::Update(unsigned char *,unsigned int)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="MD5::Final(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="MD5::digestFile(char *)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CDirectX::HookD3DFunctions(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CInjectedLibraries::Scan(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CLoader::Initialize(struct HINSTANCE__ *)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CLoader::RunElevated(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CLoader::IsProcessElevated(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CProcessList::CProcessList(void)"
+				IncludedInCompilation="false"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CProcessList::Scan(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CCheats::GetFileMD5(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CCheats::AddFile(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CCheats::OnFileExecuted(char const *,char const *)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CCheats::ResendFiles(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CCheats::DoesFileExist(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::Load(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::LoadScripts(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::VerifyFilePaths(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CheckMemoryAddr(void *,int,char *)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::LoadShotgunBullet(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::LoadBullet(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook2(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook3(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook4(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook5(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook6(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook7(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook1(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook2(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook3(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook4(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook5(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook6(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook7(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook8(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook9(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook10(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook11(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook12(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook13(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook14(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CClientUpdater::CheckForUpdate(struct HINSTANCE__ *)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CClientUpdater::UpdateClient(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;,struct HINSTANCE__ *)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CDirectoryScanner::MD5_Specific_File(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="_DllMain@12"
+				IncludedInCompilation="false"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="Misc::MD5_Memory(int,int)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="Misc::GetGTADirectory(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CRakClient::Send(enum Network::ePacketType,struct RakNet::SystemAddress const &amp;,class RakNet::BitStream *,enum PacketPriority,enum PacketReliability,char)"
+				IncludedInCompilation="false"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CRakClient::SendRPC(unsigned short,struct RakNet::SystemAddress const &amp;,class RakNet::BitStream *,enum PacketPriority,enum PacketReliability,char)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::Initialize(void)"
+				IncludedInCompilation="false"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::ResendFileInformation(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::MD5_Memory_Region(class RakNet::BitStream &amp;,int)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::MD5_File(class RakNet::BitStream &amp;,int)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="Network::Process(void)"
+				IncludedInCompilation="false"
+				CompilationType="1"
+			/>
+		</Procedures>
 	</Protection>
 	<DLLBox
 	/>

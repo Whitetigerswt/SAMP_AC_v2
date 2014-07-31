@@ -2,20 +2,27 @@
 
 #include "Addresses.h"
 
+// CLEO HOOKS //
 #define FUNC_CRunningScript_AddScriptToList (void*)0x464C00
 #define FUNC_Init_SCM1						(void*)0x53BDD7
 #define FUNC_Init_SCM2						(void*)0x5BA340
+
+// WERNER HOOKS //
 #define FUNC_ShotgunBullet					(BYTE*)0x73FC5F 
 #define FUNC_DeagleBullet					(BYTE*)0x73FC04 
 
+// CAMERA WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91
 #define FUNC_CameraXWriteHook3				(BYTE*)0x510D6C
+
+// WHILE AIMING CAMERA WRITE HOOKS //
 #define FUNC_CameraXWriteHook4				(BYTE*)0x50E56D
 #define FUNC_CameraXWriteHook5				(BYTE*)0x51566E
-#define FUNC_CameraXWriteHook6				(BYTE*)0x5225CD
-#define FUNC_CameraXWriteHook7				(BYTE*)0x5222B6
+#define FUNC_CameraXWriteHook6				(BYTE*)0x5225C7
+#define FUNC_CameraXWriteHook7				(BYTE*)0x5222B0
 
+// CAMERA ACCESS HOOKS //
 #define FUNC_CameraXAccessHook1				(BYTE*)0x5237DD
 #define FUNC_CameraXAccessHook2				(BYTE*)0x5237FC
 #define FUNC_CameraXAccessHook3				(BYTE*)0x52383E
@@ -30,6 +37,15 @@
 #define FUNC_CameraXAccessHook12			(BYTE*)0x5231CA
 #define FUNC_CameraXAccessHook13			(BYTE*)0x5232B3
 #define FUNC_CameraXAccessHook14			(BYTE*)0x5232C7
+
+// WHILE AIMING CAMERA ACCESS HOOKS //
+
+#define FUNC_CameraXAccessHook15			(BYTE*)0x52A898
+#define FUNC_CameraXAccessHook16			(BYTE*)0x52A8B7
+#define FUNC_CameraXAccessHook17			(BYTE*)0x52A8D4
+#define FUNC_CameraXAccessHook18			(BYTE*)0x51560D
+#define FUNC_CameraXAccessHook19			(BYTE*)0x52297D
+#define FUNC_CameraXAccessHook20			(BYTE*)0x522991
 
 #define FUNC_Scripts_Init1					0x53BDE1
 #define FUNC_Scripts_Init2					0x5BA345

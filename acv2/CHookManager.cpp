@@ -4,6 +4,9 @@
 #include "CMem.h"
 #include <Windows.h>
 
+// Small children look away, this is gonna get ugly...
+// This is the most poorly documented file, and the most confusing in all of the project.
+
 static DWORD LoadScriptsJmpBack = 0x05DE687;
 static DWORD ShotgunBullet1JmpBack = 0x073FC6A;
 static DWORD LoadBulletJmpBack = 0x73FC0B;
@@ -33,6 +36,15 @@ static DWORD CameraXAccess12JmpBack = 0x5231D0;
 static DWORD CameraXAccess13JmpBack = 0x5232B9;
 static DWORD CameraXAccess14JmpBack = 0x5232CD;
 
+// WHILE AIMING CAMERA X HOOKS //
+
+static DWORD CameraXAccess15JmpBack = 0x52A89E;
+static DWORD CameraXAccess16JmpBack = 0x52A8BD;
+static DWORD CameraXAccess17JmpBack = 0x52A8DA;
+static DWORD CameraXAccess18JmpBack = 0x515614;
+static DWORD CameraXAccess19JmpBack = 0x522983;
+static DWORD CameraXAccess20JmpBack = 0x522997;
+
 float CHookManager::CameraXPos = 0.0f;
 
 void CHookManager::Load()
@@ -48,10 +60,10 @@ void CHookManager::Load()
 
 	// Prevent CLEO 3's loading functions
 	VirtualProtect((void*)FUNC_Scripts_Init1, 5, PAGE_EXECUTE_READWRITE, &dwOldProt);
-	CPatch::RedirectCall(FUNC_Scripts_Init1, LoadScripts);
+	CPatch::RedirectCall(FUNC_Scripts_Init1, LoadScriptsHook);
 
 	VirtualProtect((void*)FUNC_Scripts_Init2, 5, PAGE_EXECUTE_READWRITE, &dwOldProt);
-	CPatch::RedirectCall(FUNC_Scripts_Init2, LoadScripts);
+	CPatch::RedirectCall(FUNC_Scripts_Init2, LoadScriptsHook);
 
 	// Prevent Infinite ammo patch
 	VirtualProtect(VAR_INF_AMMO, 2, PAGE_EXECUTE_READWRITE, &dwOldProt);
@@ -86,8 +98,8 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraXWriteHook3, (DWORD)CameraXWriteHook3, 6);
 	CMem::ApplyJmp(FUNC_CameraXWriteHook4, (DWORD)CameraXWriteHook4, 6);
 	CMem::ApplyJmp(FUNC_CameraXWriteHook5, (DWORD)CameraXWriteHook5, 7); // looks like array loop in asm 
-	CMem::ApplyJmp(FUNC_CameraXWriteHook6, (DWORD)CameraXWriteHook6, 6);
-	CMem::ApplyJmp(FUNC_CameraXWriteHook7, (DWORD)CameraXWriteHook7, 6);
+	CMem::ApplyJmp(FUNC_CameraXWriteHook6, (DWORD)CameraXWriteHook6, 12);
+	CMem::ApplyJmp(FUNC_CameraXWriteHook7, (DWORD)CameraXWriteHook7, 12);
 
 	CMem::ApplyJmp(FUNC_CameraXAccessHook1, (DWORD)CameraXAccessHook1, 8);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook2, (DWORD)CameraXAccessHook2, 8);
@@ -103,6 +115,12 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraXAccessHook12, (DWORD)CameraXAccessHook12, 6);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook13, (DWORD)CameraXAccessHook13, 6);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook14, (DWORD)CameraXAccessHook14, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook15, (DWORD)CameraXAccessHook15, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook16, (DWORD)CameraXAccessHook16, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook17, (DWORD)CameraXAccessHook17, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook18, (DWORD)CameraXAccessHook18, 7);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook19, (DWORD)CameraXAccessHook19, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook20, (DWORD)CameraXAccessHook20, 6);
 
 	// Check data file integrity.
 	VerifyFilePaths();
@@ -161,7 +179,7 @@ void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
 	delete[] memory;
 }
 
-HOOK CHookManager::LoadScripts()
+HOOK CHookManager::LoadScriptsHook()
 {
 	__asm
 	{
@@ -235,6 +253,7 @@ HOOK CHookManager::CameraXWriteHook6()
 {
 	__asm
 	{
+		fadd dword ptr[CameraXPos]
 		fstp[CameraXPos]
 		jmp[CameraXHook6JmpBack]
 	}
@@ -243,6 +262,7 @@ HOOK CHookManager::CameraXWriteHook7()
 {
 	__asm
 	{
+		fadd dword ptr[CameraXPos]
 		fstp[CameraXPos]
 		jmp[CameraXHook7JmpBack]
 	}
@@ -401,5 +421,59 @@ HOOK CHookManager::CameraXAccessHook14()
 	{
 		fld dword ptr[CameraXPos]
 		jmp[CameraXAccess14JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook15()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess15JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook16()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess16JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook17()
+{
+	__asm
+	{
+		fsub dword ptr[CameraXPos]
+		jmp[CameraXAccess17JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook18()
+{
+	__asm
+	{
+		mov edx, [CameraXPos]
+		jmp[CameraXAccess18JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook19()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess19JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook20()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess20JmpBack]
 	}
 }

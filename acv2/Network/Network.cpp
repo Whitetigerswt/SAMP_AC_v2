@@ -40,7 +40,7 @@ namespace Network
 		return bInitialized;
 	}
 
-	void Connect()
+	void Reconnect()
 	{
 		RakNet::ConnectionAttemptResult rs;
 		do
@@ -48,8 +48,14 @@ namespace Network
 			if (IsInitialized() && bServerHasPlugin)
 			{
 				rs = pRakClient->Connect(strAddress.c_str(), usPort, NULL);
+				Sleep(5000);
 			}
 		} while (IsInitialized() && rs != RakNet::ALREADY_CONNECTED_TO_ENDPOINT && bServerHasPlugin);
+	}
+
+	void Connect()
+	{
+		pRakClient->Connect(strAddress.c_str(), usPort, NULL);
 	}
 
 	bool IsConnected()
@@ -112,7 +118,7 @@ namespace Network
 				bConnected = false;
 
 				if (ServerHasPlugin())
-					boost::thread ConnectionThread(&Connect);
+					boost::thread ConnectionThread(&Reconnect);
 
 				break;
 			}

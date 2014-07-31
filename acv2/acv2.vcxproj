@@ -89,6 +89,8 @@
       <EnableUAC>false</EnableUAC>
       <UACUIAccess>true</UACUIAccess>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>ACv2_Client.map</MapFileName>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
