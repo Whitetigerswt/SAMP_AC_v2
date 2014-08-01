@@ -11,6 +11,9 @@
 #define FUNC_ShotgunBullet					(BYTE*)0x73FC5F 
 #define FUNC_DeagleBullet					(BYTE*)0x73FC04 
 
+// OTHER HEALTH HOOKS //
+#define FUNC_CPed_Special_Flags				(void*)0x4B36A2
+
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91

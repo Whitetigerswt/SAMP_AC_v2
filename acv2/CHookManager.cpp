@@ -10,6 +10,7 @@
 static DWORD LoadScriptsJmpBack = 0x05DE687;
 static DWORD ShotgunBullet1JmpBack = 0x073FC6A;
 static DWORD LoadBulletJmpBack = 0x73FC0B;
+static DWORD CPed_Special_FlagsJmpBack = 0x5E8FF5;
 
 static DWORD CameraXHook1JmpBack = 0x523F97;
 static DWORD CameraXHook2JmpBack = 0x5241CC;
@@ -209,6 +210,10 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraYAccessHook22, (DWORD)CameraYAccessHook22, 6);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook23, (DWORD)CameraYAccessHook23, 6);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook24, (DWORD)CameraYAccessHook24, 6);
+
+	// Health hack hooks
+	VirtualProtect(FUNC_CPed_Special_Flags, 7, PAGE_EXECUTE_READWRITE, &dwOldProt);
+	memcpy(FUNC_CPed_Special_Flags, "\xC7\x47\x40\x00\x00\x00\x00", 7);
 
 	// Check data file integrity.
 	VerifyFilePaths();

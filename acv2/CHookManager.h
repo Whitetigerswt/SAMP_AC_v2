@@ -12,8 +12,11 @@ private:
 	static void LoadScriptsHook();
 	static void CheckMemoryAddr(void* address, int size, char* tomatch);
 	static void VerifyFilePaths();
+
 	static void LoadShotgunBullet();
 	static void LoadBullet();
+	
+	static void CPed_Special_Flags();
 
 	static float CameraXPos;
 	static float CameraYPos;
