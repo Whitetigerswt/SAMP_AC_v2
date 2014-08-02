@@ -10,7 +10,6 @@
 static DWORD LoadScriptsJmpBack = 0x05DE687;
 static DWORD ShotgunBullet1JmpBack = 0x073FC6A;
 static DWORD LoadBulletJmpBack = 0x73FC0B;
-static DWORD CPed_Special_FlagsJmpBack = 0x5E8FF5;
 
 static DWORD CameraXHook1JmpBack = 0x523F97;
 static DWORD CameraXHook2JmpBack = 0x5241CC;

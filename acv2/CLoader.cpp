@@ -8,6 +8,8 @@
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "CHookManager.h"
+#include "VMProtectSDK.h"
+#include "VersionHelpers.h"
 
 #include <map>
 #include <Shellapi.h>
@@ -44,7 +46,8 @@ void CLoader::Initialize(HMODULE hMod)
 	CClientUpdater::CheckForUpdate(hMod);
 
 	// Force process elevation once the game has loaded. This will terminate the current process and run a new one.
-	CheckElevation();
+	if (IsWindowsVistaOrGreater())
+		CheckElevation();
 
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 500);
@@ -57,6 +60,12 @@ void CLoader::Initialize(HMODULE hMod)
 	{
 		Processes.Scan();
 		Modules.Scan();
+
+		if (VMProtectIsDebuggerPresent(true) || VMProtectIsVirtualMachinePresent() || !VMProtectIsValidImageCRC())
+		{
+			Network::Disconnect();
+			ExitProcess(0);
+		}
 
 		Sleep(1000);
 	}

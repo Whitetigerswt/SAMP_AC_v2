@@ -8,6 +8,8 @@ namespace Network
 	void Initialize(std::string address, unsigned short port);
 	bool IsInitialized();
 	void Connect();
+	void Reconnect();
+	void Disconnect();
 	bool IsConnected();
 	bool ServerHasPlugin();
 	void Process();

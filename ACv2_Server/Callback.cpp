@@ -227,20 +227,15 @@ namespace Callback
 		// If the player was connected to the AC before disconnecting.
 		if (Network::IsPlayerConnectedToAC(playerid))
 		{
-			Utility::Printf("hello, welcome, please insert the bill");
 			// And they weren't kicked/banned or timed out.
 			if (reason)
 			{
-				Utility::Printf("In reason");
 				// Send them a goodbye packet :(
 				Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, playerid);
 			}
 
-			Utility::Printf("Past reason");
 			// Close off the connection cleanly.
 			Network::CloseConnection(playerid);
-
-			Utility::Printf("Closed connection");
 		}
 		return true;
 	}

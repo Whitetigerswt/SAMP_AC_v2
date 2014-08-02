@@ -58,6 +58,11 @@ namespace Network
 		pRakClient->Connect(strAddress.c_str(), usPort, NULL);
 	}
 
+	void Disconnect()
+	{
+		pRakClient->Disconnect();
+	}
+
 	bool IsConnected()
 	{
 		return bConnected;

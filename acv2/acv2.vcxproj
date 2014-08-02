@@ -620,6 +620,7 @@
     <ClInclude Include="Network\CRakClient.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
     <ClInclude Include="Network\Network.h" />
+    <ClInclude Include="VersionHelpers.h" />
     <ClInclude Include="VMProtectSDK.h" />
   </ItemGroup>
   <ItemGroup>
