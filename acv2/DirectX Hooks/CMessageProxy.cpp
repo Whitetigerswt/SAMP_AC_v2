@@ -48,10 +48,6 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 
 	switch (umsg)
 	{
-		case WM_MOUSEMOVE:
-		{
-			return 0;
-		}
 		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
 		{
@@ -75,9 +71,4 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 	}
 	return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
 
-}
-
-BOOL CMessageProxy::OnSetCursorPos(int iX, int iY)
-{
-	return CDirectX::OnCursorMove(iX, iY);
 }

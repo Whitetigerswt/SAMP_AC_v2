@@ -67,7 +67,7 @@ HRESULT CDInput8DeviceProxy::Unacquire(VOID)
 
 HRESULT CDInput8DeviceProxy::GetDeviceState(DWORD a, LPVOID b)
 {
-	if (DINPUT_DEVICE_IS_MOUSE && CDirectX::IsCursorEnabled())
+	/*if (DINPUT_DEVICE_IS_MOUSE && CDirectX::IsCursorEnabled())
 	{
 		DWORD dwItems = INFINITE;
 		HRESULT hRes;
@@ -77,7 +77,7 @@ HRESULT CDInput8DeviceProxy::GetDeviceState(DWORD a, LPVOID b)
 
 		m_pDevice->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), NULL, &dwItems, 0);
 		return hRes;
-	}
+	}*/
     return m_pDevice->GetDeviceState(a, b);
 }
 

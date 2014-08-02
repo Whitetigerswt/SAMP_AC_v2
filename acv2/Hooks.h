@@ -12,7 +12,7 @@
 #define FUNC_DeagleBullet					(BYTE*)0x73FC04 
 
 // OTHER HEALTH HOOKS //
-#define FUNC_CPed_Special_Flags				(void*)0x4B36A2
+#define FUNC_CPed_Special_Flags				(BYTE*)0x4B36A2
 
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
@@ -54,6 +54,8 @@
 #define FUNC_CameraXAccessHook22			(BYTE*)0x5117CF
 #define FUNC_CameraXAccessHook23			(BYTE*)0x5118CB
 #define FUNC_CameraXAccessHook24			(BYTE*)0x511993
+#define FUNC_CameraXAccessHook25			(BYTE*)0x520B78
+#define FUNC_CameraXAccessHook26			(BYTE*)0x520B94
 
 // CAMERA Y HOOKS
 

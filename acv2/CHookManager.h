@@ -16,6 +16,8 @@ private:
 	static void LoadShotgunBullet();
 	static void LoadBullet();
 
+	static void CPed_Special_Flags();
+
 	static float CameraXPos;
 	static float CameraYPos;
 
@@ -51,6 +53,8 @@ private:
 	static void CameraXAccessHook22();
 	static void CameraXAccessHook23();
 	static void CameraXAccessHook24();
+	static void CameraXAccessHook25();
+	static void CameraXAccessHook26();
 
 	static void CameraYWriteHook1();
 	static void CameraYWriteHook2();
