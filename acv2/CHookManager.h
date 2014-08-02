@@ -18,6 +18,8 @@ private:
 
 	static void CPed_Special_Flags();
 
+	static void WidescreenPatch();
+
 	static float CameraXPos;
 	static float CameraYPos;
 

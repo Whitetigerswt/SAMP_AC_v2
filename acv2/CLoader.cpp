@@ -29,10 +29,6 @@ void CLoader::Initialize(HMODULE hMod)
 	std::map < std::string, std::string > cmdline;
 	cmdline = CParseCommandLine::parseCmdLine(GetCommandLineA());
 
-	// Hook the D3D9Device functions.
-	CDirectX::HookD3DFunctions();	
-	// causes a crash on 18's pc ^
-
 	// Wait until the game is loaded.
 	while (ADDRESS_LOADED < 6)
 	{
@@ -50,6 +46,8 @@ void CLoader::Initialize(HMODULE hMod)
 	if (IsWindowsVistaOrGreater())
 		CheckElevation();
 
+	// Hook the D3D9Device functions.
+	CDirectX::HookD3DFunctions();
 
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 500);

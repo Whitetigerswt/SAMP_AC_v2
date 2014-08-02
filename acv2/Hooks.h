@@ -14,6 +14,9 @@
 // OTHER HEALTH HOOKS //
 #define FUNC_CPed_Special_Flags				(BYTE*)0x4B36A2
 
+// WIDESCREEN MOD HOOK //
+#define FUNC_WidescreenPatch				(BYTE*)0x5894AF
+
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91

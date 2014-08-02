@@ -10,6 +10,7 @@
 static DWORD LoadScriptsJmpBack = 0x05DE687;
 static DWORD ShotgunBullet1JmpBack = 0x073FC6A;
 static DWORD LoadBulletJmpBack = 0x73FC0B;
+static DWORD WidescreenJmpBack = 0x5894B5;
 
 static DWORD CameraXHook1JmpBack = 0x523F97;
 static DWORD CameraXHook2JmpBack = 0x5241CC;
@@ -229,6 +230,8 @@ void CHookManager::Load()
 	// Health hack hooks
 	//CMem::ApplyJmp(FUNC_CPed_Special_Flags, (DWORD)CPed_Special_Flags, 7);
 
+	CMem::ApplyJmp(FUNC_WidescreenPatch, (DWORD)WidescreenPatch, 6);
+
 	// Check data file integrity.
 	VerifyFilePaths();
 }
@@ -293,6 +296,18 @@ HOOK CHookManager::CPed_Special_Flags()
 		mov[edi+40h],0
 		test[edi + 40h], 400000h
 		jmp[CPed_Special_FlagsJmpBack]
+	}
+}
+
+HOOK CHookManager::WidescreenPatch()
+{
+	__asm
+	{
+		push eax
+		mov eax, 0x859524
+		fmul dword ptr[eax]
+		pop eax
+		jmp[WidescreenJmpBack]
 	}
 }
 
