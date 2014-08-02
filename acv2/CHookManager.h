@@ -67,6 +67,8 @@ private:
 	static void CameraYWriteHook9();
 	static void CameraYWriteHook10();
 	static void CameraYWriteHook11();
+	static void CameraYWriteHook12();
+	static void CameraYWriteHook13();
 
 	static void CameraYAccessHook1();
 	static void CameraYAccessHook2();
@@ -92,6 +94,9 @@ private:
 	static void CameraYAccessHook22();
 	static void CameraYAccessHook23();
 	static void CameraYAccessHook24();
+	static void CameraYAccessHook25();
+	static void CameraYAccessHook26();
+	static void CameraYAccessHook27();
 	
 };
 

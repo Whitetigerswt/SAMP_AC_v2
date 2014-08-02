@@ -422,6 +422,22 @@
 				MapAddress="IsWindowsVersionOrGreater(unsigned short,unsigned short,unsigned short)"
 				CompilationType="2"
 			/>
+			<Procedure
+				MapAddress="CHookManager::CPed_Special_Flags(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::LoadScriptsHook(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook25(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook26(void)"
+				CompilationType="2"
+			/>
 		</Procedures>
 	</Protection>
 	<DLLBox

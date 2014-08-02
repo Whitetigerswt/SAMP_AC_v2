@@ -10,6 +10,7 @@ void CDirectX::HookD3DFunctions()
 {
 	if (!m_pDirect3DCreate9)
 	{
+		// 18's crash vvv
 		m_pDirect3DCreate9 = (Direct3DCreate9_t)DetourFunction(DetourFindFunction("d3d9.dll", "Direct3DCreate9"), (BYTE*)HOOK_Direct3DCreate9);
 	}
 

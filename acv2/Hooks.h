@@ -70,6 +70,8 @@
 #define FUNC_CameraYWriteHook9				(BYTE*)0x5233C6
 #define FUNC_CameraYWriteHook10				(BYTE*)0x522607
 #define FUNC_CameraYWriteHook11				(BYTE*)0x52290B
+#define FUNC_CameraYWriteHook12				(BYTE*)0x525A5D
+#define FUNC_CameraYWriteHook13				(BYTE*)0x525AD5
 
 #define FUNC_CameraYAccessHook1				(BYTE*)0x523BA1
 #define FUNC_CameraYAccessHook2				(BYTE*)0x52414D
@@ -95,6 +97,9 @@
 #define FUNC_CameraYAccessHook22			(BYTE*)0x5117EA
 #define FUNC_CameraYAccessHook23			(BYTE*)0x5118DB
 #define FUNC_CameraYAccessHook24			(BYTE*)0x5119A3
+#define FUNC_CameraYAccessHook25			(BYTE*)0x52410C
+#define FUNC_CameraYAccessHook26			(BYTE*)0x52411F
+#define FUNC_CameraYAccessHook27			(BYTE*)0x5240D3
 
 // CLEO HOOKS //
 

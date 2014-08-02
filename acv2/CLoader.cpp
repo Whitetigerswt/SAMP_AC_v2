@@ -31,6 +31,7 @@ void CLoader::Initialize(HMODULE hMod)
 
 	// Hook the D3D9Device functions.
 	CDirectX::HookD3DFunctions();	
+	// causes a crash on 18's pc ^
 
 	// Wait until the game is loaded.
 	while (ADDRESS_LOADED < 6)
@@ -49,6 +50,7 @@ void CLoader::Initialize(HMODULE hMod)
 	if (IsWindowsVistaOrGreater())
 		CheckElevation();
 
+
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 500);
 	Network::Connect();
@@ -61,11 +63,11 @@ void CLoader::Initialize(HMODULE hMod)
 		Processes.Scan();
 		Modules.Scan();
 
-		if (VMProtectIsDebuggerPresent(true) || VMProtectIsVirtualMachinePresent() || !VMProtectIsValidImageCRC())
+		/*if (VMProtectIsDebuggerPresent(true) || VMProtectIsVirtualMachinePresent() || !VMProtectIsValidImageCRC())
 		{
 			Network::Disconnect();
 			ExitProcess(0);
-		}
+		}*/
 
 		Sleep(1000);
 	}
