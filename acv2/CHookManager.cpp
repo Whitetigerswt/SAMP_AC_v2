@@ -97,6 +97,8 @@ static DWORD CameraYAccess27JmpBack = 0x5240DD;
 
 static DWORD CPed_Special_FlagsJmpBack = 0x4B36A9;
 
+static DWORD FOVPatchJmpBack = 0x522F38;
+
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
 
@@ -232,6 +234,8 @@ void CHookManager::Load()
 
 	CMem::ApplyJmp(FUNC_WidescreenPatch, (DWORD)WidescreenPatch, 6);
 
+	CMem::ApplyJmp(FUNC_FOVPatch, (DWORD)FOVPatch, 6);
+
 	// Check data file integrity.
 	VerifyFilePaths();
 }
@@ -287,6 +291,24 @@ void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
 	
 	// Free memory.
 	delete[] memory;
+}
+
+HOOK CHookManager::FOVPatch()
+{
+	__asm
+	{
+		fadd dword ptr[edi + 0x0000B4]
+		pushad
+	}
+
+	*(float*)0x0858CE0 = 70.0f;
+	*(float*)0x0B6F250 = 70.0f;
+
+	__asm
+	{
+		popad
+		jmp[FOVPatchJmpBack]
+	}
 }
 
 HOOK CHookManager::CPed_Special_Flags()

@@ -20,6 +20,8 @@ private:
 
 	static void WidescreenPatch();
 
+	static void FOVPatch();
+
 	static float CameraXPos;
 	static float CameraYPos;
 

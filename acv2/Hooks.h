@@ -17,6 +17,9 @@
 // WIDESCREEN MOD HOOK //
 #define FUNC_WidescreenPatch				(BYTE*)0x5894AF
 
+// FOV MOD HOOK //
+#define FUNC_FOVPatch						(BYTE*)0x522F32
+
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91
