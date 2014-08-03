@@ -1,6 +1,5 @@
 #include "CCheats.h"
 #include "md5.h"
-#include "CLog.h"
 #include "../Shared/Network/CRPC.h"
 #include "Network\Network.h"
 

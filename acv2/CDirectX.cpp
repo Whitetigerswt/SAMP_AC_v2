@@ -1,4 +1,5 @@
 #include "CDirectX.h"
+#include "Addresses.h"
 
 Direct3DCreate9_t  CDirectX::m_pDirect3DCreate9 = NULL;
 DirectInput8Create_t CDirectX::m_pDirectInput8Create = NULL;
@@ -10,13 +11,18 @@ void CDirectX::HookD3DFunctions()
 {
 	if (!m_pDirect3DCreate9)
 	{
-		// 18's crash vvv
-		m_pDirect3DCreate9 = (Direct3DCreate9_t)DetourFunction(DetourFindFunction("d3d9.dll", "Direct3DCreate9"), (BYTE*)HOOK_Direct3DCreate9);
+		PBYTE addr = DetourFindFunction("d3d9.dll", "Direct3DCreate9");
+		if (addr != NULL)
+			m_pDirect3DCreate9 = (Direct3DCreate9_t)DetourFunction(addr, (BYTE*)HOOK_Direct3DCreate9);
+		else
+			MessageBoxA(NULL, "Could not hook DirectX, Try reinstalling DirectX 9.0c.", "SAMP AC v2", MB_ICONERROR);
 	}
 
 	if (!m_pDirectInput8Create)
 	{
-		m_pDirectInput8Create = (DirectInput8Create_t)DetourFunction(DetourFindFunction("dinput8.dll", "DirectInput8Create"), (BYTE*)HOOK_DirectInput8Create);
+		PBYTE addr = DetourFindFunction("dinput8.dll", "DirectInput8Create");
+		if (addr != NULL)
+			m_pDirectInput8Create = (DirectInput8Create_t)DetourFunction(addr, (BYTE*)HOOK_DirectInput8Create);
 	}
 }
 
@@ -33,6 +39,7 @@ IDirect3D9* WINAPI CDirectX::HOOK_Direct3DCreate9(UINT SDKVersion)
 {
 	IDirect3D9* Direct3D = m_pDirect3DCreate9(SDKVersion);
 	IDirect3D9* Mine_Direct3D = new CD3D9Proxy(Direct3D);
+
 	return Mine_Direct3D;
 }
 

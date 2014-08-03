@@ -20,6 +20,9 @@
 // FOV MOD HOOK //
 #define FUNC_FOVPatch						(BYTE*)0x522F32
 
+// SPRINT PATCH - DETECT SPRINT KEY PRESSING //
+#define FUNC_SprintHook						(BYTE*)0x541C98
+
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91

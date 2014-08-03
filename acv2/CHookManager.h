@@ -22,8 +22,14 @@ private:
 
 	static void FOVPatch();
 
+	static void SprintHook();
+
 	static float CameraXPos;
 	static float CameraYPos;
+
+	static unsigned int iLastTick;
+	static int iLastPress;
+	static int iTickOffset;
 
 	static void CameraXWriteHook1();
 	static void CameraXWriteHook2();

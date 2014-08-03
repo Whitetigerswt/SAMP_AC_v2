@@ -99,8 +99,15 @@ static DWORD CPed_Special_FlagsJmpBack = 0x4B36A9;
 
 static DWORD FOVPatchJmpBack = 0x522F38;
 
+static DWORD SprintHookJmpBack = 0x541C9D;
+
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
+
+unsigned int CHookManager::iLastTick = 0;
+int CHookManager::iTickOffset = 333;
+int CHookManager::iLastPress = 0;
+
 
 void CHookManager::Load()
 {
@@ -236,6 +243,8 @@ void CHookManager::Load()
 
 	CMem::ApplyJmp(FUNC_FOVPatch, (DWORD)FOVPatch, 6);
 
+	CMem::ApplyJmp(FUNC_SprintHook, (DWORD)SprintHook, 8);
+
 	// Check data file integrity.
 	VerifyFilePaths();
 }
@@ -291,6 +300,43 @@ void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
 	
 	// Free memory.
 	delete[] memory;
+}
+
+DWORD SprintHookCall = 0x53EF80;
+HOOK CHookManager::SprintHook()
+{
+	__asm
+	{
+		pushad
+	}
+
+	// Check if the sprint key is pressed, and it wasn't pressed in the last frame.
+	if (*(BYTE*)0xB73478 != 0 && iLastPress == 0)
+	{
+		// If the sprint key was pressed more than once since the last tick
+		if (iLastTick > GetTickCount())
+		{
+			// Ignore the input
+			*(BYTE*)0xB73478 = 0;
+		}
+		else
+		{
+			// This was a successful sprint press, record it's timestamp.
+			iLastTick = GetTickCount() + iTickOffset;
+		}
+	}
+
+	// Record the last press of the sprint key.
+	iLastPress = *(BYTE*)0xB73478;
+
+	__asm
+	{
+		popad
+
+		call[SprintHookCall]
+		lea ecx, [ebx + 78h]
+		jmp[SprintHookJmpBack]
+	}
 }
 
 HOOK CHookManager::FOVPatch()
