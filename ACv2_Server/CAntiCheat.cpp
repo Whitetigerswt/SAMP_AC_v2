@@ -115,7 +115,7 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 
 void CAntiCheat::OnFileCalculated(char* path, char* md5)
 {	
-	// Create a new variable that can contain a true/false value so we know if a file matches N MD5 from our list
+	// Create a new variable that can contain a true/false value so we know if a file matches an MD5 from our list
 	bool found = false;
 
 	// Loop through a list of our md5's that we stored previously...
@@ -253,5 +253,23 @@ void CAntiCheat::OnMacroDetected(int vKey)
 	snprintf(msg, sizeof(msg), "[TEST] %s is using a macro? (vKey=0x%x)", name, vKey);
 
 	// Send the message to all connected players
+	SendClientMessageToAll(-1, msg);
+}
+
+void CAntiCheat::OnHardwareCalculated(char* hwid)
+{
+	// Set our instance variable to the player's hardware ID so we can store it for later use.
+	HardwareID = hwid;
+
+	// Create 2 variables, one for the player's name and one for a formatted message sent to everyone on the server.
+	char name[MAX_PLAYER_NAME], msg[144];
+
+	// Get the player name in our name variable.
+	GetPlayerName(ID, name, sizeof(name));
+
+	// Format the message to let everyone know his hardware ID.
+	snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s HardwareID: {FF0000}%s", name, HardwareID.c_str());
+
+	// Send the message to everyone on the server.
 	SendClientMessageToAll(-1, msg);
 }

@@ -34,6 +34,10 @@ public:
 	// REQUIRES: The client is using AC.
 	void CheckGTAFiles(int playerid);
 
+	// PURPOSE: Callback for when a player has sent their hardwareID to the server.
+	// REQUIRES: The client is using AC.
+	void OnHardwareCalculated(char* hwid);
+
 	// PURPOSE: Toggles whether the player can turn AC on or off
 	// REQUIRES: NULL
 	static void ToggleCanEnableAC(int playerid, bool toggle);
@@ -42,6 +46,10 @@ public:
 	// REQUIRES: NULL
 	static bool CanEnableAC(int playerid);
 
+	// PURPOSE: Return the player's hardwareID.
+	// REQUIRES: The client is using AC.
+	std::string GetPlayerHardwareID() { return HardwareID; }
+
 	CClientSocketInfo* GetConnectionInfo();
 
 private:
@@ -49,6 +57,9 @@ private:
 
 	// PURPOSE: Remember the player's playerID.
 	int ID;
+
+	// PURPOSE: Store the player's hardware ID.
+	std::string HardwareID;
 
 	// PURPOSE: a static list of all the players allowed to use the /actoggle command, and other AC options
 	static std::vector<int> m_Admins;

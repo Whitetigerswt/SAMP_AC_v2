@@ -5,6 +5,7 @@
 #include "GDK/core.h"
 #include "GDK/a_players.h"
 #include "Callback.h"
+#include "SDK/samp-sdk/amx/amx.h"
 
 /*cell AMX_NATIVE_CALL CallbackProc(AMX* pAmx, cell* pParams)
 {
@@ -14,12 +15,18 @@
 
 cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 {
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "IsPlayerUsingSAMPAC");
+
 	// Return the result if the player is connected to AC or not.
 	return Network::IsPlayerConnectedToAC(pParams[1]);
 }
 
 cell AMX_NATIVE_CALL MD5_MemoryProc(AMX* pAmx, cell* pParams)
 {
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(3, "MD5_Memory");
+
 	// pParams[1] = playerid
 	// pParams[2] = address
 	// pParams[3] = size
@@ -37,6 +44,9 @@ cell AMX_NATIVE_CALL MD5_MemoryProc(AMX* pAmx, cell* pParams)
 
 cell AMX_NATIVE_CALL SetPlayerCanEnableACProc(AMX* pAmx, cell* pParams)
 {
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(2, "SetPlayerCanEnableAC");
+
 	// Toggle if the player can enable AC or not.
 	CAntiCheat::ToggleCanEnableAC(pParams[1], !!pParams[2]);
 
@@ -45,8 +55,24 @@ cell AMX_NATIVE_CALL SetPlayerCanEnableACProc(AMX* pAmx, cell* pParams)
 
 cell AMX_NATIVE_CALL CanPlayerEnableACProc(AMX* pAmx, cell* pParams)
 {
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "CanPlayerEnableAC");
+
 	// Return if the player can enable AC or not.
 	return CAntiCheat::CanEnableAC(pParams[1]);
+}
+
+cell AMX_NATIVE_CALL GetPlayerHardwareIDProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(3, "GetPlayerHardwareID");
+
+	// Get the address of the variable in the 2nd parameter.
+	cell* cVarAddress = NULL;
+	amx_GetAddr(pAmx, pParams[2], &cVarAddress);
+
+	// Return the result of setting the 2nd parameter to the hardware ID string.
+	return amx_SetString(cVarAddress, Network::GetPlayerFromPlayerid(pParams[1])->GetPlayerHardwareID().c_str(), 0, 0, pParams[3]);
 }
 
 
@@ -87,6 +113,7 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "CanPlayerEnableAC", CanPlayerEnableACProc },
 	{ "SetPlayerCanEnableAC", SetPlayerCanEnableACProc },
 	{ "MD5_Memory", MD5_MemoryProc },
+	{ "GetPlayerHardwareID", GetPlayerHardwareIDProc },
 	{ 0, 0 }
 };
 

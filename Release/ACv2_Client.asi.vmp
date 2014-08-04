@@ -438,6 +438,30 @@
 				MapAddress="CHookManager::CameraXAccessHook26(void)"
 				CompilationType="2"
 			/>
+			<Procedure
+				MapAddress="CHookManager::SprintHook(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::FOVPatch(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::WidescreenPatch(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYAccessHook25(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYAccessHook26(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYAccessHook27(void)"
+				CompilationType="2"
+			/>
 		</Procedures>
 	</Protection>
 	<DLLBox

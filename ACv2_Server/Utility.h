@@ -25,3 +25,16 @@ namespace Utility
 	void Printf(const char* szFormat, ...);
 	void CheckForUpdate();
 }
+
+#ifndef CHECK_PARAMS
+#define CHECK_PARAMS(m,n)                                                                                           \
+		do                                                                                                              \
+				{                                                                                                               \
+			if (pParams[0] != (m * 4))                                                                                   \
+						{                                                                                                           \
+				Utility::Printf(" Error: Incorrect parameter count on \"" n "\", %d != %d\n", m, pParams[0] / 4); \
+				return 0;                                                                                               \
+						}                                                                                                           \
+				}                                                                                                               \
+						while (0)
+#endif

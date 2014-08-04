@@ -4,6 +4,7 @@
 #include "../Misc.h"
 #include "Network.h"
 #include "../Misc.h"
+#include "../VMProtectSDK.h"
 
 #include <Boost\thread.hpp>
 
@@ -18,6 +19,27 @@ void CRPCCallback::Initialize()
 
 void CRPCCallback::ResendFileInformation()
 {
+	// Send the server our hardware ID incase they wanna ban us.
+	RakNet::BitStream bsData;
+	
+	// Get the number of required bytes in the hardwareID.
+	INT nSize = VMProtectGetCurrentHWID(NULL, 0);
+
+	// Allocate a buffer.
+	char *pBuf = new char[nSize];
+
+	// Get the hardware ID.
+	VMProtectGetCurrentHWID(pBuf, nSize);
+
+	// Write the hardwareID to the packet
+	bsData.Write(pBuf);
+
+	// Send the info to the server.
+	Network::SendRPC(ON_HARDWAREID_SENT, &bsData);
+	
+	// Free memory.
+	delete[] pBuf; 
+
 	// Send the server the processes and modules that were loaded while we weren't connected.
 	CLoader::Processes.ResendFiles();
 	CLoader::Modules.ResendFiles();

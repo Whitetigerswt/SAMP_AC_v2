@@ -18,6 +18,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_FILE_CALCULATED, OnFileCalculated);
 	CRPC::Add(ON_IMG_FILE_MODIFIED, OnImgFileModified);
 	CRPC::Add(ON_MACRO_DETECTED, OnMacroDetected);
+	CRPC::Add(ON_HARDWAREID_SENT, OnHardwareIDGotten);
 }
 
 
@@ -90,5 +91,17 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 	if (bsData.Read(vKey))
 	{
 		Network::GetPlayerFromPlayerid(iExtra)->OnMacroDetected(vKey);
+	}
+}
+
+RPC_CALLBACK CRPCCallback::OnHardwareIDGotten(RakNet::BitStream &bsData, int iExtra)
+{
+	unsigned char hwid[2048];
+
+	memset(hwid, 0, sizeof(hwid));
+
+	if (bsData.Read((char*)hwid))
+	{
+		Network::GetPlayerFromPlayerid(iExtra)->OnHardwareCalculated((char*)hwid);
 	}
 }

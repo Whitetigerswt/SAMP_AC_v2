@@ -361,8 +361,7 @@ HOOK CHookManager::CPed_Special_Flags()
 {
 	__asm
 	{
-		mov[edi+40h],0
-		test[edi + 40h], 400000h
+		cmp edi, 0 // always unset z flag
 		jmp[CPed_Special_FlagsJmpBack]
 	}
 }

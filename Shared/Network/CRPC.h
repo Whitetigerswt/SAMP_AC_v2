@@ -35,6 +35,9 @@ enum eRPC : unsigned short
 	// Called when a macro is detected on the client machine.
 	ON_MACRO_DETECTED,
 
+	// Called when the player has sent the server their hardware ID.
+	ON_HARDWAREID_SENT,
+
 
 };
 
