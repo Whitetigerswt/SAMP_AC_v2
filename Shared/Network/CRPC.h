@@ -18,6 +18,9 @@ enum eRPC : unsigned short
 	// Called when the server requests a file to be md5'd 
 	MD5_FILE,
 
+	// Called when the server wants to turn off switch reload for a player.
+	TOGGLE_SWITCH_RELOAD,
+
 	// -- SERVER RPCs --
 
 	// Called when a new module (in the current process) or process has been run

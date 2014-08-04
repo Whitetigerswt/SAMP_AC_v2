@@ -18,6 +18,9 @@ cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 	// Make sure the parameter count is correct.
 	CHECK_PARAMS(1, "IsPlayerUsingSAMPAC");
 
+	// Make sure the player is connected
+	if (!IsPlayerConnected(pParams[1])) return 0;
+
 	// Return the result if the player is connected to AC or not.
 	return Network::IsPlayerConnectedToAC(pParams[1]);
 }
@@ -26,6 +29,9 @@ cell AMX_NATIVE_CALL MD5_MemoryProc(AMX* pAmx, cell* pParams)
 {
 	// Make sure the parameter count is correct.
 	CHECK_PARAMS(3, "MD5_Memory");
+
+	// Make sure the player is connected
+	if (!IsPlayerConnected(pParams[1])) return 0;
 
 	// pParams[1] = playerid
 	// pParams[2] = address
@@ -47,6 +53,9 @@ cell AMX_NATIVE_CALL SetPlayerCanEnableACProc(AMX* pAmx, cell* pParams)
 	// Make sure the parameter count is correct.
 	CHECK_PARAMS(2, "SetPlayerCanEnableAC");
 
+	// Make sure the player is connected
+	if (!IsPlayerConnected(pParams[1])) return 0;
+
 	// Toggle if the player can enable AC or not.
 	CAntiCheat::ToggleCanEnableAC(pParams[1], !!pParams[2]);
 
@@ -58,6 +67,9 @@ cell AMX_NATIVE_CALL CanPlayerEnableACProc(AMX* pAmx, cell* pParams)
 	// Make sure the parameter count is correct.
 	CHECK_PARAMS(1, "CanPlayerEnableAC");
 
+	// Make sure the player is connected
+	if (!IsPlayerConnected(pParams[1])) return 0;
+
 	// Return if the player can enable AC or not.
 	return CAntiCheat::CanEnableAC(pParams[1]);
 }
@@ -67,6 +79,9 @@ cell AMX_NATIVE_CALL GetPlayerHardwareIDProc(AMX* pAmx, cell* pParams)
 	// Make sure the parameter count is correct.
 	CHECK_PARAMS(3, "GetPlayerHardwareID");
 
+	// Make sure the player is connected
+	if (!IsPlayerConnected(pParams[1])) return 0;
+
 	// Get the address of the variable in the 2nd parameter.
 	cell* cVarAddress = NULL;
 	amx_GetAddr(pAmx, pParams[2], &cVarAddress);
@@ -75,6 +90,20 @@ cell AMX_NATIVE_CALL GetPlayerHardwareIDProc(AMX* pAmx, cell* pParams)
 	return amx_SetString(cVarAddress, Network::GetPlayerFromPlayerid(pParams[1])->GetPlayerHardwareID().c_str(), 0, 0, pParams[3]);
 }
 
+cell AMX_NATIVE_CALL ToggleSwitchReloadProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(2, "ToggleSwitchReload");
+
+	// Make sure the player is connected
+	if (!IsPlayerConnected(pParams[1])) return 0;
+
+	// Create RPC data
+	RakNet::BitStream bsData;
+	bsData.Write(!!pParams[2]);
+
+	return Network::PlayerSendRPC(TOGGLE_SWITCH_RELOAD, pParams[1], &bsData);
+}
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
@@ -85,6 +114,8 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
 	// Handle network related processing.
 	Network::Process();
+
+	// Handle sampGDK ticking.
 	return sampgdk::ProcessTick();
 }
 
@@ -114,6 +145,7 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "SetPlayerCanEnableAC", SetPlayerCanEnableACProc },
 	{ "MD5_Memory", MD5_MemoryProc },
 	{ "GetPlayerHardwareID", GetPlayerHardwareIDProc },
+	{ "ToggleSwitchReload", ToggleSwitchReloadProc },
 	{ 0, 0 }
 };
 

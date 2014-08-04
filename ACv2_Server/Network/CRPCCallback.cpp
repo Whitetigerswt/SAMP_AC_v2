@@ -52,56 +52,72 @@ RPC_CALLBACK CRPCCallback::OnMD5Calculated(RakNet::BitStream &bsData, int iExtra
 	// Read values sent from client.
 	if (bsData.Read(address) && bsData.Read(size) && bsData.Read((char*)md5))
 	{
+		// Call the main function with the info we got.
 		Network::GetPlayerFromPlayerid(iExtra)->OnMD5Calculated(address, size, (char*)md5);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnFileCalculated(RakNet::BitStream &bsData, int iExtra)
 {
+	// Create variables to hold the file path and md5
 	unsigned char path[MAX_PATH + 1];
 	unsigned char md5[33];
 
+	// Reset memory.
 	memset(path, 0, sizeof(path));
 	memset(md5, 0, sizeof(md5));
 
+	// Read the data the client sent us.
 	if(bsData.Read((char*)path) && bsData.Read((char*)md5)) 
 	{
+		// Call the main function with the info we got.
 		Network::GetPlayerFromPlayerid(iExtra)->OnFileCalculated((char*)path, (char*)md5);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnImgFileModified(RakNet::BitStream &bsData, int iExtra)
 {
+	// Create variables to hold the file path and md5
 	unsigned char path[MAX_PATH + 1];
 	unsigned char md5[33];
 
+	// Reset memory
 	memset(path, 0, sizeof(path));
 	memset(md5, 0, sizeof(md5));
 
+	// Read the data sent to us by the server.
 	if (bsData.Read((char*)path) && bsData.Read((char*)md5))
 	{
+		// Use our helper class's function.
 		Network::GetPlayerFromPlayerid(iExtra)->OnImgFileModified((char*)path, (char*)md5);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra)
 {
+	// Create an int var to hold the virtual key the macro was detected on.
 	int vKey;
 
+	// Read the data the client said was a key used by a macro
 	if (bsData.Read(vKey))
 	{
+		// Let our helper class know.
 		Network::GetPlayerFromPlayerid(iExtra)->OnMacroDetected(vKey);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnHardwareIDGotten(RakNet::BitStream &bsData, int iExtra)
 {
+	// Create a big variable to hold hardware ID.
 	unsigned char hwid[2048];
 
+	// Reset it's memory.
 	memset(hwid, 0, sizeof(hwid));
 
+	// Read the hardware ID from the client.
 	if (bsData.Read((char*)hwid))
 	{
+		// Send to our helper class so it can store it.
 		Network::GetPlayerFromPlayerid(iExtra)->OnHardwareCalculated((char*)hwid);
 	}
 }

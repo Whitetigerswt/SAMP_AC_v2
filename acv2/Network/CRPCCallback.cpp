@@ -5,6 +5,7 @@
 #include "Network.h"
 #include "../Misc.h"
 #include "../VMProtectSDK.h"
+#include "../Addresses.h"
 
 #include <Boost\thread.hpp>
 
@@ -13,6 +14,7 @@ void CRPCCallback::Initialize()
 {
 	CRPC::Add(MD5_MEMORY_REGION, MD5_Memory_Region);
 	CRPC::Add(MD5_FILE, MD5_File);
+	CRPC::Add(TOGGLE_SWITCH_RELOAD, ToggleSwitchReload);
 
 	boost::thread ResendFilesThread(&ResendFileInformation);
 }
@@ -91,5 +93,28 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 
 		// Call the RPC.
 		Network::SendRPC(ON_FILE_CALCULATED, &bsData);
+	}
+}
+
+void CRPCCallback::ToggleSwitchReload(RakNet::BitStream &bsData, int iExtra)
+{
+	// Create a variable to hold what the server wants to do
+	bool toggle;
+	
+	// Read the data sent to us by the server.
+	if (bsData.Read(toggle))
+	{
+		// Unprotect the switch reload address.
+		DWORD dwOldProt;
+		VirtualProtect(SWITCH_RELOAD, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+		if (!toggle)
+		{
+			memcpy(SWITCH_RELOAD, "\x90\x90\x90\x90\x90\x90", 6); // nop
+		}
+		else
+		{
+			memcpy(SWITCH_RELOAD, "\x89\x88\xA8\x05\x00\x00", 6); // mov [eax+000005A8],ecx
+		}
 	}
 }

@@ -83,33 +83,47 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 
 void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 {
+	// The start of the weapon.dat block of HITMAN skills only.
 	if (address == 0xC8C418)
 	{
+		// Compare the md5 returned to a pre-calculated checksum of that memory block.
 		if (strcmp(md5, "af82edadc0d8d2f6488e8dc615c34627") != 0)
 		{
+			// Create 2 new variables, one to hold the name and one to send a test message to all the players on the server.
 			char msg[144], name[MAX_PLAYER_NAME];
 
+			// Get the player name and store it in the name variable.
 			GetPlayerName(ID, name, sizeof(name));
 
+			// Format a new message that tells what happened.
 			snprintf(msg, sizeof(msg), "[TEST] %s has modified weapon.dat info", name);
 
+			// Send the result to everyone on the server.
 			SendClientMessageToAll(-1, msg);
 		}
 	}
+
+	// This address is some handling.cfg address, though it seems to include code to and not just data.
 	else if (address == 0xC2B9DC)
 	{
+		// Compare the returned md5 to our pre-calculated checksum.
 		if (strcmp(md5, "12c0520d9b5442fbecccfa81ebbf2603") != 0)
 		{
+			// Create 2 new variables, one to hold the player name, and one to send a formatted message to everyone on the server.
 			char msg[144], name[MAX_PLAYER_NAME];
 
+			// Get the player name and store it in the name variable.
 			GetPlayerName(ID, name, sizeof(name));
 
+			// Format the message that we're going to send to everyone.
 			snprintf(msg, sizeof(msg), "[TEST] %s has modified handling.cfg info", name);
 
+			// Send the mssage to everyone connected to the server.
 			SendClientMessageToAll(-1, msg);
 		}
 	}
 
+	// Execute a PAWN callback.
 	Callback::Execute("OnMD5Calculated", "iiis", ID, address, size, md5);
 }
 

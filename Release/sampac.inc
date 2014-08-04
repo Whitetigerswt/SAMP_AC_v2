@@ -19,5 +19,9 @@ native CanPlayerEnableAC(playerid);
 // REQUIRES: The player is using AC.
 native GetPlayerHardwareID(playerid, buf[], size = sizeof(buf));
 
+// PURPOSE: Enable or disable switch reload
+// REQUIRES: The player is using AC.
+native ToggleSwitchReload(playerid, bool:toggle);
+
 forward OnMD5Calculated(playerid, address, size);
 forward OnFileExecuted(playerid, module[], md5[]);
