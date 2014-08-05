@@ -287,3 +287,8 @@ void CAntiCheat::OnHardwareCalculated(char* hwid)
 	// Send the message to everyone on the server.
 	SendClientMessageToAll(-1, msg);
 }
+
+void CAntiCheat::SetFPSLimit(int newlimit)
+{
+	FrameLimit = newlimit;
+}

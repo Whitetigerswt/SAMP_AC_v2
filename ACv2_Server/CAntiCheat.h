@@ -50,6 +50,14 @@ public:
 	// REQUIRES: The client is using AC.
 	std::string GetPlayerHardwareID() { return HardwareID; }
 
+	// PURPOSE: Set a players frame limit.
+	// REQUIRES: The client is using AC.
+	void SetFPSLimit(int newlimit);
+
+	// PURPOSE: Get the players frame limit.
+	// REQUIRES: NULL
+	int GetFPSLimit() { return FrameLimit; }
+
 	CClientSocketInfo* GetConnectionInfo();
 
 private:
@@ -57,6 +65,9 @@ private:
 
 	// PURPOSE: Remember the player's playerID.
 	int ID;
+
+	// PURPOSE: Keep track of the players set frame rate.
+	int FrameLimit = 9999;
 
 	// PURPOSE: Store the player's hardware ID.
 	std::string HardwareID;
