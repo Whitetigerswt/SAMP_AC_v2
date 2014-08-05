@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 		}
 
 		// Free the memory we just allocated that stores the samp.dll file path since LoadLibrary has been called and it's not needed anymore.
-		VirtualFreeEx(ProcessInfo.hProcess, arg, strlen(szWithSampdll), MEM_RELEASE);
+		VirtualFreeEx(ProcessInfo.hProcess, arg, 0, MEM_RELEASE);
 
 		// Resume the process (It was suspended, remember?)
 		ResumeThread(ProcessInfo.hThread);
