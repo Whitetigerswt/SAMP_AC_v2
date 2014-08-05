@@ -1,3 +1,5 @@
+#pragma once
+
 #include "DirectX Hooks\CD3D9DeviceProxy.h"
 #include "DirectX Hooks\CD3D9Proxy.h"
 #include "DirectX Hooks\CDInput8DeviceProxy.h"
@@ -20,11 +22,10 @@ public:
 	static void PreEndScene();
 	static void PostEndScene();
 	static void Initialize(IDirect3DDevice9* device, IDirect3D9* direct3D, HWND hwnd);
+
 private:
 	static Direct3DCreate9_t  m_pDirect3DCreate9;
 	static DirectInput8Create_t m_pDirectInput8Create;
 	static IDirect3DDevice9* m_pDevice;
 	static IDirect3D9* m_pDirect3D;
-	static bool m_bCursorEnabled;
-
 };

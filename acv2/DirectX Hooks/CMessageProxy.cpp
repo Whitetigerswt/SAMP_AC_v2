@@ -5,6 +5,7 @@
 #include <RakNet\BitStream.h>
 #include "../Network/Network.h"
 #include "../../Shared/Network/CRPC.h"
+#include "../Addresses.h"
 
 HWND CMessageProxy::m_hWindowOrig;
 WNDPROC CMessageProxy::m_wProcOrig;
@@ -39,7 +40,7 @@ WNDPROC CMessageProxy::GetOriginalProcedure()
 //TODO: use Process for something useful
 LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
-	if (GetForegroundWindow() != *(HWND*)0xC97C1C)
+	if (GetForegroundWindow() != CURRENT_HWND)
 	{
 		return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
 	}
