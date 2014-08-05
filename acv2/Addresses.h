@@ -11,5 +11,6 @@
 #define RESOLUTION_X		*(int*)0xC9C040
 #define RESOLUTION_Y		*(int*)0xC9C044
 #define CURRENT_HWND		*(HWND*)0xC97C1C
+#define SPRINT_KEY			*(BYTE*)0xB73478
 
 #define VAR_GTA3_IMG_PATH					(void*)0x858AF4

@@ -12,25 +12,31 @@ private:
 	inline static void Patch(void* address, void* data, int size)
 	{
 		unsigned long protect[2];
-		VirtualProtect(address, size, PAGE_EXECUTE_READWRITE, &protect[0]);
-		memcpy(address, data, size);
-		VirtualProtect(address, size, protect[0], &protect[1]);
+		if (VirtualProtect(address, size, PAGE_EXECUTE_READWRITE, &protect[0]))
+		{
+			memcpy(address, data, size);
+			VirtualProtect(address, size, protect[0], &protect[1]);
+		}
 	}
 public:
 	inline static void Nop(int address, int size)
 	{
 		unsigned long protect[2];
-		VirtualProtect((void *)address, size, PAGE_EXECUTE_READWRITE, &protect[0]);
-		memset((void *)address, 0x90, size);
-		VirtualProtect((void *)address, size, protect[0], &protect[1]);
+		if (VirtualProtect((void *)address, size, PAGE_EXECUTE_READWRITE, &protect[0]))
+		{
+			memset((void *)address, 0x90, size);
+			VirtualProtect((void *)address, size, protect[0], &protect[1]);
+		}
 	}
 	inline static bool CheckChar(int address, unsigned char value)
 	{
 		unsigned long protect[2];
 		unsigned char dummy = value;
-		VirtualProtect((void *)address, 1, PAGE_EXECUTE_READ, &protect[0]);
-		memcpy(&dummy, (void *)address, 1);
-		VirtualProtect((void *)address, 1, protect[0], &protect[1]);
+		if (VirtualProtect((void *)address, 1, PAGE_EXECUTE_READ, &protect[0]))
+		{
+			memcpy(&dummy, (void *)address, 1);
+			VirtualProtect((void *)address, 1, protect[0], &protect[1]);
+		}
 		return (dummy == value);
 	}
 	inline static void RedirectCall(int address, void *func)

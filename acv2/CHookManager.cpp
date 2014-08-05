@@ -3,6 +3,7 @@
 #include "Hooks.h"
 #include "CMem.h"
 #include <Windows.h>
+#include "CLog.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -105,7 +106,7 @@ float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
 
 unsigned int CHookManager::iLastTick = 0;
-int CHookManager::iTickOffset = 333;
+int CHookManager::iTickOffset = 222;
 int CHookManager::iLastPress = 0;
 
 
@@ -316,13 +317,13 @@ HOOK CHookManager::SprintHook()
 	}
 
 	// Check if the sprint key is pressed, and it wasn't pressed in the last frame.
-	if (*(BYTE*)0xB73478 != 0 && iLastPress == 0)
+	if (SPRINT_KEY != 0 && iLastPress == 0)
 	{
 		// If the sprint key was pressed more than once since the last tick
 		if (iLastTick > GetTickCount())
 		{
 			// Ignore the input
-			*(BYTE*)0xB73478 = 0;
+			SPRINT_KEY = 0;
 		}
 		else
 		{
@@ -332,7 +333,7 @@ HOOK CHookManager::SprintHook()
 	}
 
 	// Record the last press of the sprint key.
-	iLastPress = *(BYTE*)0xB73478;
+	iLastPress = SPRINT_KEY;
 
 	__asm
 	{

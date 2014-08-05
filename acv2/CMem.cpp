@@ -22,5 +22,6 @@ void CMem::Cpy(void* address, const void* src, int size)
 {
 	CMem::Unprotect(address, size);
 	memcpy(address, src, size);
-	VirtualProtect(address, size, m_dwUnprotectDummy, NULL);
+	DWORD dwOldProt = 0;
+	VirtualProtect(address, size, m_dwUnprotectDummy, &dwOldProt);
 }
