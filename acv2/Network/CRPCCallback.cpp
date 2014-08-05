@@ -15,6 +15,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(MD5_MEMORY_REGION, MD5_Memory_Region);
 	CRPC::Add(MD5_FILE, MD5_File);
 	CRPC::Add(TOGGLE_SWITCH_RELOAD, ToggleSwitchReload);
+	CRPC::Add(SET_FRAME_LIMIT, SetFrameLimit);
 
 	boost::thread ResendFilesThread(&ResendFileInformation);
 }
@@ -63,12 +64,14 @@ void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)
 		bitStream.Write(size);
 		bitStream.Write(md5.c_str());
 
+		// Send the RPC to the server.
 		Network::SendRPC(ON_MD5_CALCULATED, &bitStream);
 	}
 }
 
 void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 {
+	// Create a new variable to hold the file path sent to us by the server.
 	unsigned char file[MAX_PATH+1];
 
 	// Read data sent to us by the server (which in this case is the file name)
@@ -108,6 +111,7 @@ void CRPCCallback::ToggleSwitchReload(RakNet::BitStream &bsData, int iExtra)
 		DWORD dwOldProt;
 		VirtualProtect(SWITCH_RELOAD, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
 
+		// Set the player's ability to switch reload.
 		if (!toggle)
 		{
 			memcpy(SWITCH_RELOAD, "\x90\x90\x90\x90\x90\x90", 6); // nop
@@ -116,5 +120,18 @@ void CRPCCallback::ToggleSwitchReload(RakNet::BitStream &bsData, int iExtra)
 		{
 			memcpy(SWITCH_RELOAD, "\x89\x88\xA8\x05\x00\x00", 6); // mov [eax+000005A8],ecx
 		}
+	}
+}
+
+void CRPCCallback::SetFrameLimit(RakNet::BitStream &bsData, int iExtra)
+{
+	// Create a new variable to hold the new frame limit.
+	int fpslimit;
+
+	// Read the value sent to us by the server.
+	if (bsData.Read(fpslimit))
+	{
+		// Set the new frame limit.
+		Misc::SetFPSLimit(fpslimit);
 	}
 }

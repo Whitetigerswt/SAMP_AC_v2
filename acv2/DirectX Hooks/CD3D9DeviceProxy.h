@@ -131,4 +131,7 @@ private:
 	IDirect3DDevice9* m_pDirect3DDevice9;
 	IDirect3D9* m_pDirect3D9;
 
+	DWORD LastFrameTime;
+	DWORD FPSLimit = 20;
+
 };

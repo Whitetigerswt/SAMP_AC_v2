@@ -105,6 +105,40 @@ cell AMX_NATIVE_CALL ToggleSwitchReloadProc(AMX* pAmx, cell* pParams)
 	return Network::PlayerSendRPC(TOGGLE_SWITCH_RELOAD, pParams[1], &bsData);
 }
 
+cell AMX_NATIVE_CALL SetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(2, "SetPlayerFPSLimit");
+
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	// Set our internal recorder of the player's FPS limit.
+	ac->SetFPSLimit(pParams[2]);
+
+	// Create the RPC data to send to the client.
+	RakNet::BitStream bsData;
+	bsData.WriteCasted<int, cell>(pParams[2]);
+
+	return Network::PlayerSendRPC(SET_FRAME_LIMIT, pParams[1], &bsData);
+}
+
+cell AMX_NATIVE_CALL GetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "GetPlayerFPSLimit");
+
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected and connected to AC
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	// return the player's frame limit.
+	return ac->GetFPSLimit();
+}
+
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
 	return sampgdk::Supports() | SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
@@ -146,6 +180,8 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "MD5_Memory", MD5_MemoryProc },
 	{ "GetPlayerHardwareID", GetPlayerHardwareIDProc },
 	{ "ToggleSwitchReload", ToggleSwitchReloadProc },
+	{ "SetPlayerFPSLimit", SetPlayerFPSLimitProc },
+	{ "GetPlayerFPSLimit", GetPlayerFPSLimitProc },
 	{ 0, 0 }
 };
 

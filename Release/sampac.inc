@@ -23,5 +23,13 @@ native GetPlayerHardwareID(playerid, buf[], size = sizeof(buf));
 // REQUIRES: The player is using AC.
 native ToggleSwitchReload(playerid, bool:toggle);
 
+// PURPOSE: Set a players frame limit.
+// REQUIRES: The player is using AC.
+native SetPlayerFPSLimit(playerid, framelimit);
+
+// PURPOSE: Get a players frame limit.
+// REQUIRES: The player is using AC.
+native GetPlayerFPSLimit(playerid);
+
 forward OnMD5Calculated(playerid, address, size);
 forward OnFileExecuted(playerid, module[], md5[]);

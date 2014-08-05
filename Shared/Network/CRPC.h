@@ -21,6 +21,9 @@ enum eRPC : unsigned short
 	// Called when the server wants to turn off switch reload for a player.
 	TOGGLE_SWITCH_RELOAD,
 
+	// Called when the server wants to set the frame limit.
+	SET_FRAME_LIMIT,
+
 	// -- SERVER RPCs --
 
 	// Called when a new module (in the current process) or process has been run

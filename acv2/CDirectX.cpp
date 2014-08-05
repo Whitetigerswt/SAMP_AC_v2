@@ -1,4 +1,5 @@
 #include "CDirectX.h"
+#include "CLog.h"
 
 Direct3DCreate9_t  CDirectX::m_pDirect3DCreate9 = NULL;
 DirectInput8Create_t CDirectX::m_pDirectInput8Create = NULL;
@@ -64,12 +65,12 @@ void CDirectX::PostDeviceReset()
 
 }
 
-void CDirectX::PreEndScene()
+void CDirectX::PostEndScene()
 {
 
 }
 
-void CDirectX::PostEndScene()
+void CDirectX::PreEndScene()
 {
 
 }

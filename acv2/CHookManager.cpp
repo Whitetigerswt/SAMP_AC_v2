@@ -245,6 +245,11 @@ void CHookManager::Load()
 
 	CMem::ApplyJmp(FUNC_SprintHook, (DWORD)SprintHook, 8);
 
+	VirtualProtect(FUNC_FrameLimiter, 3, PAGE_EXECUTE_READWRITE, &dwOldProt);
+	memcpy(FUNC_FrameLimiter, "\x90\x90\x90", 3);
+
+	FRAME_LIMITER = 0;
+
 	// Check data file integrity.
 	VerifyFilePaths();
 }

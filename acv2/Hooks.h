@@ -23,6 +23,9 @@
 // SPRINT PATCH - DETECT SPRINT KEY PRESSING //
 #define FUNC_SprintHook						(BYTE*)0x541C98
 
+// FRAME LIMITER PATCH //
+#define FUNC_FrameLimiter					(void*)0x57CED1
+
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91

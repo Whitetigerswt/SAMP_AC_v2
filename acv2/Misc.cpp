@@ -45,4 +45,17 @@ namespace Misc
 
 		return DirectoryPath;
 	}
+
+	// PURPOSE: The variable that holds the players frame limiter.
+	int FrameLimit = 9999;
+
+	int GetFPSLimit()
+	{
+		return FrameLimit;
+	}
+
+	void SetFPSLimit(int newlimit)
+	{
+		FrameLimit = newlimit;
+	}
 }

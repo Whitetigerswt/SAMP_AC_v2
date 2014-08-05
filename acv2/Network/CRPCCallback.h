@@ -5,12 +5,33 @@
 class CRPCCallback
 {
 public:
+	// PURPOSE: Register the RPCs.
+	// REQUIRES: The client is connected to the server.
 	static void Initialize();
 
 private:
+	// PURPOSE: Sends the initial info to the server after the connection has been accepted and OnPlayerConnect has been called on the server.
+	// REQUIRES: NULL
 	static void ResendFileInformation();
+
+	// PURPOSE: An RPC callback to get an md5 checksum of a specific memory region.
+	// REQUIRES: The server sends the MD5_MEMORY_REGION RPC to the client.
 	static RPC_CALLBACK MD5_Memory_Region(RPC_ARGS);
+
+	// PURPOSE: An RPC callback to get an MD5 of a specific file on the client's machine.
+	// REQUIRES: The server sends the MD5_FILE RPC to the client.
 	static RPC_CALLBACK MD5_File(RPC_ARGS);
+
+	// PURPOSE: An RPC callback to toggle the players ability to use switch reload.
+	// REQUIRES: The server sends the TOGGLE_SWITCH_RELOAD RPC to the client.
 	static RPC_CALLBACK ToggleSwitchReload(RPC_ARGS);
+
+	// PURPOSE: An RPC callback to toggle the players frame limiter.
+	// REQUIRES: The server sends the TOGGLE_FRAME_LIMITER RPC to the client.
+	static RPC_CALLBACK ToggleFrameLimiter(RPC_ARGS);
+
+	// PURPOSE: An RPC callback to set the players frame limit.
+	// REQUIRES: The server sends the SET_FRAME_LIMIT RPC to the client.
+	static RPC_CALLBACK SetFrameLimit(RPC_ARGS);
 
 };

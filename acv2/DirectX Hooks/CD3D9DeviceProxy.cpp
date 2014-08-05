@@ -2,6 +2,9 @@
 #include "../Network/Network.h"
 #include "CMessageProxy.h"
 #include "../CDirectX.h"
+#include "../Misc.h"
+
+#include <MMSystem.h>
 
 CD3D9DeviceProxy::CD3D9DeviceProxy(IDirect3DDevice9* pDirect3DDevice9, IDirect3D9* pDirect3D9, D3DPRESENT_PARAMETERS* pPresentationParameters)
 {
@@ -100,6 +103,13 @@ HRESULT CD3D9DeviceProxy::Reset(D3DPRESENT_PARAMETERS* pPresentationParameters)
 HRESULT CD3D9DeviceProxy::Present(CONST RECT* pSourceRect,CONST RECT* pDestRect,HWND hDestWindowOverride,CONST RGNDATA* pDirtyRegion) 
 {
 	Network::Process();
+
+	DWORD currentTime = timeGetTime();
+	if ((float)(currentTime - LastFrameTime) < (float)(1000 / Misc::GetFPSLimit()))
+	{
+		return 0;
+	}
+	LastFrameTime = currentTime;
 
 	HRESULT hRes = m_pDirect3DDevice9->Present(pSourceRect, pDestRect, hDestWindowOverride, pDirtyRegion);
 
