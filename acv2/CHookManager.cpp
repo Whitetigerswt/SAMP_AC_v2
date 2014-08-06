@@ -3,7 +3,6 @@
 #include "Hooks.h"
 #include "CMem.h"
 #include <Windows.h>
-#include "CLog.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -65,8 +64,6 @@ static DWORD CameraYWrite8JmpBack = 0x5232A9;
 static DWORD CameraYWrite9JmpBack = 0x5233CC;
 static DWORD CameraYWrite10JmpBack = 0x52260D;
 static DWORD CameraYWrite11JmpBack = 0x522911;
-static DWORD CameraYWrite12JmpBack = 0x525A6F;
-static DWORD CameraYWrite13JmpBack = 0x525A6F;
 
 static DWORD CameraYAccess1JmpBack = 0x523BA7;
 static DWORD CameraYAccess2JmpBack = 0x524153;
@@ -206,8 +203,6 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraYWriteHook9, (DWORD)CameraYWriteHook9, 6);
 	CMem::ApplyJmp(FUNC_CameraYWriteHook10, (DWORD)CameraYWriteHook10, 6);
 	CMem::ApplyJmp(FUNC_CameraYWriteHook11, (DWORD)CameraYWriteHook11, 6);
-	//CMem::ApplyJmp(FUNC_CameraYWriteHook12, (DWORD)CameraYWriteHook12, 18);
-	//CMem::ApplyJmp(FUNC_CameraYWriteHook13, (DWORD)CameraYWriteHook13, 6);
 
 	CMem::ApplyJmp(FUNC_CameraYAccessHook1, (DWORD)CameraYAccessHook1, 6);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook2, (DWORD)CameraYAccessHook2, 6);
@@ -237,18 +232,26 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraYAccessHook26, (DWORD)CameraYAccessHook26, 8);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook27, (DWORD)CameraYAccessHook27, 10);
 
-	// Health hack hooks
-	//CMem::ApplyJmp(FUNC_CPed_Special_Flags, (DWORD)CPed_Special_Flags, 7);
+	// CPed special flag for bullet proof patch
+	VirtualProtect(FUNC_CPed_Special_Flags, 2, PAGE_EXECUTE_READWRITE, &dwOldProt);
+	memcpy(FUNC_CPed_Special_Flags, "\x90\x90", 2);
 
+	// Patch widescree_lite.asi mod
+	// Parts of it's source code are here: https://github.com/ThirteenAG/Widescreen_Fixes_Pack/tree/master/GTASA_widescreen_fix
 	CMem::ApplyJmp(FUNC_WidescreenPatch, (DWORD)WidescreenPatch, 6);
 
+	// Disable changing of FOV. 
+	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer
 	CMem::ApplyJmp(FUNC_FOVPatch, (DWORD)FOVPatch, 6);
 
+	// Hook key presses, not necessarily sprint, but this is an all key presses hook.
 	CMem::ApplyJmp(FUNC_SprintHook, (DWORD)SprintHook, 8);
 
+	// When a player trys to turn on their frame limiter, this is the address that sets the frame limiter on, NOP that.
 	VirtualProtect(FUNC_FrameLimiter, 3, PAGE_EXECUTE_READWRITE, &dwOldProt);
 	memcpy(FUNC_FrameLimiter, "\x90\x90\x90", 3);
 
+	// And set the frame limiter off.
 	FRAME_LIMITER = 0;
 
 	// Check data file integrity.
@@ -360,15 +363,6 @@ HOOK CHookManager::FOVPatch()
 	{
 		popad
 		jmp[FOVPatchJmpBack]
-	}
-}
-
-HOOK CHookManager::CPed_Special_Flags()
-{
-	__asm
-	{
-		cmp edi, 0 // always unset z flag
-		jmp[CPed_Special_FlagsJmpBack]
 	}
 }
 
@@ -804,16 +798,6 @@ HOOK CHookManager::CameraYWriteHook7()
 	}
 }
 
-HOOK CHookManager::CameraYWriteHook8()
-{
-	__asm
-	{
-		fstp dword ptr[CameraYPos]
-		fld dword ptr[CameraYPos]
-		jmp[CameraYWrite8JmpBack]
-	}
-}
-
 HOOK CHookManager::CameraYWriteHook9()
 {
 	__asm
@@ -838,26 +822,6 @@ HOOK CHookManager::CameraYWriteHook11()
 	{
 		fstp dword ptr[CameraYPos]
 		jmp[CameraYWrite11JmpBack]
-	}
-}
-
-HOOK CHookManager::CameraYWriteHook12()
-{
-	__asm
-	{
-		fadd dword ptr[CameraYPos]
-		fstp dword ptr[CameraYPos]
-		fld dword ptr[CameraYPos]
-		jmp[CameraYWrite12JmpBack]
-	}
-}
-
-HOOK CHookManager::CameraYWriteHook13()
-{
-	__asm
-	{
-		mov[CameraYPos],eax
-		jmp[CameraYWrite13JmpBack]
 	}
 }
 

@@ -43,9 +43,13 @@ void CRPCCallback::ResendFileInformation()
 	// Free memory.
 	delete[] pBuf; 
 
+	CLog log = CLog("testert.txt");
+	log.Write("before processes send files.");
 	// Send the server the processes and modules that were loaded while we weren't connected.
 	CLoader::Processes.ResendFiles();
+	log.Write("before modules send files.");
 	CLoader::Modules.ResendFiles();
+	log.Write("After both");
 }
 
 void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)

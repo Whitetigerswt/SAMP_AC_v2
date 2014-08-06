@@ -73,12 +73,10 @@ private:
 	static void CameraYWriteHook5();
 	static void CameraYWriteHook6();
 	static void CameraYWriteHook7();
-	static void CameraYWriteHook8();
+	//static void CameraYWriteHook8();
 	static void CameraYWriteHook9();
 	static void CameraYWriteHook10();
 	static void CameraYWriteHook11();
-	static void CameraYWriteHook12();
-	static void CameraYWriteHook13();
 
 	static void CameraYAccessHook1();
 	static void CameraYAccessHook2();

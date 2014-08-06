@@ -53,6 +53,7 @@ CClientSocketInfo* CAntiCheat::GetConnectionInfo()
 
 void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 {
+	Utility::Printf("Processpath: %s md5: %s", processpath, md5);
 	// Loop through the list of bad processes to see if we can find a match to the one just sent to us by the client.
 	for (std::vector<std::string>::iterator it = m_ProcessMD5s.begin(); it != m_ProcessMD5s.end(); ++it)
 	{

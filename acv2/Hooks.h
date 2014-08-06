@@ -12,7 +12,7 @@
 #define FUNC_DeagleBullet					(BYTE*)0x73FC04 
 
 // OTHER HEALTH HOOKS //
-#define FUNC_CPed_Special_Flags				(BYTE*)0x4B36A2
+#define FUNC_CPed_Special_Flags				(void*)0x5448E7
 
 // WIDESCREEN MOD HOOK //
 #define FUNC_WidescreenPatch				(BYTE*)0x5894AF
@@ -78,12 +78,10 @@
 #define FUNC_CameraYWriteHook5				(BYTE*)0x5225D7
 #define FUNC_CameraYWriteHook6				(BYTE*)0x5222BC
 #define FUNC_CameraYWriteHook7				(BYTE*)0x523233
-#define FUNC_CameraYWriteHook8				(BYTE*)0x52329D
+//#define FUNC_CameraYWriteHook8				(BYTE*)0x52329D
 #define FUNC_CameraYWriteHook9				(BYTE*)0x5233C6
 #define FUNC_CameraYWriteHook10				(BYTE*)0x522607
 #define FUNC_CameraYWriteHook11				(BYTE*)0x52290B
-#define FUNC_CameraYWriteHook12				(BYTE*)0x525A5D
-#define FUNC_CameraYWriteHook13				(BYTE*)0x525AD5
 
 #define FUNC_CameraYAccessHook1				(BYTE*)0x523BA1
 #define FUNC_CameraYAccessHook2				(BYTE*)0x52414D
