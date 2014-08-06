@@ -53,7 +53,6 @@ CClientSocketInfo* CAntiCheat::GetConnectionInfo()
 
 void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 {
-	Utility::Printf("Processpath: %s md5: %s", processpath, md5);
 	// Loop through the list of bad processes to see if we can find a match to the one just sent to us by the client.
 	for (std::vector<std::string>::iterator it = m_ProcessMD5s.begin(); it != m_ProcessMD5s.end(); ++it)
 	{
@@ -79,7 +78,7 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 			SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 		}
 	}
-	Callback::Execute("OnFileExecuted", "iss", ID, processpath, md5);
+	Callback::Execute("OnFileExecuted", "ssi", md5, processpath, ID);
 }
 
 void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
@@ -125,7 +124,7 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 	}
 
 	// Execute a PAWN callback.
-	Callback::Execute("OnMD5Calculated", "iiis", ID, address, size, md5);
+	Callback::Execute("OnMD5Calculated", "siii", md5, size, address, ID);
 }
 
 void CAntiCheat::OnFileCalculated(char* path, char* md5)
@@ -174,6 +173,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 		// And kick the player.
 		SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 	}
+	Callback::Execute("OnFileCalculated", "ssi", md5, path, ID);
 }
 
 void CAntiCheat::OnImgFileModified(char* filename, char* md5)
@@ -194,6 +194,8 @@ void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 
 	// Kick the player who has the modified file.
 	SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
+
+	Callback::Execute("OnImgFileModifed", "ssi", md5, filename, ID);
 }
 
 bool CAntiCheat::CanEnableAC(int playerid)

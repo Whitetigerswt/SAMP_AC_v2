@@ -106,18 +106,21 @@ namespace Callback
 		int playerid = (int)params;
 		if (IsPlayerConnected(playerid) && Network::IsPlayerConnectedToAC(playerid))
 		{
+			// Verify the players weapon.dat values.
 			RakNet::BitStream bsData;
-			bsData.Write(0xC8C418);
+			bsData.Write(0xC8C418); 
 			bsData.Write(0x460);
 
 			Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData);
 
+			// Verify the players handling.cfg values
 			RakNet::BitStream bsData2;
 			bsData2.Write(0xC2B9DC);
 			bsData2.Write(0xAF00);
 
 			Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData2);
 
+			// Repeat on a 1 minute interval.
 			SetTimer(60000, 0, CheckPlayersMemory, (void*)playerid);
 		}
 	}
@@ -172,6 +175,7 @@ namespace Callback
 				}
 			}
 		}
+		Execute("OnACClosed", "s", ip.c_str());
 	}
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)

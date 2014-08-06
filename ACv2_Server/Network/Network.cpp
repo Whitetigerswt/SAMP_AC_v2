@@ -220,6 +220,8 @@ namespace Network
 				CClientSocketInfo* pSockInfo = new CClientSocketInfo(pPacket->systemAddress, pPacket->guid);
 				unhandledConnections.push_back(pSockInfo);
 
+				Callback::Execute("OnACOpened", "s", pPacket->systemAddress.ToString(false));
+
 				/*if (Callback::Execute("OnPlayerACConnect", "is", pPacket->systemAddress.GetPort(), pPacket->systemAddress.ToString(false)))
 				{
 					CClientSocketInfo* pSockInfo = new CClientSocketInfo(pPacket->systemAddress, pPacket->guid);
