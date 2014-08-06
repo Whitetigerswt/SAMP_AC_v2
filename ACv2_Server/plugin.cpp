@@ -79,15 +79,18 @@ cell AMX_NATIVE_CALL GetPlayerHardwareIDProc(AMX* pAmx, cell* pParams)
 	// Make sure the parameter count is correct.
 	CHECK_PARAMS(3, "GetPlayerHardwareID");
 
+	// Get the player's CAntiCheat class pointer.
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
 	// Make sure the player is connected
-	if (!IsPlayerConnected(pParams[1])) return 0;
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	// Get the address of the variable in the 2nd parameter.
 	cell* cVarAddress = NULL;
 	amx_GetAddr(pAmx, pParams[2], &cVarAddress);
 
 	// Return the result of setting the 2nd parameter to the hardware ID string.
-	return amx_SetString(cVarAddress, Network::GetPlayerFromPlayerid(pParams[1])->GetPlayerHardwareID().c_str(), 0, 0, pParams[3]);
+	return amx_SetString(cVarAddress, ac->GetPlayerHardwareID().c_str(), 0, 0, pParams[3]);
 }
 
 cell AMX_NATIVE_CALL ToggleSwitchReloadProc(AMX* pAmx, cell* pParams)

@@ -144,9 +144,9 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 		std::string data = body(res);
 		return data;
 	}
-	catch (std::exception)
+	catch (std::exception &e)
 	{
-
+		return e.what();
 	}
 	return "";
 }

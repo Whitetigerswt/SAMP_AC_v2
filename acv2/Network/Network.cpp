@@ -60,7 +60,8 @@ namespace Network
 
 	void Disconnect()
 	{
-		pRakClient->Disconnect();
+		pRakClient->Shutdown(1000);
+		bServerHasPlugin = false;
 	}
 
 	bool IsConnected()

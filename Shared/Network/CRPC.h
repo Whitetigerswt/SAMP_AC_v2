@@ -27,6 +27,9 @@ enum eRPC : unsigned short
 	// Called when the server requests the client to exit process
 	EXIT_PROCESS,
 
+	// Called when the server determines the client's AC version is not compatible.
+	VERSION_NOT_COMPATIBLE,
+
 	// -- SERVER RPCs --
 
 	// Called when a new module (in the current process) or process has been run
@@ -44,8 +47,8 @@ enum eRPC : unsigned short
 	// Called when a macro is detected on the client machine.
 	ON_MACRO_DETECTED,
 
-	// Called when the player has sent the server their hardware ID.
-	ON_HARDWAREID_SENT,
+	// Called when the player has sent it's initial info.
+	ON_INITIAL_INFO,
 
 	// Called when the player is using a virtual machine, debugger, or the CRC image doesn't match
 	ON_TAMPER_ATTEMPT,

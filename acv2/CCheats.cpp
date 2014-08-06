@@ -2,7 +2,6 @@
 #include "md5.h"
 #include "../Shared/Network/CRPC.h"
 #include "Network\Network.h"
-#include "CLog.h"
 
 #include <string>
 
@@ -126,53 +125,36 @@ void CCheats::AddFile(std::string file, std::string md5)
 
 void CCheats::OnFileExecuted(const char* file, const char* md5)
 {
-	CLog log = CLog("onfileexecuted.txt");
-	log.Write("w");
 	// Make sure the length is greater than 3 characters.
 	if (strlen(file) > 3) 
 	{
-		log.Write("Passed strlen");
 		// Convert it to an std::string.
 		std::string szFile(file);
-
-		log.Write("Created the string");
 
 		// Find the last instance of a \, cause we only want the file name and not the complete path.
 		int i = szFile.rfind("\\");
 
-		log.Write("reverse found some asd");
-
 		// Change the string to only the files name and not it's complete path.
 		szFile = szFile.substr(i + 1);
-
-		log.Write("substr'd");
 
 		// Prepare to send the info to the server.
 		RakNet::BitStream bitStream;
 		bitStream.Write(szFile.c_str());
 		bitStream.Write(md5);
 
-		log.Write("bitstreamed");
-
 		// Send the RPC to the server.
 		Network::SendRPC(ON_FILE_EXECUTED, &bitStream);
-		log.Write("sent rpc");
 	}
 	return;
 }
 
 void CCheats::ResendFiles()
 {
-	CLog log = CLog("test2.txt");
-	log.Write("begining");
 	// Loop through the file collection
 	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
 	{
-		log.Write("In loop");
 		// Don't deal with annoying pointers.
 		std::string file(*i);
-
-		log.Write("%s", file.c_str());
 
 		// Re-send the info to the server that the file was just executed.
 		OnFileExecuted(file.c_str(), GetFileMD5(file).c_str());

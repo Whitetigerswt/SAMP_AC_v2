@@ -6,6 +6,7 @@
 #include "../Misc.h"
 #include "../VMProtectSDK.h"
 #include "../Addresses.h"
+#include "../CClientUpdater.h"
 
 #include <Boost\thread.hpp>
 
@@ -17,6 +18,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(TOGGLE_SWITCH_RELOAD, ToggleSwitchReload);
 	CRPC::Add(SET_FRAME_LIMIT, SetFrameLimit);
 	CRPC::Add(EXIT_PROCESS, ExitThisProcess);
+	CRPC::Add(VERSION_NOT_COMPATIBLE, VersionNotCompatible);
 
 	boost::thread ResendFilesThread(&ResendFileInformation);
 }
@@ -38,19 +40,18 @@ void CRPCCallback::ResendFileInformation()
 	// Write the hardwareID to the packet
 	bsData.Write(pBuf);
 
+	// Write the user's AC version to the packet.
+	bsData.Write(CURRENT_MAJOR_VERSION);
+
 	// Send the info to the server.
-	Network::SendRPC(ON_HARDWAREID_SENT, &bsData);
+	Network::SendRPC(ON_INITIAL_INFO, &bsData);
 	
 	// Free memory.
 	delete[] pBuf; 
 
-	CLog log = CLog("testert.txt");
-	log.Write("before processes send files.");
 	// Send the server the processes and modules that were loaded while we weren't connected.
 	CLoader::Processes.ResendFiles();
-	log.Write("before modules send files.");
 	CLoader::Modules.ResendFiles();
-	log.Write("After both");
 }
 
 void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)
@@ -145,4 +146,9 @@ void CRPCCallback::ExitThisProcess(RakNet::BitStream &bsData, int iExtra)
 {
 	Network::Disconnect();
 	ExitProcess(0);
+}
+
+void CRPCCallback::VersionNotCompatible(RakNet::BitStream &bsData, int iExtra)
+{
+	Network::Disconnect();
 }

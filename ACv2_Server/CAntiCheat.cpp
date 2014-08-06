@@ -307,6 +307,27 @@ void CAntiCheat::OnTamperAttempt()
 	SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 }
 
+void CAntiCheat::CheckVersionCompatible(float version)
+{
+	if (version > CURRENT_MAJOR_VERSION)
+	{
+		// Inform the player there version of AC is not compatible with the server.
+		char msg[150];
+
+		// Format the message letting the user know their AC version will not work on this server.
+		snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. IT WILL NOT WORK ON THIS SERVER.");
+
+		// Send the message to the user.
+		SendClientMessage(ID, -1, msg);
+
+		// And send an RPC telling the client's AC not to continue to monitor things.
+		Network::PlayerSendRPC(VERSION_NOT_COMPATIBLE, ID);
+
+		// Close the connection.
+		Network::CloseConnection(ID);
+	}
+}
+
 void CAntiCheat::SetFPSLimit(int newlimit)
 {
 	FrameLimit = newlimit;

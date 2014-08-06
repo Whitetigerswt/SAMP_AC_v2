@@ -38,4 +38,8 @@ private:
 	// REQUIRES: The server sends the EXIT_PROCESS RPC to the client.
 	static RPC_CALLBACK ExitThisProcess(RPC_ARGS);
 
+	// PURPOSE: An RPC callback to tell the AC not to continue to monitor anything, and unload itself.
+	// REQUIRES: The server sends the VERSION_NOT_COMPATIBLE RPC to the client.
+	static RPC_CALLBACK VersionNotCompatible(RPC_ARGS);
+
 };

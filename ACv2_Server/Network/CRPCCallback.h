@@ -32,9 +32,9 @@ private:
 	// REQUIRES: NULL
 	static RPC_CALLBACK OnMacroDetected(RPC_ARGS);
 
-	// PURPOSE: RPC Callback for eRPC::ON_HARDWAREID_SENT	
+	// PURPOSE: RPC Callback for eRPC::ON_INITIAL_INFO	
 	// REQUIRES: NULL
-	static RPC_CALLBACK OnHardwareIDGotten(RPC_ARGS);
+	static RPC_CALLBACK OnIntialInfoGotten(RPC_ARGS);
 
 	// PURPOSE: RPC Callback for eRPC::ON_TAMPER_ATTEMPT
 	// REQUIRES: NULL

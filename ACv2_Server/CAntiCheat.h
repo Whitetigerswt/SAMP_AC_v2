@@ -42,6 +42,10 @@ public:
 	// REQUIRES: The client is using AC.
 	void OnTamperAttempt();
 
+	// PURPOSE: Check if the player's client version of AC is compatible with the server's version.
+	// REQUIRES: The client is using AC.
+	void CheckVersionCompatible(float version);
+
 	// PURPOSE: Toggles whether the player can turn AC on or off
 	// REQUIRES: NULL
 	static void ToggleCanEnableAC(int playerid, bool toggle);

@@ -24,6 +24,7 @@ public:
 	static CInjectedLibraries Modules;
 	static CProcessList Processes;
 	static CDirectoryScanner GtaDirectory;
+	static HMODULE ThishMod;
 
 private:
 	// PURPOSE: Check elevation of the program, and elevate if necessary.

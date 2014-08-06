@@ -19,11 +19,15 @@ CInjectedLibraries CLoader::Modules = CInjectedLibraries();
 CProcessList CLoader::Processes = CProcessList();
 CDirectoryScanner CLoader::GtaDirectory = CDirectoryScanner();
 bool CLoader::isLoaded = false;
+HMODULE CLoader::ThishMod = NULL;
 
 void CLoader::Initialize(HMODULE hMod)
 {
 	// Record that we're loaded
 	isLoaded = true;
+
+	// Keep track of the hModule.
+	ThishMod = hMod;
 
 	// Hook the D3D9Device functions.
 	CDirectX::HookD3DFunctions();
@@ -58,14 +62,24 @@ void CLoader::Initialize(HMODULE hMod)
 
 	while (true)
 	{
+		// Scan for new processes.
 		Processes.Scan();
+
+		// Scan for new injected modules.
 		Modules.Scan();
 
+		// Check for a tamper attempt.
 		if (VMProtectIsDebuggerPresent(true) || VMProtectIsVirtualMachinePresent() || !VMProtectIsValidImageCRC())
 		{
+			if (!Network::IsConnected())
+			{
+				ExitProcess(0);
+			}
+
 			Network::SendRPC(ON_TAMPER_ATTEMPT);
 		}
 
+		// Sleep
 		Sleep(1000);
 	}
 }

@@ -18,7 +18,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_FILE_CALCULATED, OnFileCalculated);
 	CRPC::Add(ON_IMG_FILE_MODIFIED, OnImgFileModified);
 	CRPC::Add(ON_MACRO_DETECTED, OnMacroDetected);
-	CRPC::Add(ON_HARDWAREID_SENT, OnHardwareIDGotten);
+	CRPC::Add(ON_INITIAL_INFO, OnIntialInfoGotten);
 	CRPC::Add(ON_TAMPER_ATTEMPT, OnTamperAttempt);
 }
 
@@ -107,19 +107,23 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 	}
 }
 
-RPC_CALLBACK CRPCCallback::OnHardwareIDGotten(RakNet::BitStream &bsData, int iExtra)
+RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
 	// Create a big variable to hold hardware ID.
 	unsigned char hwid[2048];
+	float version;
 
 	// Reset it's memory.
 	memset(hwid, 0, sizeof(hwid));
 
 	// Read the hardware ID from the client.
-	if (bsData.Read((char*)hwid))
+	if (bsData.Read((char*)hwid) && bsData.Read(version))
 	{
 		// Send to our helper class so it can store it.
 		Network::GetPlayerFromPlayerid(iExtra)->OnHardwareCalculated((char*)hwid);
+
+		// Check the version compatiblity.
+		Network::GetPlayerFromPlayerid(iExtra)->CheckVersionCompatible(version);
 	}
 }
 

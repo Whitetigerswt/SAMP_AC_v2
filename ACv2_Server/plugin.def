@@ -8,6 +8,5 @@ EXPORTS
 	OnPlayerConnect
 	OnPlayerDisconnect
 	OnGameModeInit
-	OnHTTPResponse
 	OnPlayerCommandText
 	OnRconLoginAttempt
