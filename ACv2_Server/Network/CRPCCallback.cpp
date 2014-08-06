@@ -19,6 +19,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_IMG_FILE_MODIFIED, OnImgFileModified);
 	CRPC::Add(ON_MACRO_DETECTED, OnMacroDetected);
 	CRPC::Add(ON_HARDWAREID_SENT, OnHardwareIDGotten);
+	CRPC::Add(ON_TAMPER_ATTEMPT, OnTamperAttempt);
 }
 
 
@@ -120,4 +121,10 @@ RPC_CALLBACK CRPCCallback::OnHardwareIDGotten(RakNet::BitStream &bsData, int iEx
 		// Send to our helper class so it can store it.
 		Network::GetPlayerFromPlayerid(iExtra)->OnHardwareCalculated((char*)hwid);
 	}
+}
+
+RPC_CALLBACK CRPCCallback::OnTamperAttempt(RakNet::BitStream &bsData, int iExtra)
+{
+	Network::GetPlayerFromPlayerid(iExtra)->OnTamperAttempt();
+	Network::PlayerSendRPC(EXIT_PROCESS, iExtra);
 }

@@ -9,6 +9,7 @@
 #include "CHookManager.h"
 #include "VMProtectSDK.h"
 #include "VersionHelpers.h"
+#include "../Shared/Network/CRPC.h"
 
 #include <map>
 #include <Shellapi.h>
@@ -60,11 +61,10 @@ void CLoader::Initialize(HMODULE hMod)
 		Processes.Scan();
 		Modules.Scan();
 
-		/*if (VMProtectIsDebuggerPresent(true) || VMProtectIsVirtualMachinePresent() || !VMProtectIsValidImageCRC())
+		if (VMProtectIsDebuggerPresent(true) || VMProtectIsVirtualMachinePresent() || !VMProtectIsValidImageCRC())
 		{
-			Network::Disconnect();
-			ExitProcess(0);
-		}*/
+			Network::SendRPC(ON_TAMPER_ATTEMPT);
+		}
 
 		Sleep(1000);
 	}

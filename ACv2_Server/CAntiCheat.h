@@ -38,6 +38,10 @@ public:
 	// REQUIRES: The client is using AC.
 	void OnHardwareCalculated(char* hwid);
 
+	// PURPOSE: Callback for when the player attempts to tamper with the mod.
+	// REQUIRES: The client is using AC.
+	void OnTamperAttempt();
+
 	// PURPOSE: Toggles whether the player can turn AC on or off
 	// REQUIRES: NULL
 	static void ToggleCanEnableAC(int playerid, bool toggle);

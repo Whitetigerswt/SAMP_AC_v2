@@ -289,6 +289,24 @@ void CAntiCheat::OnHardwareCalculated(char* hwid)
 	SendClientMessageToAll(-1, msg);
 }
 
+void CAntiCheat::OnTamperAttempt()
+{
+	// Create 2 new variables, one to hold the players name and one to send a formatted message to the rest of the players on the server.
+	char name[MAX_PLAYER_NAME], msg[144];
+
+	// Get the player name and store it in the name variable.
+	GetPlayerName(ID, name, sizeof(name));
+
+	// Format the message that will be sent to everyone on the server.
+	snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} is trying to tamper with the AC mod.");
+
+	// Send the message to everyone on the server.
+	SendClientMessageToAll(-1, msg);
+
+	// Kick the player.
+	SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
+}
+
 void CAntiCheat::SetFPSLimit(int newlimit)
 {
 	FrameLimit = newlimit;

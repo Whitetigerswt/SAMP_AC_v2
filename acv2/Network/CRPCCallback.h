@@ -34,4 +34,8 @@ private:
 	// REQUIRES: The server sends the SET_FRAME_LIMIT RPC to the client.
 	static RPC_CALLBACK SetFrameLimit(RPC_ARGS);
 
+	// PURPOSE: An RPC callback to end the current process
+	// REQUIRES: The server sends the EXIT_PROCESS RPC to the client.
+	static RPC_CALLBACK ExitThisProcess(RPC_ARGS);
+
 };

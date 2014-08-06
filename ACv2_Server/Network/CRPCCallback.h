@@ -36,4 +36,8 @@ private:
 	// REQUIRES: NULL
 	static RPC_CALLBACK OnHardwareIDGotten(RPC_ARGS);
 
+	// PURPOSE: RPC Callback for eRPC::ON_TAMPER_ATTEMPT
+	// REQUIRES: NULL
+	static RPC_CALLBACK OnTamperAttempt(RPC_ARGS);
+
 };

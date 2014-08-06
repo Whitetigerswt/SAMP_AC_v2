@@ -24,6 +24,9 @@ enum eRPC : unsigned short
 	// Called when the server wants to set the frame limit.
 	SET_FRAME_LIMIT,
 
+	// Called when the server requests the client to exit process
+	EXIT_PROCESS,
+
 	// -- SERVER RPCs --
 
 	// Called when a new module (in the current process) or process has been run
@@ -43,6 +46,9 @@ enum eRPC : unsigned short
 
 	// Called when the player has sent the server their hardware ID.
 	ON_HARDWAREID_SENT,
+
+	// Called when the player is using a virtual machine, debugger, or the CRC image doesn't match
+	ON_TAMPER_ATTEMPT,
 
 
 };

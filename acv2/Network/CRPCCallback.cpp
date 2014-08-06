@@ -16,6 +16,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(MD5_FILE, MD5_File);
 	CRPC::Add(TOGGLE_SWITCH_RELOAD, ToggleSwitchReload);
 	CRPC::Add(SET_FRAME_LIMIT, SetFrameLimit);
+	CRPC::Add(EXIT_PROCESS, ExitThisProcess);
 
 	boost::thread ResendFilesThread(&ResendFileInformation);
 }
@@ -138,4 +139,10 @@ void CRPCCallback::SetFrameLimit(RakNet::BitStream &bsData, int iExtra)
 		// Set the new frame limit.
 		Misc::SetFPSLimit(fpslimit);
 	}
+}
+
+void CRPCCallback::ExitThisProcess(RakNet::BitStream &bsData, int iExtra)
+{
+	Network::Disconnect();
+	ExitProcess(0);
 }
