@@ -240,20 +240,6 @@ void CHookManager::Load()
 	// Parts of it's source code are here: https://github.com/ThirteenAG/Widescreen_Fixes_Pack/tree/master/GTASA_widescreen_fix
 	CMem::ApplyJmp(FUNC_WidescreenPatch, (DWORD)WidescreenPatch, 6);
 
-	// Disable changing of FOV. 
-	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer
-	CMem::ApplyJmp(FUNC_FOVPatch, (DWORD)FOVPatch, 6);
-
-	// Hook key presses, not necessarily sprint, but this is an all key presses hook.
-	CMem::ApplyJmp(FUNC_SprintHook, (DWORD)SprintHook, 8);
-
-	// When a player trys to turn on their frame limiter, this is the address that sets the frame limiter on, NOP that.
-	VirtualProtect(FUNC_FrameLimiter, 3, PAGE_EXECUTE_READWRITE, &dwOldProt);
-	memcpy(FUNC_FrameLimiter, "\x90\x90\x90", 3);
-
-	// And set the frame limiter off.
-	FRAME_LIMITER = 0;
-
 	// Fix annoying Xfire ingame crash
 	DWORD xfire = (DWORD)GetModuleHandle("xfire_toucan_46139.dll");
 
@@ -269,9 +255,30 @@ void CHookManager::Load()
 		memcpy((void*)xfire, "\xEB", 1);
 	}
 
-
 	// Check data file integrity.
 	VerifyFilePaths();
+}
+
+void CHookManager::SetConnectPatches()
+{
+	// Hook key presses, not necessarily sprint, but this is an all key presses hook.
+	CMem::ApplyJmp(FUNC_SprintHook, (DWORD)SprintHook, 8);
+
+	// Disable changing of FOV. 
+	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer
+	CMem::ApplyJmp(FUNC_FOVPatch, (DWORD)FOVPatch, 6);
+}
+
+void CHookManager::SetFrameLimiterPatch()
+{
+	DWORD dwOldProt;
+
+	// When a player trys to turn on their frame limiter, this is the address that sets the frame limiter on, NOP that.
+	VirtualProtect(FUNC_FrameLimiter, 3, PAGE_EXECUTE_READWRITE, &dwOldProt);
+	memcpy(FUNC_FrameLimiter, "\x90\x90\x90", 3);
+
+	// And set the frame limiter off.
+	FRAME_LIMITER = 0;
 }
 
 void CHookManager::VerifyFilePaths()

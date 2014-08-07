@@ -7,6 +7,7 @@
 #include "../VMProtectSDK.h"
 #include "../Addresses.h"
 #include "../CClientUpdater.h"
+#include "../CHookManager.h"
 
 #include <Boost\thread.hpp>
 
@@ -20,6 +21,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(EXIT_PROCESS, ExitThisProcess);
 	CRPC::Add(VERSION_NOT_COMPATIBLE, VersionNotCompatible);
 
+	CHookManager::SetConnectPatches();
 	boost::thread ResendFilesThread(&ResendFileInformation);
 }
 
@@ -137,6 +139,9 @@ void CRPCCallback::SetFrameLimit(RakNet::BitStream &bsData, int iExtra)
 	// Read the value sent to us by the server.
 	if (bsData.Read(fpslimit))
 	{
+		// Make sure the frame limiter is disabled in the game.
+		CHookManager::SetFrameLimiterPatch();
+
 		// Set the new frame limit.
 		Misc::SetFPSLimit(fpslimit);
 	}

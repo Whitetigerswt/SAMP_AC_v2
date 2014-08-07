@@ -7,7 +7,8 @@ class CHookManager
 {
 public:
 	static void Load();
-	static void Monitor();
+	static void SetConnectPatches();
+	static void SetFrameLimiterPatch();
 private:
 	static void LoadScriptsHook();
 	static void CheckMemoryAddr(void* address, int size, char* tomatch);
