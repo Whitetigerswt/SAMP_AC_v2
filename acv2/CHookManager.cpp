@@ -254,6 +254,22 @@ void CHookManager::Load()
 	// And set the frame limiter off.
 	FRAME_LIMITER = 0;
 
+	// Fix annoying Xfire ingame crash
+	DWORD xfire = (DWORD)GetModuleHandle("xfire_toucan_46139.dll");
+
+	if (xfire)
+	{
+		// Add address offset.
+		xfire += 0x65C22;
+
+		// Unprotect memory.
+		VirtualProtect((void*)xfire, 1, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+		// je -> jmp
+		memcpy((void*)xfire, "\xEB", 1);
+	}
+
+
 	// Check data file integrity.
 	VerifyFilePaths();
 }
