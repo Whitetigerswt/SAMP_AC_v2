@@ -192,6 +192,9 @@ namespace Callback
 			// Send the client the files we need them to return md5's to.
 			ac->CheckGTAFiles(playerid);
 
+			// Disable lite foot by default.
+			ac->ToggleLiteFoot(false);
+
 			// Check memory pretty frequently in a new timer.
 			SetTimer(1, 0, CheckPlayersMemory, (void*)playerid);
 		}

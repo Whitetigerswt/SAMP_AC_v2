@@ -30,8 +30,11 @@ enum eRPC : unsigned short
 	// Called when the server determines the client's AC version is not compatible.
 	VERSION_NOT_COMPATIBLE,
 
-	// Called when the server wants to turn off crouch bug.
+	// Called when the server wants to turn on or off crouch bug.
 	TOGGLE_CROUCH_BUG,
+
+	// Called when the server wants to turn on or off lite foot
+	TOGGLE_LITE_FOOT,
 
 	// -- SERVER RPCs --
 

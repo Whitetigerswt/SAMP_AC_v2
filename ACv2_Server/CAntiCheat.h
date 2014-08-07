@@ -56,7 +56,7 @@ public:
 
 	// PURPOSE: Return the player's hardwareID.
 	// REQUIRES: The client is using AC.
-	std::string GetPlayerHardwareID() { return HardwareID; }
+	std::string GetPlayerHardwareID() { return m_HardwareID; }
 
 	// PURPOSE: Set a players frame limit.
 	// REQUIRES: The client is using AC.
@@ -64,7 +64,31 @@ public:
 
 	// PURPOSE: Get the players frame limit.
 	// REQUIRES: NULL
-	int GetFPSLimit() { return FrameLimit; }
+	int GetFPSLimit() { return m_FrameLimit; }
+
+	// PURPOSE: Toggle Lite foot.
+	// REQUIRES: The player is using AC.
+	void ToggleLiteFoot(bool toggle);
+
+	// PURPOSE: Get players lite foot status.
+	// REQUIRES: NULL
+	bool GetLiteFoot() { return m_LiteFoot; }
+
+	// PURPOSE: Set the players crouch bug status.
+	// REQUIRES: The client is using AC.
+	void ToggleCrouchBug(bool toggle);
+
+	// PURPOSE: Get the players crouch bug status.
+	// REQUIRES: NULL
+	bool GetCrouchBug() { return m_CBug; }
+
+	// PURPOSE: Set the players switch reload status.
+	// REQUIRES: The client is using AC.
+	void ToggleSwitchReload(bool toggle);
+
+	// PURPOSE: Get the player's switch reload status
+	// REQUIRES: NULL
+	bool GetSwitchReload() { return m_SwitchReload; }
 
 	CClientSocketInfo* GetConnectionInfo();
 
@@ -74,11 +98,20 @@ private:
 	// PURPOSE: Remember the player's playerID.
 	int ID;
 
+	// PURPOSE: Keep track of the players lite foot status.
+	bool m_LiteFoot = false;
+
+	// PURPOSE: Keep track of the players cbug status.
+	bool m_CBug = true;
+
+	// PURPOSE: Keep track of the players switch reload status.
+	bool m_SwitchReload = true;
+
 	// PURPOSE: Keep track of the players set frame rate.
-	int FrameLimit = 9999;
+	int m_FrameLimit = 0;
 
 	// PURPOSE: Store the player's hardware ID.
-	std::string HardwareID;
+	std::string m_HardwareID;
 
 	// PURPOSE: a static list of all the players allowed to use the /actoggle command, and other AC options
 	static std::vector<int> m_Admins;

@@ -13,6 +13,8 @@
 #define CURRENT_HWND		*(HWND*)0xC97C1C
 #define SPRINT_KEY			*(BYTE*)0xB73478
 #define CROUCH_KEY			*(BYTE*)0xB7347C
+#define AIM_KEY				*(BYTE*)0xB73464
 
+#define VAR_LITE_FOOT		(void*)0x60A71C
 #define VAR_SHOT_TICK		*(int*)0xB5F898
 #define VAR_GTA3_IMG_PATH					(void*)0x858AF4

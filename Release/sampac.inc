@@ -21,7 +21,7 @@ native GetPlayerHardwareID(playerid, buf[], size = sizeof(buf));
 
 // PURPOSE: Enable or disable switch reload
 // REQUIRES: The player is using AC.
-native ToggleSwitchReload(playerid, bool:toggle);
+native TogglePlayerSwitchReload(playerid, bool:toggle);
 
 // PURPOSE: Set a players frame limit.
 // REQUIRES: The player is using AC.
@@ -33,7 +33,23 @@ native GetPlayerFPSLimit(playerid);
 
 // PURPOSE: Toggle crouch bug
 // REQUIRES: The player is using AC.
-native ToggleCrouchBug(playerid, bool:toggle);
+native TogglePlayerCrouchBug(playerid, bool:toggle);
+
+// PURPOSE: Get the players crouch bug status
+// REQUIRES: Nothing
+native bool:GetPlayerCrouchBug(playerid);
+
+// PURPOSE: Get the players switch reload status
+// REQUIRES: Nothing
+native bool:GetPlayerSwitchReload(playerid);
+
+// PURPOSE: Toggle the players ability to use lite foot.
+// REQUIRES: The player is using AC.
+native TogglePlayerLiteFoot(playerid, bool:toggle);
+
+// PURPOSE: Get the players ability to use lite foot.
+// REQUIRES: Nothing
+native GetPlayerLiteFoot(playerid);
 
 // PURPOSE: Callback for when a new AC connection has been accepted.
 // REQUIRES: The client is using AC.

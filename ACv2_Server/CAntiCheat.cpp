@@ -276,7 +276,7 @@ void CAntiCheat::OnMacroDetected(int vKey)
 void CAntiCheat::OnHardwareCalculated(char* hwid)
 {
 	// Set our instance variable to the player's hardware ID so we can store it for later use.
-	HardwareID = hwid;
+	m_HardwareID = hwid;
 
 	// Create 2 variables, one for the player's name and one for a formatted message sent to everyone on the server.
 	char name[MAX_PLAYER_NAME], msg[144];
@@ -285,7 +285,7 @@ void CAntiCheat::OnHardwareCalculated(char* hwid)
 	GetPlayerName(ID, name, sizeof(name));
 
 	// Format the message to let everyone know his hardware ID.
-	snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s HardwareID: {FF0000}%s", name, HardwareID.c_str());
+	snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s HardwareID: {FF0000}%s", name, m_HardwareID.c_str());
 
 	// Send the message to everyone on the server.
 	SendClientMessageToAll(-1, msg);
@@ -332,5 +332,44 @@ void CAntiCheat::CheckVersionCompatible(float version)
 
 void CAntiCheat::SetFPSLimit(int newlimit)
 {
-	FrameLimit = newlimit;
+	m_FrameLimit = newlimit;
+}
+
+void CAntiCheat::ToggleLiteFoot(bool toggle)
+{
+	// Prepare to send RPC to client.
+	RakNet::BitStream bsData;
+	bsData.Write(toggle);
+
+	// Send RPC to player.
+	Network::PlayerSendRPC(TOGGLE_LITE_FOOT, ID, &bsData);
+
+	// Set the lite foot variable to true.
+	m_LiteFoot = toggle;
+}
+
+void CAntiCheat::ToggleCrouchBug(bool toggle)
+{
+	// Prepare to send RPC to client.
+	RakNet::BitStream bsData;
+	bsData.Write(toggle);
+
+	// Send RPC to player.
+	Network::PlayerSendRPC(TOGGLE_CROUCH_BUG, ID, &bsData);
+
+	// Set the crouch bug variable to true.
+	m_CBug = toggle;
+}
+
+void CAntiCheat::ToggleSwitchReload(bool toggle)
+{
+	// Prepare to send RPC to client.
+	RakNet::BitStream bsData;
+	bsData.Write(toggle);
+
+	// Send RPC to player.
+	Network::PlayerSendRPC(TOGGLE_SWITCH_RELOAD, ID, &bsData);
+
+	// Set the crouch bug variable to true.
+	m_SwitchReload = toggle;
 }

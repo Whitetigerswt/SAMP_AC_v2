@@ -173,3 +173,25 @@ void CRPCCallback::VersionNotCompatible(RakNet::BitStream &bsData, int iExtra)
 	// Disconnect from the server.
 	Network::Disconnect();
 }
+
+void CRPCCallback::ToggleLiteFoot(RakNet::BitStream &bsData, int iExtra)
+{
+	// Create new variable to hold the value the server sent us.
+	bool toggle;
+
+	if (bsData.Read(toggle))
+	{
+		// Unprotect the lite foot address.
+		DWORD dwOldProt;
+		VirtualProtect(VAR_LITE_FOOT, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+		if (!toggle)
+		{
+			memcpy(VAR_LITE_FOOT, "\x90\x90\x90", 3); // nop
+		} 
+		else
+		{
+			memcpy(VAR_LITE_FOOT, "\xD9\x41\x1C", 3); // fld dword ptr [ecx+1C]
+		}
+	}
+}

@@ -87,19 +87,20 @@ cell AMX_NATIVE_CALL GetPlayerHardwareIDProc(AMX* pAmx, cell* pParams)
 	return amx_SetString(cVarAddress, ac->GetPlayerHardwareID().c_str(), 0, 0, pParams[3]);
 }
 
-cell AMX_NATIVE_CALL ToggleSwitchReloadProc(AMX* pAmx, cell* pParams)
+cell AMX_NATIVE_CALL TogglePlayerSwitchReloadProc(AMX* pAmx, cell* pParams)
 {
 	// Make sure the parameter count is correct.
-	CHECK_PARAMS(2, "ToggleSwitchReload");
+	CHECK_PARAMS(2, "TogglePlayerSwitchReload");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
 
 	// Make sure the player is connected
-	if (!IsPlayerConnected(pParams[1])) return 0;
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
-	// Create RPC data
-	RakNet::BitStream bsData;
-	bsData.Write(!!pParams[2]);
+	ac->ToggleSwitchReload(!!pParams[2]);
 
-	return Network::PlayerSendRPC(TOGGLE_SWITCH_RELOAD, pParams[1], &bsData);
+	return 1;
 }
 
 cell AMX_NATIVE_CALL SetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
@@ -107,6 +108,7 @@ cell AMX_NATIVE_CALL SetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	// Make sure the parameter count is correct.
 	CHECK_PARAMS(2, "SetPlayerFPSLimit");
 
+	// Get CAntiCheat pointer
 	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
 
 	// Make sure the player is connected and the frame limit isn't 0
@@ -127,6 +129,7 @@ cell AMX_NATIVE_CALL GetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	// Make sure the parameter count is correct.
 	CHECK_PARAMS(1, "GetPlayerFPSLimit");
 
+	// Get CAntiCheat pointer
 	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
 
 	// Make sure the player is connected and connected to AC
@@ -136,20 +139,81 @@ cell AMX_NATIVE_CALL GetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	return ac->GetFPSLimit();
 }
 
-cell AMX_NATIVE_CALL ToggleCrouchBugProc(AMX* pAmx, cell* pParams)
+cell AMX_NATIVE_CALL TogglePlayerCrouchBugProc(AMX* pAmx, cell* pParams)
 {
 	// Make sure the parameter count is correct.
-	CHECK_PARAMS(2, "ToggleCrouchBug");
+	CHECK_PARAMS(2, "TogglePlayerCrouchBug");
+
+	// Get CAntiCheat pointer.
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1])) return 0;
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
-	// Prepare to send the RPC to the client.
-	RakNet::BitStream bsData;
-	bsData.Write(!!pParams[2]);
+	ac->ToggleCrouchBug(!!pParams[2]);
 
-	// Send the RPC to the client.
-	return Network::PlayerSendRPC(TOGGLE_CROUCH_BUG, pParams[1], &bsData);
+	return 1;
+}
+
+cell AMX_NATIVE_CALL TogglePlayerLiteFootProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(2, "TogglePlayerLiteFoot");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	// Toggle lite foot.
+	ac->ToggleLiteFoot(!!pParams[2]);
+
+	return 1;
+}
+
+cell AMX_NATIVE_CALL GetPlayerLiteFootProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "GetPlayerLiteFoot");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	return ac->GetLiteFoot();
+}
+
+
+cell AMX_NATIVE_CALL GetPlayerCrouchBugProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "GetPlayerCrouchBug");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	return ac->GetCrouchBug();
+}
+
+
+cell AMX_NATIVE_CALL GetPlayerSwitchReloadProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "GetPlayerSwitchReload");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	return ac->GetSwitchReload();
 }
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
@@ -192,10 +256,14 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "SetPlayerCanEnableAC", SetPlayerCanEnableACProc },
 	{ "MD5_Memory", MD5_MemoryProc },
 	{ "GetPlayerHardwareID", GetPlayerHardwareIDProc },
-	{ "ToggleSwitchReload", ToggleSwitchReloadProc },
+	{ "TogglePlayerSwitchReload", TogglePlayerSwitchReloadProc },
 	{ "SetPlayerFPSLimit", SetPlayerFPSLimitProc },
 	{ "GetPlayerFPSLimit", GetPlayerFPSLimitProc },
-	{ "ToggleCrouchBug", ToggleCrouchBugProc },
+	{ "TogglePlayerCrouchBug", TogglePlayerCrouchBugProc },
+	{ "TogglePlayerLiteFoot", TogglePlayerLiteFootProc },
+	{ "GetPlayerLiteFoot", GetPlayerLiteFootProc },
+	{ "GetPlayerCrouchBug", GetPlayerCrouchBugProc },
+	{ "GetPlayerSwitchReload", GetPlayerSwitchReloadProc },
 	{ 0, 0 }
 };
 

@@ -257,6 +257,9 @@ void CHookManager::Load()
 		memcpy((void*)xfire, "\xEB", 1);
 	}
 
+	VirtualProtect((void*)0x60A71C, 3, PAGE_EXECUTE_READWRITE, &dwOldProt);
+	memcpy((void*)0x60A71C, "\x90\x90\x90", 3);
+		
 	// Check data file integrity.
 	VerifyFilePaths();
 }

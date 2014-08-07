@@ -46,4 +46,8 @@ private:
 	// REQUIRES: The server sends the TOGGLE_CROUCH_BUG RPC to the client.
 	static RPC_CALLBACK ToggleCrouchBug(RPC_ARGS);
 
+	// PURPOSE: An RPC callback to toggle on or off Lite foot.
+	// REQUIRES: The server sends the TOGGLE_LITE_FOOT RPC to the client.
+	static RPC_CALLBACK ToggleLiteFoot(RPC_ARGS);
+
 };
