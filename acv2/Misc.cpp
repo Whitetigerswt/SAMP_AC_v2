@@ -58,4 +58,16 @@ namespace Misc
 	{
 		FrameLimit = newlimit;
 	}
+
+	bool CrouchBug = true;
+
+	void SetCrouchBug(bool toggle)
+	{
+		CrouchBug = toggle;
+	}
+
+	bool GetCrouchBug()
+	{
+		return CrouchBug;
+	}
 }

@@ -30,6 +30,9 @@ enum eRPC : unsigned short
 	// Called when the server determines the client's AC version is not compatible.
 	VERSION_NOT_COMPATIBLE,
 
+	// Called when the server wants to turn off crouch bug.
+	TOGGLE_CROUCH_BUG,
+
 	// -- SERVER RPCs --
 
 	// Called when a new module (in the current process) or process has been run

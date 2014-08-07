@@ -42,4 +42,8 @@ private:
 	// REQUIRES: The server sends the VERSION_NOT_COMPATIBLE RPC to the client.
 	static RPC_CALLBACK VersionNotCompatible(RPC_ARGS);
 
+	// PURPOSE: An RPC callback to toggle on or off cbug
+	// REQUIRES: The server sends the TOGGLE_CROUCH_BUG RPC to the client.
+	static RPC_CALLBACK ToggleCrouchBug(RPC_ARGS);
+
 };

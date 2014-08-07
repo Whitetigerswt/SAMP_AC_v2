@@ -19,4 +19,12 @@ namespace Misc
 	// PURPOSE: Set the players frame limit.
 	// REQUIRES: A new frame limit int
 	void SetFPSLimit(int newlimit);
+
+	// PURPOSE: Set the players crouch bug status.
+	// REQUIRES: NULL
+	void SetCrouchBug(bool toggle);
+
+	// PURPOSE: Get the crouch bug status.
+	// REQUIRES: NULL
+	bool GetCrouchBug();
 }

@@ -7,12 +7,6 @@
 #include "Callback.h"
 #include "SDK/samp-sdk/amx/amx.h"
 
-/*cell AMX_NATIVE_CALL CallbackProc(AMX* pAmx, cell* pParams)
-{
-	return Callback::Process(pAmx, (Callback::eCallbackType)pParams[1], &pParams[2]);
-}*/
-
-
 cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 {
 	// Make sure the parameter count is correct.
@@ -142,6 +136,22 @@ cell AMX_NATIVE_CALL GetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	return ac->GetFPSLimit();
 }
 
+cell AMX_NATIVE_CALL ToggleCrouchBugProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(2, "ToggleCrouchBug");
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1])) return 0;
+
+	// Prepare to send the RPC to the client.
+	RakNet::BitStream bsData;
+	bsData.Write(!!pParams[2]);
+
+	// Send the RPC to the client.
+	return Network::PlayerSendRPC(TOGGLE_CROUCH_BUG, pParams[1], &bsData);
+}
+
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
 	return sampgdk::Supports() | SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
@@ -185,6 +195,7 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "ToggleSwitchReload", ToggleSwitchReloadProc },
 	{ "SetPlayerFPSLimit", SetPlayerFPSLimitProc },
 	{ "GetPlayerFPSLimit", GetPlayerFPSLimitProc },
+	{ "ToggleCrouchBug", ToggleCrouchBugProc },
 	{ 0, 0 }
 };
 

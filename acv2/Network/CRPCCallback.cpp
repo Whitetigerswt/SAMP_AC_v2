@@ -20,6 +20,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(SET_FRAME_LIMIT, SetFrameLimit);
 	CRPC::Add(EXIT_PROCESS, ExitThisProcess);
 	CRPC::Add(VERSION_NOT_COMPATIBLE, VersionNotCompatible);
+	CRPC::Add(TOGGLE_CROUCH_BUG, ToggleCrouchBug);
 
 	CHookManager::SetConnectPatches();
 	boost::thread ResendFilesThread(&ResendFileInformation);
@@ -147,13 +148,28 @@ void CRPCCallback::SetFrameLimit(RakNet::BitStream &bsData, int iExtra)
 	}
 }
 
+void CRPCCallback::ToggleCrouchBug(RakNet::BitStream &bsData, int iExtra)
+{
+	// Create a new variable to hold the value the server sent.
+	bool toggle;
+
+	// Read the value the server sent us.
+	if (bsData.Read(toggle))
+	{
+		// Set the crouch bug status to the one sent to us by the server.
+		Misc::SetCrouchBug(toggle);
+	}
+}
+
 void CRPCCallback::ExitThisProcess(RakNet::BitStream &bsData, int iExtra)
 {
+	// Disconnect from the network, and exit the process.
 	Network::Disconnect();
 	ExitProcess(0);
 }
 
 void CRPCCallback::VersionNotCompatible(RakNet::BitStream &bsData, int iExtra)
 {
+	// Disconnect from the server.
 	Network::Disconnect();
 }

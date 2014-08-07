@@ -31,6 +31,10 @@ native SetPlayerFPSLimit(playerid, framelimit);
 // REQUIRES: The player is using AC.
 native GetPlayerFPSLimit(playerid);
 
+// PURPOSE: Toggle crouch bug
+// REQUIRES: The player is using AC.
+native ToggleCrouchBug(playerid, bool:toggle);
+
 // PURPOSE: Callback for when a new AC connection has been accepted.
 // REQUIRES: The client is using AC.
 forward OnACOpened(ip[]);
