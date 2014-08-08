@@ -232,7 +232,7 @@ namespace Callback
 		// If the player has just disconnected from the server, we need to handle AC disconnect as well.
 
 		// If the player was connected to the AC before disconnecting.
-		if (Network::IsPlayerConnectedToAC(playerid))
+		if (Network::IsPlayerConnectedToAC(playerid) != NULL)
 		{
 			// And they weren't kicked/banned or timed out.
 			if (reason)

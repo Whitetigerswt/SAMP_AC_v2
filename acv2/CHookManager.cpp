@@ -101,12 +101,16 @@ static DWORD FOVPatchJmpBack = 0x522F38;
 
 static DWORD SprintHookJmpBack = 0x541C9D;
 
+static DWORD LiteFootHookJmpBack = 0x60A746;
+
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
 
 unsigned int CHookManager::iLastTick = 0;
 int CHookManager::iTickOffset = 222;
 int CHookManager::iLastPress = 0;
+
+float CHookManager::LiteFoot = 1.0f;
 
 
 void CHookManager::Load()
@@ -256,9 +260,8 @@ void CHookManager::Load()
 		// je -> jmp
 		memcpy((void*)xfire, "\xEB", 1);
 	}
-
-	VirtualProtect((void*)0x60A71C, 3, PAGE_EXECUTE_READWRITE, &dwOldProt);
-	memcpy((void*)0x60A71C, "\x90\x90\x90", 3);
+	
+	CMem::ApplyJmp(FUNC_LiteFoot, (DWORD)LiteFootHook, 6);
 		
 	// Check data file integrity.
 	VerifyFilePaths();
@@ -338,6 +341,24 @@ void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
 	// Free memory.
 	delete[] memory;
 }
+
+void CHookManager::SetLiteFoot(bool toggle)
+{
+	if (!toggle)
+		LiteFoot = 1.0f;
+	else
+		LiteFoot = 0.0f;
+}
+
+HOOK CHookManager::LiteFootHook()
+{
+	__asm
+	{
+		fld dword ptr [LiteFoot]
+		jmp[LiteFootHookJmpBack]
+	}
+}
+
 
 DWORD SprintHookCall = 0x53EF80;
 HOOK CHookManager::SprintHook()

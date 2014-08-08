@@ -67,12 +67,14 @@ namespace Network
 
 	CAntiCheat* GetPlayerFromPlayerid(unsigned int uiPlayerid)
 	{
+		if (!IsPlayerConnectedToAC(uiPlayerid)) return NULL;
+
 		return players[uiPlayerid];
 	}
 
 	bool IsPlayerConnectedToAC(unsigned int uiPlayerid)
 	{
-		return players.count(uiPlayerid) > 0;
+		return !!players.count(uiPlayerid);
 	}
 
 	int GetPlayeridFromSystemAddress(const RakNet::SystemAddress& systemAddress)

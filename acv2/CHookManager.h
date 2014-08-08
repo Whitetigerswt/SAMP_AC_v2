@@ -9,6 +9,8 @@ public:
 	static void Load();
 	static void SetConnectPatches();
 	static void SetFrameLimiterPatch();
+
+	static void SetLiteFoot(bool toggle);
 private:
 	static void LoadScriptsHook();
 	static void CheckMemoryAddr(void* address, int size, char* tomatch);
@@ -25,12 +27,16 @@ private:
 
 	static void SprintHook();
 
+	static void LiteFootHook();
+
 	static float CameraXPos;
 	static float CameraYPos;
 
 	static unsigned int iLastTick;
 	static int iLastPress;
 	static int iTickOffset;
+
+	static float LiteFoot;
 
 	static void CameraXWriteHook1();
 	static void CameraXWriteHook2();

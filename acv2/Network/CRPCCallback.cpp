@@ -21,6 +21,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(EXIT_PROCESS, ExitThisProcess);
 	CRPC::Add(VERSION_NOT_COMPATIBLE, VersionNotCompatible);
 	CRPC::Add(TOGGLE_CROUCH_BUG, ToggleCrouchBug);
+	CRPC::Add(TOGGLE_LITE_FOOT, ToggleLiteFoot);
 
 	CHookManager::SetConnectPatches();
 	boost::thread ResendFilesThread(&ResendFileInformation);
@@ -181,17 +182,6 @@ void CRPCCallback::ToggleLiteFoot(RakNet::BitStream &bsData, int iExtra)
 
 	if (bsData.Read(toggle))
 	{
-		// Unprotect the lite foot address.
-		DWORD dwOldProt;
-		VirtualProtect(VAR_LITE_FOOT, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
-
-		if (!toggle)
-		{
-			memcpy(VAR_LITE_FOOT, "\x90\x90\x90", 3); // nop
-		} 
-		else
-		{
-			memcpy(VAR_LITE_FOOT, "\xD9\x41\x1C", 3); // fld dword ptr [ecx+1C]
-		}
+		CHookManager::SetLiteFoot(toggle);
 	}
 }

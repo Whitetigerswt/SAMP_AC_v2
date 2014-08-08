@@ -26,6 +26,8 @@
 // FRAME LIMITER PATCH //
 #define FUNC_FrameLimiter					(void*)0x57CED1
 
+#define FUNC_LiteFoot						(BYTE*)0x60A740
+
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91
