@@ -43,12 +43,12 @@
 <p>SA:MP AC v1 was a great application, and withstood the test of time by protecting A/D clanwars for more than 2 years. However, it was held back by many glaring problems that could not really be solved.</p>
 <p>I'll briefly explain a couple of problems.</p>
 
-<p>One major problem was the time that it took for a user to be detected as using a cheat, or turned off the AC. It could take up to 5 minutes. There was also some odd compatability problems and some people were actually able to go for an hour or two without getting picked up</p>
+<p>- One major problem was the time that it took for a user to be detected as using a cheat, or turned off the AC. It could take up to 5 minutes. There was also some odd compatability problems and some people were actually able to go for an hour or two without getting picked up</p>
 <p>This was caused by the many layers of network code that had to go through. In the old AC, information would go from C++ (JNI) -> Java -> PHP -> MySQL. Sometime after the info was input in the MySQL. the server would retrieve it, MySQL -> PHP -> PAWN.</p>
 <p>There was no direct communication between the AC and the server in this way.</p>
 <p>This has been solved by making direct communication with the server through RakNet.</p>
 
-<p>Another problem with the old AC was closing the .exe, forgetting to open it, or whatever, the extra .EXE was just a hassle to deal with in general.</p>
+<p>- Another problem with the old AC was closing the .exe, forgetting to open it, or whatever, the extra .EXE was just a hassle to deal with in general.</p>
 <p>This problem has been solved by making AC version 2 an *.ASI mod.</p>
 
 <p>There were many many other issues that would take a long time to explain, but briefly, I explained a couple.</p>
