@@ -113,7 +113,7 @@ unsigned int CHookManager::iLastTick = 0;
 int CHookManager::iTickOffset = 222;
 int CHookManager::iLastPress = 0;
 
-float CHookManager::LiteFoot = 1.0f;
+float CHookManager::LiteFoot = 0.0f;
 
 
 void CHookManager::Load()
