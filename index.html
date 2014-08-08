@@ -29,21 +29,29 @@
       <div class="inner clearfix">
         <section id="main-content">
           <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>What is SA:MP AC?.</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>SA:MP AC is a Client-side application that runs on all users computers. It establishes a connection with the server your own using <a href="https://github.com/OculusVR/RakNet">RakNet</a>. The same connection library that SA:MP itself uses!</p>
+<p>Once it's connected to the server it can send back and forth immediate information from the server to the client or vice-versa.</p>
+<p>Oh, also, it's encrypted.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>How is this better than SA:MP AC v1?</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>SA:MP AC v1 was a great application, and withstood the test of time by protecting A/D clanwars for more than 2 years. However, it was held back by many glaring problems that could not really be solved.</p>
+<p>I'll briefly explain a couple of problems.</p>
+
+<p>One major problem was the time that it took for a user to be detected as using a cheat, or turned off the AC. It could take up to 5 minutes. There was also some odd compatability problems and some people were actually able to go for an hour or two without getting picked up</p>
+<p>This was caused by the many layers of network code that had to go through. In the old AC, information would go from C++ (JNI) -> Java -> PHP -> MySQL. Sometime after the info was input in the MySQL. the server would retrieve it, MySQL -> PHP -> PAWN.</p>
+<p>There was no direct communication between the AC and the server in this way.</p>
+<p>This has been solved by making direct communication with the server through RakNet.</p>
+
+<p>Another problem with the old AC was closing the .exe, forgetting to open it, or whatever, the extra .EXE was just a hassle to deal with in general.</p>
+<p>This problem has been solved by making AC version 2 an *.ASI mod.</p>
+
+<p>There were many many other issues that would take a long time to explain, but briefly, I explained a couple.</p>
 
 <h3>
 <a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
@@ -62,13 +70,9 @@ $ git checkout gh-pages
         </section>
 
         <aside id="sidebar">
-          <a href="https://github.com/Whitetigerswt/SAMP_AC_v2/zipball/master" class="button">
+          <a href="https://google.com" class="button">
             <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/Whitetigerswt/SAMP_AC_v2/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
+            .zip file - Installer
           </a>
 
           <p class="repo-owner"><a href="https://github.com/Whitetigerswt/SAMP_AC_v2"></a> is maintained by <a href="https://github.com/Whitetigerswt">Whitetigerswt</a>.</p>
