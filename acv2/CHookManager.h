@@ -29,6 +29,8 @@ private:
 
 	static void LiteFootHook();
 
+	static void GravityHook();
+
 	static float CameraXPos;
 	static float CameraYPos;
 

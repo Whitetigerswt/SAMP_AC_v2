@@ -26,7 +26,11 @@
 // FRAME LIMITER PATCH //
 #define FUNC_FrameLimiter					(void*)0x57CED1
 
+// LITE FOOT PATCH //
 #define FUNC_LiteFoot						(BYTE*)0x60A740
+
+// GRAVITY PATCH - ANTI SOBEIT
+#define FUNC_Gravity						(BYTE*)0x54307B
 
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2

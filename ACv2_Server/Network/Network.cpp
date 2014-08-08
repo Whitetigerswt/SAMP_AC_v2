@@ -74,7 +74,7 @@ namespace Network
 
 	bool IsPlayerConnectedToAC(unsigned int uiPlayerid)
 	{
-		return !!players.count(uiPlayerid);
+		return players.count(uiPlayerid) == 1;
 	}
 
 	int GetPlayeridFromSystemAddress(const RakNet::SystemAddress& systemAddress)

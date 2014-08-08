@@ -103,6 +103,9 @@ static DWORD SprintHookJmpBack = 0x541C9D;
 
 static DWORD LiteFootHookJmpBack = 0x60A746;
 
+static DWORD GravityHookJmpBack1 = 0x543081;
+static DWORD GravityHookJmpBack2 = 0x543093;
+
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
 
@@ -262,7 +265,9 @@ void CHookManager::Load()
 	}
 	
 	CMem::ApplyJmp(FUNC_LiteFoot, (DWORD)LiteFootHook, 6);
-		
+
+	CMem::ApplyJmp(FUNC_Gravity, (DWORD)GravityHook, 6);
+
 	// Check data file integrity.
 	VerifyFilePaths();
 }
@@ -359,6 +364,34 @@ HOOK CHookManager::LiteFootHook()
 	}
 }
 
+
+HOOK CHookManager::GravityHook()
+{
+	__asm
+	{
+		pushad
+	}
+
+	// Check if a sobeit hook is installed.
+	if (*(BYTE*)0x543081 != 0xD9)
+	{
+		// Crash the client.
+		VirtualProtect((void*)0x543081, 5, PAGE_EXECUTE_READWRITE, NULL);
+		memcpy((void*)0x543081, "\x90\x90\x90\x90\x90", 5);
+	}
+
+	__asm
+	{
+		popad
+
+		test byte ptr[esi + 1Ch], 01h
+		je DONE_EQUAL
+		jmp[GravityHookJmpBack1]
+
+		DONE_EQUAL:
+		jmp[GravityHookJmpBack2]
+	}
+}
 
 DWORD SprintHookCall = 0x53EF80;
 HOOK CHookManager::SprintHook()
