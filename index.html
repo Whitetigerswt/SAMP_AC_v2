@@ -54,9 +54,18 @@
 <p>There were many many other issues that would take a long time to explain, but briefly, I explained a couple.</p>
 
 <h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Does this new version include anything but fixed problems?</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>Yes. With this new version of AC, it was a very early design goal of mine to not only detect cheats, but to prevent them from ever working at all.</p>
+<p>The list of NEW things detected in this version is here:
+
+- GTA3.img files - Skin files are scanned in gta3.img.
+- Basic macros will not work.
+- weapon.dat further integrity checks.
+- DirectX hooks
+- Lite foot is disabled by default (though the server can enable it).</p>
+
+<p>This adds onto the list of already detected things, as well as prevention was really a big deal. There are not many cheats that are working, even if undetected.</p>
 
 <h3>
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
@@ -72,7 +81,7 @@
         <aside id="sidebar">
           <a href="https://google.com" class="button">
             <small>Download</small>
-            .zip file - Installer
+            Installer
           </a>
 
           <p class="repo-owner"><a href="https://github.com/Whitetigerswt/SAMP_AC_v2"></a> is maintained by <a href="https://github.com/Whitetigerswt">Whitetigerswt</a>.</p>
