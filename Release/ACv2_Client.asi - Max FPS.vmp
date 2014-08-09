@@ -553,6 +553,70 @@
 				MapAddress="CRPCCallback::ToggleLiteFoot(class RakNet::BitStream &amp;,int)"
 				CompilationType="2"
 			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook8(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook9(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook10(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook27(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook28(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook29(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook30(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook31(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook32(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook33(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook34(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook35(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook36(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook37(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook38(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook39(void)"
+				CompilationType="1"
+			/>
 		</Procedures>
 	</Protection>
 	<DLLBox

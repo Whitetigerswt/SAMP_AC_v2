@@ -104,7 +104,7 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 	}
 
 	// This address is some handling.cfg address, though it seems to include code to and not just data.
-	else if (address == 0xC2B9DC)
+	/*else if (address == 0xC2B9DC)
 	{
 		// Compare the returned md5 to our pre-calculated checksum.
 		if (strcmp(md5, "12c0520d9b5442fbecccfa81ebbf2603") != 0)
@@ -121,7 +121,7 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 			// Send the mssage to everyone connected to the server.
 			SendClientMessageToAll(-1, msg);
 		}
-	}
+	}*/
 
 	// Execute a PAWN callback.
 	Callback::Execute("OnMD5Calculated", "siii", md5, size, address, ID);
