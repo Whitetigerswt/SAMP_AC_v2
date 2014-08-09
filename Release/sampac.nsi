@@ -118,7 +118,7 @@ Section "Uninstall"
   Delete "$INSTDIR\ACv2_Client.asi"
   Delete "$INSTDIR\samp_elevator.exe"
 
-  Delete "$INSTDIR\Uninstall.exe"
+  Delete "$INSTDIR\Uninstall_ac.exe"
 
   DeleteRegKey /ifempty HKCU "Software\sampac"
 
