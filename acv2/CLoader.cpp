@@ -73,10 +73,10 @@ void CLoader::Initialize(HMODULE hMod)
 		{
 			if (!Network::IsConnected())
 			{
-				ExitProcess(0);
+				//ExitProcess(0);
 			}
 
-			Network::SendRPC(ON_TAMPER_ATTEMPT);
+			//Network::SendRPC(ON_TAMPER_ATTEMPT);
 		}
 
 		// Sleep

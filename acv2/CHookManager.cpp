@@ -21,6 +21,9 @@ static DWORD CameraXHook4JmpBack = 0x50E573;
 static DWORD CameraXHook5JmpBack = 0x515675;
 static DWORD CameraXHook6JmpBack = 0x5225D3;
 static DWORD CameraXHook7JmpBack = 0x5222BC;
+static DWORD CameraXHook8JmpBack = 0x524C51;
+static DWORD CameraXHook9JmpBack = 0x52590C;
+static DWORD CameraXHook10JmpBack = 0x525B0E;
 
 static DWORD CameraXAccess1JmpBack = 0x5237E5;
 static DWORD CameraXAccess2JmpBack = 0x523804;
@@ -54,7 +57,23 @@ static DWORD CameraXAccess24JmpBack = 0x511999;
 static DWORD CameraXAccess25JmpBack = 0x520B7E;
 static DWORD CameraXAccess26JmpBack = 0x520B9A;
 
-// CAMERA Y WRITE HOOK JMP BACKS
+// WHILE DRIVING CAMERA X HOOKS //
+
+static DWORD CameraXAccess27JmpBack = 0x524FA1;
+static DWORD CameraXAccess28JmpBack = 0x525000;
+static DWORD CameraXAccess29JmpBack = 0x52590C;
+static DWORD CameraXAccess30JmpBack = 0x524FC0;
+static DWORD CameraXAccess31JmpBack = 0x525AED;
+static DWORD CameraXAccess32JmpBack = 0x525B1A;
+static DWORD CameraXAccess33JmpBack = 0x525B37;
+static DWORD CameraXAccess34JmpBack = 0x5251F8;
+static DWORD CameraXAccess35JmpBack = 0x525296;
+static DWORD CameraXAccess36JmpBack = 0x52532C;
+static DWORD CameraXAccess37JmpBack = 0x525B4B;
+static DWORD CameraXAccess38JmpBack = 0x525C5C;
+static DWORD CameraXAccess39JmpBack = 0x525C71;
+
+// CAMERA Y WRITE HOOK JMP BACKS //
 
 static DWORD CameraYWrite2JmpBack = 0x524153;
 static DWORD CameraYWrite3JmpBack = 0x524153;
@@ -169,6 +188,9 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraXWriteHook5, (DWORD)CameraXWriteHook5, 7); // looks like array loop in asm 
 	CMem::ApplyJmp(FUNC_CameraXWriteHook6, (DWORD)CameraXWriteHook6, 12);
 	CMem::ApplyJmp(FUNC_CameraXWriteHook7, (DWORD)CameraXWriteHook7, 12);
+	CMem::ApplyJmp(FUNC_CameraXWriteHook8, (DWORD)CameraXWriteHook8, 6);
+	CMem::ApplyJmp(FUNC_CameraXWriteHook9, (DWORD)CameraXWriteHook9, 6);
+	CMem::ApplyJmp(FUNC_CameraXWriteHook10, (DWORD)CameraXWriteHook10, 6);
 
 	CMem::ApplyJmp(FUNC_CameraXAccessHook1, (DWORD)CameraXAccessHook1, 8);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook2, (DWORD)CameraXAccessHook2, 8);
@@ -196,6 +218,20 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraXAccessHook24, (DWORD)CameraXAccessHook24, 6);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook25, (DWORD)CameraXAccessHook25, 6);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook26, (DWORD)CameraXAccessHook26, 6);
+
+	CMem::ApplyJmp(FUNC_CameraXAccessHook27, (DWORD)CameraXAccessHook27, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook28, (DWORD)CameraXAccessHook28, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook29, (DWORD)CameraXAccessHook29, 12);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook30, (DWORD)CameraXAccessHook30, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook31, (DWORD)CameraXAccessHook31, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook32, (DWORD)CameraXAccessHook32, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook33, (DWORD)CameraXAccessHook33, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook34, (DWORD)CameraXAccessHook34, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook35, (DWORD)CameraXAccessHook35, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook36, (DWORD)CameraXAccessHook36, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook37, (DWORD)CameraXAccessHook37, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook38, (DWORD)CameraXAccessHook38, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook39, (DWORD)CameraXAccessHook39, 6);
 
 	// CAMERA Y HOOKS //
 
@@ -567,6 +603,34 @@ HOOK CHookManager::CameraXWriteHook7()
 	}
 }
 
+HOOK CHookManager::CameraXWriteHook8()
+{
+	__asm
+	{
+		fst dword ptr[CameraXPos]
+		jmp[CameraXHook8JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXWriteHook9()
+{
+	__asm
+	{
+		fstp dword ptr[CameraXPos]
+		jmp[CameraXHook9JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXWriteHook10()
+{
+	__asm
+	{
+		mov[CameraXPos], edx
+		jmp[CameraXHook10JmpBack]
+	}
+}
+
+
 HOOK CHookManager::CameraXAccessHook1()
 {
 	__asm
@@ -832,6 +896,124 @@ HOOK CHookManager::CameraXAccessHook26()
 	{
 		fld dword ptr[CameraXPos]
 		jmp[CameraXAccess26JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook27()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess27JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook28()
+{
+	__asm
+	{
+		fsub dword ptr[CameraXPos]
+		jmp[CameraXAccess28JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook29()
+{
+	__asm
+	{
+		fadd dword ptr[CameraXPos]
+		fstp dword ptr[CameraXPos]
+		jmp[CameraXAccess29JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook30()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess30JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook31()
+{
+	__asm
+	{
+		fsub dword ptr[CameraXPos]
+		jmp[CameraXAccess31JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook32()
+{
+	__asm
+	{
+		mov eax, [CameraXPos]
+		jmp[CameraXAccess32JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook33()
+{
+	__asm
+	{
+		fld dword ptr [CameraXPos]
+		jmp[CameraXAccess33JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook34()
+{
+	__asm
+	{
+		fsubr dword ptr[CameraXPos]
+		jmp[CameraXAccess34JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook35()
+{
+	__asm
+	{
+		fsubr dword ptr[CameraXPos]
+		jmp[CameraXAccess35JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook36()
+{
+	__asm
+	{
+		fsubr dword ptr[CameraXPos]
+		jmp[CameraXAccess36JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook37()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess37JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook38()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess38JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook39()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess39JmpBack]
 	}
 }
 

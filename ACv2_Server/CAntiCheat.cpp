@@ -300,7 +300,7 @@ void CAntiCheat::OnTamperAttempt()
 	GetPlayerName(ID, name, sizeof(name));
 
 	// Format the message that will be sent to everyone on the server.
-	snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} is trying to tamper with the AC mod.");
+	snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} is trying to tamper with the AC mod.", name);
 
 	// Send the message to everyone on the server.
 	SendClientMessageToAll(-1, msg);

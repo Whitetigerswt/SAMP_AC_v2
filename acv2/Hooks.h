@@ -43,6 +43,11 @@
 #define FUNC_CameraXWriteHook6				(BYTE*)0x5225C7
 #define FUNC_CameraXWriteHook7				(BYTE*)0x5222B0
 
+// WHILE DRIVING CAMERA X HOOKS //
+#define FUNC_CameraXWriteHook8				(BYTE*)0x524C4B
+#define FUNC_CameraXWriteHook9				(BYTE*)0x525906
+#define FUNC_CameraXWriteHook10				(BYTE*)0x525B08
+
 // CAMERA X ACCESS HOOKS //
 
 #define FUNC_CameraXAccessHook1				(BYTE*)0x5237DD
@@ -75,7 +80,23 @@
 #define FUNC_CameraXAccessHook25			(BYTE*)0x520B78
 #define FUNC_CameraXAccessHook26			(BYTE*)0x520B94
 
-// CAMERA Y HOOKS
+// WHILE DRIVING CAMERA X ACCESS HOOKS //
+
+#define FUNC_CameraXAccessHook27			(BYTE*)0x524F9B
+#define FUNC_CameraXAccessHook28			(BYTE*)0x524FFA
+#define FUNC_CameraXAccessHook29			(BYTE*)0x525900
+#define FUNC_CameraXAccessHook30			(BYTE*)0x524FBA
+#define FUNC_CameraXAccessHook31			(BYTE*)0x525AE7
+#define FUNC_CameraXAccessHook32			(BYTE*)0x525B14
+#define FUNC_CameraXAccessHook33			(BYTE*)0x525B31
+#define FUNC_CameraXAccessHook34			(BYTE*)0x5251F2
+#define FUNC_CameraXAccessHook35			(BYTE*)0x525290
+#define FUNC_CameraXAccessHook36			(BYTE*)0x525326
+#define FUNC_CameraXAccessHook37			(BYTE*)0x525B45
+#define FUNC_CameraXAccessHook38			(BYTE*)0x525C56
+#define FUNC_CameraXAccessHook39			(BYTE*)0x525C6B
+
+// CAMERA Y HOOKS //
 
 #define FUNC_CameraYWriteHook1				(void*)0x52419C
 #define FUNC_CameraYWriteHook2				(BYTE*)0x52414D

@@ -47,6 +47,9 @@ private:
 	static void CameraXWriteHook5();
 	static void CameraXWriteHook6();
 	static void CameraXWriteHook7();
+	static void CameraXWriteHook8();
+	static void CameraXWriteHook9();
+	static void CameraXWriteHook10();
 
 	static void CameraXAccessHook1();
 	static void CameraXAccessHook2();
@@ -74,6 +77,19 @@ private:
 	static void CameraXAccessHook24();
 	static void CameraXAccessHook25();
 	static void CameraXAccessHook26();
+	static void CameraXAccessHook27();
+	static void CameraXAccessHook28();
+	static void CameraXAccessHook29();
+	static void CameraXAccessHook30();
+	static void CameraXAccessHook31();
+	static void CameraXAccessHook32();
+	static void CameraXAccessHook33();
+	static void CameraXAccessHook34();
+	static void CameraXAccessHook35();
+	static void CameraXAccessHook36();
+	static void CameraXAccessHook37();
+	static void CameraXAccessHook38();
+	static void CameraXAccessHook39();
 
 	static void CameraYWriteHook1();
 	static void CameraYWriteHook2();
