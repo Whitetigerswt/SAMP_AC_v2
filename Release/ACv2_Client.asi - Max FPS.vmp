@@ -77,6 +77,7 @@
 			/>
 			<Procedure
 				MapAddress="CCheats::OnFileExecuted(char const *,char const *)"
+				IncludedInCompilation="false"
 				CompilationType="2"
 			/>
 			<Procedure
@@ -443,7 +444,6 @@
 			/>
 			<Procedure
 				MapAddress="CHookManager::SprintHook(void)"
-				IncludedInCompilation="false"
 				CompilationType="1"
 			/>
 			<Procedure
@@ -523,6 +523,34 @@
 			/>
 			<Procedure
 				MapAddress="CRPCCallback::SetFrameLimit(class RakNet::BitStream &amp;,int)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::SetConnectPatches(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::LiteFootHook(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::GravityHook(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::ToggleCrouchBug(class RakNet::BitStream &amp;,int)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::ExitThisProcess(class RakNet::BitStream &amp;,int)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::VersionNotCompatible(class RakNet::BitStream &amp;,int)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::ToggleLiteFoot(class RakNet::BitStream &amp;,int)"
 				CompilationType="2"
 			/>
 		</Procedures>

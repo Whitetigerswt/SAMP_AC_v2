@@ -8,14 +8,18 @@
   !include "MUI2.nsh"
   !include 'nsdialogs.nsh'
   
-!define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "ac.bmp"
+!define MUI_ICON		"ac.ico"
+!define MUI_UNICON		"ac.ico"
+
+!define MUI_ABORTWARNING_TEXT "Are you sure you wish to abort installation?"
+
+SetCompressor /SOLID lzma
 
 ;--------------------------------
 ;General
 
   ;Name and file
-  Name "SA:MP AC"
+  Name "SA:MP AC-dev-beta1"
   OutFile "sampac.exe"
 
   ;Default installation folder
@@ -35,7 +39,7 @@
 ;--------------------------------
 ;Pages
 
-  !insertmacro MUI_PAGE_LICENSE "${NSISDIR}\Docs\Modern UI\License.txt"
+  !insertmacro MUI_PAGE_LICENSE "License.txt"
   !insertmacro MUI_PAGE_COMPONENTS
   !define MUI_PAGE_CUSTOMFUNCTION_LEAVE MyFuncDir
   !insertmacro MUI_PAGE_DIRECTORY
@@ -111,12 +115,10 @@ SectionEnd
 
 Section "Uninstall"
 
-  Delete "ACv2_Client.asi"
-  Delete "samp_elevator.exe"
+  Delete "$INSTDIR\ACv2_Client.asi"
+  Delete "$INSTDIR\samp_elevator.exe"
 
   Delete "$INSTDIR\Uninstall.exe"
-
-  RMDir "$INSTDIR"
 
   DeleteRegKey /ifempty HKCU "Software\sampac"
 

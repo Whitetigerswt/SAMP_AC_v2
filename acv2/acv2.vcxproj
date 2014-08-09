@@ -219,8 +219,6 @@
     <ClCompile Include="CProcessList.cpp" />
     <ClCompile Include="DirectX Hooks\CD3D9DeviceProxy.cpp" />
     <ClCompile Include="DirectX Hooks\CD3D9Proxy.cpp" />
-    <ClCompile Include="DirectX Hooks\CDInput8DeviceProxy.cpp" />
-    <ClCompile Include="DirectX Hooks\CDInput8Proxy.cpp" />
     <ClCompile Include="DirectX Hooks\CMessageProxy.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
@@ -535,8 +533,6 @@
     <ClInclude Include="Detours\detours.h" />
     <ClInclude Include="DirectX Hooks\CD3D9DeviceProxy.h" />
     <ClInclude Include="DirectX Hooks\CD3D9Proxy.h" />
-    <ClInclude Include="DirectX Hooks\CDInput8DeviceProxy.h" />
-    <ClInclude Include="DirectX Hooks\CDInput8Proxy.h" />
     <ClInclude Include="DirectX Hooks\CMessageProxy.h" />
     <ClInclude Include="DirectX\audiodefs.h" />
     <ClInclude Include="DirectX\comdecl.h" />

@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 		sprintf_s(szWithSampdll, sizeof(szWithSampdll), "%s\\samp.dll", path.c_str());
 
 		// Get the module handle to kernal32.dll
-		HMODULE hMod = GetModuleHandle("kernal32.dll");
+		HMODULE hMod = GetModuleHandle("kernel32.dll");
 
 		// Create address variable to hold the address of the LoadLibrary function.
 		void* addr = NULL;
@@ -50,6 +50,11 @@ int main(int argc, char* argv[])
 		if (hMod)
 			// Get the address of the LoadLibrary function so we can load samp.dll
 			addr = (void*)GetProcAddress(hMod, "LoadLibraryA");
+		else
+		{
+			MessageBoxA(NULL, "Could not find kernel32.dll", "SA:MP Elevator", MB_ICONERROR);
+			return 0;
+		}
 
 		// Allocate memory in the new process we just created to store the string of the samp.dll file path.
 		void* arg = (void*)VirtualAllocEx(ProcessInfo.hProcess, NULL, strlen(szWithSampdll), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
@@ -74,6 +79,11 @@ int main(int argc, char* argv[])
 			// Create a remote thread that calls LoadLibrary, and as the parameter, the memory location we just wrote the samp.dll path to.
 			// also don't execute this thread, but just create.
 			id = CreateRemoteThread(ProcessInfo.hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)addr, arg, CREATE_SUSPENDED, NULL);
+		else
+		{
+			MessageBoxA(NULL, "Could not find the address of LoadLibraryA", "SA:MP Elevator", MB_ICONERROR);
+			return 0;
+		}
 
 		// Make sure id is a valid handle
 		if (id)
@@ -83,6 +93,11 @@ int main(int argc, char* argv[])
 
 			// Wait for the remote thread to finish executing.
 			WaitForSingleObject(id, INFINITE);
+		}
+		else
+		{
+			MessageBoxA(NULL, "the ID returned from CreateRemoteThread was invalid.", "SA:MP Elevator", MB_ICONERROR);
+			return 0;
 		}
 
 		// Free the memory we just allocated that stores the samp.dll file path since LoadLibrary has been called and it's not needed anymore.

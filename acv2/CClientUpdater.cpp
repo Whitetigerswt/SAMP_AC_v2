@@ -35,7 +35,9 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 	}
 
 	// Prepare to read the result of the webpage into a buffer.
-	char szLatestVersion[256] = { 0 };
+	char szLatestVersion[256] = "";
+	memset(szLatestVersion, 0, sizeof(szLatestVersion));
+
 	DWORD dwBytesRead = 0;
 	do
 	{

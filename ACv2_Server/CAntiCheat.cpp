@@ -305,6 +305,9 @@ void CAntiCheat::OnTamperAttempt()
 	// Send the message to everyone on the server.
 	SendClientMessageToAll(-1, msg);
 
+	// Print the message to the console as well
+	Utility::Printf(msg);
+
 	// Kick the player.
 	SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 }

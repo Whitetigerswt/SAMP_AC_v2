@@ -2,7 +2,6 @@
 #include "CLog.h"
 
 Direct3DCreate9_t  CDirectX::m_pDirect3DCreate9 = NULL;
-DirectInput8Create_t CDirectX::m_pDirectInput8Create = NULL;
 
 IDirect3DDevice9* CDirectX::m_pDevice = NULL;
 IDirect3D9* CDirectX::m_pDirect3D = NULL;
@@ -22,24 +21,6 @@ void CDirectX::HookD3DFunctions()
 			MessageBoxA(NULL, "Could not hook DirectX, Try reinstalling DirectX 9.0c.", "SAMP AC v2", MB_ICONERROR);
 		}
 	}
-
-	if (!m_pDirectInput8Create)
-	{
-		PBYTE addr = DetourFindFunction("dinput8.dll", "DirectInput8Create");
-		if (addr != NULL)
-		{
-			m_pDirectInput8Create = (DirectInput8Create_t)DetourFunction(addr, (BYTE*)HOOK_DirectInput8Create);
-		}
-	}
-}
-
-HRESULT WINAPI CDirectX::HOOK_DirectInput8Create(HINSTANCE hinst, DWORD dwVersion, REFIID riidltf, void** ppvOut, IUnknown* punkOuter)
-{
-	HRESULT hr = m_pDirectInput8Create(hinst, dwVersion, riidltf, ppvOut, punkOuter);
-	IDirectInput8A* pDInput = (IDirectInput8A*)*ppvOut;
-	CDInput8Proxy* pDInputHook = new CDInput8Proxy(pDInput);
-	*ppvOut = pDInputHook;
-	return hr;
 }
 
 IDirect3D9* WINAPI CDirectX::HOOK_Direct3DCreate9(UINT SDKVersion)

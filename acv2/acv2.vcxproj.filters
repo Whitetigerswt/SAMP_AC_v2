@@ -405,12 +405,6 @@
     <ClCompile Include="DirectX Hooks\CD3D9Proxy.cpp">
       <Filter>Source Files\DirectX Hooks</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX Hooks\CDInput8DeviceProxy.cpp">
-      <Filter>Source Files\DirectX Hooks</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX Hooks\CDInput8Proxy.cpp">
-      <Filter>Source Files\DirectX Hooks</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX Hooks\CMessageProxy.cpp">
       <Filter>Source Files\DirectX Hooks</Filter>
     </ClCompile>
@@ -1314,12 +1308,6 @@
       <Filter>Source Files\DirectX Hooks</Filter>
     </ClInclude>
     <ClInclude Include="DirectX Hooks\CD3D9Proxy.h">
-      <Filter>Source Files\DirectX Hooks</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX Hooks\CDInput8DeviceProxy.h">
-      <Filter>Source Files\DirectX Hooks</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX Hooks\CDInput8Proxy.h">
       <Filter>Source Files\DirectX Hooks</Filter>
     </ClInclude>
     <ClInclude Include="DirectX Hooks\CMessageProxy.h">

@@ -10,7 +10,7 @@
 // CURRENT_MAJOR_VERSION is sent to the server and is used ONLY to tell the server if this client is compatible with it.
 #define CURRENT_MAJOR_VERSION 0.01f
 
-#define UPDATE_URL "http://whitetigerswt.github.io/SAMP_AC_v2/SAMP_AC_v2_Client_Updater.html"
+#define UPDATE_URL "http://whitetigerswt.github.io/SAMP_AC_v2/API/SAMP_AC_v2_Client_Updater.html"
 
 class CClientUpdater
 {
