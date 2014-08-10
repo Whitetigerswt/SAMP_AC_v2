@@ -45,4 +45,6 @@
 !*.vmp
 !*.inc
 !*.nsi
+!*.suo
+!*.opensdf
 !*/

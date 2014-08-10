@@ -5,6 +5,7 @@
 #include "Callback.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "../Shared/Network/CRPC.h"
+#include "CServerUpdater.h"
 
 std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;

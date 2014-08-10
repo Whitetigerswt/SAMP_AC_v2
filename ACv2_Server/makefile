@@ -10,7 +10,7 @@ GCC = gcc
 AC_OUTFILE = "bin/sampac.so"
 
 COMPILE_FLAGS = -m32 -fPIC -c -O2 -w -D LINUX -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -D PROJECT_NAME=\"sampac\" -I ./../Shared/RakNet/ -I ./../Shared/
-LIBS = -L./../Shared/libs -static -g -static -lc -lgcc -lstdc++ -ldl -lsampgdk -static -lboost_system -static -lboost_thread -lboost_regex -lboost_filesystem -lcppnetlib-client-connections -lcppnetlib-uri -lrt
+LIBS = -L./../Shared/libs -static -g -static -lc -lgcc -lstdc++ -ldl -lsampgdk -static -lboost_system -static -lboost_thread -lboost_filesystem -lcppnetlib-client-connections -lcppnetlib-uri -lrt
 
 LDFLAGS = -shared -g -pthread
 

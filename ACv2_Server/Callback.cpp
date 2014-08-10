@@ -5,6 +5,7 @@
 #include "CAntiCheat.h"
 #include "CPlayer.h"
 #include "../Shared/Network/CRPC.h"
+#include "CServerUpdater.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -250,11 +251,11 @@ namespace Callback
 	PLUGIN_EXPORT bool PLUGIN_CALL OnGameModeInit()
 	{
 		// Check for an update to this plugin version.
-		Utility::CheckForUpdate();
+		CServerUpdater::CheckForUpdate();
 
 		// Initialize raknet server to be connected to by the AC.
 
-		Network::Initialize("", GetServerVarAsInt("port") - 500, GetServerVarAsInt("maxplayers"));
+		Network::Initialize("", GetServerVarAsInt("port") - 10, GetServerVarAsInt("maxplayers"));
 
 		return true;
 	}

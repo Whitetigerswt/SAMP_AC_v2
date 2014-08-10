@@ -1,6 +1,5 @@
 #include "CClientUpdater.h"
 #include "CLoader.h"
-#include "CLog.h"
 
 #include <Wininet.h>
 #include <Urlmon.h>
@@ -77,7 +76,7 @@ void CClientUpdater::UpdateClient(std::string downloadLink, HMODULE hMod)
 	GetTempPath(sizeof(tempDir), tempDir);
 
 	// Generate a unique file name for our old .asi version.
-	char tempFile[MAX_PATH + 1]; 
+	char tempFile[MAX_PATH + 1];
 	srand((unsigned int)std::time(0));
 	sprintf_s(tempFile, sizeof(tempFile), "%s%d_%d_%d_%d.asi", tempDir, rand(), rand(), rand(), rand());
 
@@ -91,8 +90,8 @@ void CClientUpdater::UpdateClient(std::string downloadLink, HMODULE hMod)
 	// Download the new .asi version from the new technology known as "the internet"
 	HRESULT hr = URLDownloadToFile(NULL, downloadLink.c_str(), currentFile, 0, NULL);
 
-	
-	if (SUCCEEDED(hr)) 
+
+	if (SUCCEEDED(hr))
 	{
 		// If the download succeeded, great! re-run the program as an admin (which re-loads our .asi mod with the newest version, and it may be required anyway!)
 		CLoader::RunElevated();

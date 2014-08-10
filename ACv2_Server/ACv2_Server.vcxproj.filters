@@ -411,6 +411,9 @@
     <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp">
       <Filter>Source Files\Shared\MD5 Info</Filter>
     </ClCompile>
+    <ClCompile Include="CServerUpdater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h">
@@ -970,6 +973,9 @@
     </ClInclude>
     <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h">
       <Filter>Source Files\Shared\MD5 Info</Filter>
+    </ClInclude>
+    <ClInclude Include="CServerUpdater.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

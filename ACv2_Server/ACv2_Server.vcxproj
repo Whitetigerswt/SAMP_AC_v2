@@ -19,8 +19,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -46,6 +46,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)Shared\boost\libs;$(SolutionDir)Shared\;$(SolutionDir)Shared\RakNet;$(ProjectDir)SDK\sampgdk\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Shared\boost\libs;$(LibraryPath)</LibraryPath>
+    <TargetName>sampac</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -76,7 +77,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>ws2_32.lib;$(SolutionDir)Shared\libs\sampgdk4s.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -200,6 +201,7 @@
     <ClCompile Include="Callback.cpp" />
     <ClCompile Include="CAntiCheat.cpp" />
     <ClCompile Include="CPlayer.cpp" />
+    <ClCompile Include="CServerUpdater.cpp" />
     <ClCompile Include="Network\CClientSocketInfo.cpp" />
     <ClCompile Include="Network\CRakServer.cpp" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
@@ -369,6 +371,7 @@
     <ClInclude Include="Callback.h" />
     <ClInclude Include="CAntiCheat.h" />
     <ClInclude Include="CPlayer.h" />
+    <ClInclude Include="CServerUpdater.h" />
     <ClInclude Include="GDK\a_http-decl.h" />
     <ClInclude Include="GDK\a_http.h" />
     <ClInclude Include="GDK\a_objects-decl.h" />
