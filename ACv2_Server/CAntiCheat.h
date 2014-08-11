@@ -99,13 +99,13 @@ private:
 	int ID;
 
 	// PURPOSE: Keep track of the players lite foot status.
-	bool m_LiteFoot = false;
+	bool m_LiteFoot;
 
 	// PURPOSE: Keep track of the players cbug status.
-	bool m_CBug = true;
+	bool m_CBug;
 
 	// PURPOSE: Keep track of the players switch reload status.
-	bool m_SwitchReload = true;
+	bool m_SwitchReload;
 
 	// PURPOSE: Keep track of the players set frame rate.
 	int m_FrameLimit = 0;

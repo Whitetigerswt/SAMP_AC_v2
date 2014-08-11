@@ -39,6 +39,10 @@ CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m
 		// Get the list of bad processes from the internet.
 		m_ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
 	}
+
+	m_LiteFoot = false;
+	m_CBug = true;
+	m_SwitchReload = true;
 }
 
 CAntiCheat::~CAntiCheat()

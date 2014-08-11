@@ -39,7 +39,8 @@ void CServerUpdater::CheckForUpdate()
 			Utility::Printf("SAMP_AC Server plugin is out of date, and will not continue to work after this point.");
 			Utility::Printf("The current version is %.2f and the latest version is %.2f!", CURRENT_VERSION, version);
 			Utility::Printf("You can download the latest version at: %s", site);
-			Utility::Printf("To continue using this plugin, you must update it.");
+			Utility::Printf("To continue using this plugin, you MUST update it.");
+			Utility::Printf("We're going to attempt to update automatically, but it may not succeed.");
 			Utility::Printf("If you no longer wish to use this plugin, remove it from the server.cfg and adjust your scripts accordingly.");
 			Utility::Printf("The server will now close.");
 			Utility::Printf("_____________________________________________________________");
