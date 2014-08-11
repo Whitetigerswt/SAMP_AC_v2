@@ -1,7 +1,8 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_IMPL_ASYNC_CONNECTION_BASE_20100529
 #define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_ASYNC_CONNECTION_BASE_20100529
 
-// Copyright 2010 (C) Dean Michael Berris
+// Copryight 2013 Google, Inc.
+// Copyright 2010 Dean Michael Berris <dberris@google.com>
 // Copyright 2010 (C) Sinefunc, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -26,6 +27,7 @@ namespace boost { namespace network { namespace http { namespace impl {
     typedef iterator_range<char const *> char_const_range;
     typedef function<void(char_const_range const &, system::error_code const &)>
         body_callback_function_type;
+    typedef function<bool(string_type&)> body_generator_function_type;
     typedef shared_ptr<this_type> connection_ptr;
 
     // This is the factory function which constructs the appropriate async
@@ -35,9 +37,13 @@ namespace boost { namespace network { namespace http { namespace impl {
         resolve_function resolve,
         resolver_type & resolver,
         bool follow_redirect,
+        bool always_verify_peer,
         bool https,
+        int timeout,
         optional<string_type> certificate_filename=optional<string_type>(),
-        optional<string_type> const & verify_path=optional<string_type>()) {
+        optional<string_type> const & verify_path=optional<string_type>(),
+        optional<string_type> certificate_file=optional<string_type>(),
+        optional<string_type> private_key_file=optional<string_type>()) {
       typedef http_async_connection<Tag,version_major,version_minor>
           async_connection;
       typedef typename delegate_factory<Tag>::type delegate_factory_type;
@@ -47,11 +53,15 @@ namespace boost { namespace network { namespace http { namespace impl {
               resolver,
               resolve,
               follow_redirect,
+              timeout,
               delegate_factory_type::new_connection_delegate(
                   resolver.get_io_service(),
                   https,
+                  always_verify_peer,
                   certificate_filename,
-                  verify_path)));
+                  verify_path,
+                  certificate_file,
+                  private_key_file)));
       BOOST_ASSERT(temp.get() != 0);
       return temp;
     }
@@ -61,7 +71,8 @@ namespace boost { namespace network { namespace http { namespace impl {
         request const & request,
         string_type const & method,
         bool get_body,
-        body_callback_function_type callback) = 0;
+        body_callback_function_type callback,
+        body_generator_function_type generator) = 0;
 
     virtual ~async_connection_base() {}
 

@@ -10,7 +10,7 @@
 
 using namespace boost::network;
 
-http::client c;
+http::client c = http::client();
 
 std::map<std::string, std::string> Cmd5Info::GetIMGMD5s()
 {
