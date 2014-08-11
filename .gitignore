@@ -47,4 +47,5 @@
 !*.nsi
 !*.suo
 !*.opensdf
+!*.ico
 !*/

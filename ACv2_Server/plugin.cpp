@@ -112,7 +112,7 @@ cell AMX_NATIVE_CALL SetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
 
 	// Make sure the player is connected and the frame limit isn't 0
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL || pParams[2] != 0) return 0;
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL || pParams[2] == 0) return 0;
 
 	// Set our internal recorder of the player's FPS limit.
 	ac->SetFPSLimit(pParams[2]);

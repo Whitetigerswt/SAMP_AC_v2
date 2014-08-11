@@ -1,5 +1,4 @@
 #include "CDirectX.h"
-#include "CLog.h"
 
 Direct3DCreate9_t  CDirectX::m_pDirect3DCreate9 = NULL;
 

@@ -108,7 +108,7 @@ private:
 	bool m_SwitchReload;
 
 	// PURPOSE: Keep track of the players set frame rate.
-	int m_FrameLimit = 0;
+	int m_FrameLimit;
 
 	// PURPOSE: Store the player's hardware ID.
 	std::string m_HardwareID;

@@ -43,6 +43,7 @@ CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m
 	m_LiteFoot = false;
 	m_CBug = true;
 	m_SwitchReload = true;
+	m_FrameLimit = 9999;
 }
 
 CAntiCheat::~CAntiCheat()

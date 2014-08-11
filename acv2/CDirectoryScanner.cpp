@@ -1,6 +1,5 @@
 #include "CDirectoryScanner.h"
 #include <boost/network/protocol/http/client.hpp>
-#include "CLog.h"
 #include "IMG.h"
 #include <md5.h>
 #include <BitStream.h>
@@ -66,8 +65,6 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 	// Make sure it was opened successfully.
 	if (img.IsArchiveOpened())
 	{
-		CLog log = CLog("hello.txt");
-		log.Write("Successfully opened");
 		// Create vars to hold data about each IMG entry.
 		char* filecontents = NULL;
 

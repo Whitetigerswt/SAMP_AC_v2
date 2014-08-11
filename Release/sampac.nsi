@@ -19,8 +19,9 @@ SetCompressor /SOLID lzma
 ;General
 
   ;Name and file
-  Name "SA:MP AC-dev-beta1"
-  OutFile "sampac.exe"
+  !define VERSION "dev-beta1"
+  Name "SA:MP AC-${VERSION}"
+  OutFile "sampac-${VERSION}.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\Rockstar Games\GTA San Andreas"

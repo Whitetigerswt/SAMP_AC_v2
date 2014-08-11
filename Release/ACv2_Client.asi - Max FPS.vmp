@@ -617,6 +617,10 @@
 				MapAddress="CHookManager::CameraXAccessHook39(void)"
 				CompilationType="1"
 			/>
+			<Procedure
+				MapAddress="Misc::GetCrouchBug(void)"
+				CompilationType="1"
+			/>
 		</Procedures>
 	</Protection>
 	<DLLBox
