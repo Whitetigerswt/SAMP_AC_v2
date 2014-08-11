@@ -81,7 +81,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_55.lib;libboost_filesystem-vc120-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\VMProtectSDK32.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_56.lib;libboost_filesystem-vc120-mt-s-1_56.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\VMProtectSDK32.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>

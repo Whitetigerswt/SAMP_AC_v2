@@ -140,7 +140,11 @@ namespace boost { namespace network { namespace http {
           *oi = consts::colon_char();
           *oi = consts::space_char();
           boost::copy(request.host(), oi);
-          boost::optional<boost::uint16_t> port_ = port(request);
+		  #ifdef WIN32
+          boost::optional<boost::uint16_t> port_ = (boost::optional<boost::uint16_t>)port(request);
+		  #else
+		  boost::optional<boost::uint16_t> port_ = port(request);
+		  #endif
           if (port_) {
               string_type port_str = boost::lexical_cast<string_type>(*port_);
               *oi = consts::colon_char();

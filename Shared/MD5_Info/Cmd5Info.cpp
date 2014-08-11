@@ -1,14 +1,16 @@
 #include "Cmd5Info.h"
-#include <boost/network/protocol/http/client.hpp>
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <boost/network/protocol/http/client.hpp>
 
 #ifndef WIN32
 #define MAX_PATH 260
 #endif
 
 using namespace boost::network;
+
+http::client c;
 
 std::map<std::string, std::string> Cmd5Info::GetIMGMD5s()
 {
@@ -136,7 +138,6 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 	try
 	{
 		// Connect to the website
-		http::client c;
 		http::client::request req(url);
 		http::client::response res = c.get(req);
 
