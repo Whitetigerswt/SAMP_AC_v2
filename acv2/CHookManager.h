@@ -21,6 +21,10 @@ private:
 
 	static void CPed_Special_Flags();
 
+	static void Fatulous1();
+	static void Fatulous2();
+	static void Fatulous3();
+
 	static void WidescreenPatch();
 
 	static void FOVPatch();
