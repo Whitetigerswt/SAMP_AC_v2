@@ -158,6 +158,9 @@ void CCheats::ResendFiles()
 
 		// Re-send the info to the server that the file was just executed.
 		OnFileExecuted(file.c_str(), GetFileMD5(file).c_str());
+
+		// Sleep 
+		Sleep(100);
 	}
 }
 
