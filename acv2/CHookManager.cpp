@@ -453,18 +453,14 @@ HOOK CHookManager::SprintHook()
 		}
 	}
 
-	// If the crouch bug status is set to false
-	if (!Misc::GetCrouchBug())
+	// Check if the crouch key is pressed.
+	if (CROUCH_KEY == 255)
 	{
-		// Check if the crouch key is pressed.
-		if (CROUCH_KEY == 255)
+		// Check the tick variable since the last shot.
+		if (VAR_SHOT_TICK > Misc::GetCrouchBug())
 		{
-			// Check the tick variable since the last shot.
-			if (VAR_SHOT_TICK > 1)
-			{
-				// Unset the crouch key.
-				CROUCH_KEY = 0;
-			}
+			// Unset the crouch key.
+			CROUCH_KEY = 0;
 		}
 	}
 

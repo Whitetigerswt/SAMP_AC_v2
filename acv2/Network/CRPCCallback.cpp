@@ -153,7 +153,7 @@ void CRPCCallback::SetFrameLimit(RakNet::BitStream &bsData, int iExtra)
 void CRPCCallback::ToggleCrouchBug(RakNet::BitStream &bsData, int iExtra)
 {
 	// Create a new variable to hold the value the server sent.
-	bool toggle;
+	int toggle;
 
 	// Read the value the server sent us.
 	if (bsData.Read(toggle))

@@ -41,7 +41,7 @@ CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m
 	}
 
 	m_LiteFoot = false;
-	m_CBug = true;
+	m_CBug = 9999;
 	m_SwitchReload = true;
 	m_FrameLimit = 9999;
 }
@@ -357,7 +357,7 @@ void CAntiCheat::ToggleLiteFoot(bool toggle)
 	m_LiteFoot = toggle;
 }
 
-void CAntiCheat::ToggleCrouchBug(bool toggle)
+void CAntiCheat::ToggleCrouchBug(int toggle)
 {
 	// Prepare to send RPC to client.
 	RakNet::BitStream bsData;

@@ -139,10 +139,10 @@ cell AMX_NATIVE_CALL GetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	return ac->GetFPSLimit();
 }
 
-cell AMX_NATIVE_CALL TogglePlayerCrouchBugProc(AMX* pAmx, cell* pParams)
+cell AMX_NATIVE_CALL SetPlayerCrouchBugProc(AMX* pAmx, cell* pParams)
 {
 	// Make sure the parameter count is correct.
-	CHECK_PARAMS(2, "TogglePlayerCrouchBug");
+	CHECK_PARAMS(2, "SetPlayerCrouchBug");
 
 	// Get CAntiCheat pointer.
 	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
@@ -150,7 +150,7 @@ cell AMX_NATIVE_CALL TogglePlayerCrouchBugProc(AMX* pAmx, cell* pParams)
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
-	ac->ToggleCrouchBug(!!pParams[2]);
+	ac->ToggleCrouchBug(pParams[2]);
 
 	return 1;
 }
@@ -259,7 +259,7 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "TogglePlayerSwitchReload", TogglePlayerSwitchReloadProc },
 	{ "SetPlayerFPSLimit", SetPlayerFPSLimitProc },
 	{ "GetPlayerFPSLimit", GetPlayerFPSLimitProc },
-	{ "TogglePlayerCrouchBug", TogglePlayerCrouchBugProc },
+	{ "SetPlayerCrouchBug", SetPlayerCrouchBugProc },
 	{ "TogglePlayerLiteFoot", TogglePlayerLiteFootProc },
 	{ "GetPlayerLiteFoot", GetPlayerLiteFootProc },
 	{ "GetPlayerCrouchBug", GetPlayerCrouchBugProc },

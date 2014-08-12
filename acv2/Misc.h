@@ -22,9 +22,9 @@ namespace Misc
 
 	// PURPOSE: Set the players crouch bug status.
 	// REQUIRES: NULL
-	void SetCrouchBug(bool toggle);
+	void SetCrouchBug(int toggle);
 
 	// PURPOSE: Get the crouch bug status.
 	// REQUIRES: NULL
-	bool GetCrouchBug();
+	int GetCrouchBug();
 }
