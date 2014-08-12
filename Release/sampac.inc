@@ -33,7 +33,7 @@ native GetPlayerFPSLimit(playerid);
 
 // PURPOSE: Toggle crouch bug
 // REQUIRES: The player is using AC.
-native TogglePlayerCrouchBug(playerid, bool:toggle);
+native SetPlayerCrouchBug(playerid, offset);
 
 // PURPOSE: Get the players crouch bug status
 // REQUIRES: Nothing
@@ -74,3 +74,8 @@ forward OnImgFileModifed(playerid, filename[], md5[]);
 // PURPOSE: Callback for when a file (usually) inside the players GTA directory md5 checksum has been calculated.
 // REQUIRES: The player is using AC.
 forward OnFileCalculated(playerid, filename[], md5[]);
+
+stock TogglePlayerCrouchBug(playerid, bool:toggle)
+{
+	SetPlayerCrouchBug(playerid, toggle ? 9999 : 1);
+}
