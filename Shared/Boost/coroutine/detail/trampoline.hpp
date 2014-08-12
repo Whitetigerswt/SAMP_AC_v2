@@ -7,11 +7,12 @@
 #ifndef BOOST_COROUTINES_DETAIL_TRAMPOLINE_H
 #define BOOST_COROUTINES_DETAIL_TRAMPOLINE_H
 
+#include <cstddef>
+
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
 #include <boost/cstdint.hpp>
-
-#include <boost/coroutine/detail/config.hpp>
+#include <boost/tuple/tuple.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
@@ -21,41 +22,25 @@ namespace boost {
 namespace coroutines {
 namespace detail {
 
-template< typename Coro >
-void trampoline( intptr_t vp)
+template< typename Coroutine >
+void trampoline1( intptr_t vp)
 {
-    typedef typename Coro::param_type   param_type;
+    BOOST_ASSERT( vp);
 
-    BOOST_ASSERT( 0 != vp);
-
-    param_type * param(
-        reinterpret_cast< param_type * >( vp) );
-    BOOST_ASSERT( 0 != param);
-    BOOST_ASSERT( 0 != param->data);
-
-    Coro * coro(
-        reinterpret_cast< Coro * >( param->coro) );
-    BOOST_ASSERT( 0 != coro);
-
-    coro->run( param->data);
+    reinterpret_cast< Coroutine * >( vp)->run();
 }
 
-template< typename Coro >
-void trampoline_void( intptr_t vp)
+template< typename Coroutine, typename Arg >
+void trampoline2( intptr_t vp)
 {
-    typedef typename Coro::param_type   param_type;
+    BOOST_ASSERT( vp);
 
-    BOOST_ASSERT( 0 != vp);
+    tuple< Coroutine *, Arg > * tpl(
+        reinterpret_cast< tuple< Coroutine *, Arg > * >( vp) );
+    Coroutine * coro( get< 0 >( * tpl) );
+    Arg arg( get< 1 >( * tpl) );
 
-    param_type * param(
-        reinterpret_cast< param_type * >( vp) );
-    BOOST_ASSERT( 0 != param);
-
-    Coro * coro(
-        reinterpret_cast< Coro * >( param->coro) );
-    BOOST_ASSERT( 0 != coro);
-    
-    coro->run();
+    coro->run( arg);
 }
 
 }}}

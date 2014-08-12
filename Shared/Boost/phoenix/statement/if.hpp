@@ -93,9 +93,9 @@ namespace boost { namespace phoenix
     template<typename Cond, typename Then>
     struct else_gen
     {
-        else_gen(Cond const & cond_, Then const & then_)
-            : cond(cond_)
-            , then(then_) {}
+        else_gen(Cond const & cond, Then const & then)
+            : cond(cond)
+            , then(then) {}
 
         template<typename Else>
         typename expression::if_else_statement<Cond, Then, Else>::type const
@@ -135,8 +135,8 @@ namespace boost { namespace phoenix
     template<typename Cond>
     struct if_gen
     {
-        if_gen(Cond const & cond_)
-            : cond(cond_) {}
+        if_gen(Cond const & cond)
+            : cond(cond) {}
 
         template<typename Then>
         typename expression::if_<Cond, Then>::type const

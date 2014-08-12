@@ -18,10 +18,6 @@
 #include <boost/geometry/geometries/linestring.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
 
-#include <boost/geometry/geometries/multi_point.hpp>
-#include <boost/geometry/geometries/multi_linestring.hpp>
-#include <boost/geometry/geometries/multi_polygon.hpp>
-
 #include <boost/geometry/geometries/box.hpp>
 #include <boost/geometry/geometries/ring.hpp>
 #include <boost/geometry/geometries/segment.hpp>

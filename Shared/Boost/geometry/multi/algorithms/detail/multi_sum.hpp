@@ -11,11 +11,42 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_MULTI_SUM_HPP
-#define BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_MULTI_SUM_HPP
+#ifndef BOOST_GEOMETRY_MULTI_SUM_HPP
+#define BOOST_GEOMETRY_MULTI_SUM_HPP
+
+#include <boost/range.hpp>
 
 
-#include <boost/geometry/algorithms/detail/multi_sum.hpp>
+namespace boost { namespace geometry
+{
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+
+struct multi_sum
+{
+    template <typename ReturnType, typename Policy, typename MultiGeometry, typename Strategy>
+    static inline ReturnType apply(MultiGeometry const& geometry, Strategy const& strategy)
+    {
+        ReturnType sum = ReturnType();
+        for (typename boost::range_iterator
+                <
+                    MultiGeometry const
+                >::type it = boost::begin(geometry);
+            it != boost::end(geometry);
+            ++it)
+        {
+            sum += Policy::apply(*it, strategy);
+        }
+        return sum;
+    }
+};
 
 
-#endif // BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_MULTI_SUM_HPP
+} // namespace detail
+#endif
+
+}} // namespace boost::geometry
+
+
+#endif // BOOST_GEOMETRY_MULTI_SUM_HPP

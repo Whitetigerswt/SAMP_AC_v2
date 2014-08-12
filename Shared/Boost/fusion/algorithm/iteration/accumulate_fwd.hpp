@@ -7,7 +7,6 @@
 #if !defined(BOOST_FUSION_ACCUMULATE_FWD_HPP_INCLUDED)
 #define BOOST_FUSION_ACCUMULATE_FWD_HPP_INCLUDED
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -20,7 +19,6 @@ namespace boost { namespace fusion
     }
 
     template <typename Sequence, typename State, typename F>
-    BOOST_FUSION_GPU_ENABLED
     typename
         lazy_enable_if<
             traits::is_sequence<Sequence>
@@ -29,7 +27,6 @@ namespace boost { namespace fusion
     accumulate(Sequence& seq, State const& state, F f);
 
     template <typename Sequence, typename State, typename F>
-    BOOST_FUSION_GPU_ENABLED
     typename
         lazy_enable_if<
             traits::is_sequence<Sequence>

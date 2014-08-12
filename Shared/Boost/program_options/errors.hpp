@@ -25,8 +25,7 @@ namespace boost { namespace program_options {
 
     inline std::string strip_prefixes(const std::string& text)
     {
-        // "--foo-bar" -> "foo-bar"
-        return text.substr(text.find_first_not_of("-/"));
+        return text.substr(text.find_last_of("-/") + 1);
     }
 
     /** Base class for all errors in the library. */
@@ -105,13 +104,13 @@ namespace boost { namespace program_options {
         std::map<std::string, string_pair > m_substitution_defaults;
 
     public:
-        /** template with placeholders */
-        std::string m_error_template;
+		/** template with placeholders */
+		std::string m_error_template;
 
-        error_with_option_name(const std::string& template_,
-                               const std::string& option_name = "",
-                               const std::string& original_token = "",
-                               int option_style = 0);
+		error_with_option_name(const std::string& template_,
+                              const std::string& option_name = "",
+                              const std::string& original_token = "",
+                              int option_style               = 0);
 
         /** gcc says that throw specification on dtor is loosened 
          *  without this line                                     

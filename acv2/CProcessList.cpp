@@ -4,6 +4,8 @@
 #include <TlHelp32.h>
 #include <Psapi.h>
 
+#include "CLog.h"
+
 typedef void (WINAPI *QFPIN)(HANDLE hProcess, DWORD dwFlags, LPSTR lpExeName, PDWORD lpdwSize);
 
 

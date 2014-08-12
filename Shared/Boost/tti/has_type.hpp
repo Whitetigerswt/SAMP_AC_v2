@@ -7,7 +7,7 @@
 #if !defined(BOOST_TTI_HAS_TYPE_HPP)
 #define BOOST_TTI_HAS_TYPE_HPP
 
-#include <boost/config.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/tti/gen/has_type_gen.hpp>
 #include <boost/tti/gen/namespace_gen.hpp>
@@ -89,11 +89,14 @@
     class BOOST_TTI_TP_T, \
     class BOOST_TTI_TP_U = BOOST_TTI_NAMESPACE::detail::deftype \
     > \
-  struct trait \
+  struct trait : \
+    BOOST_PP_CAT(trait,_detail_type) \
+      < \
+      BOOST_TTI_TP_T, \
+      BOOST_TTI_TP_U, \
+      typename BOOST_PP_CAT(trait,_detail_type_mpl)<BOOST_TTI_TP_T>::type \
+      > \
     { \
-    typedef typename \
-    BOOST_PP_CAT(trait,_detail_type)<BOOST_TTI_TP_T,BOOST_TTI_TP_U>::type type; \
-    BOOST_STATIC_CONSTANT(bool,value=type::value); \
     }; \
 /**/
 

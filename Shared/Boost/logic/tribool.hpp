@@ -14,7 +14,7 @@
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 
-#if defined(_MSC_VER)
+#if BOOST_WORKAROUND(_MSC_VER, >= 1200)
 #  pragma once
 #endif
 

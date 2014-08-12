@@ -54,13 +54,11 @@ enum method_type
         The class is to be included in the turn_info class, either direct
         or a derived or similar class with more (e.g. enrichment) information.
  */
-template <typename SegmentRatio>
 struct turn_operation
 {
     operation_type operation;
     segment_identifier seg_id;
     segment_identifier other_id;
-    SegmentRatio fraction;
 
     inline turn_operation()
         : operation(operation_none)
@@ -80,8 +78,7 @@ struct turn_operation
 template
 <
     typename Point,
-    typename SegmentRatio,
-    typename Operation = turn_operation<SegmentRatio>,
+    typename Operation = turn_operation,
     typename Container = boost::array<Operation, 2>
 >
 struct turn_info
@@ -93,7 +90,6 @@ struct turn_info
     Point point;
     method_type method;
     bool discarded;
-    bool selectable_start; // Can be used as starting-turn in traverse
 
 
     Container operations;
@@ -101,14 +97,13 @@ struct turn_info
     inline turn_info()
         : method(method_none)
         , discarded(false)
-        , selectable_start(true)
     {}
 
     inline bool both(operation_type type) const
     {
         return has12(type, type);
     }
-
+    
     inline bool has(operation_type type) const
     {
         return this->operations[0].operation == type
@@ -120,6 +115,8 @@ struct turn_info
         return has12(type1, type2) || has12(type2, type1);
     }
 
+
+    inline bool is_discarded() const { return discarded; }
     inline bool blocked() const
     {
         return both(operation_blocked);

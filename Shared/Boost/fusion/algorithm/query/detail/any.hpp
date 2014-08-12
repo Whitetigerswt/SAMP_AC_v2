@@ -9,7 +9,6 @@
 #if !defined(FUSION_ANY_05052005_1229)
 #define FUSION_ANY_05052005_1229
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
@@ -24,7 +23,6 @@ namespace boost { namespace fusion {
 namespace detail
 {
     template <typename First, typename Last, typename F>
-    BOOST_FUSION_GPU_ENABLED
     inline bool
     linear_any(First const&, Last const&, F const&, mpl::true_)
     {
@@ -32,7 +30,6 @@ namespace detail
     }
 
     template <typename First, typename Last, typename F>
-    BOOST_FUSION_GPU_ENABLED
     inline bool
     linear_any(First const& first, Last const& last, F& f, mpl::false_)
     {
@@ -46,7 +43,6 @@ namespace detail
     }
 
     template <typename Sequence, typename F, typename Tag>
-    BOOST_FUSION_GPU_ENABLED
     inline bool
     any(Sequence const& seq, F f, Tag)
     {
@@ -63,7 +59,6 @@ namespace detail
     struct unrolled_any
     {
         template <typename It, typename F>
-        BOOST_FUSION_GPU_ENABLED
         static bool call(It const& it, F f)
         {
             return 
@@ -79,7 +74,6 @@ namespace detail
     struct unrolled_any<3>
     {
         template <typename It, typename F>
-        BOOST_FUSION_GPU_ENABLED
         static bool call(It const& it, F f)
         {
             return 
@@ -93,7 +87,6 @@ namespace detail
     struct unrolled_any<2>
     {
         template <typename It, typename F>
-        BOOST_FUSION_GPU_ENABLED
         static bool call(It const& it, F f)
         {
             return 
@@ -106,7 +99,6 @@ namespace detail
     struct unrolled_any<1>
     {
         template <typename It, typename F>
-        BOOST_FUSION_GPU_ENABLED
         static bool call(It const& it, F f)
         {
             return f(*it);
@@ -117,7 +109,6 @@ namespace detail
     struct unrolled_any<0>
     {
         template <typename It, typename F>
-        BOOST_FUSION_GPU_ENABLED
         static bool call(It const&, F)
         {
             return false;
@@ -125,7 +116,6 @@ namespace detail
     };
 
     template <typename Sequence, typename F>
-    BOOST_FUSION_GPU_ENABLED
     inline bool
     any(Sequence const& seq, F f, random_access_traversal_tag)
     {

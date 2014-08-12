@@ -56,6 +56,7 @@ void CRPCCallback::ResendFileInformation()
 	// Send the server the processes and modules that were loaded while we weren't connected.
 	CLoader::Processes.ResendFiles();
 	CLoader::Modules.ResendFiles();
+	CLoader::GtaDirectory.Scan(Misc::GetGTADirectory());
 }
 
 void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)

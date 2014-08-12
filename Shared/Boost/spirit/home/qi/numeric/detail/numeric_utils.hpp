@@ -19,7 +19,6 @@
 #include <boost/spirit/home/support/unused.hpp>
 #include <boost/spirit/home/qi/detail/attributes.hpp>
 #include <boost/spirit/home/support/char_encoding/ascii.hpp>
-#include <boost/spirit/home/support/numeric_traits.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/iteration/local.hpp>
 #include <boost/preprocessor/comparison/less.hpp>
@@ -228,7 +227,7 @@ namespace boost { namespace spirit { namespace qi { namespace detail
                     (   (MaxDigits < 0)
                     ||  (MaxDigits > digits_traits<T, Radix>::value)
                     )
-                  && traits::check_overflow<T>::value
+                  && std::numeric_limits<T>::is_modulo
                 >()
             );
         }

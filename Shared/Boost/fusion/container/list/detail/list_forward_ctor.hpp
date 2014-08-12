@@ -34,7 +34,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define N BOOST_PP_ITERATION()
 
-    BOOST_FUSION_GPU_ENABLED
 #if N == 1
     explicit
 #endif

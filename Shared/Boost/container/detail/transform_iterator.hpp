@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2013.
+// (C) Copyright Ion Gaztanaga 2005-2012.
 // (C) Copyright Gennaro Prota 2003 - 2004.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -18,9 +18,8 @@
 #  pragma once
 #endif
 
-#include <boost/container/detail/config_begin.hpp>
+#include "config_begin.hpp"
 #include <boost/container/detail/workaround.hpp>
-
 #include <boost/container/detail/type_traits.hpp>
 #include <iterator>
 
@@ -34,10 +33,10 @@ struct operator_arrow_proxy
       :  m_value(px)
    {}
 
-   typedef PseudoReference element_type;
-
    PseudoReference* operator->() const { return &m_value; }
-
+   // This function is needed for MWCW and BCC, which won't call operator->
+   // again automatically per 13.3.1.2 para 8
+//   operator T*() const { return &m_value; }
    mutable PseudoReference m_value;
 };
 
@@ -48,10 +47,10 @@ struct operator_arrow_proxy<T&>
       :  m_value(px)
    {}
 
-   typedef T element_type;
-
    T* operator->() const { return const_cast<T*>(&m_value); }
-
+   // This function is needed for MWCW and BCC, which won't call operator->
+   // again automatically per 13.3.1.2 para 8
+//   operator T*() const { return &m_value; }
    T &m_value;
 };
 

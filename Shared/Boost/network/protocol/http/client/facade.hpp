@@ -37,10 +37,6 @@ struct basic_client_facade {
     init_pimpl(options);
   }
 
-  ~basic_client_facade() {
-    pimpl->wait_complete();
-  }
-
   response head(request const& request) {
     return pimpl->request_skeleton(request,
                                    "HEAD",
@@ -176,8 +172,7 @@ struct basic_client_facade {
                                options.openssl_verify_path(),
                                options.openssl_certificate_file(),
                                options.openssl_private_key_file(),
-                               options.io_service(),
-                               options.timeout()));
+                               options.io_service()));
   }
 };
 

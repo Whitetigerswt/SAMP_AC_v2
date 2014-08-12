@@ -10,8 +10,6 @@
 #ifndef BOOST_POLYGON_VORONOI_GEOMETRY_TYPE
 #define BOOST_POLYGON_VORONOI_GEOMETRY_TYPE
 
-#include <cstddef>
-
 namespace boost {
 namespace polygon {
 // Represents topology type of the voronoi site.

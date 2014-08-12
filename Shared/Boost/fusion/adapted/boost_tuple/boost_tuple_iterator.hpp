@@ -7,7 +7,6 @@
 #if !defined(FUSION_BOOST_TUPLE_ITERATOR_09262006_1851)
 #define FUSION_BOOST_TUPLE_ITERATOR_09262006_1851
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/add_const.hpp>
@@ -48,7 +47,6 @@ namespace boost { namespace fusion
     {
         typedef Cons cons_type;
 
-        BOOST_FUSION_GPU_ENABLED
         explicit boost_tuple_iterator(Cons& in_cons)
             : cons(in_cons) {}
         Cons& cons;
@@ -69,7 +67,6 @@ namespace boost { namespace fusion
                 >::type
             type;
 
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(Iterator const& iter)
             {
@@ -91,7 +88,6 @@ namespace boost { namespace fusion
                 >::type>
             type;
 
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(Iterator const& iter)
             {
@@ -125,7 +121,6 @@ namespace boost { namespace fusion
                 lazy_next_distance<I1, I2>
             >::type type;
             
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(I1 const&, I2 const&)
             {
@@ -161,7 +156,6 @@ namespace boost { namespace fusion
         : boost_tuple_null_iterator<tuples::null_type>
     {
         template <typename Cons>
-        BOOST_FUSION_GPU_ENABLED
         explicit boost_tuple_iterator(Cons const&) {}
     };
 
@@ -170,7 +164,6 @@ namespace boost { namespace fusion
         : boost_tuple_null_iterator<tuples::null_type const>
     {
         template <typename Cons>
-        BOOST_FUSION_GPU_ENABLED
         explicit boost_tuple_iterator(Cons const&) {}
     };
 
@@ -179,7 +172,6 @@ namespace boost { namespace fusion
         : boost_tuple_null_iterator<tuples::tuple<> >
     {
         template <typename Cons>
-        BOOST_FUSION_GPU_ENABLED
         explicit boost_tuple_iterator(Cons const&) {}
     };
 
@@ -188,7 +180,6 @@ namespace boost { namespace fusion
         : boost_tuple_null_iterator<tuples::tuple<> const>
     {
         template <typename Cons>
-        BOOST_FUSION_GPU_ENABLED
         explicit boost_tuple_iterator(Cons const&) {}
     };
 }}

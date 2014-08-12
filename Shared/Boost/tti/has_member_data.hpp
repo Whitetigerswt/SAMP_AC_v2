@@ -7,11 +7,12 @@
 #if !defined(BOOST_TTI_HAS_MEMBER_DATA_HPP)
 #define BOOST_TTI_HAS_MEMBER_DATA_HPP
 
-#include <boost/config.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/tti/detail/ddeftype.hpp>
 #include <boost/tti/detail/dmem_data.hpp>
 #include <boost/tti/gen/has_member_data_gen.hpp>
+#include <boost/tti/gen/namespace_gen.hpp>
+#include <boost/type_traits/remove_const.hpp>
 
 /*
 
@@ -55,15 +56,16 @@
 #define BOOST_TTI_TRAIT_HAS_MEMBER_DATA(trait,name) \
   BOOST_TTI_DETAIL_TRAIT_HAS_MEMBER_DATA(trait,name) \
   template<class BOOST_TTI_TP_ET,class BOOST_TTI_TP_TYPE = BOOST_TTI_NAMESPACE::detail::deftype> \
-  struct trait \
-    { \
-    typedef typename \
+  struct trait : \
     BOOST_PP_CAT(trait,_detail_hmd) \
-      	< \
-      	BOOST_TTI_TP_ET, \
-      	BOOST_TTI_TP_TYPE \
-      	>::type type; \
-    BOOST_STATIC_CONSTANT(bool,value=type::value); \
+      < \
+      typename BOOST_TTI_NAMESPACE::detail::dmem_get_type<BOOST_TTI_TP_ET,BOOST_TTI_TP_TYPE>::type, \
+      typename boost::remove_const \
+        < \
+        typename BOOST_TTI_NAMESPACE::detail::dmem_get_enclosing<BOOST_TTI_TP_ET,BOOST_TTI_TP_TYPE>::type \
+        >::type \
+      > \
+    { \
     }; \
 /**/
 

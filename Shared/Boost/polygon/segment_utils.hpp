@@ -9,14 +9,9 @@
 #ifndef BOOST_POLYGON_SEGMENT_UTILS_HPP
 #define BOOST_POLYGON_SEGMENT_UTILS_HPP
 
-#include <iterator>
 #include <set>
 #include <vector>
-
-#include "detail/scan_arbitrary.hpp"
-#include "isotropy.hpp"
-#include "rectangle_concept.hpp"
-#include "segment_concept.hpp"
+#include <utility>
 
 namespace boost {
 namespace polygon {

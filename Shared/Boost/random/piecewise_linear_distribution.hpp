@@ -7,7 +7,7 @@
  *
  * See http://www.boost.org for most recent version including documentation.
  *
- * $Id$
+ * $Id: piecewise_linear_distribution.hpp 85813 2013-09-21 20:17:00Z jewillco $
  */
 
 #ifndef BOOST_RANDOM_PIECEWISE_LINEAR_DISTRIBUTION_HPP_INCLUDED

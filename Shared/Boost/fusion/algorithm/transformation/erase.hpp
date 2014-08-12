@@ -7,7 +7,6 @@
 #if !defined(FUSION_ERASE_07232005_0534)
 #define FUSION_ERASE_07232005_0534
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/iterator/mpl/convert_iterator.hpp>
 #include <boost/fusion/container/vector/vector10.hpp>
@@ -38,21 +37,18 @@ namespace boost { namespace fusion
                 >::type
             type;
 
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(First const& first, mpl::false_)
             {
                 return fusion::next(convert_iterator<First>::call(first));
             }
 
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(First const& first, mpl::true_)
             {
                 return convert_iterator<First>::call(first);
             }
 
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(First const& first)
             {
@@ -99,7 +95,6 @@ namespace boost { namespace fusion
     }
 
     template <typename Sequence, typename First>
-    BOOST_FUSION_GPU_ENABLED
     typename 
         lazy_enable_if<
             traits::is_sequence<Sequence>
@@ -122,7 +117,6 @@ namespace boost { namespace fusion
     }
 
     template <typename Sequence, typename First, typename Last>
-    BOOST_FUSION_GPU_ENABLED
     typename result_of::erase<Sequence const, First, Last>::type
     erase(Sequence const& seq, First const& first, Last const& last)
     {

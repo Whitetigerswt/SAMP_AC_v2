@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2013. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -15,7 +15,7 @@
 #  pragma once
 #endif
 
-#include <boost/container/detail/config_begin.hpp>
+#include "config_begin.hpp"
 #include <boost/container/detail/workaround.hpp>
 
 #include <boost/container/container_fwd.hpp>
@@ -51,7 +51,7 @@ class flat_tree_value_compare
    typedef Value              first_argument_type;
    typedef Value              second_argument_type;
    typedef bool               return_type;
-   public:
+   public:    
    flat_tree_value_compare()
       : Compare()
    {}
@@ -68,7 +68,7 @@ class flat_tree_value_compare
 
    const Compare &get_comp() const
       {  return *this;  }
-
+  
    Compare &get_comp()
       {  return *this;  }
 };
@@ -265,13 +265,10 @@ class flat_tree
    flat_tree&  operator=(BOOST_RV_REF(flat_tree) mx)
    {  m_data = boost::move(mx.m_data); return *this;  }
 
-   public:
+   public:   
    // accessors:
    Compare key_comp() const
    { return this->m_data.get_comp(); }
-
-   value_compare value_comp() const
-   { return this->m_data; }
 
    allocator_type get_allocator() const
    { return this->m_data.m_vect.get_allocator(); }
@@ -476,35 +473,20 @@ class flat_tree
       const const_iterator b(this->cbegin());
       const_iterator pos(b);
       //Loop in burst sizes
-      bool back_insert = false;
-      while(len && !back_insert){
-         size_type burst = len < BurstSize ? len : BurstSize;
+      while(len){
+         const size_type burst = len < BurstSize ? len : BurstSize;
          const const_iterator ce(this->cend());
+         len -= burst;
          for(size_type i = 0; i != burst; ++i){
-            //Get the insertion position for each key, use std::iterator_traits<BidirIt>::value_type
-            //because it can be different from container::value_type
-            //(e.g. conversion between std::pair<A, B> -> boost::container::pair<A, B>
-            const typename std::iterator_traits<BidirIt>::value_type & val = *first;
-            pos = const_cast<const flat_tree&>(*this).priv_upper_bound(pos, ce, KeyOfValue()(val));
-            if(pos == this->cend()){   //this element and the remaining should be back inserted
-               burst = i;
-               back_insert = true;
-               break;
-            }
-            else{
-               positions[i] = static_cast<size_type>(pos - b);
-               ++first;
-               --len;
-            }
+            //Get the insertion position for each key
+            pos = const_cast<const flat_tree&>(*this).priv_upper_bound(pos, ce, KeyOfValue()(*first));
+            positions[i] = static_cast<size_type>(pos - b);
+            ++first;
          }
          //Insert all in a single step in the precalculated positions
          this->m_data.m_vect.insert_ordered_at(burst, positions + burst, first);
-         //Next search position updated, iterator still valid because we've preserved the vector
+         //Next search position updated
          pos += burst;
-      }
-      if(first != last){
-         //The remaining range should be back inserted
-         this->m_data.m_vect.insert(this->m_data.m_vect.cend(), len, first, last);
       }
    }
 
@@ -544,49 +526,36 @@ class flat_tree
       this->reserve(this->size()+len);
       const const_iterator b(this->cbegin());
       const_iterator pos(b);
-      const value_compare &val_cmp = this->m_data;
+      const value_compare &value_comp = this->m_data;
       skips[0u] = 0u;
       //Loop in burst sizes
-      bool back_insert = false;
-      while(len && !back_insert){
+      while(len){
          const size_type burst = len < BurstSize ? len : BurstSize;
          size_type unique_burst = 0u;
          const const_iterator ce(this->cend());
          while(unique_burst < burst && len > 0){
-            //Get the insertion position for each key, use std::iterator_traits<BidirIt>::value_type
-            //because it can be different from container::value_type
-            //(e.g. conversion between std::pair<A, B> -> boost::container::pair<A, B>
-            const typename std::iterator_traits<BidirIt>::value_type & val = *first;
+            //Get the insertion position for each key
+            const value_type & val = *first++;
+            --len;
             pos = const_cast<const flat_tree&>(*this).priv_lower_bound(pos, ce, KeyOfValue()(val));
             //Check if already present
-			   if (pos != ce){
-               ++first;
-               --len;
-               if(!val_cmp(val, *pos)){
-                  if(unique_burst > 0){
-                     ++skips[unique_burst-1];
-                  }
-                  continue;
+            if(pos != ce && !value_comp(val, *pos)){
+               if(unique_burst > 0){
+                  ++skips[unique_burst-1];
                }
-               //If not present, calculate position
-               positions[unique_burst] = static_cast<size_type>(pos - b);
-               skips[unique_burst++] = 0u;
+               continue;
             }
-            else{ //this element and the remaining should be back inserted
-               back_insert = true;
-               break;
-            }
+
+            //If not present, calculate position
+            positions[unique_burst] = static_cast<size_type>(pos - b);
+            skips[unique_burst++] = 0u;
          }
          if(unique_burst){
             //Insert all in a single step in the precalculated positions
             this->m_data.m_vect.insert_ordered_at(unique_burst, positions + unique_burst, skips + unique_burst, first);
-            //Next search position updated, iterator still valid because we've preserved the vector
+            //Next search position updated
             pos += unique_burst;
          }
-      }
-      if(first != last){
-         //The remaining range should be back inserted
-         this->m_data.m_vect.insert(this->m_data.m_vect.cend(), len, first, last);
       }
    }
 
@@ -728,8 +697,8 @@ class flat_tree
    {
       iterator i = this->lower_bound(k);
       iterator end_it = this->end();
-      if (i != end_it && this->m_data.get_comp()(k, KeyOfValue()(*i))){
-         i = end_it;
+      if (i != end_it && this->m_data.get_comp()(k, KeyOfValue()(*i))){ 
+         i = end_it; 
       }
       return i;
    }
@@ -739,13 +708,12 @@ class flat_tree
       const_iterator i = this->lower_bound(k);
 
       const_iterator end_it = this->cend();
-      if (i != end_it && this->m_data.get_comp()(k, KeyOfValue()(*i))){
+      if (i != end_it && this->m_data.get_comp()(k, KeyOfValue()(*i))){ 
          i = end_it;
       }
       return i;
    }
 
-   // set operations:
    size_type count(const key_type& k) const
    {
       std::pair<const_iterator, const_iterator> p = this->equal_range(k);
@@ -771,43 +739,11 @@ class flat_tree
    std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const
    {  return this->priv_equal_range(this->cbegin(), this->cend(), k);  }
 
-   std::pair<iterator, iterator> lower_bound_range(const key_type& k)
-   {  return this->priv_lower_bound_range(this->begin(), this->end(), k);  }
-
-   std::pair<const_iterator, const_iterator> lower_bound_range(const key_type& k) const
-   {  return this->priv_lower_bound_range(this->cbegin(), this->cend(), k);  }
-
-   size_type capacity() const
+   size_type capacity() const          
    { return this->m_data.m_vect.capacity(); }
 
-   void reserve(size_type cnt)
+   void reserve(size_type cnt)      
    { this->m_data.m_vect.reserve(cnt);   }
-
-   friend bool operator==(const flat_tree& x, const flat_tree& y)
-   {
-      return x.size() == y.size() && std::equal(x.begin(), x.end(), y.begin());
-   }
-
-   friend bool operator<(const flat_tree& x, const flat_tree& y)
-   {
-      return std::lexicographical_compare(x.begin(), x.end(),
-                                          y.begin(), y.end());
-   }
-
-   friend bool operator!=(const flat_tree& x, const flat_tree& y)
-      {  return !(x == y); }
-
-   friend bool operator>(const flat_tree& x, const flat_tree& y)
-      {  return y < x;  }
-
-   friend bool operator<=(const flat_tree& x, const flat_tree& y)
-      {  return !(y < x);  }
-
-   friend bool operator>=(const flat_tree& x, const flat_tree& y)
-      {  return !(x < y);  }
-
-   friend void swap(flat_tree& x, flat_tree& y)
-      {  x.swap(y);  }
 
    private:
    struct insert_commit_data
@@ -828,10 +764,10 @@ class flat_tree
       //         insert val before upper_bound(val)
       //   else
       //      insert val before lower_bound(val)
-      const value_compare &val_cmp = this->m_data;
+      const value_compare &value_comp = this->m_data;
 
-      if(pos == this->cend() || !val_cmp(*pos, val)){
-         if (pos == this->cbegin() || !val_cmp(val, pos[-1])){
+      if(pos == this->cend() || !value_comp(*pos, val)){
+         if (pos == this->cbegin() || !value_comp(val, pos[-1])){
             data.position = pos;
          }
          else{
@@ -848,9 +784,9 @@ class flat_tree
    bool priv_insert_unique_prepare
       (const_iterator b, const_iterator e, const value_type& val, insert_commit_data &commit_data)
    {
-      const value_compare &val_cmp  = this->m_data;
+      const value_compare &value_comp  = this->m_data;
       commit_data.position = this->priv_lower_bound(b, e, KeyOfValue()(val));
-      return commit_data.position == e || val_cmp(val, *commit_data.position);
+      return commit_data.position == e || value_comp(val, *commit_data.position);
    }
 
    bool priv_insert_unique_prepare
@@ -871,9 +807,9 @@ class flat_tree
       //   insert val after pos
       //else
       //   insert val before lower_bound(val)
-      const value_compare &val_cmp = this->m_data;
+      const value_compare &value_comp = this->m_data;
       const const_iterator cend_it = this->cend();
-      if(pos == cend_it || val_cmp(val, *pos)){ //Check if val should go before end
+      if(pos == cend_it || value_comp(val, *pos)){ //Check if val should go before end
          const const_iterator cbeg = this->cbegin();
          commit_data.position = pos;
          if(pos == cbeg){  //If container is empty then insert it in the beginning
@@ -881,10 +817,10 @@ class flat_tree
          }
          const_iterator prev(pos);
          --prev;
-         if(val_cmp(*prev, val)){   //If previous element was less, then it should go between prev and pos
+         if(value_comp(*prev, val)){   //If previous element was less, then it should go between prev and pos
             return true;
          }
-         else if(!val_cmp(val, *prev)){   //If previous was equal then insertion should fail
+         else if(!value_comp(val, *prev)){   //If previous was equal then insertion should fail
             commit_data.position = prev;
             return false;
          }
@@ -910,7 +846,7 @@ class flat_tree
    }
 
    template <class RanIt>
-   RanIt priv_lower_bound(RanIt first, const RanIt last,
+   RanIt priv_lower_bound(RanIt first, RanIt last,
                           const key_type & key) const
    {
       const Compare &key_cmp = this->m_data.get_comp();
@@ -919,23 +855,24 @@ class flat_tree
       RanIt middle;
 
       while (len) {
-         size_type step = len >> 1;
+         size_type half = len >> 1;
          middle = first;
-         middle += step;
+         middle += half;
 
          if (key_cmp(key_extract(*middle), key)) {
-            first = ++middle;
-            len -= step + 1;
+            ++middle;
+            first = middle;
+            len = len - half - 1;
          }
-         else{
-            len = step;
-         }
+         else
+            len = half;
       }
       return first;
    }
 
+
    template <class RanIt>
-   RanIt priv_upper_bound(RanIt first, const RanIt last,
+   RanIt priv_upper_bound(RanIt first, RanIt last,
                           const key_type & key) const
    {
       const Compare &key_cmp = this->m_data.get_comp();
@@ -944,16 +881,16 @@ class flat_tree
       RanIt middle;
 
       while (len) {
-         size_type step = len >> 1;
+         size_type half = len >> 1;
          middle = first;
-         middle += step;
+         middle += half;
 
          if (key_cmp(key, key_extract(*middle))) {
-            len = step;
+            len = half;
          }
          else{
             first = ++middle;
-            len -= step + 1;
+            len = len - half - 1; 
          }
       }
       return first;
@@ -969,39 +906,27 @@ class flat_tree
       RanIt middle;
 
       while (len) {
-         size_type step = len >> 1;
+         size_type half = len >> 1;
          middle = first;
-         middle += step;
+         middle += half;
 
          if (key_cmp(key_extract(*middle), key)){
-            first = ++middle;
-            len -= step + 1;
+            first = middle;
+            ++first;
+            len = len - half - 1;
          }
          else if (key_cmp(key, key_extract(*middle))){
-            len = step;
+            len = half;
          }
          else {
             //Middle is equal to key
             last = first;
             last += len;
-            return std::pair<RanIt, RanIt>
-               ( this->priv_lower_bound(first, middle, key)
-               , this->priv_upper_bound(++middle, last, key));
+            first = this->priv_lower_bound(first, middle, key);
+            return std::pair<RanIt, RanIt> (first, this->priv_upper_bound(++middle, last, key));
          }
       }
       return std::pair<RanIt, RanIt>(first, first);
-   }
-
-   template<class RanIt>
-   std::pair<RanIt, RanIt> priv_lower_bound_range(RanIt first, RanIt last, const key_type& k) const
-   {
-      const Compare &key_cmp = this->m_data.get_comp();
-      KeyOfValue key_extract;
-      RanIt lb(this->priv_lower_bound(first, last, k)), ub(lb);
-      if(lb != last && static_cast<difference_type>(!key_cmp(k, key_extract(*lb)))){
-         ++ub;
-      }
-      return std::pair<RanIt, RanIt>(lb, ub);
    }
 
    template<class InIt>
@@ -1024,6 +949,62 @@ class flat_tree
       }
    }
 };
+
+template <class Key, class Value, class KeyOfValue,
+          class Compare, class A>
+inline bool
+operator==(const flat_tree<Key,Value,KeyOfValue,Compare,A>& x,
+           const flat_tree<Key,Value,KeyOfValue,Compare,A>& y)
+{
+  return x.size() == y.size() &&
+         std::equal(x.begin(), x.end(), y.begin());
+}
+
+template <class Key, class Value, class KeyOfValue,
+          class Compare, class A>
+inline bool
+operator<(const flat_tree<Key,Value,KeyOfValue,Compare,A>& x,
+          const flat_tree<Key,Value,KeyOfValue,Compare,A>& y)
+{
+  return std::lexicographical_compare(x.begin(), x.end(),
+                                      y.begin(), y.end());
+}
+
+template <class Key, class Value, class KeyOfValue,
+          class Compare, class A>
+inline bool
+operator!=(const flat_tree<Key,Value,KeyOfValue,Compare,A>& x,
+           const flat_tree<Key,Value,KeyOfValue,Compare,A>& y)
+   {  return !(x == y); }
+
+template <class Key, class Value, class KeyOfValue,
+          class Compare, class A>
+inline bool
+operator>(const flat_tree<Key,Value,KeyOfValue,Compare,A>& x,
+          const flat_tree<Key,Value,KeyOfValue,Compare,A>& y)
+   {  return y < x;  }
+
+template <class Key, class Value, class KeyOfValue,
+          class Compare, class A>
+inline bool
+operator<=(const flat_tree<Key,Value,KeyOfValue,Compare,A>& x,
+           const flat_tree<Key,Value,KeyOfValue,Compare,A>& y)
+   {  return !(y < x);  }
+
+template <class Key, class Value, class KeyOfValue,
+          class Compare, class A>
+inline bool
+operator>=(const flat_tree<Key,Value,KeyOfValue,Compare,A>& x,
+           const flat_tree<Key,Value,KeyOfValue,Compare,A>& y)
+   {  return !(x < y);  }
+
+
+template <class Key, class Value, class KeyOfValue,
+          class Compare, class A>
+inline void
+swap(flat_tree<Key,Value,KeyOfValue,Compare,A>& x,
+     flat_tree<Key,Value,KeyOfValue,Compare,A>& y)
+   {  x.swap(y);  }
 
 }  //namespace container_detail {
 

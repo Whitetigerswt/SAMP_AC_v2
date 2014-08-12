@@ -11,7 +11,7 @@
 #ifndef BOOST_INTERPROCESS_SEGMENT_MANAGER_HPP
 #define BOOST_INTERPROCESS_SEGMENT_MANAGER_HPP
 
-#if defined(_MSC_VER)
+#if (defined _MSC_VER) && (_MSC_VER >= 1200)
 #  pragma once
 #endif
 
@@ -123,7 +123,7 @@ class segment_manager_base
    /// @cond
 
    //Experimental. Dont' use.
-   //!Allocates n_elements of elem_bytes bytes.
+   //!Allocates n_elements of elem_bytes bytes. 
    //!Throws bad_alloc on failure. chain.size() is not increased on failure.
    void allocate_many(size_type elem_bytes, size_type n_elements, multiallocation_chain &chain)
    {
@@ -145,7 +145,7 @@ class segment_manager_base
       }
    }
 
-   //!Allocates n_elements of elem_bytes bytes.
+   //!Allocates n_elements of elem_bytes bytes. 
    //!Non-throwing version. chain.size() is not increased on failure.
    void allocate_many(std::nothrow_t, size_type elem_bytes, size_type n_elements, multiallocation_chain &chain)
    {  MemoryAlgorithm::allocate_many(elem_bytes, n_elements, chain); }
@@ -188,8 +188,6 @@ class segment_manager_base
       return ret;
    }
 
-   /// @cond
-
    template<class T>
    std::pair<T *, bool>
       allocation_command  (boost::interprocess::allocation_type command,   size_type limit_size,
@@ -216,8 +214,6 @@ class segment_manager_base
          throw bad_alloc();
       return ret;
    }
-
-   /// @endcond
 
    //!Deallocates the bytes allocated with allocate/allocate_many()
    //!pointed by addr
@@ -347,19 +343,19 @@ class segment_manager
    segment_manager();
    segment_manager(const segment_manager &);
    segment_manager &operator=(const segment_manager &);
-   typedef segment_manager_base<MemoryAlgorithm> segment_manager_base_t;
+   typedef segment_manager_base<MemoryAlgorithm> Base;
    /// @endcond
 
    public:
-   typedef MemoryAlgorithm                                  memory_algorithm;
-   typedef typename segment_manager_base_t::void_pointer    void_pointer;
-   typedef typename segment_manager_base_t::size_type       size_type;
-   typedef typename segment_manager_base_t::difference_type difference_type;
-   typedef CharType                                         char_type;
+   typedef MemoryAlgorithm                memory_algorithm;
+   typedef typename Base::void_pointer    void_pointer;
+   typedef typename Base::size_type       size_type;
+   typedef typename Base::difference_type difference_type;
+   typedef CharType                       char_type;
 
    typedef segment_manager_base<MemoryAlgorithm>   segment_manager_base_type;
 
-   static const size_type PayloadPerAllocation = segment_manager_base_t::PayloadPerAllocation;
+   static const size_type PayloadPerAllocation = Base::PayloadPerAllocation;
 
    /// @cond
    private:
@@ -383,7 +379,7 @@ class segment_manager
       ,is_intrusive_index<index_type>::value>   unique_transform;
    /// @endcond
 
-   typedef typename segment_manager_base_t::mutex_family       mutex_family;
+   typedef typename Base::mutex_family       mutex_family;
 
    typedef transform_iterator
       <typename named_index_t::const_iterator, named_transform> const_named_iterator;
@@ -413,31 +409,39 @@ class segment_manager
    //!the segment manager is being constructed.
    //!Can throw
    explicit segment_manager(size_type segment_size)
-      :  segment_manager_base_t(segment_size, priv_get_reserved_bytes())
-      ,  m_header(static_cast<segment_manager_base_t*>(get_this_pointer()))
+      :  Base(segment_size, priv_get_reserved_bytes())
+      ,  m_header(static_cast<Base*>(get_this_pointer()))
    {
       (void) anonymous_instance;   (void) unique_instance;
-      //Check EBO is applied, it's required
-      const void * const this_addr = this;
-      const void *const segm_addr  = static_cast<segment_manager_base_t*>(this);
-      (void)this_addr;  (void)segm_addr;
-      BOOST_ASSERT( this_addr == segm_addr);
+      BOOST_ASSERT(static_cast<const void*>(this) == static_cast<const void*>(static_cast<Base*>(this)));
    }
 
-   //!Tries to find a previous named/unique allocation. Returns the address
+   //!Tries to find a previous named allocation. Returns the address
    //!and the object count. On failure the first member of the
    //!returned pair is 0.
    template <class T>
-   std::pair<T*, size_type> find  (char_ptr_holder_t name)
+   std::pair<T*, size_type> find  (const CharType* name)
    {  return this->priv_find_impl<T>(name, true);  }
 
-   //!Tries to find a previous named/unique allocation. Returns the address
+   //!Tries to find a previous unique allocation. Returns the address
+   //!and the object count. On failure the first member of the
+   //!returned pair is 0.
+   template <class T>
+   std::pair<T*, size_type> find (const ipcdetail::unique_instance_t* name)
+   {  return this->priv_find_impl<T>(name, true);  }
+
+   //!Tries to find a previous named allocation. Returns the address
    //!and the object count. On failure the first member of the
    //!returned pair is 0. This search is not mutex-protected!
-   //!Use it only inside atomic_func() calls, where the internal mutex
-   //!is guaranteed to be locked.
    template <class T>
-   std::pair<T*, size_type> find_no_lock  (char_ptr_holder_t name)
+   std::pair<T*, size_type> find_no_lock  (const CharType* name)
+   {  return this->priv_find_impl<T>(name, false);  }
+
+   //!Tries to find a previous unique allocation. Returns the address
+   //!and the object count. On failure the first member of the
+   //!returned pair is 0. This search is not mutex-protected!
+   template <class T>
+   std::pair<T*, size_type> find_no_lock (const ipcdetail::unique_instance_t* name)
    {  return this->priv_find_impl<T>(name, false);  }
 
    //!Returns throwing "construct" proxy
@@ -496,7 +500,7 @@ class segment_manager
 
    //!Calls object function blocking recursive interprocess_mutex and guarantees that
    //!no new named_alloc or destroy will be executed by any process while
-   //!executing the object function call
+   //!executing the object function call*/
    template <class Func>
    void atomic_func(Func &f)
    {  scoped_lock<rmutex> guard(m_header);  f();  }
@@ -519,26 +523,28 @@ class segment_manager
       }
    }
 
-   //!Destroys a previously created named/unique instance.
+   //!Destroys a previously created unique instance.
    //!Returns false if the object was not present.
    template <class T>
-   bool destroy(char_ptr_holder_t name)
+   bool destroy(const ipcdetail::unique_instance_t *)
    {
-      BOOST_ASSERT(!name.is_anonymous());
       ipcdetail::placement_destroy<T> dtor;
+      return this->priv_generic_named_destroy<char>
+         (typeid(T).name(), m_header.m_unique_index, dtor, is_intrusive_t());
+   }
 
-      if(name.is_unique()){
-         return this->priv_generic_named_destroy<char>
-            ( typeid(T).name(), m_header.m_unique_index , dtor, is_intrusive_t());
-      }
-      else{
-         return this->priv_generic_named_destroy<CharType>
-            ( name.get(), m_header.m_named_index, dtor, is_intrusive_t());
-      }
+   //!Destroys the named object with
+   //!the given name. Returns false if that object can't be found.
+   template <class T>
+   bool destroy(const CharType *name)
+   {
+      ipcdetail::placement_destroy<T> dtor;
+      return this->priv_generic_named_destroy<CharType>
+               (name, m_header.m_named_index, dtor, is_intrusive_t());
    }
 
    //!Destroys an anonymous, unique or named object
-   //!using its address
+   //!using it's address
    template <class T>
    void destroy_ptr(const T *p)
    {
@@ -622,7 +628,7 @@ class segment_manager
    //!Obtains the minimum size needed by the
    //!segment manager
    static size_type get_min_size()
-   {  return segment_manager_base_t::get_min_size(priv_get_reserved_bytes());  }
+   {  return Base::get_min_size(priv_get_reserved_bytes());  }
 
    //!Returns a constant iterator to the beginning of the information about
    //!the named allocations performed in this segment manager
@@ -679,8 +685,8 @@ class segment_manager
       typedef boost::interprocess::deleter<T, segment_manager> type;
    };
 
-   //!Returns an instance of the default deleter for type T
-   //!that will delete an object constructed in this segment manager.
+   //!Returns an instance of the default allocator for type T
+   //!initialized that allocates memory from this segment manager.
    template<class T>
    typename deleter<T>::type
       get_deleter()
@@ -736,8 +742,11 @@ class segment_manager
       return std::pair<T*, size_type>(static_cast<T*>(ret), size);
    }
 
-   void *priv_generic_construct
-      (const CharType *name, size_type num, bool try2find, bool dothrow, ipcdetail::in_place_interface &table)
+   void *priv_generic_construct(const CharType *name,
+                   size_type num,
+                         bool try2find,
+                         bool dothrow,
+                         ipcdetail::in_place_interface &table)
    {
       void *ret;
       //Security overflow check
@@ -791,7 +800,7 @@ class segment_manager
    static const CharType *priv_get_instance_name(block_header_t *ctrl_data)
    {
       boost::interprocess::allocation_type type = ctrl_data->alloc_type();
-      if(type == anonymous_type){
+      if(type != named_type){
          BOOST_ASSERT((type == anonymous_type && ctrl_data->m_num_char == 0) ||
                 (type == unique_type    && ctrl_data->m_num_char != 0) );
          return 0;
@@ -823,8 +832,8 @@ class segment_manager
    static size_type priv_get_reserved_bytes()
    {
       //Get the number of bytes until the end of (*this)
-      //beginning in the end of the segment_manager_base_t base.
-      return sizeof(segment_manager) - sizeof(segment_manager_base_t);
+      //beginning in the end of the Base base.
+      return sizeof(segment_manager) - sizeof(Base);
    }
 
    template <class CharT>
@@ -832,7 +841,9 @@ class segment_manager
       (const CharT* name,
        IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> > &index,
        ipcdetail::in_place_interface &table,
-       size_type &length, ipcdetail::true_ is_intrusive, bool use_lock)
+       size_type &length,
+       ipcdetail::true_ is_intrusive,
+       bool use_lock)
    {
       (void)is_intrusive;
       typedef IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> >         index_type;
@@ -869,7 +880,9 @@ class segment_manager
       (const CharT* name,
        IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> > &index,
        ipcdetail::in_place_interface &table,
-       size_type &length, ipcdetail::false_ is_intrusive, bool use_lock)
+       size_type &length,
+       ipcdetail::false_ is_intrusive,
+       bool use_lock)
    {
       (void)is_intrusive;
       typedef IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> >      index_type;
@@ -905,7 +918,8 @@ class segment_manager
    bool priv_generic_named_destroy
      (block_header_t *block_header,
       IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> > &index,
-      ipcdetail::in_place_interface &table, ipcdetail::true_ is_node_index)
+      ipcdetail::in_place_interface &table,
+      ipcdetail::true_ is_node_index)
    {
       (void)is_node_index;
       typedef typename IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> >::iterator index_it;
@@ -929,7 +943,8 @@ class segment_manager
    template <class CharT>
    bool priv_generic_named_destroy(const CharT *name,
                                    IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> > &index,
-                                   ipcdetail::in_place_interface &table, ipcdetail::true_ is_intrusive_index)
+                                   ipcdetail::in_place_interface &table,
+                                   ipcdetail::true_ is_intrusive_index)
    {
       (void)is_intrusive_index;
       typedef IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> >         index_type;
@@ -1045,17 +1060,21 @@ class segment_manager
       }
 
       //Call destructors and free memory
-      std::size_t destroyed;
+     std::size_t destroyed;
       table.destroy_n(values, num, destroyed);
       this->deallocate(memory);
       return true;
    }
 
    template<class CharT>
-   void * priv_generic_named_construct
-      (unsigned char type, const CharT *name, size_type num, bool try2find,
-      bool dothrow, ipcdetail::in_place_interface &table, 
-      IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> > &index, ipcdetail::true_ is_intrusive)
+   void * priv_generic_named_construct(unsigned char type,
+                               const CharT *name,
+                        size_type num,
+                               bool try2find,
+                               bool dothrow,
+                               ipcdetail::in_place_interface &table,
+                               IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> > &index,
+                               ipcdetail::true_ is_intrusive)
    {
       (void)is_intrusive;
      std::size_t namelen  = std::char_traits<CharT>::length(name);
@@ -1177,10 +1196,14 @@ class segment_manager
    //!Generic named new function for
    //!named functions
    template<class CharT>
-   void * priv_generic_named_construct
-      (unsigned char type, const CharT *name, size_type num, bool try2find, bool dothrow,
-      ipcdetail::in_place_interface &table, 
-      IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> > &index, ipcdetail::false_ is_intrusive)
+   void * priv_generic_named_construct(unsigned char type,
+                               const CharT *name,
+                        size_type num,
+                               bool try2find,
+                               bool dothrow,
+                               ipcdetail::in_place_interface &table,
+                               IndexType<ipcdetail::index_config<CharT, MemoryAlgorithm> > &index,
+                               ipcdetail::false_ is_intrusive)
    {
       (void)is_intrusive;
       std::size_t namelen  = std::char_traits<CharT>::length(name);
@@ -1323,9 +1346,9 @@ class segment_manager
       named_index_t           m_named_index;
       unique_index_t          m_unique_index;
 
-      header_t(segment_manager_base_t *segment_mngr_base)
-         :  m_named_index (segment_mngr_base)
-         ,  m_unique_index(segment_mngr_base)
+      header_t(Base *restricted_segment_mngr)
+         :  m_named_index (restricted_segment_mngr)
+         ,  m_unique_index(restricted_segment_mngr)
       {}
    }  m_header;
 

@@ -238,7 +238,7 @@ namespace boost { namespace phoenix {
     template <typename Cond>
     struct switch_gen
     {
-        switch_gen(Cond const& cond_) : cond(cond_) {}
+        switch_gen(Cond const& cond) : cond(cond) {}
 
         template <typename Cases>
         typename expression::switch_<

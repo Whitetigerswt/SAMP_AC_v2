@@ -123,10 +123,11 @@ struct gmp_float_imp
    }
    gmp_float_imp& operator = (long long i)
    {
+      BOOST_MP_USING_ABS
       if(m_data[0]._mp_d == 0)
          mpf_init2(m_data, multiprecision::detail::digits10_2_2(digits10 ? digits10 : get_default_precision()));
       bool neg = i < 0;
-      *this = static_cast<unsigned long long>(boost::multiprecision::detail::unsigned_abs(i));
+      *this = static_cast<unsigned long long>(abs(i));
       if(neg)
          mpf_neg(m_data, m_data);
       return *this;
@@ -670,7 +671,7 @@ template <unsigned D1, unsigned D2>
 inline void eval_add(gmp_float<D1>& a, const gmp_float<D2>& x, long y)
 {
    if(y < 0)
-      mpf_sub_ui(a.data(), x.data(), boost::multiprecision::detail::unsigned_abs(y));
+      mpf_sub_ui(a.data(), x.data(), -y);
    else
       mpf_add_ui(a.data(), x.data(), y);
 }
@@ -684,7 +685,7 @@ inline void eval_add(gmp_float<D1>& a, long x, const gmp_float<D2>& y)
 {
    if(x < 0)
    {
-      mpf_ui_sub(a.data(), boost::multiprecision::detail::unsigned_abs(x), y.data());
+      mpf_ui_sub(a.data(), -x, y.data());
       mpf_neg(a.data(), a.data());
    }
    else
@@ -704,7 +705,7 @@ template <unsigned D1, unsigned D2>
 inline void eval_subtract(gmp_float<D1>& a, const gmp_float<D2>& x, long y)
 {
    if(y < 0)
-      mpf_add_ui(a.data(), x.data(), boost::multiprecision::detail::unsigned_abs(y));
+      mpf_add_ui(a.data(), x.data(), -y);
    else
       mpf_sub_ui(a.data(), x.data(), y);
 }
@@ -718,7 +719,7 @@ inline void eval_subtract(gmp_float<D1>& a, long x, const gmp_float<D2>& y)
 {
    if(x < 0)
    {
-      mpf_add_ui(a.data(), y.data(), boost::multiprecision::detail::unsigned_abs(x));
+      mpf_add_ui(a.data(), y.data(), -x);
       mpf_neg(a.data(), a.data());
    }
    else
@@ -740,7 +741,7 @@ inline void eval_multiply(gmp_float<D1>& a, const gmp_float<D2>& x, long y)
 {
    if(y < 0)
    {
-      mpf_mul_ui(a.data(), x.data(), boost::multiprecision::detail::unsigned_abs(y));
+      mpf_mul_ui(a.data(), x.data(), -y);
       a.negate();
    }
    else
@@ -756,7 +757,7 @@ inline void eval_multiply(gmp_float<D1>& a, long x, const gmp_float<D2>& y)
 {
    if(x < 0)
    {
-      mpf_mul_ui(a.data(), y.data(), boost::multiprecision::detail::unsigned_abs(x));
+      mpf_mul_ui(a.data(), y.data(), -x);
       mpf_neg(a.data(), a.data());
    }
    else
@@ -784,7 +785,7 @@ inline void eval_divide(gmp_float<D1>& a, const gmp_float<D2>& x, long y)
       BOOST_THROW_EXCEPTION(std::overflow_error("Division by zero."));
    if(y < 0)
    {
-      mpf_div_ui(a.data(), x.data(), boost::multiprecision::detail::unsigned_abs(y));
+      mpf_div_ui(a.data(), x.data(), -y);
       a.negate();
    }
    else
@@ -804,7 +805,7 @@ inline void eval_divide(gmp_float<D1>& a, long x, const gmp_float<D2>& y)
       BOOST_THROW_EXCEPTION(std::overflow_error("Division by zero."));
    if(x < 0)
    {
-      mpf_ui_div(a.data(), boost::multiprecision::detail::unsigned_abs(x), y.data());
+      mpf_ui_div(a.data(), -x, y.data());
       mpf_neg(a.data(), a.data());
    }
    else
@@ -1049,10 +1050,11 @@ struct gmp_int
    }
    gmp_int& operator = (long long i)
    {
+      BOOST_MP_USING_ABS
       if(m_data[0]._mp_d == 0)
          mpz_init(this->m_data);
       bool neg = i < 0;
-      *this = boost::multiprecision::detail::unsigned_abs(i);
+      *this = static_cast<unsigned long long>(abs(i));
       if(neg)
          mpz_neg(m_data, m_data);
       return *this;
@@ -1354,28 +1356,28 @@ inline void eval_add(gmp_int& t, long i)
    if(i > 0)
       mpz_add_ui(t.data(), t.data(), i);
    else
-      mpz_sub_ui(t.data(), t.data(), boost::multiprecision::detail::unsigned_abs(i));
+      mpz_sub_ui(t.data(), t.data(), -i);
 }
 inline void eval_multiply_add(gmp_int& t, const gmp_int& a, long i)
 {
    if(i > 0)
       mpz_addmul_ui(t.data(), a.data(), i);
    else
-      mpz_submul_ui(t.data(), a.data(), boost::multiprecision::detail::unsigned_abs(i));
+      mpz_submul_ui(t.data(), a.data(), -i);
 }
 inline void eval_multiply_subtract(gmp_int& t, const gmp_int& a, long i)
 {
    if(i > 0)
       mpz_submul_ui(t.data(), a.data(), i);
    else
-      mpz_addmul_ui(t.data(), a.data(), boost::multiprecision::detail::unsigned_abs(i));
+      mpz_addmul_ui(t.data(), a.data(), -i);
 }
 inline void eval_subtract(gmp_int& t, long i)
 {
    if(i > 0)
       mpz_sub_ui(t.data(), t.data(), i);
    else
-      mpz_add_ui(t.data(), t.data(), boost::multiprecision::detail::unsigned_abs(i));
+      mpz_add_ui(t.data(), t.data(), -i);
 }
 inline void eval_multiply(gmp_int& t, long i)
 {
@@ -1480,14 +1482,14 @@ inline void eval_add(gmp_int& t, const gmp_int& p, long i)
    if(i > 0)
       mpz_add_ui(t.data(), p.data(), i);
    else
-      mpz_sub_ui(t.data(), p.data(), boost::multiprecision::detail::unsigned_abs(i));
+      mpz_sub_ui(t.data(), p.data(), -i);
 }
 inline void eval_subtract(gmp_int& t, const gmp_int& p, long i)
 {
    if(i > 0)
       mpz_sub_ui(t.data(), p.data(), i);
    else
-      mpz_add_ui(t.data(), p.data(), boost::multiprecision::detail::unsigned_abs(i));
+      mpz_add_ui(t.data(), p.data(), -i);
 }
 inline void eval_multiply(gmp_int& t, const gmp_int& p, long i)
 {
@@ -1728,7 +1730,8 @@ struct gmp_rational
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
    gmp_rational(gmp_rational&& o) BOOST_NOEXCEPT
    {
-      m_data[0] = o.m_data[0];
+      m_data[0]._mp_num = o.data()[0]._mp_num;
+      m_data[0]._mp_den = o.data()[0]._mp_den;
       o.m_data[0]._mp_num._mp_d = 0;
       o.m_data[0]._mp_den._mp_d = 0;
    }
@@ -1780,10 +1783,11 @@ struct gmp_rational
    }
    gmp_rational& operator = (long long i)
    {
+      BOOST_MP_USING_ABS
       if(m_data[0]._mp_den._mp_d == 0)
          mpq_init(m_data);
       bool neg = i < 0;
-      *this = boost::multiprecision::detail::unsigned_abs(i);
+      *this = static_cast<unsigned long long>(abs(i));
       if(neg)
          mpq_neg(m_data, m_data);
       return *this;

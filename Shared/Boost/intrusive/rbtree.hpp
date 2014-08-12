@@ -13,13 +13,13 @@
 #define BOOST_INTRUSIVE_RBTREE_HPP
 
 #include <boost/intrusive/detail/config_begin.hpp>
-#include <boost/intrusive/intrusive_fwd.hpp>
 #include <cstddef>
 #include <functional>
 #include <utility>
 
 #include <boost/intrusive/detail/assert.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/intrusive/intrusive_fwd.hpp>
 #include <boost/intrusive/set_hook.hpp>
 #include <boost/intrusive/detail/rbtree_node.hpp>
 #include <boost/intrusive/bstree.hpp>
@@ -45,7 +45,6 @@ struct rbtree_defaults
    static const bool constant_time_size = true;
    typedef std::size_t size_type;
    typedef void compare;
-   typedef void header_holder_type;
 };
 
 /// @endcond
@@ -66,19 +65,18 @@ struct rbtree_defaults
 #if defined(BOOST_INTRUSIVE_DOXYGEN_INVOKED)
 template<class T, class ...Options>
 #else
-template<class ValueTraits, class VoidOrKeyComp, class SizeType, bool ConstantTimeSize, typename HeaderHolder>
+template<class ValueTraits, class VoidOrKeyComp, class SizeType, bool ConstantTimeSize>
 #endif
 class rbtree_impl
    /// @cond
-   :  public bstree_impl<ValueTraits, VoidOrKeyComp, SizeType, ConstantTimeSize, RbTreeAlgorithms, HeaderHolder>
+   :  public bstree_impl<ValueTraits, VoidOrKeyComp, SizeType, ConstantTimeSize, RbTreeAlgorithms>
    /// @endcond
 {
    public:
    typedef ValueTraits                                               value_traits;
    /// @cond
    typedef bstree_impl< ValueTraits, VoidOrKeyComp, SizeType
-                      , ConstantTimeSize, RbTreeAlgorithms
-                      , HeaderHolder>                               tree_type;
+                      , ConstantTimeSize, RbTreeAlgorithms>          tree_type;
    typedef tree_type                                                 implementation_defined;
    /// @endcond
 
@@ -294,7 +292,7 @@ class rbtree_impl
    //! @copydoc ::boost::intrusive::bstree::count(const KeyType&,KeyValueCompare)const
    template<class KeyType, class KeyValueCompare>
    size_type count(const KeyType& key, KeyValueCompare comp) const;
-
+   
    //! @copydoc ::boost::intrusive::bstree::lower_bound(const_reference)
    iterator lower_bound(const_reference value);
    
@@ -428,8 +426,7 @@ void swap(rbtree_impl<T, Options...> &x, rbtree_impl<T, Options...> &y);
 template<class T, class ...Options>
 #else
 template<class T, class O1 = void, class O2 = void
-                , class O3 = void, class O4 = void
-                , class O5 = void>
+                , class O3 = void, class O4 = void>
 #endif
 struct make_rbtree
 {
@@ -437,7 +434,7 @@ struct make_rbtree
    typedef typename pack_options
       < rbtree_defaults,
       #if !defined(BOOST_INTRUSIVE_VARIADIC_TEMPLATES)
-      O1, O2, O3, O4, O5
+      O1, O2, O3, O4
       #else
       Options...
       #endif
@@ -445,15 +442,12 @@ struct make_rbtree
 
    typedef typename detail::get_value_traits
       <T, typename packed_options::proto_value_traits>::type value_traits;
-   typedef typename detail::get_header_holder_type
-      < value_traits, typename packed_options::header_holder_type >::type header_holder_type;
 
    typedef rbtree_impl
          < value_traits
          , typename packed_options::compare
          , typename packed_options::size_type
          , packed_options::constant_time_size
-         , header_holder_type
          > implementation_defined;
    /// @endcond
    typedef implementation_defined type;
@@ -463,14 +457,14 @@ struct make_rbtree
 #ifndef BOOST_INTRUSIVE_DOXYGEN_INVOKED
 
 #if !defined(BOOST_INTRUSIVE_VARIADIC_TEMPLATES)
-template<class T, class O1, class O2, class O3, class O4, class O5>
+template<class T, class O1, class O2, class O3, class O4>
 #else
 template<class T, class ...Options>
 #endif
 class rbtree
    :  public make_rbtree<T,
       #if !defined(BOOST_INTRUSIVE_VARIADIC_TEMPLATES)
-      O1, O2, O3, O4, O5
+      O1, O2, O3, O4
       #else
       Options...
       #endif
@@ -479,7 +473,7 @@ class rbtree
    typedef typename make_rbtree
       <T,
       #if !defined(BOOST_INTRUSIVE_VARIADIC_TEMPLATES)
-      O1, O2, O3, O4, O5
+      O1, O2, O3, O4
       #else
       Options...
       #endif
@@ -489,13 +483,14 @@ class rbtree
    public:
    typedef typename Base::value_compare      value_compare;
    typedef typename Base::value_traits       value_traits;
+   typedef typename Base::real_value_traits  real_value_traits;
    typedef typename Base::iterator           iterator;
    typedef typename Base::const_iterator     const_iterator;
    typedef typename Base::reverse_iterator           reverse_iterator;
    typedef typename Base::const_reverse_iterator     const_reverse_iterator;
 
    //Assert if passed value traits are compatible with the type
-   BOOST_STATIC_ASSERT((detail::is_same<typename value_traits::value_type, T>::value));
+   BOOST_STATIC_ASSERT((detail::is_same<typename real_value_traits::value_type, T>::value));
 
    explicit rbtree( const value_compare &cmp = value_compare()
                   , const value_traits &v_traits = value_traits())

@@ -178,7 +178,7 @@ class varray
 
     BOOST_COPYABLE_AND_MOVABLE(varray)
 
-#ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifdef BOOST_NO_RVALUE_REFERENCES
 public:
     template <std::size_t C>
     varray & operator=(varray<Value, C> & sv)
@@ -363,7 +363,12 @@ public:
     //! @par Complexity
     //!   Linear O(N).
     template <std::size_t C>
-    varray & operator=(BOOST_COPY_ASSIGN_REF_2_TEMPL_ARGS(varray, value_type, C) other)
+// TEMPORARY WORKAROUND
+#if defined(BOOST_NO_RVALUE_REFERENCES)
+    varray & operator=(::boost::rv< varray<value_type, C> > const& other)
+#else
+    varray & operator=(varray<value_type, C> const& other)
+#endif
     {
         this->assign(other.begin(), other.end());                                     // may throw
 
@@ -1946,6 +1951,7 @@ public:
     void insert(iterator, Iterator first, Iterator last)
     {
         // TODO - add MPL_ASSERT, check if Iterator is really an iterator
+        typedef typename boost::iterator_traversal<Iterator>::type traversal;
         errh::check_capacity(*this, std::distance(first, last));                    // may throw
     }
 
@@ -1969,6 +1975,7 @@ public:
     void assign(Iterator first, Iterator last)
     {
         // TODO - add MPL_ASSERT, check if Iterator is really an iterator
+        typedef typename boost::iterator_traversal<Iterator>::type traversal;
         errh::check_capacity(*this, std::distance(first, last));                    // may throw
     }
 

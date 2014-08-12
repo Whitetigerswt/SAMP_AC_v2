@@ -38,13 +38,14 @@ namespace boost { namespace property_tree { namespace xml_parser
                 if (node->first_attribute())
                 {
                     Ptree &pt_attr_root = pt_node.push_back(
-                        std::make_pair(xmlattr<typename Ptree::key_type>(), Ptree()))->second;
+                        std::make_pair(xmlattr<Ch>(), Ptree()))->second;
                     for (xml_attribute<Ch> *attr = node->first_attribute();
                          attr; attr = attr->next_attribute())
                     {
                         Ptree &pt_attr = pt_attr_root.push_back(
                             std::make_pair(attr->name(), Ptree()))->second;
-                        pt_attr.data() = typename Ptree::key_type(attr->value(), attr->value_size());
+                        pt_attr.data() = std::basic_string<Ch>(attr->value(),
+                                                            attr->value_size());
                     }
                 }
 
@@ -60,10 +61,11 @@ namespace boost { namespace property_tree { namespace xml_parser
             case node_cdata:
             {
                 if (flags & no_concat_text)
-                    pt.push_back(std::make_pair(xmltext<typename Ptree::key_type>(),
+                    pt.push_back(std::make_pair(xmltext<Ch>(),
                                                 Ptree(node->value())));
                 else
-                    pt.data() += typename Ptree::key_type(node->value(), node->value_size());
+                    pt.data() += std::basic_string<Ch>(node->value(),
+                                                       node->value_size());
             }
             break;
 
@@ -71,8 +73,9 @@ namespace boost { namespace property_tree { namespace xml_parser
             case node_comment:
             {
                 if (!(flags & no_comments))
-                    pt.push_back(std::make_pair(xmlcomment<typename Ptree::key_type>(),
-                                    Ptree(typename Ptree::key_type(node->value(), node->value_size()))));
+                    pt.push_back(std::make_pair(xmlcomment<Ch>(),
+                                    Ptree(std::basic_string<Ch>(node->value(),
+                                                         node->value_size()))));
             }
             break;
 

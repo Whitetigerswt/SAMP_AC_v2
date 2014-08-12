@@ -6,7 +6,7 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-// $Id$
+// $Id: same_type.hpp 78445 2012-05-13 01:53:52Z steven_watanabe $
 
 #ifndef BOOST_TYPE_ERASURE_SAME_TYPE_HPP_INCLUDED
 #define BOOST_TYPE_ERASURE_SAME_TYPE_HPP_INCLUDED

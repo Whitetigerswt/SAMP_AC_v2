@@ -7,7 +7,7 @@
 //
 //  File        : $RCSfile$
 //
-//  Version     : $Revision$
+//  Version     : $Revision: 81913 $
 //
 //  Description : defines model of program environment variable
 // ***************************************************************************

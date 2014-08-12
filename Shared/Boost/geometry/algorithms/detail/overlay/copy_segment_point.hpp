@@ -17,7 +17,6 @@
 #include <boost/geometry/core/ring_type.hpp>
 #include <boost/geometry/core/exterior_ring.hpp>
 #include <boost/geometry/core/interior_rings.hpp>
-#include <boost/geometry/core/tags.hpp>
 #include <boost/geometry/algorithms/convert.hpp>
 #include <boost/geometry/geometries/concepts/check.hpp>
 #include <boost/geometry/views/closeable_view.hpp>
@@ -125,30 +124,6 @@ struct copy_segment_point_box
 };
 
 
-template
-<
-    typename MultiGeometry,
-    typename SegmentIdentifier,
-    typename PointOut,
-    typename Policy
->
-struct copy_segment_point_multi
-{
-    static inline bool apply(MultiGeometry const& multi,
-                             SegmentIdentifier const& seg_id, bool second,
-                             PointOut& point)
-    {
-
-        BOOST_ASSERT
-            (
-                seg_id.multi_index >= 0
-                && seg_id.multi_index < int(boost::size(multi))
-            );
-
-        // Call the single-version
-        return Policy::apply(multi[seg_id.multi_index], seg_id, second, point);
-    }
-};
 
 
 }} // namespace detail::copy_segments
@@ -212,66 +187,6 @@ struct copy_segment_point<box_tag, Box, Reverse, SegmentIdentifier, PointOut>
         >
 {};
 
-
-template
-<
-    typename MultiGeometry,
-    bool Reverse,
-    typename SegmentIdentifier,
-    typename PointOut
->
-struct copy_segment_point
-    <
-        multi_polygon_tag,
-        MultiGeometry,
-        Reverse,
-        SegmentIdentifier,
-        PointOut
-    >
-    : detail::copy_segments::copy_segment_point_multi
-        <
-            MultiGeometry,
-            SegmentIdentifier,
-            PointOut,
-            detail::copy_segments::copy_segment_point_polygon
-                <
-                    typename boost::range_value<MultiGeometry>::type,
-                    Reverse,
-                    SegmentIdentifier,
-                    PointOut
-                >
-        >
-{};
-
-template
-<
-    typename MultiGeometry,
-    bool Reverse,
-    typename SegmentIdentifier,
-    typename PointOut
->
-struct copy_segment_point
-    <
-        multi_linestring_tag,
-        MultiGeometry,
-        Reverse,
-        SegmentIdentifier,
-        PointOut
-    >
-    : detail::copy_segments::copy_segment_point_multi
-        <
-            MultiGeometry,
-            SegmentIdentifier,
-            PointOut,
-            detail::copy_segments::copy_segment_point_range
-                <
-                    typename boost::range_value<MultiGeometry>::type,
-                    Reverse,
-                    SegmentIdentifier,
-                    PointOut
-                >
-        >
-{};
 
 
 } // namespace dispatch

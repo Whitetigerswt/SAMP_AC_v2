@@ -2,7 +2,7 @@
 // buffer.hpp
 // ~~~~~~~~~~
 //
-// Copyright (c) 2003-2014 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2013 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -617,9 +617,6 @@ private:
  *
  * vector<unsigned char> data(boost::asio::buffer_size(buffers));
  * boost::asio::buffer_copy(boost::asio::buffer(data), buffers); @endcode
- *
- * Note that @ref buffer_copy is implemented in terms of @c memcpy, and
- * consequently it cannot be used to copy between overlapping memory regions.
  *
  * @par Buffer Invalidation
  *
@@ -1268,9 +1265,6 @@ inline const_buffers_1 buffer(
  *
  * This prevents buffer overflow, regardless of the buffer sizes used in the
  * copy operation.
- *
- * Note that @ref buffer_copy is implemented in terms of @c memcpy, and
- * consequently it cannot be used to copy between overlapping memory regions.
  */
 /*@{*/
 
@@ -1289,9 +1283,6 @@ inline const_buffers_1 buffer(
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffer& target,
     const const_buffer& source)
@@ -1319,9 +1310,6 @@ inline std::size_t buffer_copy(const mutable_buffer& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffer& target,
     const const_buffers_1& source)
@@ -1345,9 +1333,6 @@ inline std::size_t buffer_copy(const mutable_buffer& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffer& target,
     const mutable_buffer& source)
@@ -1371,9 +1356,6 @@ inline std::size_t buffer_copy(const mutable_buffer& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffer& target,
     const mutable_buffers_1& source)
@@ -1396,9 +1378,6 @@ inline std::size_t buffer_copy(const mutable_buffer& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename ConstBufferSequence>
 std::size_t buffer_copy(const mutable_buffer& target,
@@ -1436,9 +1415,6 @@ std::size_t buffer_copy(const mutable_buffer& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffers_1& target,
     const const_buffer& source)
@@ -1461,9 +1437,6 @@ inline std::size_t buffer_copy(const mutable_buffers_1& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffers_1& target,
     const const_buffers_1& source)
@@ -1488,9 +1461,6 @@ inline std::size_t buffer_copy(const mutable_buffers_1& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffers_1& target,
     const mutable_buffer& source)
@@ -1515,9 +1485,6 @@ inline std::size_t buffer_copy(const mutable_buffers_1& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffers_1& target,
     const mutable_buffers_1& source)
@@ -1541,9 +1508,6 @@ inline std::size_t buffer_copy(const mutable_buffers_1& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename ConstBufferSequence>
 inline std::size_t buffer_copy(const mutable_buffers_1& target,
@@ -1567,9 +1531,6 @@ inline std::size_t buffer_copy(const mutable_buffers_1& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename MutableBufferSequence>
 std::size_t buffer_copy(const MutableBufferSequence& target,
@@ -1607,9 +1568,6 @@ std::size_t buffer_copy(const MutableBufferSequence& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename MutableBufferSequence>
 inline std::size_t buffer_copy(const MutableBufferSequence& target,
@@ -1634,9 +1592,6 @@ inline std::size_t buffer_copy(const MutableBufferSequence& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename MutableBufferSequence>
 inline std::size_t buffer_copy(const MutableBufferSequence& target,
@@ -1661,9 +1616,6 @@ inline std::size_t buffer_copy(const MutableBufferSequence& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename MutableBufferSequence>
 inline std::size_t buffer_copy(const MutableBufferSequence& target,
@@ -1687,9 +1639,6 @@ inline std::size_t buffer_copy(const MutableBufferSequence& target,
  * @li @c buffer_size(target)
  *
  * @li @c buffer_size(source)
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename MutableBufferSequence, typename ConstBufferSequence>
 std::size_t buffer_copy(const MutableBufferSequence& target,
@@ -1755,9 +1704,6 @@ std::size_t buffer_copy(const MutableBufferSequence& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffer& target,
     const const_buffer& source, std::size_t max_bytes_to_copy)
@@ -1784,9 +1730,6 @@ inline std::size_t buffer_copy(const mutable_buffer& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffer& target,
     const const_buffers_1& source, std::size_t max_bytes_to_copy)
@@ -1814,9 +1757,6 @@ inline std::size_t buffer_copy(const mutable_buffer& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffer& target,
     const mutable_buffer& source, std::size_t max_bytes_to_copy)
@@ -1844,9 +1784,6 @@ inline std::size_t buffer_copy(const mutable_buffer& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffer& target,
     const mutable_buffers_1& source, std::size_t max_bytes_to_copy)
@@ -1874,9 +1811,6 @@ inline std::size_t buffer_copy(const mutable_buffer& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename ConstBufferSequence>
 inline std::size_t buffer_copy(const mutable_buffer& target,
@@ -1904,9 +1838,6 @@ inline std::size_t buffer_copy(const mutable_buffer& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffers_1& target,
     const const_buffer& source, std::size_t max_bytes_to_copy)
@@ -1933,9 +1864,6 @@ inline std::size_t buffer_copy(const mutable_buffers_1& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffers_1& target,
     const const_buffers_1& source, std::size_t max_bytes_to_copy)
@@ -1963,9 +1891,6 @@ inline std::size_t buffer_copy(const mutable_buffers_1& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffers_1& target,
     const mutable_buffer& source, std::size_t max_bytes_to_copy)
@@ -1993,9 +1918,6 @@ inline std::size_t buffer_copy(const mutable_buffers_1& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 inline std::size_t buffer_copy(const mutable_buffers_1& target,
     const mutable_buffers_1& source, std::size_t max_bytes_to_copy)
@@ -2023,9 +1945,6 @@ inline std::size_t buffer_copy(const mutable_buffers_1& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename ConstBufferSequence>
 inline std::size_t buffer_copy(const mutable_buffers_1& target,
@@ -2054,9 +1973,6 @@ inline std::size_t buffer_copy(const mutable_buffers_1& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename MutableBufferSequence>
 inline std::size_t buffer_copy(const MutableBufferSequence& target,
@@ -2085,9 +2001,6 @@ inline std::size_t buffer_copy(const MutableBufferSequence& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename MutableBufferSequence>
 inline std::size_t buffer_copy(const MutableBufferSequence& target,
@@ -2117,9 +2030,6 @@ inline std::size_t buffer_copy(const MutableBufferSequence& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename MutableBufferSequence>
 inline std::size_t buffer_copy(const MutableBufferSequence& target,
@@ -2149,9 +2059,6 @@ inline std::size_t buffer_copy(const MutableBufferSequence& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename MutableBufferSequence>
 inline std::size_t buffer_copy(const MutableBufferSequence& target,
@@ -2180,9 +2087,6 @@ inline std::size_t buffer_copy(const MutableBufferSequence& target,
  * @li @c buffer_size(source)
  *
  * @li @c max_bytes_to_copy
- *
- * This function is implemented in terms of @c memcpy, and consequently it
- * cannot be used to copy between overlapping memory regions.
  */
 template <typename MutableBufferSequence, typename ConstBufferSequence>
 std::size_t buffer_copy(const MutableBufferSequence& target,

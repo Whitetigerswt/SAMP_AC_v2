@@ -10,6 +10,8 @@
 #define BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_GET_RELATIVE_ORDER_HPP
 
 
+#include <boost/geometry/algorithms/distance.hpp>
+
 #include <boost/geometry/strategies/intersection.hpp>
 
 
@@ -34,10 +36,15 @@ namespace detail { namespace overlay
 template <typename Point1>
 struct get_relative_order
 {
-    typedef typename strategy::side::services::default_strategy
+    typedef strategy_intersection
         <
-            typename cs_tag<Point1>::type
-        >::type strategy;
+            typename cs_tag<Point1>::type,
+            Point1,
+            Point1,
+            Point1
+        > si;
+
+    typedef typename si::side_strategy_type strategy;
 
     template <typename Point>
     static inline int value_via_product(Point const& ti, Point const& tj,

@@ -20,15 +20,14 @@
 namespace boost { namespace property_tree { namespace xml_parser
 {
 
-    template<class Str>
-    Str condense(const Str &s)
+    template<class Ch>
+    std::basic_string<Ch> condense(const std::basic_string<Ch> &s)
     {
-	typedef typename Str::value_type Ch;
-	Str r;
+        std::basic_string<Ch> r;
         std::locale loc;
         bool space = false;
-        typename Str::const_iterator end = s.end();
-        for (typename Str::const_iterator it = s.begin();
+        typename std::basic_string<Ch>::const_iterator end = s.end();
+        for (typename std::basic_string<Ch>::const_iterator it = s.begin();
              it != end; ++it)
         {
             if (isspace(*it, loc) || *it == Ch('\n'))
@@ -42,22 +41,20 @@ namespace boost { namespace property_tree { namespace xml_parser
         return r;
     }
 
-
-    template<class Str>
-    Str encode_char_entities(const Str &s)
+    template<class Ch>
+    std::basic_string<Ch> encode_char_entities(const std::basic_string<Ch> &s)
     {
         // Don't do anything for empty strings.
         if(s.empty()) return s;
 
-        typedef typename Str::value_type Ch;
-
+        typedef typename std::basic_string<Ch> Str;
         Str r;
         // To properly round-trip spaces and not uglify the XML beyond
         // recognition, we have to encode them IF the text contains only spaces.
         Str sp(1, Ch(' '));
         if(s.find_first_not_of(sp) == Str::npos) {
             // The first will suffice.
-            r = detail::widen<Str>("&#32;");
+            r = detail::widen<Ch>("&#32;");
             r += Str(s.size() - 1, Ch(' '));
         } else {
             typename Str::const_iterator end = s.end();
@@ -65,13 +62,11 @@ namespace boost { namespace property_tree { namespace xml_parser
             {
                 switch (*it)
                 {
-                    case Ch('<'): r += detail::widen<Str>("&lt;"); break;
-                    case Ch('>'): r += detail::widen<Str>("&gt;"); break;
-                    case Ch('&'): r += detail::widen<Str>("&amp;"); break;
-                    case Ch('"'): r += detail::widen<Str>("&quot;"); break;
-                    case Ch('\''): r += detail::widen<Str>("&apos;"); break;
-                    case Ch('\t'): r += detail::widen<Str>("&#9;"); break;
-                    case Ch('\n'): r += detail::widen<Str>("&#10;"); break;
+                    case Ch('<'): r += detail::widen<Ch>("&lt;"); break;
+                    case Ch('>'): r += detail::widen<Ch>("&gt;"); break;
+                    case Ch('&'): r += detail::widen<Ch>("&amp;"); break;
+                    case Ch('"'): r += detail::widen<Ch>("&quot;"); break;
+                    case Ch('\''): r += detail::widen<Ch>("&apos;"); break;
                     default: r += *it; break;
                 }
             }
@@ -79,10 +74,10 @@ namespace boost { namespace property_tree { namespace xml_parser
         return r;
     }
     
-    template<class Str>
-    Str decode_char_entities(const Str &s)
+    template<class Ch>
+    std::basic_string<Ch> decode_char_entities(const std::basic_string<Ch> &s)
     {
-	typedef typename Str::value_type Ch;
+        typedef typename std::basic_string<Ch> Str;
         Str r;
         typename Str::const_iterator end = s.end();
         for (typename Str::const_iterator it = s.begin(); it != end; ++it)
@@ -93,11 +88,11 @@ namespace boost { namespace property_tree { namespace xml_parser
                 if (semicolon == end)
                     BOOST_PROPERTY_TREE_THROW(xml_parser_error("invalid character entity", "", 0));
                 Str ent(it + 1, semicolon);
-                if (ent == detail::widen<Str>("lt")) r += Ch('<');
-                else if (ent == detail::widen<Str>("gt")) r += Ch('>');
-                else if (ent == detail::widen<Str>("amp")) r += Ch('&');
-                else if (ent == detail::widen<Str>("quot")) r += Ch('"');
-                else if (ent == detail::widen<Str>("apos")) r += Ch('\'');
+                if (ent == detail::widen<Ch>("lt")) r += Ch('<');
+                else if (ent == detail::widen<Ch>("gt")) r += Ch('>');
+                else if (ent == detail::widen<Ch>("amp")) r += Ch('&');
+                else if (ent == detail::widen<Ch>("quot")) r += Ch('"');
+                else if (ent == detail::widen<Ch>("apos")) r += Ch('\'');
                 else
                     BOOST_PROPERTY_TREE_THROW(xml_parser_error("invalid character entity", "", 0));
                 it = semicolon;
@@ -108,31 +103,31 @@ namespace boost { namespace property_tree { namespace xml_parser
         return r;
     }
     
-    template<class Str>
-    const Str &xmldecl()
+    template<class Ch>
+    const std::basic_string<Ch> &xmldecl()
     {
-        static Str s = detail::widen<Str>("<?xml>");
+        static std::basic_string<Ch> s = detail::widen<Ch>("<?xml>");
         return s;
     }
 
-    template<class Str>
-    const Str &xmlattr()
+    template<class Ch>
+    const std::basic_string<Ch> &xmlattr()
     {
-        static Str s = detail::widen<Str>("<xmlattr>");
+        static std::basic_string<Ch> s = detail::widen<Ch>("<xmlattr>");
         return s;
     }
 
-    template<class Str>
-    const Str &xmlcomment()
+    template<class Ch>
+    const std::basic_string<Ch> &xmlcomment()
     {
-        static Str s = detail::widen<Str>("<xmlcomment>");
+        static std::basic_string<Ch> s = detail::widen<Ch>("<xmlcomment>");
         return s;
     }
 
-    template<class Str>
-    const Str &xmltext()
+    template<class Ch>
+    const std::basic_string<Ch> &xmltext()
     {
-        static Str s = detail::widen<Str>("<xmltext>");
+        static std::basic_string<Ch> s = detail::widen<Ch>("<xmltext>");
         return s;
     }
 

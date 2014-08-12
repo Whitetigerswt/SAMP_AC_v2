@@ -17,7 +17,6 @@ namespace boost { namespace fusion
         struct swallow_assign
         {
             template<typename T>
-            BOOST_FUSION_GPU_ENABLED
             swallow_assign const&
             operator=(const T&) const
             {

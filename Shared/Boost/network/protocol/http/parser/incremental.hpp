@@ -168,35 +168,26 @@ namespace boost { namespace network { namespace http {
                         } else if (*current == ' ') {
                             state_ = http_status_done;
                             ++current;
-                        } else if (*current == '\r' || *current == '\n') {
-                            state_ = http_status_done;
                         } else {
                             parsed_ok = false;
                         }
                         break;
                     case http_status_done:
-                        if (*current == ' ') {
+                        if (algorithm::is_alnum()(*current)) {
+                            state_ = http_status_message_char;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_message_char:
+                        if (algorithm::is_alnum()(*current) || algorithm::is_punct()(*current) || (*current == ' ')) {
                             ++current;
                         } else if (*current == '\r') {
                             state_ = http_status_message_cr;
                             ++current;
-                        } else if (*current == '\n') {
-                            state_ = http_status_message_done;
-                            ++current;
                         } else {
-                            state_ = http_status_message_char;
-                            ++current;
-                        }
-                        break;
-                    case http_status_message_char:
-                        if (*current == '\r') {
-                            state_ = http_status_message_cr;
-                            ++current;
-                        } else if (*current == '\n') {
-                            state_ = http_status_message_done;
-                            ++current;
-                        } else {
-                            ++current;
+                            parsed_ok = false;
                         }
                         break;
                     case http_status_message_cr:
@@ -209,16 +200,11 @@ namespace boost { namespace network { namespace http {
                         break;
                     case http_status_message_done:
                     case http_header_line_done:
-                        if (*current == ' ') {
-                            ++current;
-                        } else if (algorithm::is_alnum()(*current) || algorithm::is_punct()(*current)) {
+                        if (algorithm::is_alnum()(*current)) {
                             state_ = http_header_name_char;
                             ++current;
                         } else if (*current == '\r') {
                             state_ = http_headers_end_cr;
-                            ++current;
-                        } else if (*current == '\n') {
-                            state_ = http_headers_done;
                             ++current;
                         } else {
                             parsed_ok = false;
@@ -228,12 +214,6 @@ namespace boost { namespace network { namespace http {
                         if (*current == ':') {
                             state_ = http_header_colon;
                             ++current;
-                        } else if (*current == '\r') {
-                            state_ = http_header_line_cr;
-                            ++current;
-                        } else if (*current == '\n') {
-                            state_ = http_header_line_done;
-                            ++current;
                         } else if (algorithm::is_alnum()(*current) || algorithm::is_space()(*current) || algorithm::is_punct()(*current)) {
                             ++current;
                         } else {
@@ -241,26 +221,21 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_header_colon:
-                        if (*current == '\r') {
-                            state_ = http_header_line_cr;
+                        if (algorithm::is_space()(*current)) {
                             ++current;
-                        } else if (*current == '\n') {
-                            state_ = http_header_line_done;
-                            ++current;
-                        } else if (algorithm::is_space()(*current)) {
-                            ++current;
-                        } else {
+                        } else if (algorithm::is_alnum()(*current) || algorithm::is_punct()(*current)) {
                             state_ = http_header_value_char;
                             ++current;
+                        } else {
+                            parsed_ok = false;
                         }
                         break;
                     case http_header_value_char:
                         if (*current == '\r') {
                             state_ = http_header_line_cr;
                             ++current;
-                        } else if (*current == '\n') {
-                            state_ = http_header_line_done;
-                            ++current;
+                        } else if (algorithm::is_cntrl()(*current)) {
+                            parsed_ok = false;
                         } else {
                             ++current;
                         }

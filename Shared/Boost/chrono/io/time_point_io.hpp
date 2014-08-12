@@ -36,18 +36,13 @@
 
 #define  BOOST_CHRONO_INTERNAL_TIMEGM \
      ( defined BOOST_WINDOWS && ! defined(__CYGWIN__) )  \
-  || (defined(sun) || defined(__sun)) \
-  || (defined __IBMCPP__) \
-  || defined __ANDROID__ \
-  || defined __QNXNTO__ \
-  || (defined(_AIX) && defined __GNUC__)
+  || ( (defined(sun) || defined(__sun)) && defined __GNUC__) \
+  || (defined __IBMCPP__)
 
 #define  BOOST_CHRONO_INTERNAL_GMTIME \
      (defined BOOST_WINDOWS && ! defined(__CYGWIN__)) \
   || ( (defined(sun) || defined(__sun)) && defined __GNUC__) \
-  || (defined __IBMCPP__) \
-  || defined __ANDROID__ \
-  || (defined(_AIX) && defined __GNUC__)
+  || (defined __IBMCPP__)
 
 #define  BOOST_CHRONO_USES_INTERNAL_TIME_GET
 
@@ -742,8 +737,6 @@ namespace boost
     namespace detail
     {
 
-//#if BOOST_CHRONO_INTERNAL_TIMEGM
-
     inline int32_t is_leap(int32_t year)
     {
       if(year % 400 == 0)
@@ -800,7 +793,6 @@ namespace boost
 
       return result;
     }
-//#endif
 
     /**
     * from_ymd could be made more efficient by using a table

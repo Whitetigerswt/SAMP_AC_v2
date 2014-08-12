@@ -35,7 +35,6 @@ namespace boost { namespace fusion { namespace detail
         };
 
         template <typename Iterator>
-        BOOST_FUSION_GPU_ENABLED
         static typename apply<Iterator>::type
         call(Iterator)
         {
@@ -116,7 +115,6 @@ namespace boost { namespace fusion { namespace detail
         };
 
         template <typename Iterator>
-        BOOST_FUSION_GPU_ENABLED
         static typename apply<Iterator>::type
         call(Iterator const& i0)
         {

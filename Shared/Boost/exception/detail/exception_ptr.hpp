@@ -34,7 +34,7 @@ namespace
 boost
     {
     class exception_ptr;
-    BOOST_NORETURN void rethrow_exception( exception_ptr const & );
+    BOOST_ATTRIBUTE_NORETURN void rethrow_exception( exception_ptr const & );
     exception_ptr current_exception();
 
     class
@@ -454,7 +454,7 @@ boost
         return ret;
         }
 
-    BOOST_NORETURN
+    BOOST_ATTRIBUTE_NORETURN
     inline
     void
     rethrow_exception( exception_ptr const & p )

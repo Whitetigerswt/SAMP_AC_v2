@@ -9,7 +9,6 @@
 #if !defined(BOOST_FUSION_SUPPORT_DEDUCE_HPP_INCLUDED)
 #define BOOST_FUSION_SUPPORT_DEDUCE_HPP_INCLUDED
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/ref.hpp>
 
 namespace boost { namespace fusion { namespace traits

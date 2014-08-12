@@ -99,16 +99,14 @@ namespace boost { namespace network { namespace http {
         // We need to determine whether we've seen any of the following headers
         // before setting the defaults. We use a bitset to keep track of the
         // defaulted headers.
-        enum { ACCEPT, ACCEPT_ENCODING, HOST, CONNECTION, MAX };
+        enum { ACCEPT, ACCEPT_ENCODING, HOST, MAX };
         std::bitset<MAX> found_headers;
         static char const* defaulted_headers[][2] = {
           {consts::accept(),
            consts::accept() + std::strlen(consts::accept())},
           {consts::accept_encoding(),
            consts::accept_encoding() + std::strlen(consts::accept_encoding())},
-          {consts::host(), consts::host() + std::strlen(consts::host())},
-          {consts::connection(),
-           consts::connection() + std::strlen(consts::connection())}
+          {consts::host(), consts::host() + std::strlen(consts::host())}
         };
 
         typedef typename headers_range<Request>::type headers_range;
@@ -142,11 +140,7 @@ namespace boost { namespace network { namespace http {
           *oi = consts::colon_char();
           *oi = consts::space_char();
           boost::copy(request.host(), oi);
-#ifndef WIN32
           boost::optional<boost::uint16_t> port_ = port(request);
-#else
-		  boost::optional<boost::uint16_t> port_ = (boost::optional<boost::uint16_t>)port(request);
-#endif
           if (port_) {
               string_type port_str = boost::lexical_cast<string_type>(*port_);
               *oi = consts::colon_char();
@@ -173,8 +167,7 @@ namespace boost { namespace network { namespace http {
           boost::copy(crlf, oi);
         }
 
-        if (!connection_keepalive<Tag>::value &&
-            !found_headers[CONNECTION]) {
+        if (!connection_keepalive<Tag>::value) {
           boost::copy(connection, oi);
           *oi = consts::colon_char();
           *oi = consts::space_char();

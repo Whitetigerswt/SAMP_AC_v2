@@ -13,11 +13,6 @@
 #include <boost/heap/heap_concepts.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#ifdef BOOST_HAS_PRAGMA_ONCE
-#pragma once
-#endif
-
-
 namespace boost  {
 namespace heap   {
 namespace detail {

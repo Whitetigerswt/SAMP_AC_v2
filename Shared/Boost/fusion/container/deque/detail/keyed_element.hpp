@@ -8,7 +8,6 @@
 #if !defined(BOOST_FUSION_DEQUE_DETAIL_KEYED_ELEMENT_26112006_1330)
 #define BOOST_FUSION_DEQUE_DETAIL_KEYED_ELEMENT_26112006_1330
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/detail/access.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/next.hpp>
@@ -23,11 +22,9 @@ namespace boost { namespace fusion { namespace detail
     struct nil_keyed_element
     {
         typedef fusion_sequence_tag tag;
-        BOOST_FUSION_GPU_ENABLED
         void get();
 
         template<typename It>
-        BOOST_FUSION_GPU_ENABLED
         static nil_keyed_element
         from_iterator(It const&)
         {
@@ -43,7 +40,6 @@ namespace boost { namespace fusion { namespace detail
         using Rest::get;
 
         template <typename It>
-        BOOST_FUSION_GPU_ENABLED
         static keyed_element
         from_iterator(It const& it)
         {
@@ -51,13 +47,11 @@ namespace boost { namespace fusion { namespace detail
                 *it, base::from_iterator(fusion::next(it)));
         }
 
-        BOOST_FUSION_GPU_ENABLED
         keyed_element(keyed_element const& rhs)
           : Rest(rhs.get_base()), value_(rhs.value_)
         {}
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-        BOOST_FUSION_GPU_ENABLED
         keyed_element(keyed_element&& rhs)
           : Rest(std::forward<Rest>(rhs.forward_base()))
           , value_(std::forward<Value>(rhs.value_))
@@ -65,7 +59,6 @@ namespace boost { namespace fusion { namespace detail
 #endif
 
         template <typename U, typename Rst>
-        BOOST_FUSION_GPU_ENABLED
         keyed_element(keyed_element<Key, U, Rst> const& rhs)
           : Rest(rhs.get_base()), value_(rhs.value_)
         {}
@@ -73,39 +66,33 @@ namespace boost { namespace fusion { namespace detail
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 #endif
 
-        BOOST_FUSION_GPU_ENABLED
         Rest& get_base()
         {
             return *this;
         }
 
-        BOOST_FUSION_GPU_ENABLED
         Rest const& get_base() const
         {
             return *this;
         }
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-        BOOST_FUSION_GPU_ENABLED
         Rest&& forward_base()
         {
             return std::forward<Rest>(*static_cast<Rest*>(this));
         }
 #endif
 
-        BOOST_FUSION_GPU_ENABLED
         typename cref_result<Value>::type get(Key) const
         {
             return value_;
         }
 
-        BOOST_FUSION_GPU_ENABLED
         typename ref_result<Value>::type get(Key)
         {
             return value_;
         }
 
-        BOOST_FUSION_GPU_ENABLED
         keyed_element(
             typename detail::call_param<Value>::type value
           , Rest const& rest)
@@ -113,20 +100,17 @@ namespace boost { namespace fusion { namespace detail
         {}
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-        BOOST_FUSION_GPU_ENABLED
         keyed_element(Value&& value, Rest&& rest)
             : Rest(std::forward<Rest>(rest))
             , value_(std::forward<Value>(value))
         {}
 #endif
 
-        BOOST_FUSION_GPU_ENABLED
         keyed_element()
             : Rest(), value_()
         {}
 
         template<typename U, typename Rst>
-        BOOST_FUSION_GPU_ENABLED
         keyed_element& operator=(keyed_element<Key, U, Rst> const& rhs)
         {
             base::operator=(static_cast<Rst const&>(rhs)); // cast for msvc-7.1
@@ -134,7 +118,6 @@ namespace boost { namespace fusion { namespace detail
             return *this;
         }
 
-        BOOST_FUSION_GPU_ENABLED
         keyed_element& operator=(keyed_element const& rhs)
         {
             base::operator=(rhs);
@@ -143,7 +126,6 @@ namespace boost { namespace fusion { namespace detail
         }
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-        BOOST_FUSION_GPU_ENABLED
         keyed_element& operator=(keyed_element&& rhs)
         {
             base::operator=(std::forward<keyed_element>(rhs));

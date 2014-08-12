@@ -15,9 +15,6 @@
 #include <boost/mpl/void.hpp>
 #include <boost/concept_check.hpp>
 
-#ifdef BOOST_HAS_PRAGMA_ONCE
-#pragma once
-#endif
 
 namespace boost {
 namespace heap {

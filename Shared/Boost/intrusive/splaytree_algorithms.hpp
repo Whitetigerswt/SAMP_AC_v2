@@ -31,8 +31,8 @@
 #define BOOST_INTRUSIVE_SPLAYTREE_ALGORITHMS_HPP
 
 #include <boost/intrusive/detail/config_begin.hpp>
-#include <boost/intrusive/intrusive_fwd.hpp>
 #include <boost/intrusive/detail/assert.hpp>
+#include <boost/intrusive/intrusive_fwd.hpp>
 #include <boost/intrusive/pointer_traits.hpp>
 #include <cstddef>
 #include <boost/intrusive/detail/utilities.hpp>
@@ -45,70 +45,33 @@ namespace intrusive {
 namespace detail {
 
 template<class NodeTraits>
-struct splaydown_assemble_and_fix_header
+struct splaydown_rollback
 {
    typedef typename NodeTraits::node_ptr node_ptr;
-
-   splaydown_assemble_and_fix_header(const node_ptr & t, const node_ptr & header, const node_ptr &leftmost, const node_ptr &rightmost)
-      : t_(t)
-      , null_node_(header)
-      , l_(null_node_)
-      , r_(null_node_)
-      , leftmost_(leftmost)
-      , rightmost_(rightmost)
+   splaydown_rollback( const node_ptr *pcur_subtree, const node_ptr & header
+                     , const node_ptr & leftmost           , const node_ptr & rightmost)
+      : pcur_subtree_(pcur_subtree)  , header_(header)
+      , leftmost_(leftmost)   , rightmost_(rightmost)
    {}
 
-   ~splaydown_assemble_and_fix_header()
+   void release()
+   {  pcur_subtree_ = 0;  }
+
+   ~splaydown_rollback()
    {
-      this->assemble();
-
-      //Now recover the original header except for the
-      //splayed root node.
-      //"t_" is the current root and "null_node_" is the header node
-      NodeTraits::set_parent(null_node_, t_);
-      NodeTraits::set_parent(t_, null_node_);
-      //Recover leftmost/rightmost pointers
-      NodeTraits::set_left (null_node_, leftmost_);
-      NodeTraits::set_right(null_node_, rightmost_);
-   }
-
-   private:
-
-   void assemble()
-   {
-      //procedure assemble;
-      //    left(r), right(l) := right(t), left(t);
-      //    left(t), right(t) := right(null), left(null);
-      //end assemble;
-      {  //    left(r), right(l) := right(t), left(t);
-         
-         node_ptr const old_t_left  = NodeTraits::get_left(t_);
-         node_ptr const old_t_right = NodeTraits::get_right(t_);
-         NodeTraits::set_right(l_, old_t_left);
-         NodeTraits::set_left (r_, old_t_right);
-         if(old_t_left){
-            NodeTraits::set_parent(old_t_left, l_);
-         }
-         if(old_t_right){
-            NodeTraits::set_parent(old_t_right, r_);
-         }
-      }
-      {  //    left(t), right(t) := right(null), left(null);
-         node_ptr const null_right = NodeTraits::get_right(null_node_);
-         node_ptr const null_left  = NodeTraits::get_left(null_node_);
-         NodeTraits::set_left (t_, null_right);
-         NodeTraits::set_right(t_, null_left);
-         if(null_right){
-            NodeTraits::set_parent(null_right, t_);
-         }
-         if(null_left){
-            NodeTraits::set_parent(null_left, t_);
-         }
+      if(pcur_subtree_){
+         //Exception can only be thrown by comp, but
+         //tree invariants still hold. *pcur_subtree is the current root
+         //so link it to the header.
+         NodeTraits::set_parent(*pcur_subtree_, header_);
+         NodeTraits::set_parent(header_, *pcur_subtree_);
+         //Recover leftmost/rightmost pointers
+         NodeTraits::set_left (header_, leftmost_);
+         NodeTraits::set_right(header_, rightmost_);
       }
    }
-
-   public:
-   node_ptr t_, null_node_, l_, r_, leftmost_, rightmost_;
+   const node_ptr *pcur_subtree_;
+   node_ptr header_, leftmost_, rightmost_;
 };
 
 }  //namespace detail {
@@ -221,28 +184,32 @@ class splaytree_algorithms
    #endif   //#ifdef BOOST_INTRUSIVE_DOXYGEN_INVOKED
 
    //! @copydoc ::boost::intrusive::bstree_algorithms::erase(const node_ptr&,const node_ptr&)
-   //! Additional notes: the previous node of z is splayed to speed up range deletions.
-   static void erase(const node_ptr & header, const node_ptr & z)
+   //! Additional notes: the previous node of z is splayed. The "splay" parameter which indicated if splaying
+   //! should be performed, it's deprecated and will disappear in future versions.
+   static void erase(const node_ptr & header, const node_ptr & z, bool splay = true)
    {
       //posibility 1
-      if(NodeTraits::get_left(z)){
+      if(splay && NodeTraits::get_left(z)){
          splay_up(bstree_algo::prev_node(z), header);
       }
       /*
       //possibility 2
-      if(NodeTraits::get_left(z)){
+      if(splay && NodeTraits::get_left(z)){
          node_ptr l = NodeTraits::get_left(z);
          splay_up(l, header);
-      }*/
-      /*
-      if(NodeTraits::get_left(z)){
+      }*//*
+      if(splay && NodeTraits::get_left(z)){
          node_ptr l = bstree_algo::prev_node(z);
          splay_up_impl(l, z);
       }*/
       /*
       //possibility 4
-      splay_up(z, header);
-      */
+      if(splay){
+         splay_up(z, header);
+      }*/
+
+      //if(splay)
+         //splay_up(z, header);
       bstree_algo::erase(header, z);
    }
 
@@ -258,7 +225,7 @@ class splaytree_algorithms
 
    #endif   //#ifdef BOOST_INTRUSIVE_DOXYGEN_INVOKED
    //! @copydoc ::boost::intrusive::bstree_algorithms::count(const const_node_ptr&,const KeyType&,KeyNodePtrCompare)
-   //! Additional notes: an element with key `key` is splayed.
+   //! Additional notes: the first node of the range is splayed.
    template<class KeyType, class KeyNodePtrCompare>
    static std::size_t count
       (const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp)
@@ -280,14 +247,15 @@ class splaytree_algorithms
    {  return bstree_algo::count(header, key, comp);  }
 
    //! @copydoc ::boost::intrusive::bstree_algorithms::lower_bound(const const_node_ptr&,const KeyType&,KeyNodePtrCompare)
-   //! Additional notes: the first node of the range is splayed.
+   //! Additional notes: the first node of the range is splayed. The "splay" parameter which indicated if splaying
+   //! should be performed, it's deprecated and will disappear in future versions.
    template<class KeyType, class KeyNodePtrCompare>
    static node_ptr lower_bound
-      (const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp)
+      (const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp, bool splay = true)
    {
-      splay_down(detail::uncast(header), key, comp);
+      //splay_down(detail::uncast(header), key, comp);
       node_ptr y = bstree_algo::lower_bound(header, key, comp);
-      //splay_up(y, detail::uncast(header));
+      if(splay) splay_up(y, detail::uncast(header));
       return y;
    }
 
@@ -299,14 +267,15 @@ class splaytree_algorithms
    {  return bstree_algo::lower_bound(header, key, comp);  }
 
    //! @copydoc ::boost::intrusive::bstree_algorithms::upper_bound(const const_node_ptr&,const KeyType&,KeyNodePtrCompare)
-   //! Additional notes: the first node of the range is splayed.
+   //! Additional notes: the first node of the range is splayed. The "splay" parameter which indicated if splaying
+   //! should be performed, it's deprecated and will disappear in future versions.
    template<class KeyType, class KeyNodePtrCompare>
    static node_ptr upper_bound
-      (const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp)
+      (const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp, bool splay = true)
    {
-      splay_down(detail::uncast(header), key, comp);
+      //splay_down(detail::uncast(header), key, comp);
       node_ptr y = bstree_algo::upper_bound(header, key, comp);
-      //splay_up(y, detail::uncast(header));
+      if(splay) splay_up(y, detail::uncast(header));
       return y;
    }
 
@@ -318,13 +287,17 @@ class splaytree_algorithms
    {  return bstree_algo::upper_bound(header, key, comp);  }
 
    //! @copydoc ::boost::intrusive::bstree_algorithms::find(const const_node_ptr&, const KeyType&,KeyNodePtrCompare)
-   //! Additional notes: the found node of the lower bound is splayed.
+   //! Additional notes: the found node of the lower bound is splayed. The "splay" parameter which indicated if splaying
+   //! should be performed, it's deprecated and will disappear in future versions.
    template<class KeyType, class KeyNodePtrCompare>
    static node_ptr find
-      (const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp)
+      (const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp, bool splay = true)
    {
-      splay_down(detail::uncast(header), key, comp);
-      return bstree_algo::find(header, key, comp);
+      if(splay) splay_down(detail::uncast(header), key, comp);
+      node_ptr end = detail::uncast(header);
+      node_ptr y = bstree_algo::lower_bound(header, key, comp);
+      node_ptr r = (y == end || comp(key, y)) ? end : y;
+      return r;
    }
 
    //! @copydoc ::boost::intrusive::bstree_algorithms::find(const const_node_ptr&, const KeyType&,KeyNodePtrCompare)
@@ -335,14 +308,15 @@ class splaytree_algorithms
    {  return bstree_algo::find(header, key, comp);  }
 
    //! @copydoc ::boost::intrusive::bstree_algorithms::equal_range(const const_node_ptr&,const KeyType&,KeyNodePtrCompare)
-   //! Additional notes: the first node of the range is splayed.
+   //! Additional notes: the first node of the range is splayed. The "splay" parameter which indicated if splaying
+   //! should be performed, it's deprecated and will disappear in future versions.
    template<class KeyType, class KeyNodePtrCompare>
    static std::pair<node_ptr, node_ptr> equal_range
-      (const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp)
+      (const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp, bool splay = true)
    {
-      splay_down(detail::uncast(header), key, comp);
+      //splay_down(detail::uncast(header), key, comp);
       std::pair<node_ptr, node_ptr> ret = bstree_algo::equal_range(header, key, comp);
-      //splay_up(ret.first, detail::uncast(header));
+      if(splay) splay_up(ret.first, detail::uncast(header));
       return ret;
    }
 
@@ -353,36 +327,17 @@ class splaytree_algorithms
       (const const_node_ptr & header, const KeyType &key, KeyNodePtrCompare comp)
    {  return bstree_algo::equal_range(header, key, comp);  }
 
-   //! @copydoc ::boost::intrusive::bstree_algorithms::lower_bound_range(const const_node_ptr&,const KeyType&,KeyNodePtrCompare)
-   //! Additional notes: the first node of the range is splayed.
-   template<class KeyType, class KeyNodePtrCompare>
-   static std::pair<node_ptr, node_ptr> lower_bound_range
-      (const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp)
-   {
-      splay_down(detail::uncast(header), key, comp);
-      std::pair<node_ptr, node_ptr> ret = bstree_algo::lower_bound_range(header, key, comp);
-      //splay_up(ret.first, detail::uncast(header));
-      return ret;
-   }
-
-   //! @copydoc ::boost::intrusive::bstree_algorithms::lower_bound_range(const const_node_ptr&,const KeyType&,KeyNodePtrCompare)
-   //! Additional note: no splaying is performed
-   template<class KeyType, class KeyNodePtrCompare>
-   static std::pair<node_ptr, node_ptr> lower_bound_range
-      (const const_node_ptr & header, const KeyType &key, KeyNodePtrCompare comp)
-   {  return bstree_algo::lower_bound_range(header, key, comp);  }
-
    //! @copydoc ::boost::intrusive::bstree_algorithms::bounded_range(const const_node_ptr&,const KeyType&,const KeyType&,KeyNodePtrCompare,bool,bool)
-   //! Additional notes: the first node of the range is splayed.
+   //! Additional notes: the first node of the range is splayed. The "splay" parameter which indicated if splaying
+   //! should be performed, it's deprecated and will disappear in future versions.
    template<class KeyType, class KeyNodePtrCompare>
    static std::pair<node_ptr, node_ptr> bounded_range
       (const node_ptr & header, const KeyType &lower_key, const KeyType &upper_key, KeyNodePtrCompare comp
-      , bool left_closed, bool right_closed)
+      , bool left_closed, bool right_closed, bool splay = true)
    {
-      splay_down(detail::uncast(header), lower_key, comp);
       std::pair<node_ptr, node_ptr> ret =
          bstree_algo::bounded_range(header, lower_key, upper_key, comp, left_closed, right_closed);
-      //splay_up(ret.first, detail::uncast(header));
+      if(splay) splay_up(ret.first, detail::uncast(header));
       return ret;
    }
 
@@ -490,20 +445,6 @@ class splaytree_algorithms
 
    // bottom-up splay, use data_ as parent for n    | complexity : logarithmic    | exception : nothrow
    static void splay_up(const node_ptr & node, const node_ptr & header)
-   {  priv_splay_up<true>(node, header); }
-
-   // top-down splay | complexity : logarithmic    | exception : strong, note A
-   template<class KeyType, class KeyNodePtrCompare>
-   static node_ptr splay_down(const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp, bool *pfound = 0)
-   {  return priv_splay_down<true>(header, key, comp, pfound);   }
-
-   private:
-
-   /// @cond
-
-   // bottom-up splay, use data_ as parent for n    | complexity : logarithmic    | exception : nothrow
-   template<bool SimpleSplay>
-   static void priv_splay_up(const node_ptr & node, const node_ptr & header)
    {
       // If (node == header) do a splay for the right most node instead
       // this is to boost performance of equal_range/count on equivalent containers in the case
@@ -529,19 +470,20 @@ class splaytree_algorithms
             rotate(p);
             rotate(n);
          }
-         else {
+         else{
             // zig-zag
             rotate(n);
-            if(!SimpleSplay){
-               rotate(n);
-            }
+            rotate(n);
          }
       }
    }
 
-   template<bool SimpleSplay, class KeyType, class KeyNodePtrCompare>
-   static node_ptr priv_splay_down(const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp, bool *pfound = 0)
+   // top-down splay | complexity : logarithmic    | exception : strong, note A
+   template<class KeyType, class KeyNodePtrCompare>
+   static node_ptr splay_down(const node_ptr & header, const KeyType &key, KeyNodePtrCompare comp)
    {
+      if(!NodeTraits::get_parent(header))
+         return header;
       //Most splay tree implementations use a dummy/null node to implement.
       //this function. This has some problems for a generic library like Intrusive:
       //
@@ -552,87 +494,118 @@ class splaytree_algorithms
       //are not changed when splaying (because the invariants of the tree don't
       //change) We can back up them, use the header as the null node and
       //reassign old values after the function has been completed.
-      node_ptr const old_root  = NodeTraits::get_parent(header);
-      node_ptr const leftmost  = NodeTraits::get_left(header);
-      node_ptr const rightmost = NodeTraits::get_right(header);
-      if(leftmost == rightmost){ //Empty or unique node
-         if(pfound){
-            *pfound = old_root && !comp(key, old_root) && !comp(old_root, key);
-         }
-         return old_root ? old_root : header;
-      }
-      else{
-         //Initialize "null node" (the header in our case)
-         NodeTraits::set_left (header, node_ptr());
-         NodeTraits::set_right(header, node_ptr());
-         //Class that will backup leftmost/rightmost from header, commit the assemble(),
-         //and will restore leftmost/rightmost to header even if "comp" throws
-         detail::splaydown_assemble_and_fix_header<NodeTraits> commit(old_root, header, leftmost, rightmost);
-         bool found = false;
+      node_ptr t = NodeTraits::get_parent(header);
+      //Check if tree has a single node
+      if(!NodeTraits::get_left(t) && !NodeTraits::get_right(t))
+         return t;
+      //Backup leftmost/rightmost
+      node_ptr leftmost (NodeTraits::get_left(header));
+      node_ptr rightmost(NodeTraits::get_right(header));
+      {
+         //Anti-exception rollback, recovers the original header node if an exception is thrown.
+         detail::splaydown_rollback<NodeTraits> rollback(&t, header, leftmost, rightmost);
+         node_ptr null_node = header;
+         node_ptr l = null_node;
+         node_ptr r = null_node;
 
          for( ;; ){
-            if(comp(key, commit.t_)){
-               node_ptr const t_left = NodeTraits::get_left(commit.t_);
-               if(!t_left)
+            if(comp(key, t)){
+               if(NodeTraits::get_left(t) == node_ptr() )
                   break;
-               if(comp(key, t_left)){
-                  bstree_algo::rotate_right_no_parent_fix(commit.t_, t_left);
-                  commit.t_ = t_left;
-                  if( !NodeTraits::get_left(commit.t_) )
+               if(comp(key, NodeTraits::get_left(t))){
+                  t = bstree_algo::rotate_right(t);
+
+                  if(NodeTraits::get_left(t) == node_ptr())
                      break;
-                  link_right(commit.t_, commit.r_);
+                  link_right(t, r);
+               }
+               else if(comp(NodeTraits::get_left(t), key)){
+                  link_right(t, r);
+
+                  if(NodeTraits::get_right(t) == node_ptr() )
+                     break;
+                  link_left(t, l);
                }
                else{
-                  link_right(commit.t_, commit.r_);
-                  if(!SimpleSplay && comp(t_left, key)){
-                     if( !NodeTraits::get_right(commit.t_) )
-                        break;
-                     link_left(commit.t_, commit.l_);
-                  }
+                  link_right(t, r);
                }
             }
-            else if(comp(commit.t_, key)){
-               node_ptr const t_right = NodeTraits::get_right(commit.t_);
-               if(!t_right)
+            else if(comp(t, key)){
+               if(NodeTraits::get_right(t) == node_ptr() )
                   break;
 
-               if(comp(t_right, key)){
-                     bstree_algo::rotate_left_no_parent_fix(commit.t_, t_right);
-                     commit.t_ = t_right;
-                     if( !NodeTraits::get_right(commit.t_) )
+               if(comp(NodeTraits::get_right(t), key)){
+                     t = bstree_algo::rotate_left( t );
+
+                     if(NodeTraits::get_right(t) == node_ptr() )
                         break;
-                     link_left(commit.t_, commit.l_);
+                     link_left(t, l);
+               }
+               else if(comp(key, NodeTraits::get_right(t))){
+                  link_left(t, l);
+
+                  if(NodeTraits::get_left(t) == node_ptr())
+                     break;
+
+                  link_right(t, r);
                }
                else{
-                  link_left(commit.t_, commit.l_);
-                  if(!SimpleSplay && comp(key, t_right)){
-                     if( !NodeTraits::get_left(commit.t_) )
-                        break;
-                     link_right(commit.t_, commit.r_);
-                  }
+                  link_left(t, l);
                }
             }
             else{
-               found = true;
                break;
             }
          }
 
-         //commit.~splaydown_assemble_and_fix_header<NodeTraits>() will first
-         //"assemble()" + link the new root & recover header's leftmost & rightmost
-         if(pfound){
-            *pfound = found;
-         }
-         return commit.t_;
+         assemble(t, l, r, null_node);
+         rollback.release();
+      }
+
+      //Now recover the original header except for the
+      //splayed root node.
+      //t is the current root
+      NodeTraits::set_parent(header, t);
+      NodeTraits::set_parent(t, header);
+      //Recover leftmost/rightmost pointers
+      NodeTraits::set_left (header, leftmost);
+      NodeTraits::set_right(header, rightmost);
+      return t;
+   }
+
+   private:
+
+   /// @cond
+
+   // assemble the three sub-trees into new tree pointed to by t    | complexity : constant        | exception : nothrow
+   static void assemble(const node_ptr &t, const node_ptr & l, const node_ptr & r, const const_node_ptr & null_node )
+   {
+      NodeTraits::set_right(l, NodeTraits::get_left(t));
+      NodeTraits::set_left(r, NodeTraits::get_right(t));
+
+      if(NodeTraits::get_right(l) != node_ptr()){
+         NodeTraits::set_parent(NodeTraits::get_right(l), l);
+      }
+
+      if(NodeTraits::get_left(r) != node_ptr()){
+         NodeTraits::set_parent(NodeTraits::get_left(r), r);
+      }
+
+      NodeTraits::set_left (t, NodeTraits::get_right(null_node));
+      NodeTraits::set_right(t, NodeTraits::get_left(null_node));
+
+      if( NodeTraits::get_left(t) != node_ptr() ){
+         NodeTraits::set_parent(NodeTraits::get_left(t), t);
+      }
+
+      if( NodeTraits::get_right(t) ){
+         NodeTraits::set_parent(NodeTraits::get_right(t), t);
       }
    }
 
    // break link to left child node and attach it to left tree pointed to by l   | complexity : constant | exception : nothrow
    static void link_left(node_ptr & t, node_ptr & l)
    {
-      //procedure link_left;
-      //    t, l, right(l) := right(t), t, t
-      //end link_left
       NodeTraits::set_right(l, t);
       NodeTraits::set_parent(t, l);
       l = t;
@@ -642,9 +615,6 @@ class splaytree_algorithms
    // break link to right child node and attach it to right tree pointed to by r | complexity : constant | exception : nothrow
    static void link_right(node_ptr & t, node_ptr & r)
    {
-      //procedure link_right;
-      //    t, r, left(r) := left(t), t, t
-      //end link_right;
       NodeTraits::set_left(r, t);
       NodeTraits::set_parent(t, r);
       r = t;
@@ -654,9 +624,6 @@ class splaytree_algorithms
    // rotate n with its parent                     | complexity : constant    | exception : nothrow
    static void rotate(const node_ptr & n)
    {
-      //procedure rotate_left;
-      //    t, right(t), left(right(t)) := right(t), left(right(t)), t
-      //end rotate_left;
       node_ptr p = NodeTraits::get_parent(n);
       node_ptr g = NodeTraits::get_parent(p);
       //Test if g is header before breaking tree
@@ -665,13 +632,13 @@ class splaytree_algorithms
 
       if(NodeTraits::get_left(p) == n){
          NodeTraits::set_left(p, NodeTraits::get_right(n));
-         if(NodeTraits::get_left(p))
+         if(NodeTraits::get_left(p) != node_ptr())
             NodeTraits::set_parent(NodeTraits::get_left(p), p);
          NodeTraits::set_right(n, p);
       }
       else{ // must be ( p->right == n )
          NodeTraits::set_right(p, NodeTraits::get_left(n));
-         if(NodeTraits::get_right(p))
+         if(NodeTraits::get_right(p) != node_ptr())
             NodeTraits::set_parent(NodeTraits::get_right(p), p);
          NodeTraits::set_left(n, p);
       }

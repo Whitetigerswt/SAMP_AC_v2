@@ -337,16 +337,7 @@ namespace boost
         template<typename duration_type>
         bool timed_wait(unique_lock<mutex>& m,duration_type const& wait_duration)
         {
-          if (wait_duration.is_pos_infinity())
-          {
-              wait(m); // or do_wait(m,detail::timeout::sentinel());
-              return true;
-          }
-          if (wait_duration.is_special())
-          {
-            return true;
-          }
-          return do_wait(m,wait_duration.total_milliseconds());
+            return do_wait(m,wait_duration.total_milliseconds());
         }
 
         template<typename predicate_type>

@@ -48,4 +48,6 @@
 !*.suo
 !*.opensdf
 !*.ico
+!*.ipp
+!*.pwn
 !*/

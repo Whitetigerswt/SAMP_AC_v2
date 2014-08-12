@@ -15,6 +15,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/optional.hpp>
 #include <boost/assert.hpp>
 #ifdef BOOST_THREAD_USES_CHRONO
 #include <boost/chrono/system_clocks.hpp>
@@ -219,11 +220,11 @@ namespace boost
 
     namespace this_thread
     {
-        namespace hiden
-        {
-          void BOOST_THREAD_DECL sleep_for(const timespec& ts);
-          void BOOST_THREAD_DECL sleep_until(const timespec& ts);
-        }
+      namespace hiden
+      {
+        void BOOST_THREAD_DECL sleep_for(const timespec& ts);
+        void BOOST_THREAD_DECL sleep_until(const timespec& ts);
+      }
 
 #ifdef BOOST_THREAD_USES_CHRONO
 #ifdef BOOST_THREAD_SLEEP_FOR_IS_STEADY
@@ -235,27 +236,6 @@ namespace boost
         }
 #endif
 #endif // BOOST_THREAD_USES_CHRONO
-
-        namespace no_interruption_point
-        {
-          namespace hiden
-          {
-            void BOOST_THREAD_DECL sleep_for(const timespec& ts);
-            void BOOST_THREAD_DECL sleep_until(const timespec& ts);
-          }
-
-    #ifdef BOOST_THREAD_USES_CHRONO
-    #ifdef BOOST_THREAD_SLEEP_FOR_IS_STEADY
-
-          inline
-          void BOOST_SYMBOL_VISIBLE sleep_for(const chrono::nanoseconds& ns)
-          {
-              return boost::this_thread::hiden::sleep_for(boost::detail::to_timespec(ns));
-          }
-    #endif
-    #endif // BOOST_THREAD_USES_CHRONO
-
-        } // no_interruption_point
 
         void BOOST_THREAD_DECL yield() BOOST_NOEXCEPT;
 

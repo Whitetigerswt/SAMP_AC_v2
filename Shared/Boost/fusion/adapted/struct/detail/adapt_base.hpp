@@ -10,7 +10,6 @@
 #ifndef BOOST_FUSION_ADAPTED_STRUCT_DETAIL_ADAPT_BASE_HPP
 #define BOOST_FUSION_ADAPTED_STRUCT_DETAIL_ADAPT_BASE_HPP
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
 
@@ -138,7 +137,6 @@
                 >::type                                                         \
             type;                                                               \
                                                                                 \
-            BOOST_FUSION_GPU_ENABLED                                            \
             static type                                                         \
             call(Seq& seq)                                                      \
             {                                                                   \
@@ -158,7 +156,6 @@
     {                                                                           \
         typedef char const* type;                                               \
                                                                                 \
-        BOOST_FUSION_GPU_ENABLED                                                \
         static type                                                             \
         call()                                                                  \
         {                                                                       \

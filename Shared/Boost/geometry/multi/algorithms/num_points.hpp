@@ -15,12 +15,11 @@
 #ifndef BOOST_GEOMETRY_MULTI_ALGORITHMS_NUM_POINTS_HPP
 #define BOOST_GEOMETRY_MULTI_ALGORITHMS_NUM_POINTS_HPP
 
-#include <cstddef>
 
 #include <boost/range.hpp>
 
-#include <boost/geometry/core/tags.hpp>
-#include <boost/geometry/geometries/concepts/check.hpp>
+#include <boost/geometry/multi/core/tags.hpp>
+#include <boost/geometry/multi/geometries/concepts/check.hpp>
 #include <boost/geometry/algorithms/num_points.hpp>
 
 
@@ -35,8 +34,7 @@ namespace detail { namespace num_points
 struct multi_count
 {
     template <typename MultiGeometry>
-    static inline
-    std::size_t apply(MultiGeometry const& geometry, bool add_for_open)
+    static inline size_t apply(MultiGeometry const& geometry, bool add_for_open)
     {
         typedef typename boost::range_value<MultiGeometry>::type geometry_type;
         typedef typename boost::range_iterator

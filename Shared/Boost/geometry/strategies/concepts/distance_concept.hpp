@@ -18,7 +18,6 @@
 #include <iterator>
 
 #include <boost/concept_check.hpp>
-#include <boost/core/ignore_unused.hpp>
 
 #include <boost/geometry/util/parameter_type_of.hpp>
 
@@ -94,8 +93,9 @@ private :
                     ptype1, ptype2
                 >::apply(*str, 1.0);
 
-            boost::ignore_unused<tag>();
-            boost::ignore_unused(str, c, r);
+            boost::ignore_unused_variable_warning(str);
+            boost::ignore_unused_variable_warning(c);
+            boost::ignore_unused_variable_warning(r);
         }
     };
 
@@ -135,8 +135,15 @@ private :
                     ApplyMethod, 1
                 >::type sptype;
 
-            // must define meta-function return_type
+            // 1) must define meta-function return_type
             typedef typename strategy::distance::services::return_type<Strategy, ptype, sptype>::type rtype;
+
+            // 2) must define underlying point-distance-strategy
+            typedef typename strategy::distance::services::strategy_point_point<Strategy>::type stype;
+            BOOST_CONCEPT_ASSERT
+                (
+                    (concept::PointDistanceStrategy<stype, Point, PointOfSegment>)
+                );
 
 
             Strategy *str = 0;

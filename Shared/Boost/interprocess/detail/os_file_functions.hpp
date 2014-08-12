@@ -21,7 +21,7 @@
 #include <climits>
 #include <boost/type_traits/make_unsigned.hpp>
 
-#if defined (BOOST_INTERPROCESS_WINDOWS)
+#if (defined BOOST_INTERPROCESS_WINDOWS)
 #  include <boost/interprocess/detail/win32_api.hpp>
 #else
 #  ifdef BOOST_HAS_UNISTD_H
@@ -46,7 +46,7 @@
 namespace boost {
 namespace interprocess {
 
-#if defined (BOOST_INTERPROCESS_WINDOWS)
+#if (defined BOOST_INTERPROCESS_WINDOWS)
 
 typedef void *             file_handle_t;
 typedef long long          offset_t;
@@ -94,22 +94,9 @@ inline file_handle_t file_handle_from_mapping_handle(mapping_handle_t hnd)
 inline bool create_directory(const char *path)
 {  return winapi::create_directory(path); }
 
-inline bool get_temporary_path(char *buffer, std::size_t buf_len, std::size_t &required_len)
-{
-   required_len = 0;
-   //std::size_t is always bigger or equal than unsigned long in Windows systems
-   //In case std::size_t is bigger than unsigned long
-   unsigned long buf = buf_len;
-   if(buf_len != buf){   //maybe overflowed
-      return false;
-   }
-   required_len = winapi::get_temp_path(buf_len, buffer);
-   const bool ret = !(buf_len < required_len);
-   if(ret && buffer[required_len-1] == '\\'){
-      buffer[required_len-1] = 0;
-   }
-   return ret;
-}
+inline const char *get_temporary_path()
+{  return std::getenv("TMP"); }
+
 
 inline file_handle_t create_new_file
    (const char *name, mode_t mode, const permissions & perm = permissions(), bool temporary = false)
@@ -149,7 +136,7 @@ inline bool truncate_file (file_handle_t hnd, std::size_t size)
    typedef boost::make_unsigned<offset_t>::type uoffset_t;
    const uoffset_t max_filesize = uoffset_t((std::numeric_limits<offset_t>::max)());
    //Avoid unused variable warnings in 32 bit systems
-   if(uoffset_t(size) > max_filesize){
+   if(size > max_filesize){
       winapi::set_last_error(winapi::error_file_too_large);
       return false;
    }
@@ -270,7 +257,7 @@ inline bool delete_subdirectories_recursive
    void *             hFile;                       // Handle to directory
    std::string        strFilePath;                 // Filepath
    std::string        strPattern;                  // Pattern
-   winapi::win32_find_data  FileInformation;     // File information
+   winapi::win32_find_data_t  FileInformation;     // File information
 
    //Find all files and directories
    strPattern = refcstrRootDirectory + "\\*.*";
@@ -286,10 +273,8 @@ inline bool delete_subdirectories_recursive
             //If it's a directory, go recursive
             if(FileInformation.dwFileAttributes & winapi::file_attribute_directory){
                // Delete subdirectory
-               if(!delete_subdirectories_recursive(strFilePath, dont_delete_this, count+1)){
-                  winapi::find_close(hFile);
+               if(!delete_subdirectories_recursive(strFilePath, dont_delete_this, count+1))
                   return false;
-               }
             }
             //If it's a file, just delete it
             else{
@@ -338,7 +323,7 @@ template<class Function>
 inline bool for_each_file_in_dir(const char *dir, Function f)
 {
    void *             hFile;                       // Handle to directory
-   winapi::win32_find_data  FileInformation;     // File information
+   winapi::win32_find_data_t  FileInformation;     // File information
 
    //Get base directory
    std::string str(dir);
@@ -371,7 +356,7 @@ inline bool for_each_file_in_dir(const char *dir, Function f)
 }
 
 
-#else    //#if defined (BOOST_INTERPROCESS_WINDOWS)
+#else    //#if (defined BOOST_INTERPROCESS_WINDOWS)
 
 typedef int       file_handle_t;
 typedef off_t     offset_t;
@@ -413,15 +398,17 @@ inline file_handle_t file_handle_from_mapping_handle(mapping_handle_t hnd)
 inline bool create_directory(const char *path)
 {  return ::mkdir(path, 0777) == 0 && ::chmod(path, 0777) == 0; }
 
-inline bool get_temporary_path(char *buffer, std::size_t buf_len, std::size_t &required_len)
+inline const char *get_temporary_path()
 {
-   required_len = 5u;
-   if(buf_len < required_len)
-      return false;
-   else{
-      std::strcpy(buffer, "/tmp");
+   const char *names[] = {"/tmp", "TMPDIR", "TMP", "TEMP" };
+   const int names_size = sizeof(names)/sizeof(names[0]);
+   struct stat data;
+   for(int i = 0; i != names_size; ++i){
+      if(::stat(names[i], &data) == 0){
+         return names[i];
+      }
    }
-   return true;
+   return "/tmp";
 }
 
 inline file_handle_t create_new_file
@@ -691,7 +678,7 @@ inline bool delete_subdirectories(const std::string &refcstrRootDirectory, const
    return delete_subdirectories_recursive(refcstrRootDirectory, dont_delete_this );
 }
 
-#endif   //#if defined (BOOST_INTERPROCESS_WINDOWS)
+#endif   //#if (defined BOOST_INTERPROCESS_WINDOWS)
 
 inline bool open_or_create_directory(const char *dir_name)
 {
@@ -705,18 +692,6 @@ inline bool open_or_create_directory(const char *dir_name)
    return true;
 }
 
-inline std::string get_temporary_path()
-{
-   std::size_t required_len = 0;
-   get_temporary_path(0, 0, required_len);
-   std::string ret_str(required_len, char(0));
-   get_temporary_path(&ret_str[0], ret_str.size(), required_len);
-   while(!ret_str.empty() && !ret_str[ret_str.size()-1]){
-      ret_str.erase(ret_str.size()-1);
-   }
-
-   return ret_str;
-}
 
 }  //namespace ipcdetail{
 }  //namespace interprocess {

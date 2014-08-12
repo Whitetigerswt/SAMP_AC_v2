@@ -135,7 +135,11 @@ public:
   }
 
   // see generate_array_view in base.hpp
+#if !defined(BOOST_MSVC) || BOOST_MSVC > 1300
   template <int NDims>
+#else
+  template <int NumDims, int NDims> // else ICE
+#endif // BOOST_MSVC
   typename const_array_view<NDims>::type 
   operator[](const boost::detail::multi_array::
              index_gen<NumDims,NDims>& indices)
@@ -342,7 +346,11 @@ public:
 
 
   // see generate_array_view in base.hpp
+#if !defined(BOOST_MSVC) || BOOST_MSVC > 1300
   template <int NDims>
+#else
+  template <int NumDims, int NDims> // else ICE
+#endif // BOOST_MSVC
   typename array_view<NDims>::type 
   operator[](const boost::detail::multi_array::
              index_gen<NumDims,NDims>& indices) {
@@ -394,7 +402,11 @@ public:
   }
 
   // see generate_array_view in base.hpp
+#if !defined(BOOST_MSVC) || BOOST_MSVC > 1300
   template <int NDims>
+#else
+  template <int NumDims, int NDims> // else ICE
+#endif // BOOST_MSVC
   typename const_array_view<NDims>::type 
   operator[](const boost::detail::multi_array::
              index_gen<NumDims,NDims>& indices)

@@ -8,7 +8,6 @@
 #if !defined(BOOST_FUSION_DEQUE_END_IMPL_09122006_2034)
 #define BOOST_FUSION_DEQUE_END_IMPL_09122006_2034
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/container/deque/deque_iterator.hpp>
 
 #include <boost/mpl/equal_to.hpp>
@@ -37,7 +36,6 @@ namespace boost { namespace fusion
                     >::type
                 type;
 
-                BOOST_FUSION_GPU_ENABLED
                 static type call(Sequence& seq)
                 {
                     return type(seq);

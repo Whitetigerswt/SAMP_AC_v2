@@ -40,12 +40,10 @@ namespace boost { namespace fusion
     }
 
     template <class Function, class Sequence>
-    BOOST_FUSION_GPU_ENABLED
     inline typename result_of::invoke_function_object<Function, Sequence>::type
     invoke_function_object(Function, Sequence &);
 
     template <class Function, class Sequence>
-    BOOST_FUSION_GPU_ENABLED
     inline typename result_of::invoke_function_object<Function, Sequence const
         >::type invoke_function_object(Function, Sequence const &);
 
@@ -81,7 +79,6 @@ namespace boost { namespace fusion
     }
 
     template <class Function, class Sequence>
-    BOOST_FUSION_GPU_ENABLED
     inline typename result_of::invoke_function_object<Function,Sequence>::type
     invoke_function_object(Function f, Sequence & s)
     {
@@ -91,7 +88,6 @@ namespace boost { namespace fusion
     }
 
     template <class Function, class Sequence>
-    BOOST_FUSION_GPU_ENABLED
     inline typename result_of::invoke_function_object<Function,Sequence const>::type
     invoke_function_object(Function f, Sequence const & s)
     {
@@ -125,7 +121,6 @@ namespace boost { namespace fusion
 #if N > 0
 
             template <class F>
-            BOOST_FUSION_GPU_ENABLED
             static inline result_type
             call(F & f, Sequence & s)
             {
@@ -137,7 +132,6 @@ namespace boost { namespace fusion
 #else
 
             template <class F>
-            BOOST_FUSION_GPU_ENABLED
             static inline result_type
             call(F & f, Sequence & /*s*/)
             {
@@ -161,7 +155,6 @@ namespace boost { namespace fusion
 #if N > 0
 
             template <class F>
-            BOOST_FUSION_GPU_ENABLED
             static inline result_type
             call(F & f, Sequence & s)
             {
@@ -177,7 +170,6 @@ namespace boost { namespace fusion
 #else
 
             template <class F>
-            BOOST_FUSION_GPU_ENABLED
             static inline result_type
             call(F & f, Sequence & /*s*/)
             {

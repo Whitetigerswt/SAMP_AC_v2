@@ -12,7 +12,7 @@
 #include <boost/statechart/detail/rtti_policy.hpp>
 #include <boost/statechart/detail/memory.hpp>
 
-#include <boost/polymorphic_cast.hpp> // boost::polymorphic_downcast
+#include <boost/cast.hpp> // boost::polymorphic_downcast
 
 #include <memory> // std::allocator
 

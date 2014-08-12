@@ -138,10 +138,11 @@ struct mpfi_float_imp
    }
    mpfi_float_imp& operator = (long long i)
    {
+      BOOST_MP_USING_ABS
       if(m_data[0].left._mpfr_d == 0)
          mpfi_init2(m_data, multiprecision::detail::digits10_2_2(digits10 ? digits10 : get_default_precision()));
       bool neg = i < 0;
-      *this = boost::multiprecision::detail::unsigned_abs(i);
+      *this = static_cast<unsigned long long>(abs(i));
       if(neg)
          mpfi_neg(m_data, m_data);
       return *this;
@@ -178,8 +179,6 @@ struct mpfi_float_imp
    }
    mpfi_float_imp& operator = (const char* s)
    {
-      using default_ops::eval_fpclassify;
-   
       if(m_data[0].left._mpfr_d == 0)
          mpfi_init2(m_data, multiprecision::detail::digits10_2_2(digits10 ? digits10 : get_default_precision()));
 
@@ -204,22 +203,7 @@ struct mpfi_float_imp
             part.erase();
          b = part.c_str();
 
-         if(eval_fpclassify(a) == (int)FP_NAN)
-         {
-            mpfi_set_fr(this->data(), a.data());
-         }
-         else if(eval_fpclassify(b) == (int)FP_NAN)
-         {
-            mpfi_set_fr(this->data(), b.data());
-         }
-         else
-         {
-            if(a.compare(b) > 0)
-            {
-               BOOST_THROW_EXCEPTION(std::runtime_error("Attempt to create interval with invalid range (start is greater than end)."));
-            }
-            mpfi_interv_fr(m_data, a.data(), b.data());
-         }
+         mpfi_interv_fr(m_data, a.data(), b.data());
       }
       else if(mpfi_set_str(m_data, s, 10) != 0)
       {
@@ -529,7 +513,7 @@ inline void eval_add(mpfi_float_backend<digits10>& result, long i)
    if(i > 0)
       mpfi_add_ui(result.data(), result.data(), i);
    else
-      mpfi_sub_ui(result.data(), result.data(), boost::multiprecision::detail::unsigned_abs(i));
+      mpfi_sub_ui(result.data(), result.data(), std::abs(i));
 }
 template <unsigned digits10>
 inline void eval_subtract(mpfi_float_backend<digits10>& result, long i)
@@ -537,19 +521,19 @@ inline void eval_subtract(mpfi_float_backend<digits10>& result, long i)
    if(i > 0)
       mpfi_sub_ui(result.data(), result.data(), i);
    else
-      mpfi_add_ui(result.data(), result.data(), boost::multiprecision::detail::unsigned_abs(i));
+      mpfi_add_ui(result.data(), result.data(), std::abs(i));
 }
 template <unsigned digits10>
 inline void eval_multiply(mpfi_float_backend<digits10>& result, long i)
 {
-   mpfi_mul_ui(result.data(), result.data(), boost::multiprecision::detail::unsigned_abs(i));
+   mpfi_mul_ui(result.data(), result.data(), std::abs(i));
    if(i < 0)
       mpfi_neg(result.data(), result.data());
 }
 template <unsigned digits10>
 inline void eval_divide(mpfi_float_backend<digits10>& result, long i)
 {
-   mpfi_div_ui(result.data(), result.data(), boost::multiprecision::detail::unsigned_abs(i));
+   mpfi_div_ui(result.data(), result.data(), std::abs(i));
    if(i < 0)
       mpfi_neg(result.data(), result.data());
 }
@@ -570,7 +554,7 @@ template <unsigned D1, unsigned D2>
 inline void eval_add(mpfi_float_backend<D1>& a, const mpfi_float_backend<D2>& x, long y)
 {
    if(y < 0)
-      mpfi_sub_ui(a.data(), x.data(), boost::multiprecision::detail::unsigned_abs(y));
+      mpfi_sub_ui(a.data(), x.data(), -y);
    else
       mpfi_add_ui(a.data(), x.data(), y);
 }
@@ -584,7 +568,7 @@ inline void eval_add(mpfi_float_backend<D1>& a, long x, const mpfi_float_backend
 {
    if(x < 0)
    {
-      mpfi_ui_sub(a.data(), boost::multiprecision::detail::unsigned_abs(x), y.data());
+      mpfi_ui_sub(a.data(), -x, y.data());
       mpfi_neg(a.data(), a.data());
    }
    else
@@ -604,7 +588,7 @@ template <unsigned D1, unsigned D2>
 inline void eval_subtract(mpfi_float_backend<D1>& a, const mpfi_float_backend<D2>& x, long y)
 {
    if(y < 0)
-      mpfi_add_ui(a.data(), x.data(), boost::multiprecision::detail::unsigned_abs(y));
+      mpfi_add_ui(a.data(), x.data(), -y);
    else
       mpfi_sub_ui(a.data(), x.data(), y);
 }
@@ -618,7 +602,7 @@ inline void eval_subtract(mpfi_float_backend<D1>& a, long x, const mpfi_float_ba
 {
    if(x < 0)
    {
-      mpfi_add_ui(a.data(), y.data(), boost::multiprecision::detail::unsigned_abs(x));
+      mpfi_add_ui(a.data(), y.data(), -x);
       mpfi_neg(a.data(), a.data());
    }
    else
@@ -643,7 +627,7 @@ inline void eval_multiply(mpfi_float_backend<D1>& a, const mpfi_float_backend<D2
 {
    if(y < 0)
    {
-      mpfi_mul_ui(a.data(), x.data(), boost::multiprecision::detail::unsigned_abs(y));
+      mpfi_mul_ui(a.data(), x.data(), -y);
       a.negate();
    }
    else
@@ -659,7 +643,7 @@ inline void eval_multiply(mpfi_float_backend<D1>& a, long x, const mpfi_float_ba
 {
    if(x < 0)
    {
-      mpfi_mul_ui(a.data(), y.data(), boost::multiprecision::detail::unsigned_abs(x));
+      mpfi_mul_ui(a.data(), y.data(), -x);
       mpfi_neg(a.data(), a.data());
    }
    else
@@ -681,7 +665,7 @@ inline void eval_divide(mpfi_float_backend<D1>& a, const mpfi_float_backend<D2>&
 {
    if(y < 0)
    {
-      mpfi_div_ui(a.data(), x.data(), boost::multiprecision::detail::unsigned_abs(y));
+      mpfi_div_ui(a.data(), x.data(), -y);
       a.negate();
    }
    else
@@ -697,7 +681,7 @@ inline void eval_divide(mpfi_float_backend<D1>& a, long x, const mpfi_float_back
 {
    if(x < 0)
    {
-      mpfi_ui_div(a.data(), boost::multiprecision::detail::unsigned_abs(x), y.data());
+      mpfi_ui_div(a.data(), -x, y.data());
       mpfi_neg(a.data(), a.data());
    }
    else
@@ -761,23 +745,7 @@ inline void eval_convert_to(long double* result, const mpfi_float_backend<digits
 template <unsigned D1, unsigned D2, mpfr_allocation_type AllocationType>
 inline void assign_components(mpfi_float_backend<D1>& result, const mpfr_float_backend<D2, AllocationType>& a, const mpfr_float_backend<D2, AllocationType>& b)
 {
-   using default_ops::eval_fpclassify;
-   if(eval_fpclassify(a) == (int)FP_NAN)
-   {
-      mpfi_set_fr(result.data(), a.data());
-   }
-   else if(eval_fpclassify(b) == (int)FP_NAN)
-   {
-      mpfi_set_fr(result.data(), b.data());
-   }
-   else
-   {
-      if(a.compare(b) > 0)
-      {
-         BOOST_THROW_EXCEPTION(std::runtime_error("Attempt to create interval with invalid range (start is greater than end)."));
-      }
-      mpfi_interv_fr(result.data(), a.data(), b.data());
-   }
+   mpfi_interv_fr(result.data(), a.data(), b.data());
 }
 
 template <unsigned Digits10, class V>

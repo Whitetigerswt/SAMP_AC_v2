@@ -2,7 +2,7 @@
 //
 // Spatial query predicates
 //
-// Copyright (c) 2011-2014 Adam Wulkiewicz, Lodz, Poland.
+// Copyright (c) 2011-2013 Adam Wulkiewicz, Lodz, Poland.
 //
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -269,15 +269,13 @@ satisfies(UnaryPredicate const& pred)
 \brief Generate nearest() predicate.
 
 When nearest predicate is passed to the query, k-nearest neighbour search will be performed.
-\c nearest() predicate takes a \c Geometry from which distances to \c Values are calculated
-and the maximum number of \c Values that should be returned. Internally
-boost::geometry::comparable_distance() is used to perform the calculation.
+\c nearest() predicate takes a \c Point from which distance to \c Values is calculated
+and the maximum number of \c Values that should be returned.
 
 \par Example
 \verbatim
 bgi::query(spatial_index, bgi::nearest(pt, 5), std::back_inserter(result));
 bgi::query(spatial_index, bgi::nearest(pt, 5) && bgi::intersects(box), std::back_inserter(result));
-bgi::query(spatial_index, bgi::nearest(box, 5), std::back_inserter(result));
 \endverbatim
 
 \warning
@@ -285,14 +283,14 @@ Only one \c nearest() predicate may be used in a query.
 
 \ingroup predicates
 
-\param geometry     The geometry from which distance is calculated.
+\param point        The point from which distance is calculated.
 \param k            The maximum number of values to return.
 */
-template <typename Geometry> inline
-detail::nearest<Geometry>
-nearest(Geometry const& geometry, unsigned k)
+template <typename Point> inline
+detail::nearest<Point>
+nearest(Point const& point, unsigned k)
 {
-    return detail::nearest<Geometry>(geometry, k);
+    return detail::nearest<Point>(point, k);
 }
 
 #ifdef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL
@@ -364,8 +362,11 @@ operator&&(Pred1 const& p1, Pred2 const& p2)
 }
 
 template <typename Head, typename Tail, typename Pred> inline
-typename tuples::push_back<
-    boost::tuples::cons<Head, Tail>, Pred
+typename tuples::push_back_impl<
+    boost::tuples::cons<Head, Tail>,
+    Pred,
+    0,
+    boost::tuples::length<boost::tuples::cons<Head, Tail> >::value
 >::type
 operator&&(boost::tuples::cons<Head, Tail> const& t, Pred const& p)
 {
@@ -373,8 +374,8 @@ operator&&(boost::tuples::cons<Head, Tail> const& t, Pred const& p)
     namespace bt = boost::tuples;
 
     return
-    tuples::push_back<
-        bt::cons<Head, Tail>, Pred
+    tuples::push_back_impl<
+        bt::cons<Head, Tail>, Pred, 0, bt::length< bt::cons<Head, Tail> >::value
     >::apply(t, p);
 }
     

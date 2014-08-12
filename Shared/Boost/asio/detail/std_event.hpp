@@ -2,7 +2,7 @@
 // detail/std_event.hpp
 // ~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2014 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2013 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -36,7 +36,7 @@ class std_event
 public:
   // Constructor.
   std_event()
-    : state_(0)
+    : signalled_(false)
   {
   }
 
@@ -45,48 +45,24 @@ public:
   {
   }
 
-  // Signal the event. (Retained for backward compatibility.)
+  // Signal the event.
   template <typename Lock>
   void signal(Lock& lock)
   {
-    this->signal_all(lock);
-  }
-
-  // Signal all waiters.
-  template <typename Lock>
-  void signal_all(Lock& lock)
-  {
     BOOST_ASIO_ASSERT(lock.locked());
     (void)lock;
-    state_ |= 1;
-    cond_.notify_all();
+    signalled_ = true;
+    cond_.notify_one();
   }
 
-  // Unlock the mutex and signal one waiter.
+  // Signal the event and unlock the mutex.
   template <typename Lock>
-  void unlock_and_signal_one(Lock& lock)
+  void signal_and_unlock(Lock& lock)
   {
     BOOST_ASIO_ASSERT(lock.locked());
-    state_ |= 1;
-    bool have_waiters = (state_ > 1);
+    signalled_ = true;
     lock.unlock();
-    if (have_waiters)
-      cond_.notify_one();
-  }
-
-  // If there's a waiter, unlock the mutex and signal it.
-  template <typename Lock>
-  bool maybe_unlock_and_signal_one(Lock& lock)
-  {
-    BOOST_ASIO_ASSERT(lock.locked());
-    state_ |= 1;
-    if (state_ > 1)
-    {
-      lock.unlock();
-      cond_.notify_one();
-      return true;
-    }
-    return false;
+    cond_.notify_one();
   }
 
   // Reset the event.
@@ -95,7 +71,7 @@ public:
   {
     BOOST_ASIO_ASSERT(lock.locked());
     (void)lock;
-    state_ &= ~std::size_t(1);
+    signalled_ = false;
   }
 
   // Wait for the event to become signalled.
@@ -104,11 +80,8 @@ public:
   {
     BOOST_ASIO_ASSERT(lock.locked());
     unique_lock_adapter u_lock(lock);
-    while ((state_ & 1) == 0)
-    {
-      waiter w(state_);
+    while (!signalled_)
       cond_.wait(u_lock.unique_lock_);
-    }
   }
 
   // Timed wait for the event to become signalled.
@@ -117,12 +90,9 @@ public:
   {
     BOOST_ASIO_ASSERT(lock.locked());
     unique_lock_adapter u_lock(lock);
-    if ((state_ & 1) == 0)
-    {
-      waiter w(state_);
+    if (!signalled_)
       cond_.wait_for(u_lock.unique_lock_, std::chrono::microseconds(usec));
-    }
-    return (state_ & 1) != 0;
+    return signalled_;
   }
 
 private:
@@ -144,27 +114,8 @@ private:
     std::unique_lock<std::mutex> unique_lock_;
   };
 
-  // Helper to increment and decrement the state to track outstanding waiters.
-  class waiter
-  {
-  public:
-    explicit waiter(std::size_t& state)
-      : state_(state)
-    {
-      state_ += 2;
-    }
-
-    ~waiter()
-    {
-      state_ -= 2;
-    }
-
-  private:
-    std::size_t& state_;
-  };
-
   std::condition_variable cond_;
-  std::size_t state_;
+  bool signalled_;
 };
 
 } // namespace detail

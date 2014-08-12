@@ -1,5 +1,5 @@
 /*
- *          Copyright Andrey Semashev 2007 - 2014.
+ *          Copyright Andrey Semashev 2007 - 2013.
  * Distributed under the Boost Software License, Version 1.0.
  *    (See accompanying file LICENSE_1_0.txt or copy at
  *          http://www.boost.org/LICENSE_1_0.txt)
@@ -368,12 +368,12 @@ public:
     /*!
      * Checks if the section refers to the container.
      */
-    BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
+    BOOST_EXPLICIT_OPERATOR_BOOL()
 
     /*!
      * Checks if the section refers to the container.
      */
-    bool operator! () const BOOST_NOEXCEPT { return !m_ptree; }
+    bool operator! () const { return !m_ptree; }
 
     /*!
      * Returns an iterator over the nested subsections and parameters.

@@ -7,7 +7,6 @@
 #if !defined(FUSION_ITERATOR_ADAPTER_08112011_0942)
 #define FUSION_ITERATOR_ADAPTER_08112011_0942
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/iterator/detail/advance.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/type_traits/remove_const.hpp>
@@ -24,7 +23,6 @@ namespace boost { namespace fusion
         iterator_base_type;
         iterator_base_type iterator_base;
 
-        BOOST_FUSION_GPU_ENABLED
         iterator_adapter(iterator_base_type const& iterator_base_)
             : iterator_base(iterator_base_) {}
 
@@ -47,7 +45,6 @@ namespace boost { namespace fusion
                 >::type>::type
             type;
 
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(Iterator const& it)
             {
@@ -82,7 +79,6 @@ namespace boost { namespace fusion
                 >::type
             type;
 
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(Iterator const& it)
             {
@@ -100,7 +96,6 @@ namespace boost { namespace fusion
                 >::type>::type
             type;
 
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(Iterator const& i)
             {
@@ -118,7 +113,6 @@ namespace boost { namespace fusion
                 >::type>::type
             type;
 
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(Iterator const& i)
             {

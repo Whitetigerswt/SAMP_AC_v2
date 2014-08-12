@@ -1,13 +1,8 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
 
-// Copyright (c) 2007-2014 Barend Gehrels, Amsterdam, the Netherlands.
-// Copyright (c) 2008-2014 Bruno Lalande, Paris, France.
-// Copyright (c) 2009-2014 Mateusz Loskot, London, UK.
-
-// This file was modified by Oracle on 2014.
-// Modifications copyright (c) 2014, Oracle and/or its affiliates.
-
-// Contributed and/or modified by Menelaos Karavelas, on behalf of Oracle
+// Copyright (c) 2007-2012 Barend Gehrels, Amsterdam, the Netherlands.
+// Copyright (c) 2008-2012 Bruno Lalande, Paris, France.
+// Copyright (c) 2009-2012 Mateusz Loskot, London, UK.
 
 // Parts of Boost.Geometry are redesigned from Geodan's Geographic Library
 // (geolib/GGL), copyright (c) 1995-2010 Geodan, Amsterdam, the Netherlands.
@@ -110,7 +105,7 @@ struct range_to_polygon
     typedef typename ring_type<Polygon>::type ring_type;
 
     static inline void apply(Polygon& polygon, Range const& range,
-                int ring_index, int = 0)
+                int ring_index, int )
     {
         if (ring_index == -1)
         {
@@ -199,14 +194,8 @@ struct append<Geometry, RangeOrPoint, point_tag>
     : splitted_dispatch::append_point<typename tag<Geometry>::type, Geometry, RangeOrPoint>
 {};
 
-} // namespace dispatch
-#endif // DOXYGEN_NO_DISPATCH
-
-
-namespace resolve_variant {
-
 template <typename Geometry>
-struct append
+struct devarianted_append
 {
     template <typename RangeOrPoint>
     static inline void apply(Geometry& geometry,
@@ -215,16 +204,16 @@ struct append
                              int multi_index)
     {
         concept::check<Geometry>();
-        dispatch::append<Geometry, RangeOrPoint>::apply(geometry,
-                                                        range_or_point,
-                                                        ring_index,
-                                                        multi_index);
+        append<Geometry, RangeOrPoint>::apply(geometry,
+                                              range_or_point,
+                                              ring_index,
+                                              multi_index);
     }
 };
 
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
-struct append<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
+struct devarianted_append<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
     template <typename RangeOrPoint>
     struct visitor: boost::static_visitor<void>
@@ -232,7 +221,7 @@ struct append<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
         RangeOrPoint const& m_range_or_point;
         int m_ring_index;
         int m_multi_index;
-
+    
         visitor(RangeOrPoint const& range_or_point,
                 int ring_index,
                 int multi_index):
@@ -240,14 +229,15 @@ struct append<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
             m_ring_index(ring_index),
             m_multi_index(multi_index)
         {}
-
+    
         template <typename Geometry>
         void operator()(Geometry& geometry) const
         {
-            append<Geometry>::apply(geometry,
-                                    m_range_or_point,
-                                    m_ring_index,
-                                    m_multi_index);
+            concept::check<Geometry>();
+            append<Geometry, RangeOrPoint>::apply(geometry,
+                                                  m_range_or_point,
+                                                  m_ring_index,
+                                                  m_multi_index);
         }
     };
 
@@ -268,7 +258,9 @@ struct append<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
     }
 };
 
-} // namespace resolve_variant;
+
+} // namespace dispatch
+#endif // DOXYGEN_NO_DISPATCH
 
 
 /*!
@@ -280,7 +272,7 @@ struct append<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 \param range_or_point The point or range to add
 \param ring_index The index of the ring in case of a polygon:
     exterior ring (-1, the default) or  interior ring index
-\param multi_index The index of the geometry to which the points are appended
+\param multi_index Reserved for multi polygons or multi linestrings
 
 \qbk{[include reference/algorithms/append.qbk]}
 }
@@ -289,8 +281,8 @@ template <typename Geometry, typename RangeOrPoint>
 inline void append(Geometry& geometry, RangeOrPoint const& range_or_point,
                    int ring_index = -1, int multi_index = 0)
 {
-    resolve_variant::append<Geometry>
-                   ::apply(geometry, range_or_point, ring_index, multi_index);
+    dispatch::devarianted_append<Geometry>
+            ::apply(geometry, range_or_point, ring_index, multi_index);
 }
 
 

@@ -16,7 +16,7 @@
 
 
 #include <boost/mpl/assert.hpp>
-#include <boost/range/value_type.hpp>
+#include <boost/type_traits.hpp>
 
 #include <boost/geometry/core/ring_type.hpp>
 #include <boost/geometry/core/tag.hpp>
@@ -33,8 +33,7 @@ namespace dispatch
 {
 
 
-template <typename Geometry,
-          typename Tag = typename tag<Geometry>::type>
+template <typename GeometryTag, typename Geometry>
 struct range_type
 {
     BOOST_MPL_ASSERT_MSG
@@ -46,56 +45,28 @@ struct range_type
 
 
 template <typename Geometry>
-struct range_type<Geometry, ring_tag>
+struct range_type<ring_tag, Geometry>
+{
+    typedef Geometry type;
+};
+
+template <typename Geometry>
+struct range_type<linestring_tag, Geometry>
 {
     typedef Geometry type;
 };
 
 
 template <typename Geometry>
-struct range_type<Geometry, linestring_tag>
-{
-    typedef Geometry type;
-};
-
-
-template <typename Geometry>
-struct range_type<Geometry, polygon_tag>
+struct range_type<polygon_tag, Geometry>
 {
     typedef typename ring_type<Geometry>::type type;
 };
 
-
 template <typename Geometry>
-struct range_type<Geometry, box_tag>
+struct range_type<box_tag, Geometry>
 {
     typedef box_view<Geometry> type;
-};
-
-
-// multi-point acts itself as a range
-template <typename Geometry>
-struct range_type<Geometry, multi_point_tag>
-{
-    typedef Geometry type;
-};
-
-
-template <typename Geometry>
-struct range_type<Geometry, multi_linestring_tag>
-{
-    typedef typename boost::range_value<Geometry>::type type;
-};
-
-
-template <typename Geometry>
-struct range_type<Geometry, multi_polygon_tag>
-{
-    // Call its single-version
-    typedef typename dispatch::range_type
-        <
-            typename boost::range_value<Geometry>::type
-        >::type type;
 };
 
 
@@ -122,6 +93,7 @@ struct range_type
 {
     typedef typename dispatch::range_type
         <
+            typename tag<Geometry>::type,
             Geometry
         >::type type;
 };

@@ -58,7 +58,6 @@ namespace boost { namespace fusion
         struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)
         {
             template<typename State, typename It0, typename F>
-            BOOST_FUSION_GPU_ENABLED
             static Result
             call(State const& state,It0 const& it0,F f)
             {
@@ -104,7 +103,6 @@ namespace boost { namespace fusion
         struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<Result,3>
         {
             template<typename State, typename It0, typename F>
-            BOOST_FUSION_GPU_ENABLED
             static Result
             call(State const& state,It0 const& it0,F f)
             {
@@ -135,7 +133,6 @@ namespace boost { namespace fusion
         struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<Result,2>
         {
             template<typename State, typename It0, typename F>
-            BOOST_FUSION_GPU_ENABLED
             static Result
             call(State const& state,It0 const& it0,F f)
             {
@@ -153,7 +150,6 @@ namespace boost { namespace fusion
         struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<Result,1>
         {
             template<typename State, typename It0, typename F>
-            BOOST_FUSION_GPU_ENABLED
             static Result
             call(State const& state,It0 const& it0,F f)
             {
@@ -166,9 +162,8 @@ namespace boost { namespace fusion
         struct BOOST_PP_CAT(unrolled_,BOOST_FUSION_FOLD_NAME)<Result,0>
         {
             template<typename State, typename It0, typename F>
-            BOOST_FUSION_GPU_ENABLED
             static Result
-            call(State const& state,It0 const&, F)
+            call(State const& state,It0 const& it0, F)
             {
                 return static_cast<Result>(state);
             }
@@ -345,7 +340,6 @@ namespace boost { namespace fusion
                 >::type
             type;
 
-            BOOST_FUSION_GPU_ENABLED
             static type
             call(StateRef state, Seq& seq, F f)
             {
@@ -369,7 +363,6 @@ namespace boost { namespace fusion
         {
             typedef StateRef type;
 
-            BOOST_FUSION_GPU_ENABLED
             static StateRef
             call(StateRef state, Seq&, F)
             {
@@ -404,7 +397,6 @@ namespace boost { namespace fusion
     }
 
     template<typename Seq, typename State, typename F>
-    BOOST_FUSION_GPU_ENABLED
     inline typename result_of::BOOST_FUSION_FOLD_NAME<
         Seq
       , State const
@@ -419,7 +411,6 @@ namespace boost { namespace fusion
     }
 
     template<typename Seq, typename State, typename F>
-    BOOST_FUSION_GPU_ENABLED
     inline typename result_of::BOOST_FUSION_FOLD_NAME<
         Seq const
       , State const
@@ -434,7 +425,6 @@ namespace boost { namespace fusion
     }
 
     template<typename Seq, typename State, typename F>
-    BOOST_FUSION_GPU_ENABLED
     inline typename result_of::BOOST_FUSION_FOLD_NAME<
         Seq
       , State const
@@ -449,7 +439,6 @@ namespace boost { namespace fusion
     }
 
     template<typename Seq, typename State, typename F>
-    BOOST_FUSION_GPU_ENABLED
     inline typename result_of::BOOST_FUSION_FOLD_NAME<
         Seq const
       , State const

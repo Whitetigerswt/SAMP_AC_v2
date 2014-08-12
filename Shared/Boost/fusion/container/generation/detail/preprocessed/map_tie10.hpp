@@ -23,7 +23,7 @@ namespace boost { namespace fusion
             typedef map<> type;
         };
     }
-    BOOST_FUSION_GPU_ENABLED inline map<>
+    inline map<>
     map_tie()
     {
         return map<>();
@@ -34,7 +34,7 @@ namespace boost { namespace fusion
             typename K0
           , typename D0
         >
-        struct map_tie<K0, D0 , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_>
+        struct map_tie<K0, D0>
         {
             typedef map<fusion::pair< K0 , typename add_reference<D0>::type> > type;
         };
@@ -43,7 +43,6 @@ namespace boost { namespace fusion
         typename K0
       , typename D0
     >
-    BOOST_FUSION_GPU_ENABLED
     inline map<fusion::pair< K0 , typename add_reference<D0>::type> >
     map_tie(D0 & _0)
     {
@@ -56,7 +55,7 @@ namespace boost { namespace fusion
             typename K0 , typename K1
           , typename D0 , typename D1
         >
-        struct map_tie<K0 , K1, D0 , D1 , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_>
+        struct map_tie<K0 , K1, D0 , D1>
         {
             typedef map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> > type;
         };
@@ -65,7 +64,6 @@ namespace boost { namespace fusion
         typename K0 , typename K1
       , typename D0 , typename D1
     >
-    BOOST_FUSION_GPU_ENABLED
     inline map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> >
     map_tie(D0 & _0 , D1 & _1)
     {
@@ -78,7 +76,7 @@ namespace boost { namespace fusion
             typename K0 , typename K1 , typename K2
           , typename D0 , typename D1 , typename D2
         >
-        struct map_tie<K0 , K1 , K2, D0 , D1 , D2 , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_>
+        struct map_tie<K0 , K1 , K2, D0 , D1 , D2>
         {
             typedef map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> > type;
         };
@@ -87,7 +85,6 @@ namespace boost { namespace fusion
         typename K0 , typename K1 , typename K2
       , typename D0 , typename D1 , typename D2
     >
-    BOOST_FUSION_GPU_ENABLED
     inline map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> >
     map_tie(D0 & _0 , D1 & _1 , D2 & _2)
     {
@@ -100,7 +97,7 @@ namespace boost { namespace fusion
             typename K0 , typename K1 , typename K2 , typename K3
           , typename D0 , typename D1 , typename D2 , typename D3
         >
-        struct map_tie<K0 , K1 , K2 , K3, D0 , D1 , D2 , D3 , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_>
+        struct map_tie<K0 , K1 , K2 , K3, D0 , D1 , D2 , D3>
         {
             typedef map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> > type;
         };
@@ -109,7 +106,6 @@ namespace boost { namespace fusion
         typename K0 , typename K1 , typename K2 , typename K3
       , typename D0 , typename D1 , typename D2 , typename D3
     >
-    BOOST_FUSION_GPU_ENABLED
     inline map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> >
     map_tie(D0 & _0 , D1 & _1 , D2 & _2 , D3 & _3)
     {
@@ -122,7 +118,7 @@ namespace boost { namespace fusion
             typename K0 , typename K1 , typename K2 , typename K3 , typename K4
           , typename D0 , typename D1 , typename D2 , typename D3 , typename D4
         >
-        struct map_tie<K0 , K1 , K2 , K3 , K4, D0 , D1 , D2 , D3 , D4 , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_>
+        struct map_tie<K0 , K1 , K2 , K3 , K4, D0 , D1 , D2 , D3 , D4>
         {
             typedef map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> > type;
         };
@@ -131,7 +127,6 @@ namespace boost { namespace fusion
         typename K0 , typename K1 , typename K2 , typename K3 , typename K4
       , typename D0 , typename D1 , typename D2 , typename D3 , typename D4
     >
-    BOOST_FUSION_GPU_ENABLED
     inline map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> >
     map_tie(D0 & _0 , D1 & _1 , D2 & _2 , D3 & _3 , D4 & _4)
     {
@@ -144,7 +139,7 @@ namespace boost { namespace fusion
             typename K0 , typename K1 , typename K2 , typename K3 , typename K4 , typename K5
           , typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5
         >
-        struct map_tie<K0 , K1 , K2 , K3 , K4 , K5, D0 , D1 , D2 , D3 , D4 , D5 , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_ , void_>
+        struct map_tie<K0 , K1 , K2 , K3 , K4 , K5, D0 , D1 , D2 , D3 , D4 , D5>
         {
             typedef map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> , fusion::pair< K5 , typename add_reference<D5>::type> > type;
         };
@@ -153,7 +148,6 @@ namespace boost { namespace fusion
         typename K0 , typename K1 , typename K2 , typename K3 , typename K4 , typename K5
       , typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5
     >
-    BOOST_FUSION_GPU_ENABLED
     inline map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> , fusion::pair< K5 , typename add_reference<D5>::type> >
     map_tie(D0 & _0 , D1 & _1 , D2 & _2 , D3 & _3 , D4 & _4 , D5 & _5)
     {
@@ -166,7 +160,7 @@ namespace boost { namespace fusion
             typename K0 , typename K1 , typename K2 , typename K3 , typename K4 , typename K5 , typename K6
           , typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6
         >
-        struct map_tie<K0 , K1 , K2 , K3 , K4 , K5 , K6, D0 , D1 , D2 , D3 , D4 , D5 , D6 , void_ , void_ , void_ , void_ , void_ , void_ , void_>
+        struct map_tie<K0 , K1 , K2 , K3 , K4 , K5 , K6, D0 , D1 , D2 , D3 , D4 , D5 , D6>
         {
             typedef map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> , fusion::pair< K5 , typename add_reference<D5>::type> , fusion::pair< K6 , typename add_reference<D6>::type> > type;
         };
@@ -175,7 +169,6 @@ namespace boost { namespace fusion
         typename K0 , typename K1 , typename K2 , typename K3 , typename K4 , typename K5 , typename K6
       , typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6
     >
-    BOOST_FUSION_GPU_ENABLED
     inline map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> , fusion::pair< K5 , typename add_reference<D5>::type> , fusion::pair< K6 , typename add_reference<D6>::type> >
     map_tie(D0 & _0 , D1 & _1 , D2 & _2 , D3 & _3 , D4 & _4 , D5 & _5 , D6 & _6)
     {
@@ -188,7 +181,7 @@ namespace boost { namespace fusion
             typename K0 , typename K1 , typename K2 , typename K3 , typename K4 , typename K5 , typename K6 , typename K7
           , typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7
         >
-        struct map_tie<K0 , K1 , K2 , K3 , K4 , K5 , K6 , K7, D0 , D1 , D2 , D3 , D4 , D5 , D6 , D7 , void_ , void_ , void_ , void_ , void_>
+        struct map_tie<K0 , K1 , K2 , K3 , K4 , K5 , K6 , K7, D0 , D1 , D2 , D3 , D4 , D5 , D6 , D7>
         {
             typedef map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> , fusion::pair< K5 , typename add_reference<D5>::type> , fusion::pair< K6 , typename add_reference<D6>::type> , fusion::pair< K7 , typename add_reference<D7>::type> > type;
         };
@@ -197,7 +190,6 @@ namespace boost { namespace fusion
         typename K0 , typename K1 , typename K2 , typename K3 , typename K4 , typename K5 , typename K6 , typename K7
       , typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7
     >
-    BOOST_FUSION_GPU_ENABLED
     inline map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> , fusion::pair< K5 , typename add_reference<D5>::type> , fusion::pair< K6 , typename add_reference<D6>::type> , fusion::pair< K7 , typename add_reference<D7>::type> >
     map_tie(D0 & _0 , D1 & _1 , D2 & _2 , D3 & _3 , D4 & _4 , D5 & _5 , D6 & _6 , D7 & _7)
     {
@@ -210,7 +202,7 @@ namespace boost { namespace fusion
             typename K0 , typename K1 , typename K2 , typename K3 , typename K4 , typename K5 , typename K6 , typename K7 , typename K8
           , typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 , typename D8
         >
-        struct map_tie<K0 , K1 , K2 , K3 , K4 , K5 , K6 , K7 , K8, D0 , D1 , D2 , D3 , D4 , D5 , D6 , D7 , D8 , void_ , void_ , void_>
+        struct map_tie<K0 , K1 , K2 , K3 , K4 , K5 , K6 , K7 , K8, D0 , D1 , D2 , D3 , D4 , D5 , D6 , D7 , D8>
         {
             typedef map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> , fusion::pair< K5 , typename add_reference<D5>::type> , fusion::pair< K6 , typename add_reference<D6>::type> , fusion::pair< K7 , typename add_reference<D7>::type> , fusion::pair< K8 , typename add_reference<D8>::type> > type;
         };
@@ -219,7 +211,6 @@ namespace boost { namespace fusion
         typename K0 , typename K1 , typename K2 , typename K3 , typename K4 , typename K5 , typename K6 , typename K7 , typename K8
       , typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 , typename D8
     >
-    BOOST_FUSION_GPU_ENABLED
     inline map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> , fusion::pair< K5 , typename add_reference<D5>::type> , fusion::pair< K6 , typename add_reference<D6>::type> , fusion::pair< K7 , typename add_reference<D7>::type> , fusion::pair< K8 , typename add_reference<D8>::type> >
     map_tie(D0 & _0 , D1 & _1 , D2 & _2 , D3 & _3 , D4 & _4 , D5 & _5 , D6 & _6 , D7 & _7 , D8 & _8)
     {
@@ -232,7 +223,7 @@ namespace boost { namespace fusion
             typename K0 , typename K1 , typename K2 , typename K3 , typename K4 , typename K5 , typename K6 , typename K7 , typename K8 , typename K9
           , typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 , typename D8 , typename D9
         >
-        struct map_tie<K0 , K1 , K2 , K3 , K4 , K5 , K6 , K7 , K8 , K9, D0 , D1 , D2 , D3 , D4 , D5 , D6 , D7 , D8 , D9 , void_>
+        struct map_tie<K0 , K1 , K2 , K3 , K4 , K5 , K6 , K7 , K8 , K9, D0 , D1 , D2 , D3 , D4 , D5 , D6 , D7 , D8 , D9>
         {
             typedef map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> , fusion::pair< K5 , typename add_reference<D5>::type> , fusion::pair< K6 , typename add_reference<D6>::type> , fusion::pair< K7 , typename add_reference<D7>::type> , fusion::pair< K8 , typename add_reference<D8>::type> , fusion::pair< K9 , typename add_reference<D9>::type> > type;
         };
@@ -241,7 +232,6 @@ namespace boost { namespace fusion
         typename K0 , typename K1 , typename K2 , typename K3 , typename K4 , typename K5 , typename K6 , typename K7 , typename K8 , typename K9
       , typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 , typename D8 , typename D9
     >
-    BOOST_FUSION_GPU_ENABLED
     inline map<fusion::pair< K0 , typename add_reference<D0>::type> , fusion::pair< K1 , typename add_reference<D1>::type> , fusion::pair< K2 , typename add_reference<D2>::type> , fusion::pair< K3 , typename add_reference<D3>::type> , fusion::pair< K4 , typename add_reference<D4>::type> , fusion::pair< K5 , typename add_reference<D5>::type> , fusion::pair< K6 , typename add_reference<D6>::type> , fusion::pair< K7 , typename add_reference<D7>::type> , fusion::pair< K8 , typename add_reference<D8>::type> , fusion::pair< K9 , typename add_reference<D9>::type> >
     map_tie(D0 & _0 , D1 & _1 , D2 & _2 , D3 & _3 , D4 & _4 , D5 & _5 , D6 & _6 , D7 & _7 , D8 & _8 , D9 & _9)
     {

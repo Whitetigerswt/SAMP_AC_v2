@@ -8,7 +8,7 @@
 //
 //  File        : $RCSfile$
 //
-//  Version     : $Revision$
+//  Version     : $Revision: 57992 $
 //
 //  Description : defines abstract monitor interfaces and implements execution exception
 //  The original Boost Test Library included an implementation detail function

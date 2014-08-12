@@ -34,8 +34,8 @@ class null_index
    /// @endcond
 
    public:
-   typedef int * iterator;
-   typedef const int * const_iterator;
+   typedef void * iterator;
+   typedef const void * const_iterator;
 
    //!begin() is equal
    //!to end()

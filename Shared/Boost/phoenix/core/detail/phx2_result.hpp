@@ -23,13 +23,13 @@ namespace boost { namespace phoenix {
             typedef char (&no)[2];
 
             template <typename A>
-            static yes check_(typename A::type *);
+            static yes check(typename A::type *);
             
             
             template <typename A>
-            static no check_(...);
+            static no check(...);
 
-            static bool const value = (sizeof(yes) == sizeof(check_<Result>(0)));
+            static bool const value = (sizeof(yes) == sizeof(check<Result>(0)));
             typedef boost::mpl::bool_<value> type;
         };
 

@@ -433,7 +433,7 @@ void
 delta_stepping_impl<Graph, PredecessorMap, DistanceMap, EdgeWeightMap>::
 synchronize()
 {
-  using boost::parallel::synchronize;
+  using boost::graph::parallel::synchronize;
 
   // Synchronize at the process group level.
   synchronize(pg);

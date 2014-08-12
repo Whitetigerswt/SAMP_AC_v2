@@ -46,7 +46,7 @@ class point_data {
   }
 
   template <typename PointType>
-  point_data(const PointType& that) {
+  explicit point_data(const PointType& that) {
     *this = that;
   }
 

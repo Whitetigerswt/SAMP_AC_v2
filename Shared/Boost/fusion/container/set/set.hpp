@@ -7,7 +7,6 @@
 #if !defined(FUSION_SET_09162005_1104)
 #define FUSION_SET_09162005_1104
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/detail/access.hpp>
@@ -63,19 +62,16 @@ namespace boost { namespace fusion
 
         typedef typename storage_type::size size;
 
-        BOOST_FUSION_GPU_ENABLED
         set()
             : data() {}
 
         template <typename Sequence>
-        BOOST_FUSION_GPU_ENABLED
         set(Sequence const& rhs)
             : data(rhs) {}
 
         #include <boost/fusion/container/set/detail/set_forward_ctor.hpp>
 
         template <typename T>
-        BOOST_FUSION_GPU_ENABLED
         set&
         operator=(T const& rhs)
         {
@@ -83,9 +79,7 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        BOOST_FUSION_GPU_ENABLED
         storage_type& get_data() { return data; }
-        BOOST_FUSION_GPU_ENABLED
         storage_type const& get_data() const { return data; }
 
     private:

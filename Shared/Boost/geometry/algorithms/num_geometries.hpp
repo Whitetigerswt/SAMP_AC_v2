@@ -17,8 +17,6 @@
 
 #include <cstddef>
 
-#include <boost/range.hpp>
-
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 #include <boost/geometry/core/tag.hpp>
@@ -60,15 +58,6 @@ struct num_geometries<Geometry, single_tag>
     }
 };
 
-
-template <typename MultiGeometry>
-struct num_geometries<MultiGeometry, multi_tag>
-{
-    static inline std::size_t apply(MultiGeometry const& multi_geometry)
-    {
-        return boost::size(multi_geometry);
-    }
-};
 
 
 } // namespace dispatch

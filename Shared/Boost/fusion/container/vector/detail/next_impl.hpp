@@ -7,7 +7,6 @@
 #if !defined(FUSION_NEXT_IMPL_05042005_1058)
 #define FUSION_NEXT_IMPL_05042005_1058
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/container/vector/vector_iterator.hpp>
 
 namespace boost { namespace fusion
@@ -31,7 +30,6 @@ namespace boost { namespace fusion
                 typedef typename Iterator::index index;
                 typedef vector_iterator<vector, index::value+1> type;
 
-                BOOST_FUSION_GPU_ENABLED
                 static type
                 call(Iterator const& i)
                 {

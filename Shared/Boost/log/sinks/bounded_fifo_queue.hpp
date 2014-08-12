@@ -1,5 +1,5 @@
 /*
- *          Copyright Andrey Semashev 2007 - 2014.
+ *          Copyright Andrey Semashev 2007 - 2013.
  * Distributed under the Boost Software License, Version 1.0.
  *    (See accompanying file LICENSE_1_0.txt or copy at
  *          http://www.boost.org/LICENSE_1_0.txt)
@@ -139,7 +139,8 @@ protected:
         {
             rec.swap(m_queue.front());
             m_queue.pop();
-            overflow_strategy::on_queue_space_available();
+            if (size == MaxQueueSizeV)
+                overflow_strategy::on_queue_space_available();
             return true;
         }
 
@@ -158,7 +159,8 @@ protected:
             {
                 rec.swap(m_queue.front());
                 m_queue.pop();
-                overflow_strategy::on_queue_space_available();
+                if (size == MaxQueueSizeV)
+                    overflow_strategy::on_queue_space_available();
                 return true;
             }
             else

@@ -12,6 +12,9 @@
 #define BOOST_LOCKFREE_FIFO_HPP_INCLUDED
 
 #include <boost/assert.hpp>
+#ifdef BOOST_NO_CXX11_DELETED_FUNCTIONS
+#include <boost/noncopyable.hpp>
+#endif
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/has_trivial_assign.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
@@ -21,11 +24,6 @@
 #include <boost/lockfree/detail/freelist.hpp>
 #include <boost/lockfree/detail/parameter.hpp>
 #include <boost/lockfree/detail/tagged_ptr.hpp>
-
-#ifdef BOOST_HAS_PRAGMA_ONCE
-#pragma once
-#endif
-
 
 #if defined(_MSC_VER)
 #pragma warning(push)
@@ -78,6 +76,9 @@ template <typename T,
 template <typename T, ...Options>
 #endif
 class queue
+#ifdef BOOST_NO_CXX11_DELETED_FUNCTIONS
+    : boost::noncopyable
+#endif
 {
 private:
 #ifndef BOOST_DOXYGEN_INVOKED
@@ -144,8 +145,11 @@ private:
 
 #endif
 
-    BOOST_DELETED_FUNCTION(queue(queue const&))
-    BOOST_DELETED_FUNCTION(queue& operator= (queue const&))
+#ifndef BOOST_NO_CXX11_DELETED_FUNCTIONS
+    queue(queue const &) = delete;
+    queue(queue &&)      = delete;
+    const queue& operator=( const queue& ) = delete;
+#endif
 
 public:
     typedef T value_type;

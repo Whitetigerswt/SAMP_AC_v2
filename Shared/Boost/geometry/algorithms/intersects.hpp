@@ -21,9 +21,6 @@
 #include <boost/geometry/algorithms/detail/overlay/self_turn_points.hpp>
 #include <boost/geometry/algorithms/disjoint.hpp>
 
-#include <boost/geometry/policies/robustness/segment_ratio_type.hpp>
-#include <boost/geometry/policies/robustness/get_rescale_policy.hpp>
-
 
 namespace boost { namespace geometry
 {
@@ -46,31 +43,37 @@ inline bool intersects(Geometry const& geometry)
 {
     concept::check<Geometry const>();
 
-    typedef typename geometry::point_type<Geometry>::type point_type;
-    typedef typename rescale_policy_type<point_type>::type
-        rescale_policy_type;
 
     typedef detail::overlay::turn_info
         <
-            point_type,
-            typename segment_ratio_type<point_type, rescale_policy_type>::type
+            typename geometry::point_type<Geometry>::type
         > turn_info;
-
     std::deque<turn_info> turns;
+
+    typedef typename strategy_intersection
+        <
+            typename cs_tag<Geometry>::type,
+            Geometry,
+            Geometry,
+            typename geometry::point_type<Geometry>::type
+        >::segment_intersection_strategy_type segment_intersection_strategy_type;
 
     typedef detail::overlay::get_turn_info
         <
+            typename point_type<Geometry>::type,
+            typename point_type<Geometry>::type,
+            turn_info,
             detail::overlay::assign_null_policy
-        > turn_policy;
-
-    rescale_policy_type robust_policy
-        = geometry::get_rescale_policy<rescale_policy_type>(geometry);
+        > TurnPolicy;
 
     detail::disjoint::disjoint_interrupt_policy policy;
     detail::self_get_turn_points::get_turns
-        <
-            turn_policy
-        >::apply(geometry, robust_policy, turns, policy);
+            <
+                Geometry,
+                std::deque<turn_info>,
+                TurnPolicy,
+                detail::disjoint::disjoint_interrupt_policy
+            >::apply(geometry, turns, policy);
     return policy.has_intersections;
 }
 

@@ -1,11 +1,6 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
 
-// Copyright (c) 2007-2014 Barend Gehrels, Amsterdam, the Netherlands.
-
-// This file was modified by Oracle on 2014.
-// Modifications copyright (c) 2014 Oracle and/or its affiliates.
-
-// Contributed and/or modified by Menelaos Karavelas, on behalf of Oracle
+// Copyright (c) 2007-2012 Barend Gehrels, Amsterdam, the Netherlands.
 
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -15,30 +10,24 @@
 #define BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_COPY_SEGMENTS_HPP
 
 
+#include <boost/array.hpp>
+#include <boost/mpl/assert.hpp>
 #include <vector>
 
-#include <boost/array.hpp>
 #include <boost/assert.hpp>
-#include <boost/mpl/assert.hpp>
 #include <boost/range.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 
 #include <boost/geometry/core/tags.hpp>
 
 #include <boost/geometry/core/ring_type.hpp>
 #include <boost/geometry/core/exterior_ring.hpp>
 #include <boost/geometry/core/interior_rings.hpp>
-#include <boost/geometry/core/ring_type.hpp>
-#include <boost/geometry/core/tags.hpp>
-#include <boost/geometry/algorithms/not_implemented.hpp>
 #include <boost/geometry/geometries/concepts/check.hpp>
 #include <boost/geometry/iterators/ever_circling_iterator.hpp>
 #include <boost/geometry/views/closeable_view.hpp>
 #include <boost/geometry/views/reversible_view.hpp>
 
-#include <boost/geometry/algorithms/detail/overlay/append_no_duplicates.hpp>
 #include <boost/geometry/algorithms/detail/overlay/append_no_dups_or_spikes.hpp>
-
 
 namespace boost { namespace geometry
 {
@@ -49,37 +38,34 @@ namespace detail { namespace copy_segments
 {
 
 
-template <bool Reverse>
+template
+<
+    typename Ring,
+    bool Reverse,
+    typename SegmentIdentifier,
+    typename RangeOut
+>
 struct copy_segments_ring
 {
-    template
-    <
-        typename Ring,
-        typename SegmentIdentifier,
-        typename RobustPolicy,
-        typename RangeOut
-    >
-    static inline void apply(Ring const& ring,
-            SegmentIdentifier const& seg_id, int to_index,
-            RobustPolicy const& robust_policy,
-            RangeOut& current_output)
-    {
-        typedef typename closeable_view
+    typedef typename closeable_view
         <
             Ring const,
             closure<Ring>::value
         >::type cview_type;
 
-        typedef typename reversible_view
+    typedef typename reversible_view
         <
             cview_type const,
             Reverse ? iterate_reverse : iterate_forward
         >::type rview_type;
 
-        typedef typename boost::range_iterator<rview_type const>::type iterator;
-        typedef geometry::ever_circling_iterator<iterator> ec_iterator;
+    typedef typename boost::range_iterator<rview_type const>::type iterator;
+    typedef geometry::ever_circling_iterator<iterator> ec_iterator;
 
-
+    static inline void apply(Ring const& ring,
+            SegmentIdentifier const& seg_id, int to_index,
+            RangeOut& current_output)
+    {
         cview_type cview(ring);
         rview_type view(cview);
 
@@ -107,55 +93,31 @@ struct copy_segments_ring
 
         for (size_type i = 0; i < count; ++i, ++it)
         {
-            detail::overlay::append_no_dups_or_spikes(current_output, *it, robust_policy);
+            detail::overlay::append_no_dups_or_spikes(current_output, *it);
         }
     }
 };
 
-template <bool Reverse, bool RemoveSpikes = true>
-class copy_segments_linestring
+template
+<
+    typename LineString,
+    bool Reverse,
+    typename SegmentIdentifier,
+    typename RangeOut
+>
+struct copy_segments_linestring
 {
-private:
-    // remove spikes
-    template <typename RangeOut, typename Point, typename RobustPolicy>
-    static inline void append_to_output(RangeOut& current_output,
-                                        Point const& point,
-                                        RobustPolicy const& robust_policy,
-                                        boost::true_type const&)
-    {
-        detail::overlay::append_no_dups_or_spikes(current_output, point,
-                                                  robust_policy);
-    }
 
-    // keep spikes
-    template <typename RangeOut, typename Point, typename RobustPolicy>
-    static inline void append_to_output(RangeOut& current_output,
-                                        Point const& point,
-                                        RobustPolicy const&,
-                                        boost::false_type const&)
-    {
-        detail::overlay::append_no_duplicates(current_output, point);
-    }
+    typedef typename boost::range_iterator<LineString const>::type iterator;
 
-public:
-    template
-    <
-        typename LineString,
-        typename SegmentIdentifier,
-        typename RobustPolicy,
-        typename RangeOut
-    >
     static inline void apply(LineString const& ls,
             SegmentIdentifier const& seg_id, int to_index,
-            RobustPolicy const& robust_policy,
             RangeOut& current_output)
     {
         int const from_index = seg_id.segment_index + 1;
 
         // Sanity check
-        if ( from_index > to_index
-          || from_index < 0
-          || to_index >= int(boost::size(ls)) )
+        if (from_index > to_index || from_index < 0 || to_index >= int(boost::size(ls)))
         {
             return;
         }
@@ -163,59 +125,58 @@ public:
         typedef typename boost::range_difference<LineString>::type size_type;
         size_type const count = to_index - from_index + 1;
 
-        typename boost::range_iterator<LineString const>::type
-            it = boost::begin(ls) + from_index;
+        typename boost::range_iterator<LineString const>::type it = boost::begin(ls) + from_index;
 
         for (size_type i = 0; i < count; ++i, ++it)
         {
-            append_to_output(current_output, *it, robust_policy,
-                             boost::integral_constant<bool, RemoveSpikes>());
+            detail::overlay::append_no_dups_or_spikes(current_output, *it);
         }
     }
 };
 
-template <bool Reverse>
+template
+<
+    typename Polygon,
+    bool Reverse,
+    typename SegmentIdentifier,
+    typename RangeOut
+>
 struct copy_segments_polygon
 {
-    template
-    <
-        typename Polygon,
-        typename SegmentIdentifier,
-        typename RobustPolicy,
-        typename RangeOut
-    >
     static inline void apply(Polygon const& polygon,
             SegmentIdentifier const& seg_id, int to_index,
-            RobustPolicy const& robust_policy,
             RangeOut& current_output)
     {
         // Call ring-version with the right ring
-        copy_segments_ring<Reverse>::apply
-            (
-                seg_id.ring_index < 0
-                ? geometry::exterior_ring(polygon)
-                : geometry::interior_rings(polygon)[seg_id.ring_index],
-                seg_id, to_index,
-                robust_policy,
-                current_output
-            );
+        copy_segments_ring
+            <
+                typename geometry::ring_type<Polygon>::type,
+                Reverse,
+                SegmentIdentifier,
+                RangeOut
+            >::apply
+                (
+                    seg_id.ring_index < 0
+                    ? geometry::exterior_ring(polygon)
+                    : geometry::interior_rings(polygon)[seg_id.ring_index],
+                    seg_id, to_index,
+                    current_output
+                );
     }
 };
 
 
-template <bool Reverse>
+template
+<
+    typename Box,
+    bool Reverse,
+    typename SegmentIdentifier,
+    typename RangeOut
+>
 struct copy_segments_box
 {
-    template
-    <
-        typename Box,
-        typename SegmentIdentifier,
-        typename RobustPolicy,
-        typename RangeOut
-    >
     static inline void apply(Box const& box,
             SegmentIdentifier const& seg_id, int to_index,
-            RobustPolicy const& robust_policy,
             RangeOut& current_output)
     {
         int index = seg_id.segment_index + 1;
@@ -234,41 +195,9 @@ struct copy_segments_box
         //    (see comments in ring-version)
         for (int i = 0; i < count; i++, index++)
         {
-            detail::overlay::append_no_dups_or_spikes(current_output,
-                bp[index % 5], robust_policy);
+            detail::overlay::append_no_dups_or_spikes(current_output, bp[index % 5]);
 
         }
-    }
-};
-
-
-template<typename Policy>
-struct copy_segments_multi
-{
-    template
-    <
-        typename MultiGeometry,
-        typename SegmentIdentifier,
-        typename RobustPolicy,
-        typename RangeOut
-    >
-    static inline void apply(MultiGeometry const& multi_geometry,
-            SegmentIdentifier const& seg_id, int to_index,
-            RobustPolicy const& robust_policy,
-            RangeOut& current_output)
-    {
-
-        BOOST_ASSERT
-            (
-                seg_id.multi_index >= 0
-                && seg_id.multi_index < int(boost::size(multi_geometry))
-            );
-
-        // Call the single-version
-        Policy::apply(multi_geometry[seg_id.multi_index],
-                    seg_id, to_index,
-                    robust_policy,
-                    current_output);
     }
 };
 
@@ -284,42 +213,80 @@ namespace dispatch
 template
 <
     typename Tag,
-    bool Reverse
+    typename GeometryIn,
+    bool Reverse,
+    typename SegmentIdentifier,
+    typename RangeOut
 >
-struct copy_segments : not_implemented<Tag>
-{};
+struct copy_segments
+{
+    BOOST_MPL_ASSERT_MSG
+        (
+            false, NOT_OR_NOT_YET_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+            , (types<GeometryIn>)
+        );
+};
 
 
-template <bool Reverse>
-struct copy_segments<ring_tag, Reverse>
-    : detail::copy_segments::copy_segments_ring<Reverse>
-{};
-
-
-template <bool Reverse>
-struct copy_segments<linestring_tag, Reverse>
-    : detail::copy_segments::copy_segments_linestring<Reverse>
-{};
-
-template <bool Reverse>
-struct copy_segments<polygon_tag, Reverse>
-    : detail::copy_segments::copy_segments_polygon<Reverse>
-{};
-
-
-template <bool Reverse>
-struct copy_segments<box_tag, Reverse>
-    : detail::copy_segments::copy_segments_box<Reverse>
-{};
-
-
-template<bool Reverse>
-struct copy_segments<multi_polygon_tag, Reverse>
-    : detail::copy_segments::copy_segments_multi
+template
+<
+    typename Ring,
+    bool Reverse,
+    typename SegmentIdentifier,
+    typename RangeOut
+>
+struct copy_segments<ring_tag, Ring, Reverse, SegmentIdentifier, RangeOut>
+    : detail::copy_segments::copy_segments_ring
         <
-            detail::copy_segments::copy_segments_polygon<Reverse>
+            Ring, Reverse, SegmentIdentifier, RangeOut
         >
 {};
+
+
+
+template
+<
+    typename LineString,
+    bool Reverse,
+    typename SegmentIdentifier,
+    typename RangeOut
+>
+struct copy_segments<linestring_tag, LineString, Reverse, SegmentIdentifier, RangeOut>
+    : detail::copy_segments::copy_segments_linestring
+        <
+            LineString, Reverse, SegmentIdentifier, RangeOut
+        >
+{};
+
+template
+<
+    typename Polygon,
+    bool Reverse,
+    typename SegmentIdentifier,
+    typename RangeOut
+>
+struct copy_segments<polygon_tag, Polygon, Reverse, SegmentIdentifier, RangeOut>
+    : detail::copy_segments::copy_segments_polygon
+        <
+            Polygon, Reverse, SegmentIdentifier, RangeOut
+        >
+{};
+
+
+template
+<
+    typename Box,
+    bool Reverse,
+    typename SegmentIdentifier,
+    typename RangeOut
+>
+struct copy_segments<box_tag, Box, Reverse, SegmentIdentifier, RangeOut>
+    : detail::copy_segments::copy_segments_box
+        <
+            Box, Reverse, SegmentIdentifier, RangeOut
+        >
+{};
+
 
 
 } // namespace dispatch
@@ -336,12 +303,10 @@ template
     bool Reverse,
     typename Geometry,
     typename SegmentIdentifier,
-    typename RobustPolicy,
     typename RangeOut
 >
 inline void copy_segments(Geometry const& geometry,
             SegmentIdentifier const& seg_id, int to_index,
-            RobustPolicy const& robust_policy,
             RangeOut& range_out)
 {
     concept::check<Geometry const>();
@@ -349,8 +314,11 @@ inline void copy_segments(Geometry const& geometry,
     dispatch::copy_segments
         <
             typename tag<Geometry>::type,
-            Reverse
-        >::apply(geometry, seg_id, to_index, robust_policy, range_out);
+            Geometry,
+            Reverse,
+            SegmentIdentifier,
+            RangeOut
+        >::apply(geometry, seg_id, to_index, range_out);
 }
 
 

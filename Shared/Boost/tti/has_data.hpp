@@ -7,7 +7,6 @@
 #if !defined(BOOST_TTI_HAS_DATA_HPP)
 #define BOOST_TTI_HAS_DATA_HPP
 
-#include <boost/config.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/tti/gen/has_data_gen.hpp>
@@ -51,15 +50,13 @@
 #define BOOST_TTI_TRAIT_HAS_DATA(trait,name) \
   BOOST_TTI_DETAIL_TRAIT_HAS_DATA(trait,name) \
   template<class BOOST_TTI_TP_T,class BOOST_TTI_TP_TYPE> \
-  struct trait \
-    { \
-    typedef typename \
+  struct trait : \
     BOOST_PP_CAT(trait,_detail_hd) \
       < \
       typename boost::remove_const<BOOST_TTI_TP_T>::type, \
       BOOST_TTI_TP_TYPE \
-      >::type type; \
-    BOOST_STATIC_CONSTANT(bool,value=type::value); \
+      > \
+    { \
     }; \
 /**/
 

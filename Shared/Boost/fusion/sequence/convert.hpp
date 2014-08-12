@@ -20,16 +20,15 @@ namespace boost { namespace fusion
         template <typename Tag, typename Sequence>
         struct convert
         {
-            typedef typename
-                extension::convert_impl<Tag>::template apply<Sequence>
-            gen;
+            typedef typename extension::convert_impl<Tag> gen;
 
-            typedef typename gen::type type;
+            typedef typename
+                gen::template apply<Sequence>::type
+            type;
         };
     }
 
     template <typename Tag, typename Sequence>
-    BOOST_FUSION_GPU_ENABLED
     inline typename result_of::convert<Tag, Sequence>::type
     convert(Sequence& seq)
     {
@@ -38,7 +37,6 @@ namespace boost { namespace fusion
     }
 
     template <typename Tag, typename Sequence>
-    BOOST_FUSION_GPU_ENABLED
     inline typename result_of::convert<Tag, Sequence const>::type
     convert(Sequence const& seq)
     {

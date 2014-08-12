@@ -6,7 +6,7 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-// $Id$
+// $Id: normalize.hpp 83251 2013-03-02 19:23:44Z steven_watanabe $
 
 #ifndef BOOST_TYPE_ERASURE_DETAIL_NORMALIZE_HPP_INCLUDED
 #define BOOST_TYPE_ERASURE_DETAIL_NORMALIZE_HPP_INCLUDED

@@ -7,7 +7,6 @@
 #if !defined(BOOST_FUSION_NVIEW_ITERATOR_SEP_23_2009_0948PM)
 #define BOOST_FUSION_NVIEW_ITERATOR_SEP_23_2009_0948PM
 
-#include <boost/fusion/support/config.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
@@ -42,7 +41,7 @@ namespace boost { namespace fusion
         typedef Sequence sequence_type;
         typedef mpl_iterator<Pos> first_type;
 
-        BOOST_FUSION_GPU_ENABLED explicit nview_iterator(Sequence& in_seq)
+        explicit nview_iterator(Sequence& in_seq)
           : seq(in_seq) {}
 
         Sequence& seq;

@@ -6,9 +6,8 @@
  Base class for all explicit Runge Kutta stepper which are also error steppers.
  [end_description]
 
- Copyright 2010-2013 Karsten Ahnert
- Copyright 2010-2012 Mario Mulansky
- Copyright 2012 Christoph Koke
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -263,7 +262,7 @@ private:
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl<StateInOut> , detail::ref( *this ) , detail::_1 ) );
-        sys( x , m_dxdt.m_v , t );
+        sys( x , m_dxdt.m_v ,t );
         this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );
     }
 

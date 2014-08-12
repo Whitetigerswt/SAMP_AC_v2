@@ -13,9 +13,6 @@
 #ifndef BOOST_INTRUSIVE_MEMBER_VALUE_TRAITS_HPP
 #define BOOST_INTRUSIVE_MEMBER_VALUE_TRAITS_HPP
 
-#include <boost/intrusive/detail/config_begin.hpp>
-#include <boost/intrusive/intrusive_fwd.hpp>
-
 #include <boost/intrusive/link_mode.hpp>
 #include <iterator>
 #include <boost/intrusive/detail/parent_from_member.hpp>
@@ -29,11 +26,7 @@ namespace intrusive {
 //!store a node_traits::node
 template< class T, class NodeTraits
         , typename NodeTraits::node T::* PtrToMember
-        , link_mode_type LinkMode
-   #ifdef BOOST_INTRUSIVE_DOXYGEN_INVOKED
-   = safe_link
-   #endif
->
+        , link_mode_type LinkMode = safe_link>
 struct member_value_traits
 {
    public:
@@ -73,7 +66,5 @@ struct member_value_traits
 
 } //namespace intrusive
 } //namespace boost
-
-#include <boost/intrusive/detail/config_end.hpp>
 
 #endif //BOOST_INTRUSIVE_MEMBER_VALUE_TRAITS_HPP
