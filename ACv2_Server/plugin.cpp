@@ -216,6 +216,36 @@ cell AMX_NATIVE_CALL GetPlayerSwitchReloadProc(AMX* pAmx, cell* pParams)
 	return ac->GetSwitchReload();
 }
 
+cell AMX_NATIVE_CALL TogglePlayerUnlimitedSprintProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(2, "TogglePlayerUnlimitedSprint");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	ac->ToggleUnlimitedSprint(!!pParams[2]);
+
+	return 1;
+}
+
+cell AMX_NATIVE_CALL GetPlayerUnlimitedSprintProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "GetPlayerUnlimitedSprint");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	return ac->GetUnlimitedSprint();
+}
+
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
 	return sampgdk::Supports() | SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
@@ -264,6 +294,8 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "GetPlayerLiteFoot", GetPlayerLiteFootProc },
 	{ "GetPlayerCrouchBug", GetPlayerCrouchBugProc },
 	{ "GetPlayerSwitchReload", GetPlayerSwitchReloadProc },
+	{ "TogglePlayerUnlimitedSprint", TogglePlayerUnlimitedSprintProc },
+	{ "GetPlayerUnlimitedSprint", GetPlayerUnlimitedSprintProc },
 	{ 0, 0 }
 };
 

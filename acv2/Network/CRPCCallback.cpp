@@ -8,6 +8,7 @@
 #include "../Addresses.h"
 #include "../CClientUpdater.h"
 #include "../CHookManager.h"
+#include "../CMem.h"
 
 #include <Boost\thread.hpp>
 
@@ -22,6 +23,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(VERSION_NOT_COMPATIBLE, VersionNotCompatible);
 	CRPC::Add(TOGGLE_CROUCH_BUG, ToggleCrouchBug);
 	CRPC::Add(TOGGLE_LITE_FOOT, ToggleLiteFoot);
+	CRPC::Add(TOGGLE_UNLIMITED_SPRINT, ToggleUnlimitedSprint);
 
 	CHookManager::SetConnectPatches();
 	boost::thread ResendFilesThread(&ResendFileInformation);
@@ -184,5 +186,18 @@ void CRPCCallback::ToggleLiteFoot(RakNet::BitStream &bsData, int iExtra)
 	if (bsData.Read(toggle))
 	{
 		CHookManager::SetLiteFoot(toggle);
+	}
+}
+
+void CRPCCallback::ToggleUnlimitedSprint(RakNet::BitStream &bsData, int iExtra)
+{
+	// Create a new variable to hold the server data.
+	bool toggle;
+
+	// Read the data
+	if (bsData.Read(toggle))
+	{
+		// Set infinite run to what the server wants.
+		CMem::PutSingle<BYTE>(0xB7CEE4, toggle);
 	}
 }

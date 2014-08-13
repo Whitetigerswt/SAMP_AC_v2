@@ -86,9 +86,25 @@ public:
 	// REQUIRES: The client is using AC.
 	void ToggleSwitchReload(bool toggle);
 
-	// PURPOSE: Get the player's switch reload status
+	// PURPOSE: Get the players switch reload status
 	// REQUIRES: NULL
 	bool GetSwitchReload() { return m_SwitchReload; }
+
+	// PURPOSE: Set the players unlimited sprint.
+	// REQUIRES: The client is using AC.
+	void ToggleUnlimitedSprint(bool toggle);
+
+	// PURPOSE: Get the players unlimited sprint
+	// REQUIRES: NULL
+	bool GetUnlimitedSprint() { return m_UnlimitedSprint; }
+
+	// PURPOSE: Called when the player pauses or unpauses, or alt tabs from the game.
+	// REQUIRES: NULL
+	void TogglePause(int iType, bool bPause);
+
+	// PURPOSE: Called when a player takes a screenshot of their game with F8.
+	// REQUIRES: NULL
+	void OnScreenshotTaken();
 
 	CClientSocketInfo* GetConnectionInfo();
 
@@ -109,6 +125,9 @@ private:
 
 	// PURPOSE: Keep track of the players set frame rate.
 	int m_FrameLimit;
+
+	// PURPOSE: Keep track of the players unlimited sprint.
+	bool m_UnlimitedSprint;
 
 	// PURPOSE: Store the player's hardware ID.
 	std::string m_HardwareID;

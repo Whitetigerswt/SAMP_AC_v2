@@ -51,6 +51,14 @@ native TogglePlayerLiteFoot(playerid, bool:toggle);
 // REQUIRES: Nothing
 native GetPlayerLiteFoot(playerid);
 
+// PURPOSE: Toggle the players unlimited sprint.
+// REQUIRES: The player is using AC.
+native TogglePlayerUnlimitedSprint(playerid, bool:toggle);
+
+// PURPOSE: Get the players unlimited sprint status.
+// REQUIRES: Nothing
+native GetPlayerUnlimitedSprint(playerid);
+
 // PURPOSE: Callback for when a new AC connection has been accepted.
 // REQUIRES: The client is using AC.
 forward OnACOpened(ip[]);
@@ -74,6 +82,18 @@ forward OnImgFileModifed(playerid, filename[], md5[]);
 // PURPOSE: Callback for when a file (usually) inside the players GTA directory md5 checksum has been calculated.
 // REQUIRES: The player is using AC.
 forward OnFileCalculated(playerid, filename[], md5[]);
+
+// PURPOSE: Callback for when a player pauses, unpauses, or alt tabs from the game
+// REQUIRES: The player is using AC.
+// Type = 1 (alt tab)
+// Type = 0 (Regular pause)
+// Pause = 1 (pause or alt tabbed)
+// Pause = 0 (Unpause or came back into the game from an alt tab)
+forward OnPlayerPause(playerid, type, bool:pause);
+
+// PURPOSE: Callback for when a player takes a screenshot of their game using F8 only.
+// REQUIRES: The player is using AC.
+forward OnScreenshotTaken(playerid); 
 
 stock TogglePlayerCrouchBug(playerid, bool:toggle)
 {

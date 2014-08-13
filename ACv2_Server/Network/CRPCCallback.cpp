@@ -20,6 +20,8 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_MACRO_DETECTED, OnMacroDetected);
 	CRPC::Add(ON_INITIAL_INFO, OnIntialInfoGotten);
 	CRPC::Add(ON_TAMPER_ATTEMPT, OnTamperAttempt);
+	CRPC::Add(TOGGLE_PAUSE, OnPauseToggled);
+	CRPC::Add(TAKE_SCREENSHOT, OnTakeScreenshot);
 }
 
 
@@ -131,4 +133,22 @@ RPC_CALLBACK CRPCCallback::OnTamperAttempt(RakNet::BitStream &bsData, int iExtra
 {
 	Network::GetPlayerFromPlayerid(iExtra)->OnTamperAttempt();
 	Network::PlayerSendRPC(EXIT_PROCESS, iExtra);
+}
+
+RPC_CALLBACK CRPCCallback::OnPauseToggled(RakNet::BitStream &bsData, int iExtra)
+{
+	// Record the data the client sent us.
+	int iType;
+	bool bPause;
+
+	// Read the data.
+	if (bsData.Read(iType) && bsData.Read(bPause))
+	{
+		Network::GetPlayerFromPlayerid(iExtra)->TogglePause(iType, bPause);
+	}
+}
+
+RPC_CALLBACK CRPCCallback::OnTakeScreenshot(RakNet::BitStream &bsData, int iExtra)
+{
+	Network::GetPlayerFromPlayerid(iExtra)->OnScreenshotTaken();
 }

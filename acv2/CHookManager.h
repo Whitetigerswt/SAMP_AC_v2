@@ -21,6 +21,10 @@ private:
 
 	//static void CPed_Special_Flags();
 
+	static void OnPause();
+	static void OnUnPause();
+	static void OnPauseChange();
+
 	static void Fatulous1();
 	static void Fatulous2();
 	static void Fatulous3();

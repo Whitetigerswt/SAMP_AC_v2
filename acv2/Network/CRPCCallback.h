@@ -50,4 +50,8 @@ private:
 	// REQUIRES: The server sends the TOGGLE_LITE_FOOT RPC to the client.
 	static RPC_CALLBACK ToggleLiteFoot(RPC_ARGS);
 
+	// PURPOSE: An RPC callback to toggle on or off unlimited sprint.
+	// REQUIRES: The server sends the TOGGLE_UNLIMMITED_SPRINT RPC to the client.
+	static RPC_CALLBACK ToggleUnlimitedSprint(RPC_ARGS);
+
 };

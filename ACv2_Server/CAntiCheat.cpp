@@ -44,6 +44,7 @@ CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m
 	m_CBug = 9999;
 	m_SwitchReload = true;
 	m_FrameLimit = 9999;
+	m_UnlimitedSprint = false;
 }
 
 CAntiCheat::~CAntiCheat()
@@ -381,4 +382,29 @@ void CAntiCheat::ToggleSwitchReload(bool toggle)
 
 	// Set the crouch bug variable to true.
 	m_SwitchReload = toggle;
+}
+
+void CAntiCheat::ToggleUnlimitedSprint(bool toggle)
+{
+	// Prepare to send RPC to client.
+	RakNet::BitStream bsData;
+	bsData.Write(toggle);
+
+	// Send RPC to player.
+	Network::PlayerSendRPC(TOGGLE_UNLIMITED_SPRINT, ID, &bsData);
+
+	// Set the crouch bug variable to true.
+	m_UnlimitedSprint = toggle;
+}
+
+void CAntiCheat::TogglePause(int iType, bool bPause)
+{
+	// Let PAWN scripts know.
+	Callback::Execute("OnPlayerPause", "iii", bPause, iType, ID);
+}
+
+void CAntiCheat::OnScreenshotTaken()
+{
+	// Let PAWN scripts know.
+	Callback::Execute("OnScreenshotTaken", "i", ID);
 }

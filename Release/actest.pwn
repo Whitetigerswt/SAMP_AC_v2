@@ -22,6 +22,20 @@ CMD:acstatus(playerid, params[])
 	format(str, sizeof(str), "GetPlayerFPSLimit: %d", GetPlayerFPSLimit(playerid));
 	SendClientMessage(playerid, -1, str);
 
+	format(str, sizeof(str), "GetPlayerUnlimitedSprint: %d", GetPlayerUnlimitedSprint(playerid));
+	SendClientMessage(playerid, -1, str);
+
+	return 1;
+}
+
+CMD:sprint(playerid, params[])
+{
+	TogglePlayerUnlimitedSprint(playerid, !!strval(params));
+
+	new str[128];
+	format(str, sizeof(str), "Set unlimited sprint to: %d", !!strval(params));
+	SendClientMessage(playerid, -1, str);
+
 	return 1;
 }
 
@@ -49,10 +63,10 @@ CMD:litefoot(playerid, params[])
 
 CMD:cbug(playerid, params[])
 {
-	TogglePlayerCrouchBug(playerid, !!strval(params));
+	SetPlayerCrouchBug(playerid, strval(params));
 
 	new str[128];
-	format(str, sizeof(str), "Set cbug to: %d", !!strval(params));
+	format(str, sizeof(str), "Set cbug to: %d", strval(params));
 	SendClientMessage(playerid, -1, str);
 
 	return 1;
@@ -130,4 +144,18 @@ public OnFileCalculated(playerid, filename[], md5[])
 	format(str, sizeof(str), "OnFileCalculated(%d, %s, %s)", playerid, filename, md5);
 	SendClientMessage(playerid, -1, str);
 	#endif
+}
+
+public OnPlayerPause(playerid, type, bool:pause)
+{
+	new str[170];
+	format(str, sizeof(str), "PAWN - OnPlayerPause(%d, %d, %d)", playerid, type, pause);
+	SendClientMessage(playerid, -1, str);
+}
+
+public OnScreenshotTaken(playerid)
+{
+	new str[180];
+	format(str, sizeof(str), "PAWN - OnScreenShotTaken(%d)", playerid);
+	SendClientMessage(playerid, -1, str);
 }

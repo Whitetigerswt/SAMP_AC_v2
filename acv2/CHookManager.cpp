@@ -3,6 +3,8 @@
 #include "Hooks.h"
 #include "CMem.h"
 #include "Misc.h"
+#include "Network\Network.h"
+#include "../Shared/Network/CRPC.h"
 
 #include <Windows.h>
 
@@ -129,6 +131,8 @@ static DWORD LiteFootHookJmpBack = 0x60A746;
 
 static DWORD GravityHookJmpBack1 = 0x543081;
 static DWORD GravityHookJmpBack2 = 0x543093;
+
+static DWORD PauseJmpBack = 0x576C2D;
 
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
@@ -324,6 +328,17 @@ void CHookManager::SetConnectPatches()
 	// Disable changing of FOV. 
 	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer
 	CMem::ApplyJmp(FUNC_FOVPatch, (DWORD)FOVPatch, 5);
+
+	// Detect when a player is pausing.
+	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
+
+	// Allow sprint on any surface
+	DWORD dwOldProt;
+	VirtualProtect((void*)0x55E870, sizeof(DWORD), PAGE_EXECUTE_READWRITE, &dwOldProt);
+	VirtualProtect((void*)0x55E874, sizeof(WORD), PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+	CMem::PutSingle < DWORD >(0x55E870, 0xC2C03366);
+	CMem::PutSingle < WORD >(0x55E874, 0x0004);
 }
 
 void CHookManager::SetFrameLimiterPatch()
@@ -390,6 +405,40 @@ void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
 	// Free memory.
 	delete[] memory;
 }
+
+bool isPaused = false;
+void CHookManager::OnPauseChange()
+{
+	isPaused = !isPaused;
+
+	RakNet::BitStream bsData;
+	bsData.Write(0);
+	bsData.Write(isPaused);
+
+	Network::SendRPC(TOGGLE_PAUSE, &bsData);
+}
+
+#pragma warning(disable:4731)
+void CHookManager::OnPause()
+{
+
+	__asm pushad
+
+	OnPauseChange();
+
+	__asm
+	{
+		popad
+		mov cl, [esi + 5Ch]
+		mov al, [esi + 32h]
+		pop edi
+		pop esi
+		pop ebx
+		pop ebp
+		jmp[PauseJmpBack]
+	}
+}
+#pragma warning(default:4731)
 
 void CHookManager::SetLiteFoot(bool toggle)
 {

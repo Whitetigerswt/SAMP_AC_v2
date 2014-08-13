@@ -40,4 +40,11 @@ private:
 	// REQUIRES: NULL
 	static RPC_CALLBACK OnTamperAttempt(RPC_ARGS);
 
+	// PURPOSE: RPC Callback for eRPC::TOGGLE_PAUSE
+	// REQUIRES: NULL
+	static RPC_CALLBACK OnPauseToggled(RPC_ARGS);
+
+	// PURPOSE: RPC Callback for eRPC::TAKE_SCREENSHOT
+	// REQUIRES: NULL
+	static RPC_CALLBACK OnTakeScreenshot(RPC_ARGS);
 };

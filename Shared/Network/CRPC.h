@@ -33,8 +33,11 @@ enum eRPC : unsigned short
 	// Called when the server wants to turn on or off crouch bug.
 	TOGGLE_CROUCH_BUG,
 
-	// Called when the server wants to turn on or off lite foot
+	// Called when the server wants to turn on or off lite foot.
 	TOGGLE_LITE_FOOT,
+
+	// Called hwen the server wants to turn on or off unlimited sprint.
+	TOGGLE_UNLIMITED_SPRINT,
 
 	// -- SERVER RPCs --
 
@@ -58,6 +61,12 @@ enum eRPC : unsigned short
 
 	// Called when the player is using a virtual machine, debugger, or the CRC image doesn't match
 	ON_TAMPER_ATTEMPT,
+
+	// Called when a player pauses or unpauses, or alt tabs from the game.
+	TOGGLE_PAUSE,
+
+	// Called when a player takes a screenshot
+	TAKE_SCREENSHOT,
 
 
 };

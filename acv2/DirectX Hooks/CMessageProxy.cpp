@@ -65,6 +65,29 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 		{
 			return 0;
 		}
+		case WM_SETFOCUS:
+		{
+			RakNet::BitStream bsData;
+			bsData.Write(1);
+			bsData.Write(true);
+
+			Network::SendRPC(TOGGLE_PAUSE, &bsData);
+		}
+		case WM_KILLFOCUS:
+		{
+			RakNet::BitStream bsData;
+			bsData.Write(1);
+			bsData.Write(false);
+
+			Network::SendRPC(TOGGLE_PAUSE, &bsData);
+		}
+		case WM_KEYUP:
+		{
+			if (vKey == VK_F8)
+			{
+				Network::SendRPC(TAKE_SCREENSHOT);
+			}
+		}
 		default:
 		{
 

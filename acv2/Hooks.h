@@ -35,6 +35,9 @@
 // GRAVITY PATCH - ANTI SOBEIT
 #define FUNC_Gravity						(BYTE*)0x54307B
 
+// PAUSE PATCH - DETECT WHEN THE GAME IS PAUSED
+#define FUNC_GamePaused						(BYTE*)0x576C27
+
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91
