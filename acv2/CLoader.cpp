@@ -69,7 +69,7 @@ void CLoader::Initialize(HMODULE hMod)
 		Modules.Scan();
 
 		// Check for a tamper attempt.
-		/*if (VMProtectIsDebuggerPresent(true) || VMProtectIsVirtualMachinePresent() || !VMProtectIsValidImageCRC())
+		if (VMProtectIsDebuggerPresent(true) || VMProtectIsVirtualMachinePresent() || !VMProtectIsValidImageCRC())
 		{
 			if (!Network::IsConnected())
 			{
@@ -77,7 +77,7 @@ void CLoader::Initialize(HMODULE hMod)
 			}
 
 			Network::SendRPC(ON_TAMPER_ATTEMPT);
-		}*/
+		}
 
 		// Sleep
 		Sleep(1000);

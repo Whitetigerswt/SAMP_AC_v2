@@ -70,6 +70,9 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 		char* filecontents = NULL;
 
 		std::map<std::string, std::string> Gta3ImgDefaults = Cmd5Info::GetIMGMD5s();
+
+		// Create a new MD5 object.
+		MD5 md5obj = MD5();
 		
 		// Loop through all IMG entrys.
 		for (auto& entry = img.begin(); entry != img.end(); ++entry)
@@ -84,7 +87,6 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 			(*entry).ReadEntireFile((void*)filecontents);
 
 			// MD5 each entry
-			MD5 md5obj = MD5();
 			std::string md5 = md5obj.digestMemory((BYTE*)filecontents, (*entry).GetFilesize());
 
 			// Make sure the filename has an entry in the files we're checking
@@ -92,6 +94,7 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 			{
 				// Free memory!
 				free(filecontents);
+				md5.clear();
 				continue;
 			}
 
