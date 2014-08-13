@@ -21,7 +21,7 @@
 #define FUNC_WidescreenPatch				(BYTE*)0x5894AF
 
 // FOV MOD HOOK //
-#define FUNC_FOVPatch						(BYTE*)0x522F32
+#define FUNC_FOVPatch						(BYTE*)0x522F63
 
 // SPRINT PATCH - DETECT SPRINT KEY PRESSING //
 #define FUNC_SprintHook						(BYTE*)0x541C98

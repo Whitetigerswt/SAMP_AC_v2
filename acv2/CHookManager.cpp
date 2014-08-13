@@ -121,7 +121,7 @@ static DWORD Fatulous1JmpBack = 0x6D8033;
 static DWORD Fatulous2JmpBack = 0x4B330C;
 static DWORD Fatulous3JmpBack = 0x6081AA;
 
-static DWORD FOVPatchJmpBack = 0x522F38;
+static DWORD FOVPatchJmpBack = 0x522F68;
 
 static DWORD SprintHookJmpBack = 0x541C9D;
 
@@ -323,7 +323,7 @@ void CHookManager::SetConnectPatches()
 
 	// Disable changing of FOV. 
 	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer
-	CMem::ApplyJmp(FUNC_FOVPatch, (DWORD)FOVPatch, 6);
+	CMem::ApplyJmp(FUNC_FOVPatch, (DWORD)FOVPatch, 5);
 }
 
 void CHookManager::SetFrameLimiterPatch()
@@ -559,7 +559,8 @@ HOOK CHookManager::FOVPatch()
 {
 	__asm
 	{
-		fadd dword ptr[edi + 0x0000B4]
+		fnstsw ax
+		test ah, 05
 		pushad
 	}
 
