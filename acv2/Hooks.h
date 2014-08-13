@@ -50,6 +50,7 @@
 #define FUNC_CameraXWriteHook8				(BYTE*)0x524C4B
 #define FUNC_CameraXWriteHook9				(BYTE*)0x525906
 #define FUNC_CameraXWriteHook10				(BYTE*)0x525B08
+#define FUNC_CameraXWriteHook11				(BYTE*)0x509C6F
 
 // CAMERA X ACCESS HOOKS //
 
@@ -98,6 +99,7 @@
 #define FUNC_CameraXAccessHook37			(BYTE*)0x525B45
 #define FUNC_CameraXAccessHook38			(BYTE*)0x525C56
 #define FUNC_CameraXAccessHook39			(BYTE*)0x525C6B
+#define FUNC_CameraXAccessHook40			(BYTE*)0x524C90
 
 // CAMERA Y HOOKS //
 

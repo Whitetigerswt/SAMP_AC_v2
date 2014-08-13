@@ -24,6 +24,7 @@ static DWORD CameraXHook7JmpBack = 0x5222BC;
 static DWORD CameraXHook8JmpBack = 0x524C51;
 static DWORD CameraXHook9JmpBack = 0x52590C;
 static DWORD CameraXHook10JmpBack = 0x525B0E;
+static DWORD CameraXHook11JmpBack = 0x509C75;
 
 static DWORD CameraXAccess1JmpBack = 0x5237E5;
 static DWORD CameraXAccess2JmpBack = 0x523804;
@@ -72,6 +73,7 @@ static DWORD CameraXAccess36JmpBack = 0x52532C;
 static DWORD CameraXAccess37JmpBack = 0x525B4B;
 static DWORD CameraXAccess38JmpBack = 0x525C5C;
 static DWORD CameraXAccess39JmpBack = 0x525C71;
+static DWORD CameraXAccess40JmpBack = 0x524CAA;
 
 // CAMERA Y WRITE HOOK JMP BACKS //
 
@@ -194,6 +196,7 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraXWriteHook8, (DWORD)CameraXWriteHook8, 6);
 	CMem::ApplyJmp(FUNC_CameraXWriteHook9, (DWORD)CameraXWriteHook9, 6);
 	CMem::ApplyJmp(FUNC_CameraXWriteHook10, (DWORD)CameraXWriteHook10, 6);
+	CMem::ApplyJmp(FUNC_CameraXWriteHook11, (DWORD)CameraXWriteHook11, 6);
 
 	CMem::ApplyJmp(FUNC_CameraXAccessHook1, (DWORD)CameraXAccessHook1, 8);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook2, (DWORD)CameraXAccessHook2, 8);
@@ -235,6 +238,7 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraXAccessHook37, (DWORD)CameraXAccessHook37, 6);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook38, (DWORD)CameraXAccessHook38, 6);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook39, (DWORD)CameraXAccessHook39, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook40, (DWORD)CameraXAccessHook40, 32);
 
 	// CAMERA Y HOOKS //
 
@@ -700,6 +704,16 @@ HOOK CHookManager::CameraXWriteHook10()
 	}
 }
 
+HOOK CHookManager::CameraXWriteHook11()
+{
+	__asm
+	{
+		fstp dword ptr[CameraXPos]
+		jmp[CameraXHook11JmpBack]
+	}
+}
+
+
 
 HOOK CHookManager::CameraXAccessHook1()
 {
@@ -1086,6 +1100,22 @@ HOOK CHookManager::CameraXAccessHook39()
 		jmp[CameraXAccess39JmpBack]
 	}
 }
+
+HOOK CHookManager::CameraXAccessHook40()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		fcos
+		fmul st(0), st(1)
+		fchs
+		fstp dword ptr[esp + 54h]
+		mov ebx, [esp + 54h]
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess40JmpBack]
+	}
+}
+
 
 HOOK CHookManager::CameraYWriteHook2()
 {
