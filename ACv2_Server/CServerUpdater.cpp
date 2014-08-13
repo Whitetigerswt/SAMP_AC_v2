@@ -21,11 +21,9 @@ CServerUpdater::~CServerUpdater()
 void CServerUpdater::CheckForUpdate()
 {
 	// Get the website's response
-	Utility::Printf("check for update...");
+	Utility::Printf("check for an update...");
 	try {
 		std::string updatestring = Cmd5Info::GetWebsiteText(AC_UPDATE_URL);
-		Utility::Printf("Got website text.");
-		Utility::Printf("the text is: %s", updatestring);
 
 		// Create new variables to split up the version and the update URL.
 		float version = 0.0f;

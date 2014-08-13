@@ -653,6 +653,34 @@
 				MapAddress="Cmd5Info::GetWebsiteText(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)"
 				CompilationType="2"
 			/>
+			<Procedure
+				MapAddress="CHookManager::OnPauseChange(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::OnPause(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::Fatulous1(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::Fatulous2(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::Fatulous3(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook11(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook40(void)"
+				CompilationType="2"
+			/>
 		</Procedures>
 	</Protection>
 	<DLLBox
