@@ -18,3 +18,4 @@
 #define VAR_LITE_FOOT		(void*)0x60A71C
 #define VAR_SHOT_TICK		*(int*)0xB5F898
 #define VAR_GTA3_IMG_PATH					(void*)0x858AF4
+#define VAR_CPED_SPECIAL_FLAGS		*(BYTE*)((PLAYER_POINTER) + 0x42)

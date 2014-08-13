@@ -59,7 +59,7 @@ namespace Misc
 		FrameLimit = newlimit;
 	}
 
-	int CrouchBug = true;
+	int CrouchBug = 9999;
 
 	void SetCrouchBug(int toggle)
 	{

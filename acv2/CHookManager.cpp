@@ -114,7 +114,7 @@ static DWORD CameraYAccess25JmpBack = 0x524112;
 static DWORD CameraYAccess26JmpBack = 0x524127;
 static DWORD CameraYAccess27JmpBack = 0x5240DD;
 
-static DWORD CPed_Special_FlagsJmpBack = 0x4B36A9;
+static DWORD CPed_Special_FlagsJmpBack = 0x5448E9;
 static DWORD Fatulous1JmpBack = 0x6D8033;
 static DWORD Fatulous2JmpBack = 0x4B330C;
 static DWORD Fatulous3JmpBack = 0x6081AA;
@@ -280,16 +280,12 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraYAccessHook26, (DWORD)CameraYAccessHook26, 8);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook27, (DWORD)CameraYAccessHook27, 10);
 
-	// CPed special flag for bullet proof patch
-	VirtualProtect(FUNC_CPed_Special_Flags, 2, PAGE_EXECUTE_READWRITE, &dwOldProt);
-	memcpy(FUNC_CPed_Special_Flags, "\x90\x90", 2);
-
 	// Fix for fatulous.exe health hack
 	CMem::ApplyJmp(FUNC_Fatulous1, (DWORD)Fatulous1, 9);
 	CMem::ApplyJmp(FUNC_Fatulous2, (DWORD)Fatulous2, 5);
 	CMem::ApplyJmp(FUNC_Fatulous3, (DWORD)Fatulous3, 11);
 
-	// Patch widescree_lite.asi mod
+	// Patch widescreen_lite.asi mod
 	// Parts of it's source code are here: https://github.com/ThirteenAG/Widescreen_Fixes_Pack/tree/master/GTASA_widescreen_fix
 	CMem::ApplyJmp(FUNC_WidescreenPatch, (DWORD)WidescreenPatch, 6);
 
@@ -520,6 +516,40 @@ HOOK CHookManager::SprintHook()
 		jmp[SprintHookJmpBack]
 	}
 }
+
+/*DWORD ecx_copy = 0;
+DWORD CPed_Special_flags_Alt = 0x5448FE;
+HOOK CHookManager::CPed_Special_Flags()
+{
+	__asm
+	{
+		mov ecx_copy, ecx
+		pushad
+	}
+
+	if (*(BYTE*)(ecx_copy + 64) == VAR_CPED_SPECIAL_FLAGS)
+	{
+		__asm
+		{
+			popad
+			test dword ptr[ecx + 40h], 40000h
+			jmp[CPed_Special_FlagsJmpBack]
+		}
+	}
+	else
+	{
+		__asm
+		{
+			popad
+			test dword ptr[ecx + 40h], 40000h
+			jne jne_not_equal
+			jmp[CPed_Special_FlagsJmpBack]
+
+		jne_not_equal:
+			jmp[CPed_Special_flags_Alt]
+		}
+	}
+}*/
 
 HOOK CHookManager::FOVPatch()
 {

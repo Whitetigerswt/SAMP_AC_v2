@@ -19,7 +19,7 @@ private:
 	static void LoadShotgunBullet();
 	static void LoadBullet();
 
-	static void CPed_Special_Flags();
+	//static void CPed_Special_Flags();
 
 	static void Fatulous1();
 	static void Fatulous2();
