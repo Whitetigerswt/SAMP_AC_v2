@@ -14,7 +14,7 @@
 // OTHER HEALTH HOOKS //
 //#define FUNC_CPed_Special_Flags				(BYTE*)0x5448E0
 #define FUNC_Fatulous1						(BYTE*)0x6D802A
-#define FUNC_Fatulous2						(BYTE*)0x4B3309
+#define FUNC_Fatulous2						(BYTE*)0x4B330E
 #define FUNC_Fatulous3						(BYTE*)0x60819F
 
 // WIDESCREEN MOD HOOK //

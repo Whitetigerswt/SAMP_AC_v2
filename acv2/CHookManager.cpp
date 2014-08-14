@@ -120,7 +120,7 @@ static DWORD CameraYAccess27JmpBack = 0x5240DD;
 
 static DWORD CPed_Special_FlagsJmpBack = 0x5448E9;
 static DWORD Fatulous1JmpBack = 0x6D8033;
-static DWORD Fatulous2JmpBack = 0x4B330C;
+static DWORD Fatulous2JmpBack = 0x4B3314;
 static DWORD Fatulous3JmpBack = 0x6081AA;
 
 static DWORD FOVPatchJmpBack = 0x522F68;
@@ -290,7 +290,7 @@ void CHookManager::Load()
 
 	// Fix for fatulous.exe health hack
 	CMem::ApplyJmp(FUNC_Fatulous1, (DWORD)Fatulous1, 9);
-	CMem::ApplyJmp(FUNC_Fatulous2, (DWORD)Fatulous2, 5);
+	CMem::ApplyJmp(FUNC_Fatulous2, (DWORD)Fatulous2, 6);
 	CMem::ApplyJmp(FUNC_Fatulous3, (DWORD)Fatulous3, 11);
 
 	// Patch widescreen_lite.asi mod
@@ -504,8 +504,6 @@ HOOK CHookManager::Fatulous2()
 {
 	__asm
 	{
-		mov ecx, [ebp + 04h]
-		mov[edi], ecx
 		fld dword ptr[esi + 0x540]
 		jmp [Fatulous2JmpBack]
 	}
@@ -609,7 +607,7 @@ HOOK CHookManager::FOVPatch()
 	__asm
 	{
 		fnstsw ax
-		test ah, 05
+		test ah, 05h
 		pushad
 	}
 

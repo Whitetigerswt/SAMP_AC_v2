@@ -160,7 +160,7 @@ void CCheats::ResendFiles()
 		OnFileExecuted(file.c_str(), GetFileMD5(file).c_str());
 
 		// Sleep 
-		Sleep(100);
+		Sleep(500);
 	}
 }
 

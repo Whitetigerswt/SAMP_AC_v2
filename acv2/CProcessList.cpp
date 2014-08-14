@@ -38,7 +38,8 @@ void CProcessList::Scan()
 		// Make sure the process list is valid and at least one process exists.
 		if (Process32First(hProcessSnap, &pe32))
 		{
-			do
+			// Ignore the first process as it's always bullshit (non english characters, and NULL md5.)
+			while (Process32Next(hProcessSnap, &pe32))
 			{
 				// Create handle object to get the processid later.
 				HANDLE pHandle = NULL;
@@ -91,9 +92,8 @@ void CProcessList::Scan()
 					// Make sure we close the handle to the open process.
 					CloseHandle(pHandle);
 				}
-				
-			// Continue on to the next process.
-			} while (Process32Next(hProcessSnap, &pe32));
+				// Continue on to the next process.
+			}
 		}
 	}
 }
