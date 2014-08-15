@@ -82,7 +82,7 @@
 			/>
 			<Procedure
 				MapAddress="CCheats::ResendFiles(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CCheats::DoesFileExist(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)"
@@ -102,11 +102,11 @@
 			/>
 			<Procedure
 				MapAddress="CHookManager::LoadShotgunBullet(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CHookManager::LoadBullet(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CHookManager::CameraXWriteHook2(void)"
@@ -448,7 +448,7 @@
 			/>
 			<Procedure
 				MapAddress="CHookManager::FOVPatch(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CHookManager::WidescreenPatch(void)"
@@ -663,15 +663,15 @@
 			/>
 			<Procedure
 				MapAddress="CHookManager::Fatulous1(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CHookManager::Fatulous2(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CHookManager::Fatulous3(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CHookManager::CameraXWriteHook11(void)"
@@ -679,7 +679,7 @@
 			/>
 			<Procedure
 				MapAddress="CHookManager::CameraXAccessHook40(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 		</Procedures>
 	</Protection>
