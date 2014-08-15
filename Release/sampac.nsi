@@ -77,6 +77,7 @@ Section "Main Components" SecMain
   
   File "ACv2_Client.asi"
   File "samp_elevator.exe"
+  Delete "$INSTDIR\d3d9.dll"
   
   ;Store installation folder
   WriteRegStr HKCU "Software\sampac" "" $INSTDIR
