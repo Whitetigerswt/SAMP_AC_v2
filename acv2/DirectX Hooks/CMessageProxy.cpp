@@ -1,7 +1,5 @@
 #include "CMessageProxy.h"
 #include "../CDirectX.h"
-#include <Windows.h>
-#include "../CLog.h"
 #include <RakNet\BitStream.h>
 #include "../Network/Network.h"
 #include "../../Shared/Network/CRPC.h"

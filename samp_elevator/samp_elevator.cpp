@@ -20,6 +20,10 @@ int main(int argc, char* argv[])
 	// however, we don't bother parsing all the command line since it's not necessary, we can just paste another GetCommandLine.
 	// and SA:MP is smart enough to skip passed the samp_elevator.exe path, and go to the -h -p etc for host and port.
 
+
+	// Let the user know that this is kind of unnecessary.
+	std::cout << "Run SAMP.exe as an administrator to skip this step." << std::endl;
+
 	// Turn the gta_sa.exe path into an std::string instead of a C char.
 	std::string ExeFile(argv[1]);
 
@@ -91,6 +95,8 @@ int main(int argc, char* argv[])
 		{
 			// Resume the remote thread.
 			ResumeThread(id);
+
+			std::cout << "...patience..." << std::endl;
 
 			// Wait for the remote thread to finish executing.
 			WaitForSingleObject(id, INFINITE);

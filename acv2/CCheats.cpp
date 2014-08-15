@@ -154,13 +154,13 @@ void CCheats::ResendFiles()
 	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
 	{
 		// Don't deal with annoying pointers.
-		std::string file(*i);
+		std::string file(i->c_str());
 
 		// Re-send the info to the server that the file was just executed.
 		OnFileExecuted(file.c_str(), GetFileMD5(file).c_str());
 
-		// Sleep 
-		Sleep(500);
+		// Sleep
+		Sleep(150);
 	}
 }
 

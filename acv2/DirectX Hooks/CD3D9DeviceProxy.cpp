@@ -31,11 +31,7 @@ ULONG CD3D9DeviceProxy::AddRef()
 
 ULONG CD3D9DeviceProxy::Release()
 {
-	ULONG count = m_pDirect3DDevice9->Release();
-	if(count == 0)
-		delete this;
-
-	return count;
+	return m_pDirect3DDevice9->Release();
 }
 
 HRESULT CD3D9DeviceProxy::TestCooperativeLevel() 
@@ -50,11 +46,7 @@ HRESULT CD3D9DeviceProxy::EvictManagedResources()
 
 HRESULT CD3D9DeviceProxy::GetDirect3D(IDirect3D9** ppD3D9)
 {
-	HRESULT hr = m_pDirect3DDevice9->GetDirect3D(ppD3D9);
-	if(SUCCEEDED(hr))
-		*ppD3D9 = m_pDirect3D9;
-
-	return hr;
+	return m_pDirect3DDevice9->GetDirect3D(ppD3D9);
 }
 
 HRESULT CD3D9DeviceProxy::GetDeviceCaps(D3DCAPS9* pCaps) 
@@ -89,14 +81,9 @@ HRESULT CD3D9DeviceProxy::GetSwapChain(UINT iSwapChain,IDirect3DSwapChain9** pSw
 
 HRESULT CD3D9DeviceProxy::Reset(D3DPRESENT_PARAMETERS* pPresentationParameters) 
 {
-	CDirectX::PreDeviceReset();
 	HRESULT hRes = m_pDirect3DDevice9->Reset(pPresentationParameters);
 
 	CMessageProxy::Initialize(pPresentationParameters->hDeviceWindow);
-
-	if(hRes == D3D_OK)
-		CDirectX::PostDeviceReset();
-
 	return hRes;
 }
 
@@ -111,9 +98,7 @@ HRESULT CD3D9DeviceProxy::Present(CONST RECT* pSourceRect,CONST RECT* pDestRect,
 	}
 	LastFrameTime = currentTime;
 
-	HRESULT hRes = m_pDirect3DDevice9->Present(pSourceRect, pDestRect, hDestWindowOverride, pDirtyRegion);
-
-	return hRes;
+	return m_pDirect3DDevice9->Present(pSourceRect, pDestRect, hDestWindowOverride, pDirtyRegion);
 }
 
 HRESULT CD3D9DeviceProxy::GetBackBuffer(UINT iSwapChain,UINT iBackBuffer,D3DBACKBUFFER_TYPE Type,IDirect3DSurface9** ppBackBuffer) 
@@ -228,13 +213,7 @@ HRESULT CD3D9DeviceProxy::BeginScene()
 
 HRESULT CD3D9DeviceProxy::EndScene() 
 {
-	CDirectX::PreEndScene();
-
-	HRESULT hRes = m_pDirect3DDevice9->EndScene();
-
-	CDirectX::PostEndScene();
-
-	return hRes;
+	return m_pDirect3DDevice9->EndScene();
 }
 
 HRESULT CD3D9DeviceProxy::Clear(DWORD Count,CONST D3DRECT* pRects,DWORD Flags,D3DCOLOR Color,float Z,DWORD Stencil) 
