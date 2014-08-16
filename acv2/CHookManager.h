@@ -6,12 +6,23 @@
 class CHookManager
 {
 public:
+	// PURPOSE: Load the main hooks in the game.
+	// REQUiRES: NULL
 	static void Load();
+
+	// PURPOSE: Install the hooks in the game after the user connects to the server.
+	// REQUIRES: NULL
 	static void SetConnectPatches();
+
+	// PURPOSE: Install the frame limiter patch.
+	// REQUIRES: NULL
 	static void SetFrameLimiterPatch();
 
+	// PURPOSE: Toggle lite foot on and off.
+	// REQUIRES: NULL
 	static void SetLiteFoot(bool toggle);
 private:
+
 	static void LoadScriptsHook();
 	static void CheckMemoryAddr(void* address, int size, char* tomatch);
 	static void VerifyFilePaths();

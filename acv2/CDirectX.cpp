@@ -34,23 +34,3 @@ void CDirectX::Initialize(IDirect3DDevice9* device, IDirect3D9* direct3D, HWND h
 	m_pDevice = device;
 	m_pDirect3D = direct3D;
 }
-
-void CDirectX::PreDeviceReset()
-{
-
-}
-
-void CDirectX::PostDeviceReset()
-{
-
-}
-
-void CDirectX::PostEndScene()
-{
-
-}
-
-void CDirectX::PreEndScene()
-{
-
-}

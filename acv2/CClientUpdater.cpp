@@ -21,13 +21,17 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 	// where the 1.0 is the latest version
 	// and the www.google.com is where to download the latest version
 	HINTERNET hNet = InternetOpenA("Mozilla/5.0", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+
+	// Check the internet.
 	if (hNet == NULL)
 	{
 		return;
 	}
 
+	// Open the internet URL link.
 	HINTERNET hNetFile = InternetOpenUrlA(hNet, UPDATE_URL, 0, 0, 0, 0);
 
+	// Make sure it was a successful connection
 	if (hNetFile == NULL)
 	{
 		return;
@@ -40,6 +44,7 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 	DWORD dwBytesRead = 0;
 	do
 	{
+		// Get the text on the URL.
 		InternetReadFile(hNetFile, (LPVOID)szLatestVersion, sizeof(szLatestVersion), &dwBytesRead);
 	} while (dwBytesRead > 0);
 

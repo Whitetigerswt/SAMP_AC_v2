@@ -13,10 +13,6 @@ class CDirectX
 public:
 	static void HookD3DFunctions();
 	static IDirect3D9* WINAPI HOOK_Direct3DCreate9(UINT SDKVersion);
-	static void PreDeviceReset();
-	static void PostDeviceReset();
-	static void PreEndScene();
-	static void PostEndScene();
 	static void Initialize(IDirect3DDevice9* device, IDirect3D9* direct3D, HWND hwnd);
 
 private:
