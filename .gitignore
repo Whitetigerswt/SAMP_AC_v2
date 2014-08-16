@@ -46,7 +46,6 @@
 !*.inc
 !*.nsi
 !*.suo
-!*.opensdf
 !*.ico
 !*.ipp
 !*.pwn

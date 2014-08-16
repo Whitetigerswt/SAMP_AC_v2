@@ -3,6 +3,7 @@
 #include "CMessageProxy.h"
 #include "../CDirectX.h"
 #include "../Misc.h"
+#include "../CLog.h"
 
 #include <MMSystem.h>
 
@@ -89,7 +90,10 @@ HRESULT CD3D9DeviceProxy::Reset(D3DPRESENT_PARAMETERS* pPresentationParameters)
 
 HRESULT CD3D9DeviceProxy::Present(CONST RECT* pSourceRect,CONST RECT* pDestRect,HWND hDestWindowOverride,CONST RGNDATA* pDirtyRegion) 
 {
+	CLog log = CLog("d3d9.log");
+	log.Write("d3d::Present called");
 	Network::Process();
+	log.Write("Network processed.");
 
 	DWORD currentTime = timeGetTime();
 	if ((float)(currentTime - LastFrameTime) < (float)(1000 / Misc::GetFPSLimit()))

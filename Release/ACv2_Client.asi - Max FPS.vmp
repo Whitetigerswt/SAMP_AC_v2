@@ -643,7 +643,7 @@
 			/>
 			<Procedure
 				MapAddress="IMG_Entry::ReadEntireFile(void *)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="Cmd5Info::GetIMGMD5s(void)"

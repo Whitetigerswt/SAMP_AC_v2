@@ -1,5 +1,6 @@
 #include "CD3D9Proxy.h"
 #include "CD3D9DeviceProxy.h"
+#include "../CLog.h"
 
 CD3D9Proxy::CD3D9Proxy(IDirect3D9* pDirect3D)
 {
@@ -94,8 +95,16 @@ HMONITOR CD3D9Proxy::GetAdapterMonitor(UINT Adapter)
 
 HRESULT CD3D9Proxy::CreateDevice(UINT Adapter, D3DDEVTYPE DeviceType, HWND hFocusWindow, DWORD BehaviorFlags, D3DPRESENT_PARAMETERS* pPresentationParameters, IDirect3DDevice9** ppReturnedDeviceInterface)
 {
+	CLog log = CLog("d3d9.log");
+	log.Write("Creating D3DDevice.");
 	IDirect3DDevice9* pDirect3DDevice9;
 	HRESULT hRes = m_pDirect3D9->CreateDevice(Adapter, DeviceType, hFocusWindow, BehaviorFlags, pPresentationParameters, &pDirect3DDevice9);
 	*ppReturnedDeviceInterface = new CD3D9DeviceProxy(pDirect3DDevice9, this, pPresentationParameters);
+
+	log.Write("pDirect3DDevice9: 0x%x", pDirect3DDevice9);
+	log.Write("hRes: %d", hRes);
+	log.Write("ppReturnedDeviceInterface: 0x%x", ppReturnedDeviceInterface);
+	log.Write("*ppReturnedDeviceInterface: 0x%x", *ppReturnedDeviceInterface);
+
 	return hRes;
 }
