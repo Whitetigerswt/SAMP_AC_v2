@@ -51,11 +51,13 @@ namespace Network
 
 	// PURPOSE: Close an unhandled connection (A connection that connected to the AC server, that didn't connect to the SA:MP server)
 	// REQUIRES: A RakNet system address.
-	void CloseUnhandledConnection(const RakNet::SystemAddress& systemAddress);
+	// REQUIRES: The disconnection type.
+	void CloseUnhandledConnection(const RakNet::SystemAddress& systemAddress, int type);
 
 	// PURPOSE: Cleanup a connection from a playerid.
 	// REQUIRES: A playerid.
-	void Cleanup(unsigned int uiPlayerid);
+	// REQUIRES: A disconnection type
+	void Cleanup(unsigned int uiPlayerid, int type);
 
 	// PURPOSE: Cleanup an unhandled connection by system address.
 	// REQUIRES: A RakNet system address.

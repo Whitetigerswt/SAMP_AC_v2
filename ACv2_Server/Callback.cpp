@@ -99,8 +99,12 @@ namespace Callback
 
 	void SAMPGDK_CALL KickPlayer(int timerid, void *params)
 	{
-		// Kick the player from the server.
-		Kick((int)params);
+		// Make sure the player is connected.
+		if (IsPlayerConnected((int)params))
+		{
+			// Kick the player from the server.
+			Kick((int)params);
+		}
 	}
 	
 	void SAMPGDK_CALL CheckPlayersMemory(int timerid, void *params) 
@@ -131,10 +135,10 @@ namespace Callback
 		}
 	}
 
-	void OnACClosed(unsigned int playerid)
+	void OnACClosed(unsigned int playerid, int type)
 	{
 		// If the player is connected, and /actoggle has been turned on (aka, AC is on)
-		if (IsPlayerConnected(playerid) && ACToggle)
+		if (IsPlayerConnected(playerid) && ACToggle && type == 1)
 		{
 			// Create 2 variables, one to hold the file name, and one to format a string to send to all users on the server
 			// letting them know why this player was kicked.
@@ -144,17 +148,20 @@ namespace Callback
 			GetPlayerName(playerid, name, sizeof(name));
 
 			// Format the string
-			snprintf(str, sizeof(str), "{FF0000}%s{FFFFFF} has been kicked from the server (AC Lost Connection)", name);
+			snprintf(str, sizeof(str), "{FF0000}%s{FFFFFF} has been kicked from the server ({FF0000}AC Lost Connection{FFFFFF})", name);
 
 			// Send the string to everyone
 			SendClientMessageToAll(-1, str);
 
 			// Kick the user from the server.
-			SetTimer(3000, 0, Callback::KickPlayer, (void*)playerid);
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+		} else {
+			// Just make sure the user is kicked from the server.
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 		}
 	}
 
-	void OnACClosed(std::string ip)
+	void OnACClosed(std::string ip, int type)
 	{
 		// If someone's AC is closed, and we only have their IP, we need to get their playerid to do anything.
 
@@ -177,7 +184,7 @@ namespace Callback
 				if (ip.compare(userip) == 0)
 				{
 					// If they match, we just found our playerid, and send it to the other OnACClosed so we can handle this situation properly.
-					OnACClosed(i);
+					OnACClosed(i, type);
 				}
 			}
 		}

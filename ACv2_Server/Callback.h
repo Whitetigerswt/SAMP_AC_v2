@@ -24,11 +24,13 @@ namespace Callback
 
 	// PURPOSE: Callback for when a player closes their AC by IP.
 	// REQUIRES: Nothing, this function should not be called manually.
-	void OnACClosed(std::string ip);
+	// REQUIRES: The disconnection type.
+	void OnACClosed(std::string ip, int type);
 
 	// PURPOSE: Callback for when a player closes their AC by playerid.
 	// REQUIRES: Nothing, this function should not be called manually.
-	void OnACClosed(unsigned int playerid);
+	// REQUIRES: The disconnection type.
+	void OnACClosed(unsigned int playerid, int type);
 
 	// PURPOSE: Callback to kick a player on a delay (So they will see the SendClientMessage's before they get kicked)
 	// REQUIRES: Nothing.

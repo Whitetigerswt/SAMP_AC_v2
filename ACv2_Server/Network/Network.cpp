@@ -94,23 +94,23 @@ namespace Network
 	void CloseConnection(unsigned int uiPlayerid)
 	{
 		pRakServer->CloseConnection(players[uiPlayerid]->GetConnectionInfo()->GetSystemAddress());
-		Cleanup(uiPlayerid);
+		Cleanup(uiPlayerid, 1);
 	}
 
-	void CloseUnhandledConnection(const RakNet::SystemAddress& systemAddress)
+	void CloseUnhandledConnection(const RakNet::SystemAddress& systemAddress, int type)
 	{
-		Callback::OnACClosed(systemAddress.ToString(false));
+		Callback::OnACClosed(systemAddress.ToString(false), type);
 
 		pRakServer->CloseConnection(systemAddress);
 		CleanupUnhandledConnection(systemAddress);
 	}
 
-	void Cleanup(unsigned int uiPlayerid)
+	void Cleanup(unsigned int uiPlayerid, int type)
 	{
 		delete players[uiPlayerid];
 		players.erase(uiPlayerid);
 
-		Callback::OnACClosed(uiPlayerid);
+		Callback::OnACClosed(uiPlayerid, type);
 	}
 
 	void CleanupUnhandledConnection(const RakNet::SystemAddress& systemAddress)
@@ -247,7 +247,7 @@ namespace Network
 				Utility::Printf("Disconnected: %s", pPacket->systemAddress.ToString());
 				
 				if (iPlayerId != -1)
-					Cleanup(iPlayerId);
+					Cleanup(iPlayerId, 0);
 				else
 					CleanupUnhandledConnection(pPacket->systemAddress);
 				
@@ -262,7 +262,7 @@ namespace Network
 				Utility::Printf("Connection lost: %s", pPacket->systemAddress.ToString());
 
 				if (iPlayerId != -1)
-					Cleanup(iPlayerId);
+					Cleanup(iPlayerId, 1);
 				else
 					CleanupUnhandledConnection(pPacket->systemAddress);
 
