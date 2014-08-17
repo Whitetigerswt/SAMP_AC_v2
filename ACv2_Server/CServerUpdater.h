@@ -37,10 +37,18 @@ public:
 	CServerUpdater();
 	~CServerUpdater();
 
+	// PURPOSE: Check for the latest server version.
+	// REQUIRES: NULL.
 	static void CheckForUpdate();
 
 private:
+	
+	// PURPOSE: Attempt to download an update.
+	// REQUIRES: A url to the latest update .so or .dll.
 	static void AttemptToUpdatePlugin(std::string url);
+
+	// PURPOSE: Download update from the specified URL. (.so or .dll)
+	// REQUIRES: A URL to a .so or a .dll.
 	static std::string DownloadUpdate(std::string url);
 };
 

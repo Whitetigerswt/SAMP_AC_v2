@@ -40,6 +40,7 @@ CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m
 		m_ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
 	}
 
+	// Set the default values for the variables.
 	m_LiteFoot = false;
 	m_CBug = 9999;
 	m_SwitchReload = true;
@@ -85,6 +86,7 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 			SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 		}
 	}
+	// Execute the PAWN callback.
 	Callback::Execute("OnFileExecuted", "ssi", md5, processpath, ID);
 }
 
@@ -180,6 +182,8 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 		// And kick the player.
 		SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 	}
+
+	// Execute PAWN callback.
 	Callback::Execute("OnFileCalculated", "ssi", md5, path, ID);
 }
 
@@ -202,6 +206,7 @@ void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 	// Kick the player who has the modified file.
 	SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 
+	// Execute the PAWN callback.
 	Callback::Execute("OnImgFileModifed", "ssi", md5, filename, ID);
 }
 
@@ -321,6 +326,7 @@ void CAntiCheat::OnTamperAttempt()
 
 void CAntiCheat::CheckVersionCompatible(float version)
 {
+	// Check if the version is incompatible with the server version.
 	if (version > CURRENT_MAJOR_VERSION)
 	{
 		// Inform the player there version of AC is not compatible with the server.
@@ -342,6 +348,7 @@ void CAntiCheat::CheckVersionCompatible(float version)
 
 void CAntiCheat::SetFPSLimit(int newlimit)
 {
+	// Update the frame limit the server keeps.
 	m_FrameLimit = newlimit;
 }
 

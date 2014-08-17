@@ -1,4 +1,3 @@
-
 #include <map>
 #include <vector>
 #include <string>
@@ -11,10 +10,24 @@
 class Cmd5Info
 {
 public:
+	// PURPOSE: Get the list of allowed IMG md5s
+	// REQUIRES: NULL
 	static std::map<std::string, std::string> GetIMGMD5s();
+
+	// PURPOSE: Get a list of bad md5 .exe, or modules.
+	// REQUIRES: NULL
 	static std::vector<std::string> GetBadExecutableFiles();
+
+	// PURPOSE: Get the text of a website.
+	// REQUIRES: A URL to check.
 	static std::string GetWebsiteText(std::string url);
+
+	// PURPOSE: Get a list of bad gta directory files in md5s.
+	// REQUIRES: NULL
 	static std::vector<std::string> GetGtaDirectoryFilesMd5();
+
+	// PURPOSE: Get a list of bad gta directory files in file names.
+	// REQUIRES: NULL
 	static std::vector<std::string> GetGtaDirectoryFilesNames();
 
 private:

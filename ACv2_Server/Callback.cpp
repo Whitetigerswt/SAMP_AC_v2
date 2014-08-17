@@ -99,12 +99,16 @@ namespace Callback
 
 	void SAMPGDK_CALL KickPlayer(int timerid, void *params)
 	{
+		// Kick the player from the server.
 		Kick((int)params);
 	}
 	
 	void SAMPGDK_CALL CheckPlayersMemory(int timerid, void *params) 
 	{
+		// Get the player ID from the params.
 		int playerid = (int)params;
+
+		// Make sure the player is connected to the AC and the server.
 		if (IsPlayerConnected(playerid) && Network::IsPlayerConnectedToAC(playerid))
 		{
 			// Verify the players weapon.dat values.
@@ -112,6 +116,7 @@ namespace Callback
 			bsData.Write(0xC8C418); 
 			bsData.Write(0x460);
 
+			// Send RPC.
 			Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData);
 
 			/*// Verify the players handling.cfg values
@@ -176,6 +181,7 @@ namespace Callback
 				}
 			}
 		}
+		// Execute the callback to PAWN.
 		Execute("OnACClosed", "s", ip.c_str());
 	}
 
@@ -254,7 +260,6 @@ namespace Callback
 		CServerUpdater::CheckForUpdate();
 
 		// Initialize raknet server to be connected to by the AC.
-
 		Network::Initialize("", GetServerVarAsInt("port") - 7, GetServerVarAsInt("maxplayers"));
 
 		return true;

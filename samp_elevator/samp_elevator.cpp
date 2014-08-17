@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include <windows.h>
 
 // The purpose of this program is just to elevate gta_sa.exe if it's not elevated.
