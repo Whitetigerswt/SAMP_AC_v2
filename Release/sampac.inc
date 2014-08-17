@@ -65,7 +65,8 @@ forward OnACOpened(ip[]);
 
 // PURPOSE: Callback for when a player has disconnected from the AC server.
 // REQUIRES: The client is using AC.
-forward OnACClosed(ip[]);
+// types: 0 = proper disconnection, 1 = timeout
+forward OnACClosed(ip[], type);
 
 // PURPOSE: Callback for MD5_Memory
 // REQUIRES: MD5_Memorys return value will be sent to this function sometime after MD5_Memory is called.

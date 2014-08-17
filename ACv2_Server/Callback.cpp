@@ -189,7 +189,7 @@ namespace Callback
 			}
 		}
 		// Execute the callback to PAWN.
-		Execute("OnACClosed", "s", ip.c_str());
+		Execute("OnACClosed", "is", type, ip.c_str());
 	}
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
@@ -235,7 +235,7 @@ namespace Callback
 			Utility::Printf("%s has been kicked from the server for not connecting with AC while AC is on.", name);
 
 			// Finally, kick the player.
-			SetTimer(3000, 0, Callback::KickPlayer, (void*)playerid);
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 		} 
 
 		return true;
@@ -302,7 +302,7 @@ namespace Callback
 					if (IsPlayerConnected(i) && !Network::IsPlayerConnectedToAC(i))
 					{
 						// Kick them from the server!
-						SetTimer(3000, 0, Callback::KickPlayer, (void*)i);
+						SetTimer(1000, 0, Callback::KickPlayer, (void*)i);
 					}
 				}
 			}
