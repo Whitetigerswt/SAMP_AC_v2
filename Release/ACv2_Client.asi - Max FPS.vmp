@@ -501,6 +501,7 @@
 			/>
 			<Procedure
 				MapAddress="CDirectX::HOOK_DirectInput8Create(struct HINSTANCE__ *,unsigned long,struct _GUID const &amp;,void * *,struct IUnknown *)"
+				IncludedInCompilation="false"
 				CompilationType="1"
 			/>
 			<Procedure

@@ -19,7 +19,7 @@ SetCompressor /SOLID lzma
 ;General
 
   ;Name and file
-  !define VERSION "dev-beta6"
+  !define VERSION "dev-beta7"
   Name "SA:MP AC-${VERSION}"
   OutFile "sampac-${VERSION}.exe"
 
