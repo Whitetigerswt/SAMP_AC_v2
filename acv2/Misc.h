@@ -27,4 +27,8 @@ namespace Misc
 	// PURPOSE: Get the crouch bug status.
 	// REQUIRES: NULL
 	int GetCrouchBug();
+
+	// PURPOSE: Get the players GTA SA version
+	// REQUIRES: NULL
+	int GetGameVersion();
 }

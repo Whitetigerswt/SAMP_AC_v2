@@ -14,6 +14,10 @@ public:
 	static void HookD3DFunctions();
 	static IDirect3D9* WINAPI HOOK_Direct3DCreate9(UINT SDKVersion);
 	static void Initialize(IDirect3DDevice9* device, IDirect3D9* direct3D, HWND hwnd);
+	static void CheckD3DHooks();
+	static void DirectXCreationHookUS();
+	static void DirectXCreationHookEU();
+	static void DirectXCreationProxy();
 
 private:
 	static Direct3DCreate9_t  m_pDirect3DCreate9;

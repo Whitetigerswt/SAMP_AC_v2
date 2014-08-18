@@ -14,6 +14,8 @@
 #define SPRINT_KEY			*(BYTE*)0xB73478
 #define CROUCH_KEY			*(BYTE*)0xB7347C
 #define AIM_KEY				*(BYTE*)0xB73464
+#define DIRECT_CREATE_US	(BYTE*)0x7F6312
+#define DIRECT_CREATE_EU	(BYTE*)0x7F6352
 
 #define VAR_LITE_FOOT		(void*)0x60A71C
 #define VAR_SHOT_TICK		*(int*)0xB5F898

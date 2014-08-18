@@ -70,4 +70,27 @@ namespace Misc
 	{
 		return CrouchBug;
 	}
+
+	int GetGameVersion() {
+		unsigned char ucA = *reinterpret_cast < unsigned char* > (0x748ADD);
+		unsigned char ucB = *reinterpret_cast < unsigned char* > (0x748ADE);
+		if (ucA == 0xFF && ucB == 0x53)
+		{
+			return 1; // usa
+		}
+		else if (ucA == 0x0F && ucB == 0x84)
+		{
+			return 2; // eu
+		}
+		else if (ucA == 0xFE && ucB == 0x10)
+		{
+			return 3;
+		}
+		else
+		{
+			return -1;
+		}
+
+		return -1;
+	}
 }

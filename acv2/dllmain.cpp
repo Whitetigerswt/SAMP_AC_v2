@@ -16,6 +16,9 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 		{
 			if (!CLoader::IsLoaded())
 			{
+				// Hook the D3D9Device functions.
+				CDirectX::HookD3DFunctions();
+
 				// Load the CLEO hooks so CLEO will not load scripts properly.
 				CHookManager::Load();
 
@@ -24,8 +27,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 				{
 					FreeLibraryAndExitThread(hModule, 0);
 				}
-
-				
+		
 				// Do the main loading procedure in a new thread.
 				boost::thread theThread(&CLoader::Initialize, hModule);
 				break;

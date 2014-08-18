@@ -682,6 +682,18 @@
 				MapAddress="CHookManager::CameraXAccessHook40(void)"
 				CompilationType="1"
 			/>
+			<Procedure
+				MapAddress="CDirectX::DirectXCreationHookUS(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CDirectX::DirectXCreationHookEU(void)"
+				CompilationType="2"
+			/>
+			<Procedure
+				MapAddress="CDirectX::DirectXCreationProxy(void)"
+				CompilationType="2"
+			/>
 		</Procedures>
 	</Protection>
 	<DLLBox
