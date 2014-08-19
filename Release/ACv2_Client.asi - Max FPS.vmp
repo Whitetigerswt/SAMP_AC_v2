@@ -624,23 +624,23 @@
 			/>
 			<Procedure
 				MapAddress="CDirectoryScanner::Scan(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CDirectoryScanner::img_scan(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="GTASA_CRC32_fromUpCaseString(char const *)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="IMG::OpenArchive(char const *)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="IMG_Entry::IMG_Entry(class IMG *)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="IMG_Entry::ReadEntireFile(void *)"
