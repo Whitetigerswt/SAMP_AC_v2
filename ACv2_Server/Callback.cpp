@@ -19,7 +19,7 @@ namespace Callback
 	static AMX* amx_allowed = NULL;
 	static std::list<AMX*> amxPointers;
 
-	static bool ACToggle = false;
+	static bool ACToggle = true;
 
 	std::list<AMX*>& GetAMXList()
 	{
@@ -104,6 +104,69 @@ namespace Callback
 		{
 			// Kick the player from the server.
 			Kick((int)params);
+		}
+	}
+
+	void SAMPGDK_CALL CheckPacketResponse(int timerid, void *params)
+	{
+		// Convert the params into a playerid.
+		int playerid = (int)params;
+
+		// Make sure the player is still connected to the server.
+		if (!IsPlayerConnected(playerid))
+		{
+			// Return
+			return;
+		}
+
+		// Make sure the player is connected to the server and AC.
+		if (!Network::IsPlayerConnectedToAC(playerid))
+		{
+			// Create new variables to hold strings we'll send to the server.
+			char msg[144], name[MAX_PLAYER_NAME];
+
+			// Get the player's name
+			GetPlayerName(playerid, name, sizeof(name));
+
+			// Format the main string
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server ({FF0000}AC Lost Connection{FFFFFF})");
+
+			// Send the message to the rest of the players on the server.
+			SendClientMessageToAll(-1, msg);
+
+			// Kick the player from the server.
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+
+			// Don't continue in the function.
+			return;
+		}
+
+		// Get the player's CAntiCheat pointer.
+		CAntiCheat* ac = Network::GetPlayerFromPlayerid(playerid);
+		
+		// Get the player's Hardware ID.
+		std::string hwid = ac->GetPlayerHardwareID();
+
+		// Check if it's an empty string
+		if (hwid.empty())
+		{
+			// If it's empty, the client didn't respond to our PACKET_PLAYER_REGISTERED from OnPlayerConnect
+			// (When the player first connects it sends the players HardwareID immediately after receiving that packet)
+
+			// Create new variables for strings we'll send to the rest of the players telling them what happened.
+			char msg[144], name[MAX_PLAYER_NAME];
+
+			// Get the player's name
+			GetPlayerName(playerid, name, sizeof(name));
+
+			// Format the main string we'll send to the players on the server.
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s AC did not respond in time.");
+
+			// Send the message to the server
+			SendClientMessageToAll(-1, msg);
+
+			// Kick the player from the server.
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 		}
 	}
 	
@@ -211,6 +274,14 @@ namespace Callback
 
 			// Check memory pretty frequently in a new timer.
 			SetTimer(1, 0, CheckPlayersMemory, (void*)playerid);
+			
+			// Check if AC is on
+			if (ACToggle)
+			{
+				// Check for a response packet from PACKET_PLAYER_REGISTERED. (The client should send back the HWID ASAP).
+				// If we don't get a response, then directX failed to hook(?) on client side.
+				SetTimer(5000, 0, CheckPacketResponse, (void*)playerid);
+			}
 		}
 
 		// If the player is not running the AC, and /actoggle has been turned on (aka AC is on)
