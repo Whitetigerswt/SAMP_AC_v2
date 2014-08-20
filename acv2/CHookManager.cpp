@@ -121,7 +121,7 @@ static DWORD CameraYAccess27JmpBack = 0x5240DD;
 static DWORD CPed_Special_FlagsJmpBack = 0x5448E9;
 static DWORD Fatulous1JmpBack = 0x6D8033;
 static DWORD Fatulous2JmpBack = 0x4B3314;
-static DWORD Fatulous3JmpBack = 0x6081AA;
+static DWORD Fatulous3JmpBack = 0x64EEEA;
 
 static DWORD FOVPatchJmpBack = 0x522F68;
 
@@ -291,7 +291,7 @@ void CHookManager::Load()
 	// Fix for fatulous.exe health hack
 	CMem::ApplyJmp(FUNC_Fatulous1, (DWORD)Fatulous1, 9);
 	CMem::ApplyJmp(FUNC_Fatulous2, (DWORD)Fatulous2, 6);
-	CMem::ApplyJmp(FUNC_Fatulous3, (DWORD)Fatulous3, 11);
+	CMem::ApplyJmp(FUNC_Fatulous3, (DWORD)Fatulous3, 10);
 
 	// Patch widescreen_lite.asi mod
 	// Parts of it's source code are here: https://github.com/ThirteenAG/Widescreen_Fixes_Pack/tree/master/GTASA_widescreen_fix
@@ -509,12 +509,11 @@ HOOK CHookManager::Fatulous2()
 	}
 }
 
-DWORD Fatulous3Call = 0x4AEB90;
 HOOK CHookManager::Fatulous3()
 {
 	__asm
 	{
-		call[Fatulous3Call]
+		mov eax, [esp + 04h]
 		fld dword ptr[esi + 0x540]
 		jmp[Fatulous3JmpBack]
 	}

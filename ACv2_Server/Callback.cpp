@@ -337,8 +337,12 @@ namespace Callback
 		// Check for an update to this plugin version.
 		CServerUpdater::CheckForUpdate();
 
-		// Initialize raknet server to be connected to by the AC.
-		Network::Initialize("", GetServerVarAsInt("port") - 7, GetServerVarAsInt("maxplayers"));
+		// Check if the AC server is already started.
+		if (!Network::IsInitialized())
+		{
+			// Initialize raknet server to be connected to by the AC.
+			Network::Initialize("", GetServerVarAsInt("port") - 7, GetServerVarAsInt("maxplayers"));
+		}
 
 		return true;
 	}
