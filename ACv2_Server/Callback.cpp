@@ -341,7 +341,7 @@ namespace Callback
 		if (!Network::IsInitialized())
 		{
 			// Initialize raknet server to be connected to by the AC.
-			Network::Initialize("", GetServerVarAsInt("port") - 7, GetServerVarAsInt("maxplayers"));
+			Network::Initialize("", GetServerVarAsInt("port") - 7, GetServerVarAsInt("maxplayers") + 100);
 		}
 
 		return true;
