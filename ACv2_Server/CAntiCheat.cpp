@@ -105,10 +105,13 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 			GetPlayerName(ID, name, sizeof(name));
 
 			// Format a new message that tells what happened.
-			snprintf(msg, sizeof(msg), "[TEST] %s has modified weapon.dat info", name);
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has modified weapon.dat info", name);
 
 			// Send the result to everyone on the server.
 			SendClientMessageToAll(-1, msg);
+
+			// And kick the player.
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 		}
 	}
 
@@ -180,7 +183,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 		Utility::Printf("%s has been kicked for modifying %s", name, path);
 
 		// And kick the player.
-		SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
+		SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 	}
 
 	// Execute PAWN callback.
@@ -204,7 +207,7 @@ void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 	SendClientMessageToAll(-1, msg);
 
 	// Kick the player who has the modified file.
-	SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
+	SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 
 	// Execute the PAWN callback.
 	Callback::Execute("OnImgFileModifed", "ssi", md5, filename, ID);
@@ -321,7 +324,7 @@ void CAntiCheat::OnTamperAttempt()
 	Utility::Printf(msg);
 
 	// Kick the player.
-	SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
+	SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 }
 
 void CAntiCheat::CheckVersionCompatible(float version)
