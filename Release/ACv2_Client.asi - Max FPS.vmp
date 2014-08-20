@@ -694,6 +694,10 @@
 				MapAddress="CDirectX::DirectXCreationProxy(void)"
 				CompilationType="2"
 			/>
+			<Procedure
+				MapAddress="CRPCCallback::ToggleUnlimitedSprint(class RakNet::BitStream &amp;,int)"
+				CompilationType="2"
+			/>
 		</Procedures>
 	</Protection>
 	<DLLBox
