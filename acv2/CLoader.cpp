@@ -10,6 +10,7 @@
 #include "VMProtectSDK.h"
 #include "VersionHelpers.h"
 #include "../Shared/Network/CRPC.h"
+#include "CCrashHandler.h"
 
 #include <map>
 #include <Shellapi.h>
@@ -23,6 +24,9 @@ HMODULE CLoader::ThishMod = NULL;
 
 void CLoader::Initialize(HMODULE hMod)
 {
+	// Install the crash handler.
+	new CCrashHandler();
+
 	// Record that we're loaded
 	isLoaded = true;
 

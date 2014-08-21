@@ -77,6 +77,11 @@ Section "Main Components" SecMain
   
   File "ACv2_Client.asi"
   File "samp_elevator.exe"
+  File "crashrpt_lang.ini"
+  File "CrashRpt1402.dll"
+  File "dbghelp.dll"
+  File "CrashSender1402.exe"
+  
   Delete "$INSTDIR\d3d9.dll"
   
   ;Store installation folder
@@ -119,6 +124,10 @@ Section "Uninstall"
 
   Delete "$INSTDIR\ACv2_Client.asi"
   Delete "$INSTDIR\samp_elevator.exe"
+  Delete "$INSTDIR\crashrpt_lang.ini"
+  Delete "$INSTDIR\CrashRpt1402.dll"
+  Delete "$INSTDIR\dbghelp.dll"
+  Delete "$INSTDIR\CrashSender1402.exe"
 
   Delete "$INSTDIR\Uninstall_ac.exe"
 

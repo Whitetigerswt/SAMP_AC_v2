@@ -4,6 +4,7 @@
 #include "CHookManager.h"
 #include "CLoader.h"
 #include "Addresses.h"
+#include "CCrashHandler.h"
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
