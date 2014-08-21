@@ -20,6 +20,7 @@ SetCompressor /SOLID lzma
 
   ;Name and file
   !define VERSION "pub-beta1"
+  !define AUTHOR "Whitetiger"
   Name "SA:MP AC-${VERSION}"
   OutFile "sampac-${VERSION}.exe"
 
@@ -69,6 +70,10 @@ FunctionEnd
 ;--------------------------------
 ;Installer Sections
 
+!define PRODUCT_UNINST_ROOT_KEY "HKLM"
+!define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)"
+!define PRODUCT_WEBSITE "http://whitetigerswt.github.io/SAMP_AC_v2/"
+
 Section "Main Components" SecMain
 
 	SectionIn 1 2 RO
@@ -89,6 +94,13 @@ Section "Main Components" SecMain
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall_ac.exe"
+  
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\Uninstall_ac.exe"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\uninstall_ac.exe"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${VERSION}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEBSITE}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${AUTHOR}"
 
 SectionEnd
 
@@ -130,6 +142,8 @@ Section "Uninstall"
   Delete "$INSTDIR\CrashSender1402.exe"
 
   Delete "$INSTDIR\Uninstall_ac.exe"
+  
+  DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
 
   DeleteRegKey /ifempty HKCU "Software\sampac"
 
