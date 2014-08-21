@@ -6,6 +6,10 @@ CLog::CLog(char* filename) {
 	m_stream.open(filename, std::ofstream::out | std::ofstream::app);
 }
 
+CLog::CLog(char* filename, bool append) {
+	m_stream.open(filename, append == true ? std::ofstream::out | std::ofstream::app : std::ofstream::out);
+}
+
 void CLog::Write(std::string logline){
 	time_t now = time(0);
 	struct tm* tm = localtime(&now);
