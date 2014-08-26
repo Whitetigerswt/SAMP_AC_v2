@@ -40,6 +40,8 @@ private:
 	static void Fatulous2();
 	static void Fatulous3();
 
+	static void NameTagHook();
+
 	static void WidescreenPatch();
 
 	static void FOVPatch();

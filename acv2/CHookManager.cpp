@@ -311,6 +311,21 @@ void CHookManager::Load()
 		// je -> jmp
 		memcpy((void*)xfire, "\xEB", 1);
 	}
+
+	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
+
+	DWORD samp = (DWORD)GetModuleHandle("samp.dll");
+	if (samp)
+	{
+		// Add address offset
+		samp += 0x86963;
+
+		// Unprotect memory.
+		VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+		// Install hook
+		CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 6);
+	}
 	
 	CMem::ApplyJmp(FUNC_LiteFoot, (DWORD)LiteFootHook, 6);
 
@@ -438,6 +453,45 @@ void CHookManager::OnPause()
 		jmp[PauseJmpBack]
 	}
 }
+
+DWORD samp_base;
+DWORD je1;
+DWORD je2;
+DWORD NameTagHookJmpBack;
+void CHookManager::NameTagHook()
+{
+
+	__asm
+	{
+		pushad
+	}
+
+	samp_base = (DWORD)GetModuleHandle("samp.dll");
+	je1 = samp_base + 0x86969;
+	je2 = samp_base + 0x869CA;
+	NameTagHookJmpBack = je1;
+
+	__asm
+	{
+		popad
+		pop edi
+		pop esi
+		pop ebx
+		pop ebp
+		je jmp_if_equal
+		test ecx,ecx
+		je jmp_if_equal_2
+
+	jmp_if_equal:
+		jmp je1
+
+	jmp_if_equal_2:
+		jmp je2
+
+	jmp NameTagHookJmpBack
+
+	}
+}
 #pragma warning(default:4731)
 
 void CHookManager::SetLiteFoot(bool toggle)
@@ -514,7 +568,7 @@ HOOK CHookManager::Fatulous3()
 	__asm
 	{
 		mov eax, [esp + 04h]
-		fld dword ptr[esi + 0x540]
+		fld dword ptr[eax + 540h]
 		jmp[Fatulous3JmpBack]
 	}
 }

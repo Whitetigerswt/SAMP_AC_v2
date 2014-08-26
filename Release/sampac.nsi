@@ -19,7 +19,7 @@ SetCompressor /SOLID lzma
 ;General
 
   ;Name and file
-  !define VERSION "pub-beta2"
+  !define VERSION "pub-beta3"
   !define AUTHOR "Whitetiger"
   Name "SA:MP AC-${VERSION}"
   OutFile "sampac-${VERSION}.exe"
