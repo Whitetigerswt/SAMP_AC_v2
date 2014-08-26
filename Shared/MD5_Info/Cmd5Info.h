@@ -22,6 +22,11 @@ public:
 	// REQUIRES: A URL to check.
 	static std::string GetWebsiteText(std::string url);
 
+	// PURPOSE: Download a file onto the machine.
+	// REQUIRES: A URL to download from.
+	// REQUIRES: A filename to place it into.
+	static std::string DownloadFile(std::string url, std::string fname);
+
 	// PURPOSE: Get a list of bad gta directory files in md5s.
 	// REQUIRES: NULL
 	static std::vector<std::string> GetGtaDirectoryFilesMd5();

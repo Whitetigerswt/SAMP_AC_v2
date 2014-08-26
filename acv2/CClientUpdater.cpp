@@ -1,5 +1,7 @@
 #include "CClientUpdater.h"
 #include "CLoader.h"
+#include "../Shared/MD5_Info/Cmd5Info.h"
+#include "CLog.h"
 
 #include <Wininet.h>
 #include <Urlmon.h>
@@ -103,8 +105,25 @@ void CClientUpdater::UpdateClient(std::string downloadLink, HMODULE hMod)
 	}
 	else
 	{
-		// Else an error occured and provide the link to the user so they can update manually.
-		sprintf_s(currentFile, sizeof(currentFile), "SAMP AC has failed at installing an update. You will need to update manually to keep using this mod.\n\nYou can download the latest version here: %s", downloadLink.c_str());
-		MessageBoxA(NULL, currentFile, "An error occured while updating", MB_OK | MB_ICONEXCLAMATION);
+		// Some error occured, try to update in an alternative way.
+		std::string result = Cmd5Info::DownloadFile(downloadLink, currentFile);
+
+		// Check if the result was less than 1000 bytes.
+		if (result.length() < 1000)
+		{
+			// If the returned file is less than 1000 bytes, an error occured. (Since the DownloadFile function will retrun
+			// Either the file contents or an std::exception.what()
+			CLog log = CLog("ac_ypdate_error_log.txt");
+			log.Write("An error occured while updating, you should report this error immediately to Whitetiger.");
+			log.Write("The error message returned: ");
+			log.Write(result);
+			log.Write("And that's all we know!");
+
+			// Show a message box to the user telling them an error occured.
+			sprintf_s(currentFile, sizeof(currentFile), "SAMP AC has failed at installing an update. You will need to update manually to keep using this mod.\n\nYou can download the latest version here: %s", downloadLink.c_str());
+			MessageBoxA(NULL, currentFile, "An error occured while updating", MB_OK | MB_ICONEXCLAMATION);
+
+			ExitProcess(0);
+		}
 	}
 }

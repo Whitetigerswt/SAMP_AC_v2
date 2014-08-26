@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <fstream>
 
 #ifndef WIN32
 #define MAX_PATH 260
@@ -149,4 +150,18 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 		return e.what();
 	}
 	return "";
+}
+
+std::string Cmd5Info::DownloadFile(std::string url, std::string fname)
+{
+	// Create an output stream to paste the URL contents.
+	std::ofstream ofs(fname.c_str());
+
+	// Save the URL contents so we can return it later.
+	std::string result = GetWebsiteText(url);
+
+	// Paste the URL contents.
+	ofs << static_cast<std::string>(result) << std::endl;
+
+	return result;
 }
