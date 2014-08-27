@@ -113,7 +113,7 @@ void CClientUpdater::UpdateClient(std::string downloadLink, HMODULE hMod)
 		{
 			// If the returned file is less than 1000 bytes, an error occured. (Since the DownloadFile function will retrun
 			// Either the file contents or an std::exception.what()
-			CLog log = CLog("ac_ypdate_error_log.txt");
+			CLog log = CLog("ac_update_error_log.txt");
 			log.Write("An error occured while updating, you should report this error immediately to Whitetiger.");
 			log.Write("The error message returned: ");
 			log.Write(result);
