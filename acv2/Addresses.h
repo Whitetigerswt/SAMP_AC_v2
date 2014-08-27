@@ -21,3 +21,4 @@
 #define VAR_SHOT_TICK		*(int*)0xB5F898
 #define VAR_GTA3_IMG_PATH					(void*)0x858AF4
 #define VAR_CPED_SPECIAL_FLAGS		*(BYTE*)((PLAYER_POINTER) + 0x42)
+#define VAR_SPRINT_SPEED			*(float*)0xB7CDB8

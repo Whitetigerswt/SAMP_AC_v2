@@ -582,19 +582,10 @@ HOOK CHookManager::SprintHook()
 	}
 
 	// Check if the sprint key is pressed, and it wasn't pressed in the last frame.
-	if (SPRINT_KEY != 0 && iLastPress == 0)
+	if (SPRINT_KEY != 0)
 	{
-		// If the sprint key was pressed more than once since the last tick
-		if (iLastTick > GetTickCount())
-		{
-			// Ignore the input
-			SPRINT_KEY = 0;
-		}
-		else
-		{
-			// This was a successful sprint press, record it's timestamp.
-			iLastTick = GetTickCount() + iTickOffset;
-		}
+		// Set the sprint speed 
+		VAR_SPRINT_SPEED = 6.5f;
 	}
 
 	// Check if the crouch key is pressed.
@@ -607,9 +598,6 @@ HOOK CHookManager::SprintHook()
 			CROUCH_KEY = 0;
 		}
 	}
-
-	// Record the last press of the sprint key.
-	iLastPress = SPRINT_KEY;
 
 	__asm
 	{

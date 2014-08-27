@@ -340,8 +340,18 @@ namespace Callback
 		// Check if the AC server is already started.
 		if (!Network::IsInitialized())
 		{
-			// Initialize raknet server to be connected to by the AC.
-			Network::Initialize("", GetServerVarAsInt("port") - 7, GetServerVarAsInt("maxplayers") + 100);
+			try
+			{
+				// Initialize raknet server to be connected to by the AC.
+				Network::Initialize("", GetServerVarAsInt("port") - 7, GetServerVarAsInt("maxplayers") + 100);
+			}
+			catch (std::exception &e)
+			{
+				// an error occured, possibly due to the port being already in use?
+				Utility::Printf("We've run into an exception when trying to initialize the AC server. Here's what came back");
+				Utility::Printf(e.what());
+				Utility::Printf("To fix this issue, the solution may be to simply port forward port %d, and make sure no other software is using this port.", GetServerVarAsInt("port") - 7);
+			}
 		}
 
 		return true;
