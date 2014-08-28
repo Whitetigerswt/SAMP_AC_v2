@@ -43,6 +43,7 @@
 			/>
 			<Procedure
 				MapAddress="CInjectedLibraries::Scan(void)"
+				IncludedInCompilation="false"
 				CompilationType="1"
 			/>
 			<Procedure
@@ -51,11 +52,11 @@
 			/>
 			<Procedure
 				MapAddress="CLoader::RunElevated(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CLoader::IsProcessElevated(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CProcessList::CProcessList(void)"
@@ -63,6 +64,7 @@
 			/>
 			<Procedure
 				MapAddress="CProcessList::Scan(void)"
+				IncludedInCompilation="false"
 				CompilationType="1"
 			/>
 			<Procedure
@@ -226,7 +228,7 @@
 			/>
 			<Procedure
 				MapAddress="CRPCCallback::Initialize(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CRPCCallback::ResendFileInformation(void)"
@@ -519,15 +521,15 @@
 			/>
 			<Procedure
 				MapAddress="CRPCCallback::ToggleSwitchReload(class RakNet::BitStream &amp;,int)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CRPCCallback::SetFrameLimit(class RakNet::BitStream &amp;,int)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CHookManager::SetConnectPatches(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CHookManager::LiteFootHook(void)"
@@ -539,19 +541,19 @@
 			/>
 			<Procedure
 				MapAddress="CRPCCallback::ToggleCrouchBug(class RakNet::BitStream &amp;,int)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CRPCCallback::ExitThisProcess(class RakNet::BitStream &amp;,int)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CRPCCallback::VersionNotCompatible(class RakNet::BitStream &amp;,int)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CRPCCallback::ToggleLiteFoot(class RakNet::BitStream &amp;,int)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CHookManager::CameraXWriteHook8(void)"
@@ -683,19 +685,19 @@
 			/>
 			<Procedure
 				MapAddress="CDirectX::DirectXCreationHookUS(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CDirectX::DirectXCreationHookEU(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CDirectX::DirectXCreationProxy(void)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CRPCCallback::ToggleUnlimitedSprint(class RakNet::BitStream &amp;,int)"
-				CompilationType="2"
+				CompilationType="1"
 			/>
 		</Procedures>
 	</Protection>

@@ -80,9 +80,11 @@ int main(int argc, char* argv[])
 
 		// Make sure The address of LoadLibrary isn't NULL
 		if (addr != NULL)
+		{
 			// Create a remote thread that calls LoadLibrary, and as the parameter, the memory location we just wrote the samp.dll path to.
 			// also don't execute this thread, but just create.
 			id = CreateRemoteThread(ProcessInfo.hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)addr, arg, CREATE_SUSPENDED, NULL);
+		}
 		else
 		{
 			MessageBoxA(NULL, "Could not find the address of LoadLibraryA", "SA:MP Elevator", MB_ICONERROR);
