@@ -11,6 +11,7 @@ int CALLBACK CrashCallback(CR_CRASH_CALLBACK_INFO* pInfo)
 	// Add additional log file.
 	CLog log = CLog("exception_info.txt", false);
 	log.Write("Exception Type: %d", pInfo->pExceptionInfo->exctype);
+	log.Write("Report from: %s", GetCommandLineA());
 
 	if (pInfo->pExceptionInfo->exctype == CR_CPP_INVALID_PARAMETER)
 	{

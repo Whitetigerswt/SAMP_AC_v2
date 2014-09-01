@@ -172,29 +172,27 @@ namespace Callback
 	
 	void SAMPGDK_CALL CheckPlayersMemory(int timerid, void *params) 
 	{
-		// Get the player ID from the params.
-		int playerid = (int)params;
-
-		// Make sure the player is connected to the AC and the server.
-		if (IsPlayerConnected(playerid) && Network::IsPlayerConnectedToAC(playerid))
+		// Loop through all players.
+		for (int i = 0; i < MAX_PLAYERS; ++i)
 		{
-			// Verify the players weapon.dat values.
-			RakNet::BitStream bsData;
-			bsData.Write(0xC8C418); 
-			bsData.Write(0x460);
+			// Make sure the player is connected to the AC and the server.
+			if (IsPlayerConnected(i) && Network::IsPlayerConnectedToAC(i))
+			{
+				// Verify the players weapon.dat values.
+				RakNet::BitStream bsData;
+				bsData.Write(0xC8C418);
+				bsData.Write(0x460);
 
-			// Send RPC.
-			Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData);
+				// Send RPC.
+				Network::PlayerSendRPC(MD5_MEMORY_REGION, i, &bsData);
 
-			/*// Verify the players handling.cfg values
-			RakNet::BitStream bsData2;
-			bsData2.Write(0xC2B9DC);
-			bsData2.Write(0xAF00);
+				/*// Verify the players handling.cfg values
+				RakNet::BitStream bsData2;
+				bsData2.Write(0xC2B9DC);
+				bsData2.Write(0xAF00);
 
-			Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData2);*/
-
-			// Repeat on a 1 minute interval.
-			SetTimer(60000, 0, CheckPlayersMemory, (void*)playerid);
+				Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData2);*/
+			}
 		}
 	}
 
@@ -271,9 +269,6 @@ namespace Callback
 
 			// Disable lite foot by default.
 			ac->ToggleLiteFoot(false);
-
-			// Check memory pretty frequently in a new timer.
-			SetTimer(1, 0, CheckPlayersMemory, (void*)playerid);
 			
 			// Check if AC is on
 			if (ACToggle)
@@ -353,6 +348,9 @@ namespace Callback
 				Utility::Printf("To fix this issue, the solution may be to simply port forward port %d, and make sure no other software is using this port.", GetServerVarAsInt("port") - 7);
 			}
 		}
+
+		// Check memory pretty frequently in a new timer.
+		SetTimer(60000, 1, CheckPlayersMemory, NULL);
 
 		return true;
 	}

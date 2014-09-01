@@ -11,6 +11,9 @@
 #include "VersionHelpers.h"
 #include "../Shared/Network/CRPC.h"
 #include "CCrashHandler.h"
+#include "CLog.h"
+#include "Detours\detours.h"
+#include "CModuleSecurity.h"
 
 #include <map>
 #include <Shellapi.h>
@@ -27,6 +30,9 @@ void CLoader::Initialize(HMODULE hMod)
 	// Install the crash handler.
 	new CCrashHandler();
 
+	// Hook LoadLibrary function.
+	CModuleSecurity::HookLoadLibrary();
+
 	// Record that we're loaded
 	isLoaded = true;
 
@@ -35,6 +41,9 @@ void CLoader::Initialize(HMODULE hMod)
 
 	// Hook the D3D9Device functions.
 	CDirectX::HookD3DFunctions();
+
+	CLog log = CLog("hooks.txt");
+	log.Write("inst directxhooks");
 	
 	// Load the command line in a string (mostly the host, and port so we can connect later)
 	std::map < std::string, std::string > cmdline;
@@ -49,6 +58,8 @@ void CLoader::Initialize(HMODULE hMod)
 		// Wait until the game is loaded in an infinite loop.
 		Sleep(5);
 	}
+
+	CModuleSecurity::AddAllowedModules();
 	
 	// Make sure we're using the latest version of this mod.
 	CClientUpdater::CheckForUpdate(hMod);
@@ -75,11 +86,14 @@ void CLoader::Initialize(HMODULE hMod)
 		// Check for a tamper attempt.
 		if (VMProtectIsDebuggerPresent(true) || VMProtectIsVirtualMachinePresent() || !VMProtectIsValidImageCRC())
 		{
+			// Make sure the user is connected.
 			if (!Network::IsConnected())
 			{
+				// Close the process.
 				ExitProcess(0);
 			}
 
+			// Tell the server we've done some naughty stuff.
 			Network::SendRPC(ON_TAMPER_ATTEMPT);
 		}
 

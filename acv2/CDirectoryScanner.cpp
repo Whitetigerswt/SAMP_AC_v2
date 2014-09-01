@@ -80,6 +80,12 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 			// Get the file name
 			const char* filename = (*entry).GetFilename();
 
+			// Make sure the filename has an entry in the files we're checking
+			if (Gta3ImgDefaults[filename].empty())
+			{
+				continue;
+			}
+
 			// allocate enough memory to hold all of the file contents in the entry.
 			filecontents = (char*)malloc(sizeof(char)*(*entry).GetFilesize());
 
@@ -88,15 +94,6 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 
 			// MD5 each entry
 			std::string md5 = md5obj.digestMemory((BYTE*)filecontents, (*entry).GetFilesize());
-
-			// Make sure the filename has an entry in the files we're checking
-			if (Gta3ImgDefaults[filename].empty())
-			{
-				// Free memory!
-				free(filecontents);
-				md5.clear();
-				continue;
-			}
 
 			// Compare the md5 calculated to the list of files we got from the "Internet"
 			if (md5.compare(Gta3ImgDefaults[filename]) != 0)

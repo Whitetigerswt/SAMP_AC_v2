@@ -450,6 +450,9 @@
     <ClCompile Include="CCrashHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CModuleSecurity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h">
@@ -1606,6 +1609,9 @@
     </ClInclude>
     <ClInclude Include="CrashRptProbe.h">
       <Filter>Header Files\CrashRpt</Filter>
+    </ClInclude>
+    <ClInclude Include="CModuleSecurity.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

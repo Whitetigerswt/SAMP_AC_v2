@@ -29,9 +29,10 @@ std::map <std::string, std::string> CParseCommandLine::parseCmdLine(std::string 
 				switch (CommandLine.at(i + 1))
 				{
 				
-				case 'h': CmdLine["Host"] = CommandLine.substr(i + 3, characters);
-				case 'p': CmdLine["Port"] = CommandLine.substr(i + 3, characters);
-				case 'z': CmdLine["Password"] = CommandLine.substr(i + 3, characters);
+					case 'h': CmdLine["Host"] = CommandLine.substr(i + 3, characters);
+					case 'p': CmdLine["Port"] = CommandLine.substr(i + 3, characters);
+					case 'z': CmdLine["Password"] = CommandLine.substr(i + 3, characters);
+					case 'n': CmdLine["Name"] = CommandLine.substr(i + 3, characters);
 				}
 			}
 		}
