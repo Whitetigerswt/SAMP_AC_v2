@@ -156,7 +156,6 @@
 #define VAR_INF_AMMO						(void*)0x7428A6
 #define VAR_INF_OXYGEN						(void*)0x60A8E2
 #define VAR_INF_HP							(void*)0x4B322C
-#define VAR_FULL_WEAPON_AIMING				(void*)0x6446BD
 
 // GTA:SA PATH CHECKS //
 

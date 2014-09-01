@@ -143,7 +143,6 @@ int CHookManager::iLastPress = 0;
 
 float CHookManager::LiteFoot = 0.0f;
 
-
 void CHookManager::Load()
 {
 	DWORD dwOldProt;
@@ -173,10 +172,6 @@ void CHookManager::Load()
 	// Prevent infinite hp patch
 	VirtualProtect(VAR_INF_HP, 1, PAGE_EXECUTE_READWRITE, &dwOldProt);
 	memcpy(VAR_INF_HP, "\xEB", 1);
-
-	// Prevent Full Weapon Aiming patch
-	VirtualProtect(VAR_FULL_WEAPON_AIMING, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
-	memcpy(VAR_FULL_WEAPON_AIMING, "\x90\x90\x90\x90\x90\x90", 6);
 
 	// Disable Werner patch
 	CMem::ApplyJmp(FUNC_ShotgunBullet, (DWORD)LoadShotgunBullet, 11);
