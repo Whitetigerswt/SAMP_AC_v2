@@ -23,8 +23,11 @@
 // FOV MOD HOOK //
 #define FUNC_FOVPatch						(BYTE*)0x522F63
 
-// SPRINT PATCH - DETECT SPRINT KEY PRESSING //
-#define FUNC_SprintHook						(BYTE*)0x541C98
+// Key press PATCH - DETECT KEY PRESSING //
+#define FUNC_KeyPress						(BYTE*)0x541C98
+
+// Sprint hook - limit sprint to a certain number
+#define FUNC_SprintHook						(BYTE*)0x60A757
 
 // FRAME LIMITER PATCH //
 #define FUNC_FrameLimiter					(void*)0x57CED1

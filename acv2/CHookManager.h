@@ -46,8 +46,9 @@ private:
 
 	static void FOVPatch();
 
-	static void SprintHook();
+	static void KeyPress();
 
+	static void SprintHook();
 	static void LiteFootHook();
 
 	static void GravityHook();

@@ -21,7 +21,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 				// Load the CLEO hooks so CLEO will not load scripts properly.
 				CHookManager::Load();
 
-				CModuleSecurity::AddAllowedModules();
+				//CModuleSecurity::AddAllowedModules();
 
 				// Make sure we aren't loading this DLL at sometime other than init
 				if (ADDRESS_LOADED >= 6)
@@ -33,6 +33,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 				boost::thread theThread(&CLoader::Initialize, hModule);
 				break;
 			}
+			return TRUE;
 		}
 		case DLL_THREAD_ATTACH:
 		{
@@ -45,6 +46,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 				ExitThread(0);
 				return FALSE;
 			}*/
+			return TRUE;
 		}
 	}
 	return TRUE;

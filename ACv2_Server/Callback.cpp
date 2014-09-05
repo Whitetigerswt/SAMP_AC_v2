@@ -129,7 +129,7 @@ namespace Callback
 			GetPlayerName(playerid, name, sizeof(name));
 
 			// Format the main string
-			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server ({FF0000}AC Lost Connection{FFFFFF})");
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server ({FF0000}AC Lost Connection{FFFFFF})", name);
 
 			// Send the message to the rest of the players on the server.
 			SendClientMessageToAll(-1, msg);
@@ -255,6 +255,13 @@ namespace Callback
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
+		// if the AC is on, let the user know this server is protected.
+		if (ACToggle)
+		{
+			// Tell the player we're using the AC on this server.
+			SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
+		}
+
 		// If there is an IP address connected to the AC, try and associate it with this playerid.
 		if (Network::HandleConnection(playerid))
 		{

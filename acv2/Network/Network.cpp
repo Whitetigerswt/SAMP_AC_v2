@@ -106,10 +106,12 @@ namespace Network
 			{
 				unsigned short usRpcId;
 
-				if (bitStream.Read<unsigned short>(usRpcId))
+				if (bitStream.Read(usRpcId))
+				{
 					CRPC::Process(usRpcId, bitStream);
+				}
 
-				break;
+				return;
 			}
 			case PACKET_CONNECTION_REJECTED:
 			case PACKET_PLAYER_PROPER_DISCONNECT:
@@ -133,8 +135,12 @@ namespace Network
 
 			}
 
-			pRakClient->DeallocatePacket(pPacket);
+			if (pPacket != NULL)
+			{
+				pRakClient->DeallocatePacket(pPacket);
+			}
 		}
+		return;
 	}
 
 	unsigned int Send(Network::ePacketType packetType, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)

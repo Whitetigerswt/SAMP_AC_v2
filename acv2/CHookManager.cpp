@@ -125,7 +125,7 @@ static DWORD Fatulous3JmpBack = 0x64EEEA;
 
 static DWORD FOVPatchJmpBack = 0x522F68;
 
-static DWORD SprintHookJmpBack = 0x541C9D;
+static DWORD KeyPressJmpBack = 0x541C9D;
 
 static DWORD LiteFootHookJmpBack = 0x60A746;
 
@@ -133,6 +133,7 @@ static DWORD GravityHookJmpBack1 = 0x543081;
 static DWORD GravityHookJmpBack2 = 0x543093;
 
 static DWORD PauseJmpBack = 0x576C2D;
+static DWORD SprintHookJmpBack = 0x60A760;
 
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
@@ -142,6 +143,8 @@ int CHookManager::iTickOffset = 222;
 int CHookManager::iLastPress = 0;
 
 float CHookManager::LiteFoot = 0.0f;
+
+#define MAX_SPRINT_SPEED 6.5f
 
 void CHookManager::Load()
 {
@@ -332,8 +335,12 @@ void CHookManager::Load()
 
 void CHookManager::SetConnectPatches()
 {
-	// Hook key presses, not necessarily sprint, but this is an all key presses hook.
-	CMem::ApplyJmp(FUNC_SprintHook, (DWORD)SprintHook, 8);
+
+	// Hook key presses, this is an all key presses hook.
+	CMem::ApplyJmp(FUNC_KeyPress, (DWORD)KeyPress, 8);
+
+	// Hook sprint speed
+	CMem::ApplyJmp(FUNC_SprintHook, (DWORD)SprintHook, 9);
 
 	// Disable changing of FOV. 
 	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer
@@ -568,8 +575,8 @@ HOOK CHookManager::Fatulous3()
 	}
 }
 
-DWORD SprintHookCall = 0x53EF80;
-HOOK CHookManager::SprintHook()
+DWORD KeyPressCall = 0x53EF80;
+HOOK CHookManager::KeyPress()
 {
 	__asm
 	{
@@ -580,7 +587,7 @@ HOOK CHookManager::SprintHook()
 	if (SPRINT_KEY != 0)
 	{
 		// Set the sprint speed 
-		VAR_SPRINT_SPEED = 6.5f;
+		VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
 	}
 
 	// Check if the crouch key is pressed.
@@ -598,9 +605,30 @@ HOOK CHookManager::SprintHook()
 	{
 		popad
 
-		call[SprintHookCall]
+		call[KeyPressCall]
 		lea ecx, [ebx + 78h]
-		jmp[SprintHookJmpBack]
+		jmp[KeyPressJmpBack]
+	}
+}
+
+HOOK CHookManager::SprintHook()
+{
+	__asm
+	{
+		fstp dword ptr[ecx + 1Ch]
+		mov ecx, [edi + 00000480h]
+		pushad
+	}
+
+	if (VAR_SPRINT_SPEED > MAX_SPRINT_SPEED)
+	{
+		VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
+	}
+
+	__asm
+	{
+		popad
+			jmp[SprintHookJmpBack]
 	}
 }
 
