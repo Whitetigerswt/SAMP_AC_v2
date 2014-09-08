@@ -160,7 +160,7 @@ namespace Callback
 			GetPlayerName(playerid, name, sizeof(name));
 
 			// Format the main string we'll send to the players on the server.
-			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s AC did not respond in time.");
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s AC did not respond in time.", name);
 
 			// Send the message to the server
 			SendClientMessageToAll(-1, msg);
