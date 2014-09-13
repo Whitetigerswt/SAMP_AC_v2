@@ -31,4 +31,9 @@ namespace Misc
 	// PURPOSE: Get the players GTA SA version
 	// REQUIRES: NULL
 	int GetGameVersion();
+
+	// PURPOSE: Get an address inside a potentially updated .dll
+	// REQUIRES: A pattern.
+	// REQUIRES: A mask.
+	DWORD FindPattern(char *pattern, char *mask);
 }
