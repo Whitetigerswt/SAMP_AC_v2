@@ -282,7 +282,7 @@ namespace Callback
 			{
 				// Check for a response packet from PACKET_PLAYER_REGISTERED. (The client should send back the HWID ASAP).
 				// If we don't get a response, then directX failed to hook(?) on client side.
-				SetTimer(5000, 0, CheckPacketResponse, (void*)playerid);
+				SetTimer(10000, 0, CheckPacketResponse, (void*)playerid);
 			}
 		}
 
