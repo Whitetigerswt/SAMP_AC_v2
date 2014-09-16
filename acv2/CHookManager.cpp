@@ -341,6 +341,9 @@ void CHookManager::SetConnectPatches()
 
 	// Hook sprint speed
 	CMem::ApplyJmp(FUNC_SprintHook, (DWORD)SprintHook, 9);
+	DWORD dwOldProt;
+	VirtualProtect((void*)0x60A72B, sizeof(BYTE), PAGE_EXECUTE_READWRITE, &dwOldProt);
+	CMem::PutSingle < BYTE >(0x60A72B, 0x2B);
 
 	// Disable changing of FOV. 
 	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer
@@ -350,7 +353,6 @@ void CHookManager::SetConnectPatches()
 	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
 
 	// Allow sprint on any surface
-	DWORD dwOldProt;
 	VirtualProtect((void*)0x55E870, sizeof(DWORD), PAGE_EXECUTE_READWRITE, &dwOldProt);
 	VirtualProtect((void*)0x55E874, sizeof(WORD), PAGE_EXECUTE_READWRITE, &dwOldProt);
 
@@ -628,7 +630,7 @@ HOOK CHookManager::SprintHook()
 	__asm
 	{
 		popad
-			jmp[SprintHookJmpBack]
+		jmp[SprintHookJmpBack]
 	}
 }
 
