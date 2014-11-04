@@ -263,7 +263,7 @@ namespace Callback
 		}
 
 		// Make sure the new connected user isn't an NPC.
-		if (!IsPlayerNPC(playerid))
+		if (IsPlayerNPC(playerid))
 		{
 			// Return
 			return true;
@@ -367,7 +367,7 @@ namespace Callback
 		SetTimer(60000, 1, CheckPlayersMemory, NULL);
 
 		// Get the default AC enabled value.
-		ACToggle = GetServerVarAsInt("ac");
+		ACToggle = !!GetServerVarAsInt("ac");
 
 		return true;
 	}
