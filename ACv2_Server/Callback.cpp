@@ -262,6 +262,13 @@ namespace Callback
 			SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
 		}
 
+		// Make sure the new connected user isn't an NPC.
+		if (!IsPlayerNPC(playerid))
+		{
+			// Return
+			return true;
+		}
+
 		// If there is an IP address connected to the AC, try and associate it with this playerid.
 		if (Network::HandleConnection(playerid))
 		{
@@ -359,6 +366,9 @@ namespace Callback
 		// Check memory pretty frequently in a new timer.
 		SetTimer(60000, 1, CheckPlayersMemory, NULL);
 
+		// Get the default AC enabled value.
+		ACToggle = GetServerVarAsInt("ac");
+
 		return true;
 	}
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid, const char* params)
@@ -389,7 +399,7 @@ namespace Callback
 				for (int i = 0; i < MAX_PLAYERS; ++i)
 				{
 					// If they're connected to the server, and not connected to the AC
-					if (IsPlayerConnected(i) && !Network::IsPlayerConnectedToAC(i))
+					if (IsPlayerConnected(i) && !IsPlayerNPC(i) && !Network::IsPlayerConnectedToAC(i))
 					{
 						// Kick them from the server!
 						SetTimer(1000, 0, Callback::KickPlayer, (void*)i);

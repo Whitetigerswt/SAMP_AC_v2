@@ -699,6 +699,14 @@
 				MapAddress="CRPCCallback::ToggleUnlimitedSprint(class RakNet::BitStream &amp;,int)"
 				CompilationType="1"
 			/>
+			<Procedure
+				MapAddress="CHookManager::NameTagHook(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::KeyPress(void)"
+				CompilationType="1"
+			/>
 		</Procedures>
 	</Protection>
 	<DLLBox
