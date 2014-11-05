@@ -36,8 +36,11 @@ enum eRPC : unsigned short
 	// Called when the server wants to turn on or off lite foot.
 	TOGGLE_LITE_FOOT,
 
-	// Called hwen the server wants to turn on or off unlimited sprint.
+	// Called when the server wants to turn on or off unlimited sprint.
 	TOGGLE_UNLIMITED_SPRINT,
+
+	// Called when the server wants to turn on or off macro limitations.
+	TOGGLE_MACRO_LIMITS,
 
 	// -- SERVER RPCs --
 

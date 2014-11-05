@@ -135,6 +135,8 @@ static DWORD GravityHookJmpBack2 = 0x543093;
 static DWORD PauseJmpBack = 0x576C2D;
 static DWORD SprintHookJmpBack = 0x60A760;
 
+bool CHookManager::MacroLocks = false;
+
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
 
@@ -506,6 +508,11 @@ void CHookManager::SetLiteFoot(bool toggle)
 		LiteFoot = 0.0f;
 }
 
+void CHookManager::SetMacroLocks(bool toggle)
+{
+	MacroLocks = toggle;
+}
+
 HOOK CHookManager::LiteFootHook()
 {
 	__asm
@@ -622,7 +629,7 @@ HOOK CHookManager::SprintHook()
 		pushad
 	}
 
-	if (VAR_SPRINT_SPEED > MAX_SPRINT_SPEED)
+	if (VAR_SPRINT_SPEED > MAX_SPRINT_SPEED && CHookManager::MacroLocks == true)
 	{
 		VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
 	}

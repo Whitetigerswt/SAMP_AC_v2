@@ -98,6 +98,14 @@ public:
 	// REQUIRES: NULL
 	bool GetUnlimitedSprint() { return m_UnlimitedSprint; }
 
+	// PURPOSE: Set the players macro limitations.
+	// REQUIRES: The client is using AC.
+	void ToggleMacroLimitations(bool toggle);
+
+	// PURPOSE: Get the players Macro limitation.
+	// REQUIRES: NULL
+	bool GetMacroLimitations() { return m_MacroLimits; }
+
 	// PURPOSE: Called when the player pauses or unpauses, or alt tabs from the game.
 	// REQUIRES: NULL
 	void TogglePause(int iType, bool bPause);
@@ -128,6 +136,9 @@ private:
 
 	// PURPOSE: Keep track of the players unlimited sprint.
 	bool m_UnlimitedSprint;
+	
+	// PURPOSE: Keep track of the players macro limits.
+	bool m_MacroLimits;
 
 	// PURPOSE: Store the player's hardware ID.
 	std::string m_HardwareID;

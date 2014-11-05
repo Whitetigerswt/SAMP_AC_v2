@@ -6,6 +6,7 @@
 #include "GDK/a_players.h"
 #include "Callback.h"
 #include "SDK/samp-sdk/amx/amx.h"
+#include "CServerUpdater.h"
 
 cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 {
@@ -246,6 +247,36 @@ cell AMX_NATIVE_CALL GetPlayerUnlimitedSprintProc(AMX* pAmx, cell* pParams)
 	return ac->GetUnlimitedSprint();
 }
 
+cell AMX_NATIVE_CALL TogglePlayerMacroLimitsProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(2, "TogglePlayerMacroLimits");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	ac->ToggleMacroLimitations(!!pParams[2]);
+
+	return 1;
+}
+
+cell AMX_NATIVE_CALL GetPlayerMacroLimitsProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "GetPlayerMacroLimits");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	return ac->GetMacroLimitations();
+}
+
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
 	return sampgdk::Supports() | SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
@@ -266,7 +297,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	Utility::Initialize(ppData);
 
 	// Print out that we've loaded successfully.
-	Utility::Printf("SAMP Anti-Cheat v2.0 Has loaded successfully.");
+	Utility::Printf("SA-MP Anti-Cheat v%0.2f Has loaded successfully.", CURRENT_VERSION);
 
 	// Load sampGDK.
 	return sampgdk::Load(ppData);
@@ -275,7 +306,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
 	// The plugin has been unloaded, let them know we're leaving :(
-	Utility::Printf("Unloaded SAMP Anti-Cheat v2.0");
+	Utility::Printf("Unloaded SA-MP Anti-Cheat v%0.2f", CURRENT_VERSION);
 	return sampgdk::Unload();
 }
 
@@ -296,6 +327,8 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "GetPlayerSwitchReload", GetPlayerSwitchReloadProc },
 	{ "TogglePlayerUnlimitedSprint", TogglePlayerUnlimitedSprintProc },
 	{ "GetPlayerUnlimitedSprint", GetPlayerUnlimitedSprintProc },
+	{ "TogglePlayerMacroLimits", TogglePlayerMacroLimitsProc },
+	{ "GetPlayerMacroLimits", GetPlayerMacroLimitsProc },
 	{ 0, 0 }
 };
 

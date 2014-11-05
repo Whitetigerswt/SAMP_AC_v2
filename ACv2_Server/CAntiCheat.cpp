@@ -403,8 +403,21 @@ void CAntiCheat::ToggleUnlimitedSprint(bool toggle)
 	// Send RPC to player.
 	Network::PlayerSendRPC(TOGGLE_UNLIMITED_SPRINT, ID, &bsData);
 
-	// Set the crouch bug variable to true.
+	// Set the sprint variable to true.
 	m_UnlimitedSprint = toggle;
+}
+
+void CAntiCheat::ToggleMacroLimitations(bool toggle)
+{
+	// Prepare to send RPC to client.
+	RakNet::BitStream bsData;
+	bsData.Write(toggle);
+
+	// Send RPC to player.
+	Network::PlayerSendRPC(TOGGLE_MACRO_LIMITS, ID, &bsData);
+
+	// Set the crouch bug variable to true.
+	m_MacroLimits = toggle;
 }
 
 void CAntiCheat::TogglePause(int iType, bool bPause)

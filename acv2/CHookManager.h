@@ -21,6 +21,11 @@ public:
 	// PURPOSE: Toggle lite foot on and off.
 	// REQUIRES: NULL
 	static void SetLiteFoot(bool toggle);
+
+	// PURPOSE: Toggle on and off the macro limitations.
+	// REQUIRES: NULL
+	static void SetMacroLocks(bool toggle);
+
 private:
 
 	static void LoadScriptsHook();
@@ -61,6 +66,8 @@ private:
 	static int iTickOffset;
 
 	static float LiteFoot;
+
+	static bool MacroLocks;
 
 	static void CameraXWriteHook1();
 	static void CameraXWriteHook2();

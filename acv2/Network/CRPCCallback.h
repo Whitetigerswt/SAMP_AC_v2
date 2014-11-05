@@ -54,4 +54,7 @@ private:
 	// REQUIRES: The server sends the TOGGLE_UNLIMMITED_SPRINT RPC to the client.
 	static RPC_CALLBACK ToggleUnlimitedSprint(RPC_ARGS);
 
+	// PURPOSE: An RPC callback to toggle on or off macro limitations.
+	// REQUIRES: The server sends the TOGGLE_MACRO_LIMITS RPC to the client.
+	static RPC_CALLBACK ToggleMacroLimits(RPC_ARGS);
 };
