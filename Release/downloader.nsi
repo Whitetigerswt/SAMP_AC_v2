@@ -5,9 +5,9 @@
 !define OUT_DIR    "Output"
 !define TEMP_INI   "$PLUGINSDIR\download.ini"
 !define DOWN_INI   "$EXEDIR\download.ini"
-!define DOWN_LNK   "http://whitetigerswt.github.io/SAMP_AC_v2/Releases/samp-ac-client.exe"
+!define DOWN_LNK   "http://whitetigerswt.github.io/SAMP_AC_v2/Releases/sampac-client.exe"
 !define HEAD_GET   "$PLUGINSDIR\head.txt"
-!define FILE_GET   "$EXEDIR\sampac-$date2file.zip"
+!define FILE_GET   "$EXEDIR\sampac-$date2file.exe"
 !define C_LENGTH   "Content-Length"
 !define LAST_MOD   "Last-Modified"
 !define LANG_STR  `"$(InetcStr1)" "$(InetcStr2)" \
