@@ -72,6 +72,18 @@ namespace Misc
 		return CrouchBug;
 	}
 
+	bool MacroLocks = true;
+
+	void SetMacroLocks(bool toggle)
+	{
+		MacroLocks = toggle;
+	}
+
+	bool GetMacroLocks()
+	{
+		return MacroLocks;
+	}
+
 	int GetGameVersion() {
 		unsigned char ucA = *reinterpret_cast < unsigned char* > (0x748ADD);
 		unsigned char ucB = *reinterpret_cast < unsigned char* > (0x748ADE);

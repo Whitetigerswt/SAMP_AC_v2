@@ -46,6 +46,7 @@ CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m
 	m_SwitchReload = true;
 	m_FrameLimit = 9999;
 	m_UnlimitedSprint = false;
+	m_MacroLimits = true;
 }
 
 CAntiCheat::~CAntiCheat()
@@ -293,17 +294,8 @@ void CAntiCheat::OnHardwareCalculated(char* hwid)
 	// Set our instance variable to the player's hardware ID so we can store it for later use.
 	m_HardwareID = hwid;
 
-	/*// Create 2 variables, one for the player's name and one for a formatted message sent to everyone on the server.
-	char name[MAX_PLAYER_NAME], msg[144];
-
-	// Get the player name in our name variable.
-	GetPlayerName(ID, name, sizeof(name));
-
-	// Format the message to let everyone know his hardware ID.
-	snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s HardwareID: {FF0000}%s", name, m_HardwareID.c_str());
-
-	// Send the message to everyone on the server.
-	SendClientMessageToAll(-1, msg);*/
+	// Execute a PAWN callback telling the server we've just calculated the user's Hardware ID.
+	Callback::Execute("OnHardwareIDCalculated", "si", hwid, ID);
 }
 
 void CAntiCheat::OnTamperAttempt()

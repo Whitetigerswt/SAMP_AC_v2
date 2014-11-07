@@ -4,6 +4,7 @@
 #include "../Network/Network.h"
 #include "../../Shared/Network/CRPC.h"
 #include "../Addresses.h"
+#include "../Misc.h"
 
 HWND CMessageProxy::m_hWindowOrig;
 WNDPROC CMessageProxy::m_wProcOrig;
@@ -50,7 +51,7 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
 		{
-			if (GetAsyncKeyState(vKey) & 0x8000)
+			if ((GetAsyncKeyState(vKey) & 0x8000) && Misc::GetMacroLocks() == true)
 			{
 				return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
 			}

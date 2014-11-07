@@ -212,6 +212,6 @@ void CRPCCallback::ToggleMacroLimits(RakNet::BitStream &bsData, int iExtra)
 	if (bsData.Read(toggle))
 	{
 		// Set the value the server sent.
-		CHookManager::SetMacroLocks(toggle);
+		Misc::SetMacroLocks(toggle);
 	}
 }

@@ -67,8 +67,6 @@ private:
 
 	static float LiteFoot;
 
-	static bool MacroLocks;
-
 	static void CameraXWriteHook1();
 	static void CameraXWriteHook2();
 	static void CameraXWriteHook3();

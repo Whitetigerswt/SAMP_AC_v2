@@ -28,6 +28,14 @@ namespace Misc
 	// REQUIRES: NULL
 	int GetCrouchBug();
 
+	// PURPOSE: Set the players macro lock status.
+	// REQUIRES: NULL
+	void SetMacroLocks(bool toggle);
+
+	// PURPOSE: Get the macro lock status.
+	// REQUIRES: NULL
+	bool GetMacroLocks();
+
 	// PURPOSE: Get the players GTA SA version
 	// REQUIRES: NULL
 	int GetGameVersion();
