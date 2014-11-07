@@ -351,13 +351,30 @@ void CHookManager::SetConnectPatches()
 
 	// Detect when a player is pausing.
 	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
+	
+}
 
-	// Allow sprint on any surface
+void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
+{
+	DWORD dwOldProt;
+
+	// Unprotect memory.
 	VirtualProtect((void*)0x55E870, sizeof(DWORD), PAGE_EXECUTE_READWRITE, &dwOldProt);
 	VirtualProtect((void*)0x55E874, sizeof(WORD), PAGE_EXECUTE_READWRITE, &dwOldProt);
 
-	CMem::PutSingle < DWORD >(0x55E870, 0xC2C03366);
-	CMem::PutSingle < WORD >(0x55E874, 0x0004);
+	if (toggle)
+	{
+		// Allow sprint on any surfaces.
+		CMem::PutSingle < DWORD >(0x55E870, 0xC2C03366); 
+		CMem::PutSingle < WORD >(0x55E874, 0x0004); 
+	}
+	else
+	{
+		// Restore default values to these addresses
+		CMem::PutSingle < DWORD >(0x55E870, 0x424448B);
+		CMem::PutSingle < WORD >(0x55E874, 0x48D);
+	}
+
 }
 
 void CHookManager::SetFrameLimiterPatch()

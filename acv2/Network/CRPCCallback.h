@@ -57,4 +57,8 @@ private:
 	// PURPOSE: An RPC callback to toggle on or off macro limitations.
 	// REQUIRES: The server sends the TOGGLE_MACRO_LIMITS RPC to the client.
 	static RPC_CALLBACK ToggleMacroLimits(RPC_ARGS);
+
+	// PURPOSE: An RPC callback to toggle on or off sprinting on all surfaces.
+	// REQUIRES: The server sends the TOGGLE_SPRINT_ALL_SURFACES RPC to the client.
+	static RPC_CALLBACK ToggleSprintOnAllSurfaces(RPC_ARGS);
 };

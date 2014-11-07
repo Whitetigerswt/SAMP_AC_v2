@@ -26,6 +26,10 @@ public:
 	// REQUIRES: NULL
 	static void SetMacroLocks(bool toggle);
 
+	// PURPOSE: Toggle on and off sprinting on all surfaces.
+	// REQUIRES: NULL
+	static void ToggleSprintOnAllSurfaces(bool toggle);
+
 private:
 
 	static void LoadScriptsHook();

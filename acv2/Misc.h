@@ -36,6 +36,14 @@ namespace Misc
 	// REQUIRES: NULL
 	bool GetMacroLocks();
 
+	// PURPOSE: Set the sprinting on all surfaces status.
+	// REQUIRES: NULL
+	void SetSprintOnAllSurfaces(bool toggle);
+
+	// PURPOSE: Get the sprinting on all surfaces status.
+	// REQUIRES: NULL
+	bool GetSprintOnAllSurfaces();
+
 	// PURPOSE: Get the players GTA SA version
 	// REQUIRES: NULL
 	int GetGameVersion();

@@ -25,6 +25,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(TOGGLE_LITE_FOOT, ToggleLiteFoot);
 	CRPC::Add(TOGGLE_UNLIMITED_SPRINT, ToggleUnlimitedSprint);
 	CRPC::Add(TOGGLE_MACRO_LIMITS, ToggleMacroLimits);
+	CRPC::Add(TOGGLE_SPRINT_ALL_SURFACES, ToggleSprintOnAllSurfaces);
 
 	CHookManager::SetConnectPatches();
 	boost::thread ResendFilesThread(&ResendFileInformation);
@@ -213,5 +214,21 @@ void CRPCCallback::ToggleMacroLimits(RakNet::BitStream &bsData, int iExtra)
 	{
 		// Set the value the server sent.
 		Misc::SetMacroLocks(toggle);
+	}
+}
+
+void CRPCCallback::ToggleSprintOnAllSurfaces(RakNet::BitStream &bsData, int iExtra)
+{
+	// Create a new variable to hold the servers new toggle value.
+	bool toggle;
+
+	// Read the data the server sent.
+	if (bsData.Read(toggle))
+	{
+		// Set the value the server sent.
+		Misc::SetSprintOnAllSurfaces(toggle);
+
+		// Actually toggle the value.
+		CHookManager::ToggleSprintOnAllSurfaces(toggle);
 	}
 }

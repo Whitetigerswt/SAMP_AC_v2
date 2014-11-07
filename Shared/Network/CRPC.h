@@ -42,6 +42,9 @@ enum eRPC : unsigned short
 	// Called when the server wants to turn on or off macro limitations.
 	TOGGLE_MACRO_LIMITS,
 
+	// Called when the server wants to turn on or off sprinting on all surfaces
+	TOGGLE_SPRINT_ALL_SURFACES,
+
 	// -- SERVER RPCs --
 
 	// Called when a new module (in the current process) or process has been run

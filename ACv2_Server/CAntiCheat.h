@@ -106,6 +106,14 @@ public:
 	// REQUIRES: NULL
 	bool GetMacroLimitations() { return m_MacroLimits; }
 
+	// PURPOSE: Set the players macro limitations.
+	// REQUIRES: The client is using AC.
+	void ToggleSprintOnAllSurfaces(bool toggle);
+
+	// PURPOSE: Get the players Macro limitation.
+	// REQUIRES: NULL
+	bool GetSprintOnAllSurfaces() { return m_SprintOnAllSurfaces; }
+
 	// PURPOSE: Called when the player pauses or unpauses, or alt tabs from the game.
 	// REQUIRES: NULL
 	void TogglePause(int iType, bool bPause);
@@ -122,23 +130,26 @@ private:
 	// PURPOSE: Remember the player's playerID.
 	int ID;
 
-	// PURPOSE: Keep track of the players lite foot status.
+	// PURPOSE: Keep track of the player's lite foot status.
 	bool m_LiteFoot;
 
-	// PURPOSE: Keep track of the players cbug status.
+	// PURPOSE: Keep track of the player's cbug status.
 	int m_CBug;
 
-	// PURPOSE: Keep track of the players switch reload status.
+	// PURPOSE: Keep track of the player's switch reload status.
 	bool m_SwitchReload;
 
-	// PURPOSE: Keep track of the players set frame rate.
+	// PURPOSE: Keep track of the player's set frame rate.
 	int m_FrameLimit;
 
-	// PURPOSE: Keep track of the players unlimited sprint.
+	// PURPOSE: Keep track of the player's unlimited sprint.
 	bool m_UnlimitedSprint;
 	
-	// PURPOSE: Keep track of the players macro limits.
+	// PURPOSE: Keep track of the player's macro limits.
 	bool m_MacroLimits;
+
+	// PURPOSE: Keep track of the player's status sprinting on all surfaces.
+	bool m_SprintOnAllSurfaces;
 
 	// PURPOSE: Store the player's hardware ID.
 	std::string m_HardwareID;

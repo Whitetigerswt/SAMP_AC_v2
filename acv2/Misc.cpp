@@ -84,6 +84,18 @@ namespace Misc
 		return MacroLocks;
 	}
 
+	bool SprintOnAllSurfaces = false;
+
+	void SetSprintOnAllSurfaces(bool toggle)
+	{
+		SprintOnAllSurfaces = toggle;
+	}
+
+	bool GetSprintOnAllSurfaces()
+	{
+		return SprintOnAllSurfaces;
+	}
+
 	int GetGameVersion() {
 		unsigned char ucA = *reinterpret_cast < unsigned char* > (0x748ADD);
 		unsigned char ucB = *reinterpret_cast < unsigned char* > (0x748ADE);
