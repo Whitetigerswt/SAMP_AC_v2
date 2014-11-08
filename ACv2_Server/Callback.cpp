@@ -209,23 +209,7 @@ namespace Callback
 		// If the player is connected, and /actoggle has been turned on (aka, AC is on)
 		if (IsPlayerConnected(playerid) && ACToggle && type == 1)
 		{
-			// Create 2 variables, one to hold the file name, and one to format a string to send to all users on the server
-			// letting them know why this player was kicked.
-			char str[144], name[MAX_PLAYER_NAME];
-
-			// Get the player name and store it in the name variable.
-			GetPlayerName(playerid, name, sizeof(name));
-
-			// Format the string
-			snprintf(str, sizeof(str), "{FF0000}%s{FFFFFF} has been kicked from the server ({FF0000}AC Lost Connection{FFFFFF})", name);
-
-			// Send the string to everyone
-			SendClientMessageToAll(-1, str);
-
 			// Kick the user from the server.
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
-		} else {
-			// Just make sure the user is kicked from the server.
 			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 		}
 	}
