@@ -11,7 +11,7 @@
 cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 {
 	// Make sure the parameter count is correct.
-	CHECK_PARAMS(1, "IsPlayerUsingSAMPAC");
+	CHECK_PARAMS(1, "IsPlayerUsingSampAC");
 
 	// Make sure the player is connected
 	if (!IsPlayerConnected(pParams[1])) return 0;

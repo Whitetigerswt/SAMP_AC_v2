@@ -94,7 +94,7 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 		}
 	}
 	// Execute the PAWN callback.
-	Callback::Execute("OnFileExecuted", "ssi", md5, processpath, ID);
+	Callback::Execute("AC_OnFileExecuted", "ssi", md5, processpath, ID);
 }
 
 void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
@@ -146,7 +146,7 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 		}*/
 	}
 	// Execute a PAWN callback.
-	Callback::Execute("OnMD5Calculated", "siii", md5, size, address, ID);
+	Callback::Execute("AC_OnMD5Calculated", "siii", md5, size, address, ID);
 }
 
 void CAntiCheat::OnFileCalculated(char* path, char* md5)
@@ -200,7 +200,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 		}
 	}
 	// Execute PAWN callback.
-	Callback::Execute("OnFileCalculated", "ssi", md5, path, ID);
+	Callback::Execute("AC_OnFileCalculated", "ssi", md5, path, ID);
 }
 
 void CAntiCheat::OnImgFileModified(char* filename, char* md5)
@@ -226,7 +226,7 @@ void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 	}
 
 	// Execute the PAWN callback.
-	Callback::Execute("OnImgFileModifed", "ssi", md5, filename, ID);
+	Callback::Execute("AC_OnImgFileModifed", "ssi", md5, filename, ID);
 }
 
 bool CAntiCheat::CanEnableAC(int playerid)
@@ -310,7 +310,7 @@ void CAntiCheat::OnHardwareCalculated(char* hwid)
 	m_HardwareID = hwid;
 
 	// Execute a PAWN callback telling the server we've just calculated the user's Hardware ID.
-	Callback::Execute("OnHardwareIDCalculated", "si", hwid, ID);
+	Callback::Execute("AC_OnHardwareIDCalculated", "si", hwid, ID);
 }
 
 void CAntiCheat::OnTamperAttempt()
@@ -443,11 +443,11 @@ void CAntiCheat::ToggleSprintOnAllSurfaces(bool toggle)
 void CAntiCheat::TogglePause(int iType, bool bPause)
 {
 	// Let PAWN scripts know.
-	Callback::Execute("OnPlayerPause", "iii", bPause, iType, ID);
+	Callback::Execute("AC_OnPlayerPause", "iii", bPause, iType, ID);
 }
 
 void CAntiCheat::OnScreenshotTaken()
 {
 	// Let PAWN scripts know.
-	Callback::Execute("OnScreenshotTaken", "i", ID);
+	Callback::Execute("AC_OnScreenshotTaken", "i", ID);
 }
