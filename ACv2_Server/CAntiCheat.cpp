@@ -7,6 +7,7 @@
 #include "../Shared/Network/CRPC.h"
 #include "CServerUpdater.h"
 
+
 std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;
 std::vector<std::string> CAntiCheat::m_MD5s;
@@ -63,29 +64,33 @@ CClientSocketInfo* CAntiCheat::GetConnectionInfo()
 
 void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 {
-	// Loop through the list of bad processes to see if we can find a match to the one just sent to us by the client.
-	for (std::vector<std::string>::iterator it = m_ProcessMD5s.begin(); it != m_ProcessMD5s.end(); ++it)
+	// If AC Main checks are enabled
+	if (Callback::ACToggle == true)
 	{
-		// If the md5 matches one of the md5's from our list of bad md5's
-		if (it->compare(md5) == 0)
+		// Loop through the list of bad processes to see if we can find a match to the one just sent to us by the client.
+		for (std::vector<std::string>::iterator it = m_ProcessMD5s.begin(); it != m_ProcessMD5s.end(); ++it)
 		{
-			// Create 2 variables, one holding the player name, and one holding a formatted string telling why we're going to kick this player.
-			char name[MAX_PLAYER_NAME], msg[144];
+			// If the md5 matches one of the md5's from our list of bad md5's
+			if (it->compare(md5) == 0)
+			{
+				// Create 2 variables, one holding the player name, and one holding a formatted string telling why we're going to kick this player.
+				char name[MAX_PLAYER_NAME], msg[144];
 
-			// Get the player name and store it in the name variable.
-			GetPlayerName(ID, name, sizeof(name));
+				// Get the player name and store it in the name variable.
+				GetPlayerName(ID, name, sizeof(name));
 
-			// Format the string telling all the players on the server why we kicked this one.
-			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for using an illegal file: \"{FF0000}%s{FFFFFF}\"", name, processpath);
+				// Format the string telling all the players on the server why we kicked this one.
+				snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for using an illegal file: \"{FF0000}%s{FFFFFF}\"", name, processpath);
 
-			// Send the message to all the players on the server.
-			SendClientMessageToAll(-1, msg);
+				// Send the message to all the players on the server.
+				SendClientMessageToAll(-1, msg);
 
-			// Print the result to the console so it can be logged.
-			Utility::Printf("%s has been kicked from the server for using illegal file: \"%s\"", name, processpath);
+				// Print the result to the console so it can be logged.
+				Utility::Printf("%s has been kicked from the server for using illegal file: \"%s\"", name, processpath);
 
-			// Kick the player from the server.
-			SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
+				// Kick the player from the server.
+				SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
+			}
 		}
 	}
 	// Execute the PAWN callback.
@@ -94,122 +99,131 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 
 void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 {
-	// The start of the weapon.dat block of HITMAN skills only.
-	if (address == 0xC8C418)
+	// If AC Main checks are enabled
+	if (Callback::ACToggle == true)
 	{
-		// Compare the md5 returned to a pre-calculated checksum of that memory block.
-		if (strcmp(md5, "af82edadc0d8d2f6488e8dc615c34627") != 0)
+		// The start of the weapon.dat block of HITMAN skills only.
+		if (address == 0xC8C418)
 		{
-			// Create 2 new variables, one to hold the name and one to send a test message to all the players on the server.
-			char msg[144], name[MAX_PLAYER_NAME];
+			// Compare the md5 returned to a pre-calculated checksum of that memory block.
+			if (strcmp(md5, "af82edadc0d8d2f6488e8dc615c34627") != 0)
+			{
+				// Create 2 new variables, one to hold the name and one to send a test message to all the players on the server.
+				char msg[144], name[MAX_PLAYER_NAME];
 
-			// Get the player name and store it in the name variable.
-			GetPlayerName(ID, name, sizeof(name));
+				// Get the player name and store it in the name variable.
+				GetPlayerName(ID, name, sizeof(name));
 
-			// Format a new message that tells what happened.
-			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has modified weapon.dat info", name);
+				// Format a new message that tells what happened.
+				snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has modified weapon.dat info", name);
 
-			// Send the result to everyone on the server.
-			SendClientMessageToAll(-1, msg);
+				// Send the result to everyone on the server.
+				SendClientMessageToAll(-1, msg);
 
-			// And kick the player.
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+				// And kick the player.
+				SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+			}
 		}
-	}
 
-	// This address is some handling.cfg address, though it seems to include code to and not just data.
-	/*else if (address == 0xC2B9DC)
-	{
+		// This address is some handling.cfg address, though it seems to include code to and not just data.
+		/*else if (address == 0xC2B9DC)
+		{
 		// Compare the returned md5 to our pre-calculated checksum.
 		if (strcmp(md5, "12c0520d9b5442fbecccfa81ebbf2603") != 0)
 		{
-			// Create 2 new variables, one to hold the player name, and one to send a formatted message to everyone on the server.
-			char msg[144], name[MAX_PLAYER_NAME];
+		// Create 2 new variables, one to hold the player name, and one to send a formatted message to everyone on the server.
+		char msg[144], name[MAX_PLAYER_NAME];
 
-			// Get the player name and store it in the name variable.
-			GetPlayerName(ID, name, sizeof(name));
+		// Get the player name and store it in the name variable.
+		GetPlayerName(ID, name, sizeof(name));
 
-			// Format the message that we're going to send to everyone.
-			snprintf(msg, sizeof(msg), "[TEST] %s has modified handling.cfg info", name);
+		// Format the message that we're going to send to everyone.
+		snprintf(msg, sizeof(msg), "[TEST] %s has modified handling.cfg info", name);
 
-			// Send the mssage to everyone connected to the server.
-			SendClientMessageToAll(-1, msg);
+		// Send the mssage to everyone connected to the server.
+		SendClientMessageToAll(-1, msg);
 		}
-	}*/
-
+		}*/
+	}
 	// Execute a PAWN callback.
 	Callback::Execute("OnMD5Calculated", "siii", md5, size, address, ID);
 }
 
 void CAntiCheat::OnFileCalculated(char* path, char* md5)
 {	
-	// Create a new variable that can contain a true/false value so we know if a file matches an MD5 from our list
-	bool found = false;
-
-	// Loop through a list of our md5's that we stored previously...
-	for (std::vector<std::string>::iterator it = m_MD5s.begin(); it != m_MD5s.end(); ++it)
+	// If AC Main checks are enabled
+	if (Callback::ACToggle == true)
 	{
-		// Compare the md5 sent to us by the client to our list of MD5's
-		if (strcmp(it->c_str(), md5) == 0)
+		// Create a new variable that can contain a true/false value so we know if a file matches an MD5 from our list
+		bool found = false;
+
+		// Loop through a list of our md5's that we stored previously...
+		for (std::vector<std::string>::iterator it = m_MD5s.begin(); it != m_MD5s.end(); ++it)
 		{
-			// If they match, set found=true and break
-			found = true;
-			break;
+			// Compare the md5 sent to us by the client to our list of MD5's
+			if (strcmp(it->c_str(), md5) == 0)
+			{
+				// If they match, set found=true and break
+				found = true;
+				break;
+			}
+		}
+
+		// Check if an md5 matches, and if it doesn't kick the player.
+		if (!found)
+		{
+			// Create a new variable holding a string that will be formatted to let the player know he's been kicked.
+			char msg[160];
+			snprintf(msg, sizeof(msg), "{FF0000}Error: {FFFFFF}You've been kicked from this server for having ({FF0000}%s{FFFFFF}) modified.", path);
+
+			// Send the formatted message to the player.
+			SendClientMessage(ID, -1, msg);
+
+			// Now, we need to send a message to the whole server saying someone was kicked, and we need to include their name
+			// So create a variable that can hold their name.
+			char name[MAX_PLAYER_NAME];
+
+			// Find their name.
+			GetPlayerName(ID, name, sizeof(name));
+
+			// Format the string telling all the users this player has been kicked.
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for having ({FF0000}%s{FFFFFF}) modified.", name, path);
+
+			// Send it to everyone
+			SendClientMessageToAll(-1, msg);
+
+			// Finally, print our a message to the console so we can log the result.
+			Utility::Printf("%s has been kicked for modifying %s", name, path);
+
+			// And kick the player.
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 		}
 	}
-
-	// Check if an md5 matches, and if it doesn't kick the player.
-	if (!found)
-	{
-		// Create a new variable holding a string that will be formatted to let the player know he's been kicked.
-		char msg[160];
-		snprintf(msg, sizeof(msg), "{FF0000}Error: {FFFFFF}You've been kicked from this server for having ({FF0000}%s{FFFFFF}) modified.", path);
-
-		// Send the formatted message to the player.
-		SendClientMessage(ID, -1, msg);
-
-		// Now, we need to send a message to the whole server saying someone was kicked, and we need to include their name
-		// So create a variable that can hold their name.
-		char name[MAX_PLAYER_NAME];
-
-		// Find their name.
-		GetPlayerName(ID, name, sizeof(name));
-
-		// Format the string telling all the users this player has been kicked.
-		snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for having ({FF0000}%s{FFFFFF}) modified.", name, path);
-		
-		// Send it to everyone
-		SendClientMessageToAll(-1, msg);
-
-		// Finally, print our a message to the console so we can log the result.
-		Utility::Printf("%s has been kicked for modifying %s", name, path);
-
-		// And kick the player.
-		SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
-	}
-
 	// Execute PAWN callback.
 	Callback::Execute("OnFileCalculated", "ssi", md5, path, ID);
 }
 
 void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 {
-	// We already know the file is modified, so we don't need to check for that.
+	// If AC Main checks are enabled
+	if (Callback::ACToggle == true)
+	{
+		// We already know the file is modified, so we don't need to check for that.
+		// Create 2 variables, one to hold the player name and one to send a formatted message to the whole server telling them what happened.
+		char name[MAX_PLAYER_NAME], msg[144];
 
-	// Create 2 variables, one to hold the player name and one to send a formatted message to the whole server telling them what happened.
-	char name[MAX_PLAYER_NAME], msg[144];
+		// Get the player name and store it in the variable we just created.
+		GetPlayerName(ID, name, sizeof(name));
 
-	// Get the player name and store it in the variable we just created.
-	GetPlayerName(ID, name, sizeof(name));
+		// Format the message to send to all players.
+		snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for having ({FF0000}%s{FFFFFF}) modified.", name, filename);
 
-	// Format the message to send to all players.
-	snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for having ({FF0000}%s{FFFFFF}) modified.", name, filename);
+		// Send the message to all players connected to the server.
+		SendClientMessageToAll(-1, msg);
 
-	// Send the message to all players connected to the server.
-	SendClientMessageToAll(-1, msg);
-
-	// Kick the player who has the modified file.
-	SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+		// Kick the player who has the modified file.
+		SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+	}
 
 	// Execute the PAWN callback.
 	Callback::Execute("OnImgFileModifed", "ssi", md5, filename, ID);

@@ -21,7 +21,6 @@ namespace Callback
 	static AMX* amx_allowed = NULL;
 	static std::list<AMX*> amxPointers;
 
-	static bool ACToggle = true;
 	static bool Default_InfSprint = false;
 	static bool Default_SprintOnAllSurfaces = false;
 	static bool Default_MacroLimits = false;

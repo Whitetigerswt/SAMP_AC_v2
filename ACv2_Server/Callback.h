@@ -36,4 +36,5 @@ namespace Callback
 	// REQUIRES: Nothing.
 	void KickPlayer(int timerid, void* params);
 
+	static bool ACToggle;
 }
