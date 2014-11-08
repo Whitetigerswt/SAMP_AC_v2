@@ -9,6 +9,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 
 #ifdef WIN32
 #define snprintf sprintf_s
@@ -20,6 +22,13 @@ namespace Callback
 	static std::list<AMX*> amxPointers;
 
 	static bool ACToggle = true;
+	static bool Default_InfSprint = false;
+	static bool Default_SprintOnAllSurfaces = false;
+	static bool Default_MacroLimits = false;
+	static bool Default_SwitchReload = false;
+	static bool Default_CrouchBug = false;
+	static bool Default_LiteFoot = false;
+	static int Default_FrameLimit = 9999;
 
 	std::list<AMX*>& GetAMXList()
 	{
@@ -281,8 +290,15 @@ namespace Callback
 			// Send the client the files we need them to return md5's to.
 			ac->CheckGTAFiles(playerid);
 
-			// Disable lite foot by default.
-			ac->ToggleLiteFoot(false);
+			// Set defaults
+			ac->ToggleUnlimitedSprint(Default_InfSprint);
+			ac->ToggleSprintOnAllSurfaces(Default_SprintOnAllSurfaces);
+			ac->ToggleMacroLimitations(Default_MacroLimits);
+			ac->ToggleSwitchReload(Default_SwitchReload);
+			ac->ToggleCrouchBug(Default_CrouchBug);
+			ac->ToggleLiteFoot(Default_LiteFoot);
+
+			if(Default_FrameLimit != 9999) ac->SetFPSLimit(Default_FrameLimit);			
 			
 			// Check if AC is on
 			if (ACToggle)
@@ -366,11 +382,23 @@ namespace Callback
 		// Check memory pretty frequently in a new timer.
 		SetTimer(60000, 1, CheckPlayersMemory, NULL);
 
-		// Get the default AC enabled value.
-		ACToggle = !!GetServerVarAsInt("ac");
+		// Load config.
+		boost::property_tree::ptree pt;
+		boost::property_tree::ini_parser::read_ini("ac_config.ini", pt);
+
+		// Load default values.
+		ACToggle = pt.get<bool>("defaults.main_ac_checks");
+		Default_InfSprint = pt.get<bool>("defaults.inf_sprint");
+		Default_SprintOnAllSurfaces = pt.get<bool>("defaults.sprint_all_surfaces");
+		Default_MacroLimits = pt.get<bool>("defaults.macro_limits");
+		Default_SwitchReload = pt.get<bool>("defaults.switch_reload");
+		Default_CrouchBug = pt.get<bool>("defaults.crouch_bug");
+		Default_LiteFoot = pt.get<bool>("defaults.lite_foot");
+		Default_FrameLimit = pt.get<int>("defaults.frame_limit");
 
 		return true;
 	}
+
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid, const char* params)
 	{
 		// If the user typed /actoggle and they're allowed to run that command.
