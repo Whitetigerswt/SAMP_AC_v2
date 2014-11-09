@@ -200,8 +200,14 @@ void CRPCCallback::ToggleUnlimitedSprint(RakNet::BitStream &bsData, int iExtra)
 	// Read the data
 	if (bsData.Read(toggle))
 	{
-		// Set infinite run to what the server wants.
-		CMem::PutSingle<BYTE>(0xB7CEE4, toggle);
+		if (toggle)
+		{
+			CMem::Cpy((void*)0x60A5BA, "\x90\x90\x90", 3); // nop
+		}
+		else
+		{
+			CMem::Cpy((void*)0x60A5BA, "\xD3\x5E\x18", 3); // fstp dword ptr [esi+18]
+		}
 	}
 }
 
