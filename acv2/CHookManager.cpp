@@ -329,6 +329,8 @@ void CHookManager::Load()
 
 	CMem::ApplyJmp(FUNC_Gravity, (DWORD)GravityHook, 6);
 
+	CMem::ApplyJmp(FUNC_MARKERS, (DWORD)MarkersHook, 6);
+
 	// Check data file integrity.
 	VerifyFilePaths();
 }
@@ -559,6 +561,41 @@ HOOK CHookManager::GravityHook()
 		DONE_EQUAL:
 		jmp[GravityHookJmpBack2]
 	}
+}
+
+
+DWORD gtasa_markers_jmp_pointer = 0x584A79;
+HOOK CHookManager::MarkersHook()
+{
+	__asm pushad
+
+	if (Misc::GetVehicleBlips() == false)
+	{
+		__asm
+		{
+			popad
+			mov eax, [esp + 04h]
+			cmp eax, 000003ECh
+			je return_hook
+			mov eax, gtasa_markers_jmp_pointer
+			jmp dword ptr[eax]
+
+
+			return_hook:
+				mov eax, 0h
+				ret
+		}
+	}
+	else
+	{
+		__asm
+		{
+			popad
+			mov eax, gtasa_markers_jmp_pointer
+			jmp dword ptr[eax]
+		}
+	}
+
 }
 
 DWORD Fatulous1AlternativeJmpBack = 0x6D827E;

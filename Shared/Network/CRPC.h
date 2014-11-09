@@ -45,6 +45,9 @@ enum eRPC : unsigned short
 	// Called when the server wants to turn on or off sprinting on all surfaces
 	TOGGLE_SPRINT_ALL_SURFACES,
 
+	// Called when the server wants to turn on or off vehicle blips.
+	TOGGLE_VEHICLE_BLIPS,
+
 	// -- SERVER RPCs --
 
 	// Called when a new module (in the current process) or process has been run

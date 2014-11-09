@@ -307,6 +307,36 @@ cell AMX_NATIVE_CALL GetPlayerSprintOnAllSurfacesProc(AMX* pAmx, cell* pParams)
 	return ac->GetSprintOnAllSurfaces();
 }
 
+cell AMX_NATIVE_CALL TogglePlayerVehicleBlipsProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(2, "TogglePlayerVehicleBlips");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	ac->ToggleVehicleBlips(!!pParams[2]);
+
+	return 1;
+}
+
+cell AMX_NATIVE_CALL GetPlayerVehicleBlipsProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "GetPlayerVehicleBlips");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	return ac->GetVehicleBlips();
+}
+
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
 	return sampgdk::Supports() | SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
@@ -361,6 +391,8 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "GetPlayerMacroLimits", GetPlayerMacroLimitsProc },
 	{ "TogglePlayerSprintOnAllSurfaces", TogglePlayerSprintOnAllSurfacesProc },
 	{ "GetPlayerSprintOnAllSurfaces", GetPlayerSprintOnAllSurfacesProc },
+	{ "TogglePlayerVehicleBlips", TogglePlayerVehicleBlipsProc },
+	{ "GetPlayerVehicleBlips", GetPlayerVehicleBlipsProc },
 	{ 0, 0 }
 };
 

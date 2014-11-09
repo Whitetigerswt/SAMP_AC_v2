@@ -49,6 +49,7 @@ CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m
 	m_UnlimitedSprint = false;
 	m_MacroLimits = true;
 	m_SprintOnAllSurfaces = false;
+	m_VehicleBlips = true;
 }
 
 CAntiCheat::~CAntiCheat()
@@ -438,6 +439,19 @@ void CAntiCheat::ToggleSprintOnAllSurfaces(bool toggle)
 
 	// Set the crouch bug variable to true.
 	m_SprintOnAllSurfaces = toggle;
+}
+
+void CAntiCheat::ToggleVehicleBlips(bool toggle)
+{
+	// Prepare to send RPC to client.
+	RakNet::BitStream bsData;
+	bsData.Write(toggle);
+
+	// Send RPC to player.
+	Network::PlayerSendRPC(TOGGLE_VEHICLE_BLIPS, ID, &bsData);
+
+	// Set the crouch bug variable to true.
+	m_VehicleBlips = toggle;
 }
 
 void CAntiCheat::TogglePause(int iType, bool bPause)

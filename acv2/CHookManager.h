@@ -62,6 +62,8 @@ private:
 
 	static void GravityHook();
 
+	static void MarkersHook();
+
 	static float CameraXPos;
 	static float CameraYPos;
 

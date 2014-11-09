@@ -48,6 +48,14 @@ namespace Misc
 	// REQUIRES: NULL
 	int GetGameVersion();
 
+	// PURPOSE: Set vehicle blips status
+	// REQUIRES: NULL
+	void SetVehicleBlips(bool toggle);
+
+	// PURPOSE: Get whether vehicle blips are enabled or not.
+	// REQUIRES: NULL
+	bool GetVehicleBlips();
+
 	// PURPOSE: Get an address inside a potentially updated .dll
 	// REQUIRES: A pattern.
 	// REQUIRES: A mask.

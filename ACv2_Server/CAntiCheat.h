@@ -114,6 +114,14 @@ public:
 	// REQUIRES: NULL
 	bool GetSprintOnAllSurfaces() { return m_SprintOnAllSurfaces; }
 
+	// PURPOSE: Set the player's vehicle blips.
+	// REQUIRES: The client is using AC.
+	void ToggleVehicleBlips(bool toggle);
+
+	// PURPOSE: Get the player's vehicle blip status.
+	// REQUIRES: NULL
+	bool GetVehicleBlips() { return m_VehicleBlips; }
+
 	// PURPOSE: Called when the player pauses or unpauses, or alt tabs from the game.
 	// REQUIRES: NULL
 	void TogglePause(int iType, bool bPause);
@@ -150,6 +158,9 @@ private:
 
 	// PURPOSE: Keep track of the player's status sprinting on all surfaces.
 	bool m_SprintOnAllSurfaces;
+
+	// PURPOSE: Keep track of player's status of vehicle blips.
+	bool m_VehicleBlips;
 
 	// PURPOSE: Store the player's hardware ID.
 	std::string m_HardwareID;

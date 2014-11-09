@@ -96,6 +96,18 @@ namespace Misc
 		return SprintOnAllSurfaces;
 	}
 
+	bool VehicleBlips = true;
+
+	void SetVehicleBlips(bool toggle)
+	{
+		VehicleBlips = toggle;
+	}
+
+	bool GetVehicleBlips()
+	{
+		return VehicleBlips;
+	}
+
 	int GetGameVersion() {
 		unsigned char ucA = *reinterpret_cast < unsigned char* > (0x748ADD);
 		unsigned char ucB = *reinterpret_cast < unsigned char* > (0x748ADE);

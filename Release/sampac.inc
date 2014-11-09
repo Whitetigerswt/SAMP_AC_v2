@@ -75,6 +75,14 @@ native TogglePlayerSprintOnAllSurfaces(playerid, bool:toggle);
 // REQUIRES: Nothing.
 native GetPlayerSprintOnAllSurfaces(playerid);
 
+// PURPOSE: Toggle the player's ability to to see vehicle blips on their radar.
+// REQUIRES: The player is using AC.
+native TogglePlayerVehicleBlips(playerid, bool:toggle);
+
+// PURPOSE: Get the player's ability to see vehicle radar blips.
+// REQUIRES: Nothing.
+native GetPlayerVehicleBlips(playerid);
+
 // PURPOSE: Callback for when a new AC connection has been accepted.
 // REQUIRES: The client is using AC.
 forward OnACOpened(ip[]);
