@@ -639,8 +639,8 @@ HOOK CHookManager::KeyPress()
 		pushad
 	}
 
-	// Check if the sprint key is pressed, and it wasn't pressed in the last frame.
-	if (SPRINT_KEY != 0)
+	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.
+	if (SPRINT_KEY != 0 && VAR_CURRENT_VEHICLE == 0)
 	{
 		// Set the sprint speed 
 		VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
