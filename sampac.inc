@@ -59,6 +59,30 @@ native TogglePlayerUnlimitedSprint(playerid, bool:toggle);
 // REQUIRES: Nothing
 native GetPlayerUnlimitedSprint(playerid);
 
+// PURPOSE: Toggle the macro limits for players (limiting sprint, chat macros, etc)
+// REQUIRES: The player is using AC.
+native TogglePlayerMacroLimits(playerid, bool:toggle);
+
+// PURPOSE: Get the player's macro limits status
+// REQUIRES: Nothing
+native GetPlayerMacroLimits(playerid);
+
+// PURPOSE: Toggle the player's ability to sprint on all surfaces.
+// REQUIRES: The player is using AC.
+native TogglePlayerSprintOnAllSurfaces(playerid, bool:toggle);
+
+// PURPOSE: Get the player's ability to sprint on all surfaces.
+// REQUIRES: Nothing.
+native GetPlayerSprintOnAllSurfaces(playerid);
+
+// PURPOSE: Toggle the player's ability to to see vehicle blips on their radar.
+// REQUIRES: The player is using AC.
+native TogglePlayerVehicleBlips(playerid, bool:toggle);
+
+// PURPOSE: Get the player's ability to see vehicle radar blips.
+// REQUIRES: Nothing.
+native GetPlayerVehicleBlips(playerid);
+
 // PURPOSE: Callback for when a new AC connection has been accepted.
 // REQUIRES: The client is using AC.
 forward OnACOpened(ip[]);
@@ -70,19 +94,19 @@ forward OnACClosed(ip[], type);
 
 // PURPOSE: Callback for MD5_Memory
 // REQUIRES: MD5_Memorys return value will be sent to this function sometime after MD5_Memory is called.
-forward OnMD5Calculated(playerid, address, size, md5[]);
+forward AC_OnMD5Calculated(playerid, address, size, md5[]);
 
 // PURPOSE: Callback for when a new PE file is run on the clients machine.
 // REQUIRES: The player is using AC.
-forward OnFileExecuted(playerid, module[], md5[]);
+forward AC_OnFileExecuted(playerid, module[], md5[]);
 
 // PURPOSE: Callback for when the AC has detected there is a file inside gta3.img that is modifed that is also on the list of bad gta3.img files. (Files that can't be modified in gta3.img)
 // REQUIRES: The player is using AC.
-forward OnImgFileModifed(playerid, filename[], md5[]);
+forward AC_OnImgFileModifed(playerid, filename[], md5[]);
 
 // PURPOSE: Callback for when a file (usually) inside the players GTA directory md5 checksum has been calculated.
 // REQUIRES: The player is using AC.
-forward OnFileCalculated(playerid, filename[], md5[]);
+forward AC_OnFileCalculated(playerid, filename[], md5[]);
 
 // PURPOSE: Callback for when a player pauses, unpauses, or alt tabs from the game
 // REQUIRES: The player is using AC.
@@ -90,11 +114,11 @@ forward OnFileCalculated(playerid, filename[], md5[]);
 // Type = 0 (Regular pause)
 // Pause = 1 (pause or alt tabbed)
 // Pause = 0 (Unpause or came back into the game from an alt tab)
-forward OnPlayerPause(playerid, type, bool:pause);
+forward AC_OnPlayerPause(playerid, type, bool:pause);
 
 // PURPOSE: Callback for when a player takes a screenshot of their game using F8 only.
 // REQUIRES: The player is using AC.
-forward OnScreenshotTaken(playerid); 
+forward AC_OnScreenshotTaken(playerid); 
 
 stock TogglePlayerCrouchBug(playerid, bool:toggle)
 {
