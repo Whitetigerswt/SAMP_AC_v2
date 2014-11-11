@@ -51,7 +51,7 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
 		{
-			if ((GetAsyncKeyState(vKey) & 0x8000) && Misc::GetMacroLocks() == true)
+			if ((GetAsyncKeyState(vKey) & 0x8000) || Misc::GetMacroLocks() == false)
 			{
 				return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
 			}
