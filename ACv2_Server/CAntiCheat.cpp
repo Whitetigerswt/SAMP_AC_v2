@@ -65,37 +65,46 @@ CClientSocketInfo* CAntiCheat::GetConnectionInfo()
 
 void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 {
+	// Create new variable that will hold if this .exe is a bad exe.
+	bool found;
+
+	// Loop through the list of bad processes to see if we can find a match to the one just sent to us by the client.
+	for (std::vector<std::string>::iterator it = m_ProcessMD5s.begin(); it != m_ProcessMD5s.end(); ++it)
+	{
+		// If the md5 matches one of the md5's from our list of bad md5's
+		if (it->compare(md5) == 0)
+		{
+			found = true;
+		}
+	}
+
 	// If AC Main checks are enabled
 	if (Callback::ACToggle == true)
 	{
 		// Loop through the list of bad processes to see if we can find a match to the one just sent to us by the client.
-		for (std::vector<std::string>::iterator it = m_ProcessMD5s.begin(); it != m_ProcessMD5s.end(); ++it)
+		if(found)
 		{
-			// If the md5 matches one of the md5's from our list of bad md5's
-			if (it->compare(md5) == 0)
-			{
-				// Create 2 variables, one holding the player name, and one holding a formatted string telling why we're going to kick this player.
-				char name[MAX_PLAYER_NAME], msg[144];
+			// Create 2 variables, one holding the player name, and one holding a formatted string telling why we're going to kick this player.
+			char name[MAX_PLAYER_NAME], msg[144];
 
-				// Get the player name and store it in the name variable.
-				GetPlayerName(ID, name, sizeof(name));
+			// Get the player name and store it in the name variable.
+			GetPlayerName(ID, name, sizeof(name));
 
-				// Format the string telling all the players on the server why we kicked this one.
-				snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for using an illegal file: \"{FF0000}%s{FFFFFF}\"", name, processpath);
+			// Format the string telling all the players on the server why we kicked this one.
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for using an illegal file: \"{FF0000}%s{FFFFFF}\"", name, processpath);
 
-				// Send the message to all the players on the server.
-				SendClientMessageToAll(-1, msg);
+			// Send the message to all the players on the server.
+			SendClientMessageToAll(-1, msg);
 
-				// Print the result to the console so it can be logged.
-				Utility::Printf("%s has been kicked from the server for using illegal file: \"%s\"", name, processpath);
+			// Print the result to the console so it can be logged.
+			Utility::Printf("%s has been kicked from the server for using illegal file: \"%s\"", name, processpath);
 
-				// Kick the player from the server.
-				SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
-			}
+			// Kick the player from the server.
+			SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 		}
 	}
 	// Execute the PAWN callback.
-	Callback::Execute("AC_OnFileExecuted", "ssi", md5, processpath, ID);
+	Callback::Execute("AC_OnFileExecuted", "issi", found, md5, processpath, ID);
 }
 
 void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
@@ -152,24 +161,25 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 
 void CAntiCheat::OnFileCalculated(char* path, char* md5)
 {	
+
+	// Create a new variable that can contain a true/false value so we know if a file matches an MD5 from our list
+	bool found = false;
+
+	// Loop through a list of our md5's that we stored previously...
+	for (std::vector<std::string>::iterator it = m_MD5s.begin(); it != m_MD5s.end(); ++it)
+	{
+		// Compare the md5 sent to us by the client to our list of MD5's
+		if (strcmp(it->c_str(), md5) == 0)
+		{
+			// If they match, set found=true and break
+			found = true;
+			break;
+		}
+	}
+
 	// If AC Main checks are enabled
 	if (Callback::ACToggle == true)
 	{
-		// Create a new variable that can contain a true/false value so we know if a file matches an MD5 from our list
-		bool found = false;
-
-		// Loop through a list of our md5's that we stored previously...
-		for (std::vector<std::string>::iterator it = m_MD5s.begin(); it != m_MD5s.end(); ++it)
-		{
-			// Compare the md5 sent to us by the client to our list of MD5's
-			if (strcmp(it->c_str(), md5) == 0)
-			{
-				// If they match, set found=true and break
-				found = true;
-				break;
-			}
-		}
-
 		// Check if an md5 matches, and if it doesn't kick the player.
 		if (!found)
 		{
@@ -201,7 +211,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 		}
 	}
 	// Execute PAWN callback.
-	Callback::Execute("AC_OnFileCalculated", "ssi", md5, path, ID);
+	Callback::Execute("AC_OnFileCalculated", "issi", found, md5, path, ID);
 }
 
 void CAntiCheat::OnImgFileModified(char* filename, char* md5)

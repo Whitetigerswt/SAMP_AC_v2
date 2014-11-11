@@ -25,8 +25,9 @@ namespace Callback
 	static bool Default_SprintOnAllSurfaces = false;
 	static bool Default_MacroLimits = false;
 	static bool Default_SwitchReload = false;
-	static bool Default_CrouchBug = false;
+	static bool Default_VehicleBlips = true;
 	static bool Default_LiteFoot = false;
+	static int Default_CrouchBug = 9999;
 	static int Default_FrameLimit = 9999;
 
 	std::list<AMX*>& GetAMXList()
@@ -280,6 +281,7 @@ namespace Callback
 			ac->ToggleSwitchReload(Default_SwitchReload);
 			ac->ToggleCrouchBug(Default_CrouchBug);
 			ac->ToggleLiteFoot(Default_LiteFoot);
+			ac->ToggleVehicleBlips(Default_VehicleBlips);
 
 			if(Default_FrameLimit != 9999) ac->SetFPSLimit(Default_FrameLimit);			
 			
@@ -375,9 +377,10 @@ namespace Callback
 		Default_SprintOnAllSurfaces = pt.get<bool>("defaults.sprint_all_surfaces");
 		Default_MacroLimits = pt.get<bool>("defaults.macro_limits");
 		Default_SwitchReload = pt.get<bool>("defaults.switch_reload");
-		Default_CrouchBug = pt.get<bool>("defaults.crouch_bug");
+		Default_CrouchBug = pt.get<int>("defaults.crouch_bug");
 		Default_LiteFoot = pt.get<bool>("defaults.lite_foot");
 		Default_FrameLimit = pt.get<int>("defaults.frame_limit");
+		Default_VehicleBlips = pt.get<bool>("defaults.vehicle_blips");
 
 		return true;
 	}
