@@ -640,7 +640,7 @@ HOOK CHookManager::KeyPress()
 	}
 
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.
-	if (SPRINT_KEY != 0 && VAR_CURRENT_VEHICLE == 0)
+	if (SPRINT_KEY != 0 && VAR_CURRENT_VEHICLE == 0 && Misc::GetMacroLocks() == true)
 	{
 		// Set the sprint speed 
 		VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
@@ -676,7 +676,7 @@ HOOK CHookManager::SprintHook()
 		pushad
 	}
 
-	if (VAR_SPRINT_SPEED > MAX_SPRINT_SPEED && Misc::GetMacroLocks() == true)
+	if (VAR_SPRINT_SPEED > MAX_SPRINT_SPEED && Misc::GetMacroLocks() == true && VAR_CURRENT_VEHICLE == 0)
 	{
 		VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
 	}
