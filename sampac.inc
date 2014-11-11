@@ -98,7 +98,7 @@ forward AC_OnMD5Calculated(playerid, address, size, md5[]);
 
 // PURPOSE: Callback for when a new PE file is run on the clients machine.
 // REQUIRES: The player is using AC.
-forward AC_OnFileExecuted(playerid, module[], md5[]);
+forward AC_OnFileExecuted(playerid, module[], md5[], bool:isAllowed);
 
 // PURPOSE: Callback for when the AC has detected there is a file inside gta3.img that is modifed that is also on the list of bad gta3.img files. (Files that can't be modified in gta3.img)
 // REQUIRES: The player is using AC.
@@ -106,7 +106,7 @@ forward AC_OnImgFileModifed(playerid, filename[], md5[]);
 
 // PURPOSE: Callback for when a file (usually) inside the players GTA directory md5 checksum has been calculated.
 // REQUIRES: The player is using AC.
-forward AC_OnFileCalculated(playerid, filename[], md5[]);
+forward AC_OnFileCalculated(playerid, filename[], md5[], bool:isAllowed);
 
 // PURPOSE: Callback for when a player pauses, unpauses, or alt tabs from the game
 // REQUIRES: The player is using AC.
