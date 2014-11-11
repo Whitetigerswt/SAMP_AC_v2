@@ -6,7 +6,7 @@
 #define AC_UPDATE_URL "http://whitetigerswt.github.io/SAMP_AC_v2/API/Server_Linux_Updater.html"
 #endif
 
-#define CURRENT_VERSION 2.2f
+#define CURRENT_VERSION 2.3f
 #define CURRENT_MAJOR_VERSION 2.1f
 
 #include <string>
