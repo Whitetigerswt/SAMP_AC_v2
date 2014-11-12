@@ -202,11 +202,14 @@ void CRPCCallback::ToggleUnlimitedSprint(RakNet::BitStream &bsData, int iExtra)
 	{
 		if (toggle)
 		{
-			CMem::Cpy((void*)0x60A5BA, "\x90\x90\x90", 3); // nop
+			CMem::Cpy((void*)0x60A5B0, "\x68\x00\x00\x00\x00\x90\x90\x90\x90\x90\x90\x90\x90", 13); // nop
 		}
 		else
 		{
-			CMem::Cpy((void*)0x60A5BA, "\xD3\x5E\x18", 3); // fstp dword ptr [esi+18]
+			// push C3160000
+			// call 00420800
+			// fstp dword ptr [esi+18]
+			CMem::Cpy((void*)0x60A5B0, "\x68\x00\x00\x16\xC3\xE8\x46\x62\xE1\xFF\xD9\x5E\x18", 13);
 		}
 	}
 }

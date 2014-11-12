@@ -5,8 +5,6 @@
 #include <winternl.h>
 #include <Windows.h>
 
-#include "CLog.h"
-
 LoadLibrary_t CModuleSecurity::m_pLoadLibrary = NULL;
 std::vector<std::string> CModuleSecurity::m_AllowedModules;
 
@@ -34,9 +32,6 @@ void CModuleSecurity::HookLoadLibrary()
 HMODULE WINAPI CModuleSecurity::HOOK_LoadLibrary(LPCTSTR lpFileName)
 {
 	AddAllowedModule(lpFileName);
-
-	CLog log = CLog("loadlib.txt");
-	log.Write(lpFileName);
 
 	return m_pLoadLibrary(lpFileName);
 }
@@ -95,8 +90,6 @@ bool CModuleSecurity::IsAddressInAllowedModule(DWORD address)
 				{
 					if (address >= (DWORD)me32.modBaseAddr && address < (DWORD)(me32.modBaseAddr + me32.modBaseSize))
 					{
-						CLog log = CLog("modules.txt");
-						log.Write("mod: %s, base: 0x%x, basesize: 0x%x, address: 0x%x", me32.szModule, me32.modBaseAddr, me32.modBaseSize, address);
 						return true;
 					}
 				}

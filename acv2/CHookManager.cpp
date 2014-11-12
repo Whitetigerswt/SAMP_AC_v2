@@ -344,8 +344,13 @@ void CHookManager::SetConnectPatches()
 	// Hook sprint speed
 	CMem::ApplyJmp(FUNC_SprintHook, (DWORD)SprintHook, 9);
 	DWORD dwOldProt;
+
+	// Change a jump early in the function to jump over our sprint hook
 	VirtualProtect((void*)0x60A72B, sizeof(BYTE), PAGE_EXECUTE_READWRITE, &dwOldProt);
-	CMem::PutSingle < BYTE >(0x60A72B, 0x2B);
+	CMem::PutSingle < BYTE >(0x60A72B, 0x34);
+
+	/*// NOP the fld instruction that loads the sprinting value - This is now done inside the SprintHook function. (at the top, the asm)
+	CMem::Cpy((void*)0x60A751, "\x90\x90\x90\x90\x90\x90", 5);*/
 
 	// Disable changing of FOV. 
 	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer
@@ -640,10 +645,14 @@ HOOK CHookManager::KeyPress()
 	}
 
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.
-	if (SPRINT_KEY != 0 && VAR_CURRENT_VEHICLE == 0 && Misc::GetMacroLocks() == true)
+	if (SPRINT_KEY != 0)
 	{
-		// Set the sprint speed 
-		VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
+		// If not in a vehicle and macro locks is off.
+		if (VAR_CURRENT_VEHICLE == 0 && Misc::GetMacroLocks() == true)
+		{
+			// Set the sprint speed 
+			VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
+		}
 	}
 
 	// Check if the crouch key is pressed.

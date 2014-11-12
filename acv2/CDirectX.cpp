@@ -3,7 +3,6 @@
 #include "Addresses.h"
 #include "CMem.h"
 #include "Misc.h"
-#include "CLog.h"
 
 Direct3DCreate9_t  CDirectX::m_pDirect3DCreate9 = NULL;
 
@@ -12,24 +11,18 @@ IDirect3D9* CDirectX::m_pDirect3D = NULL;
 
 void CDirectX::HookD3DFunctions()
 {
-	CLog log = CLog("hooks.txt");
-	log.Write("init");
 
 	char	filename[MAX_PATH];
 	GetSystemDirectory(filename, (UINT)(MAX_PATH - strlen("\\d3d9.dll") - 1));
 	strcat(filename, "\\d3d9.dll");
-	log.Write("before load");
 	HMODULE d3d9 = LoadLibrary(filename);
-	log.Write("load");
 
 	if (Misc::GetGameVersion() == 1)
 	{
-		log.Write("insthook1");
 		CMem::ApplyJmp(DIRECT_CREATE_US, (DWORD)DirectXCreationHookUS, 5);
 	}
 	else
 	{
-		log.Write("insthook2");
 		CMem::ApplyJmp(DIRECT_CREATE_EU, (DWORD)DirectXCreationHookEU, 5);
 	}
 }
@@ -66,8 +59,5 @@ __declspec(naked) void CDirectX::DirectXCreationHookEU()
 
 void CDirectX::DirectXCreationProxy()
 {
-	CLog log = CLog("hooks.txt");
-	log.Write("installing d3d hook");
 	DIRECT_D3D9 = new CD3D9Proxy(Direct3DCreate9(D3D_SDK_VERSION));
-	log.Write("hooked");
 }
