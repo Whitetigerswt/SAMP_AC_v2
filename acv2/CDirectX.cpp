@@ -8,10 +8,12 @@ Direct3DCreate9_t  CDirectX::m_pDirect3DCreate9 = NULL;
 
 IDirect3DDevice9* CDirectX::m_pDevice = NULL;
 IDirect3D9* CDirectX::m_pDirect3D = NULL;
+ID3DXFont* CDirectX::m_pFont = NULL;
+ID3DXSprite* CDirectX::m_pSprite = NULL;
+Sprite* CDirectX::logo = NULL;
 
 void CDirectX::HookD3DFunctions()
 {
-
 	char	filename[MAX_PATH];
 	GetSystemDirectory(filename, (UINT)(MAX_PATH - strlen("\\d3d9.dll") - 1));
 	strcat(filename, "\\d3d9.dll");
@@ -60,4 +62,52 @@ __declspec(naked) void CDirectX::DirectXCreationHookEU()
 void CDirectX::DirectXCreationProxy()
 {
 	DIRECT_D3D9 = new CD3D9Proxy(Direct3DCreate9(D3D_SDK_VERSION));
+}
+
+void CDirectX::LoadImages()
+{
+	if (m_pDevice != NULL && logo == NULL)
+	{
+		/*D3DXCreateSprite(m_pDevice, &m_pSprite);
+		m_pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
+
+		D3DXCreateFont(m_pDevice, 12, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH, "Arial", &m_pFont);
+		*/
+
+		int width = GetSystemMetrics(SM_CXSCREEN);
+		int height = GetSystemMetrics(SM_CYSCREEN);
+
+		logo = new Sprite(width / 2, height / 2);
+
+		logo->Init(m_pDevice, 311, 152);
+	}
+}
+
+void CDirectX::Present()
+{
+	if (logo)
+	{
+		if (logo->isInitialized())
+		{
+			CLog log = CLog("test.txt");
+			log.Write("drawing");
+			logo->Draw();
+		}
+	}
+}
+
+void CDirectX::OnReset()
+{
+	if (logo)
+	{
+		logo->OnResetDevice();
+	}
+}
+
+void CDirectX::OnLost()
+{
+	if (logo)
+	{
+		logo->OnLostDevice();
+	}
 }

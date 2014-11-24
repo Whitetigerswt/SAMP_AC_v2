@@ -238,6 +238,7 @@
     <ClCompile Include="Network\CRakClient.cpp" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
     <ClCompile Include="Network\Network.cpp" />
+    <ClCompile Include="CSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\Boost\aligned_storage.hpp" />
@@ -538,6 +539,7 @@
     <ClInclude Include="CProcessList.h" />
     <ClInclude Include="CrashRpt.h" />
     <ClInclude Include="CrashRptProbe.h" />
+    <ClInclude Include="CSprite.h" />
     <ClInclude Include="Detours\detours.h" />
     <ClInclude Include="DirectX Hooks\CD3D9DeviceProxy.h" />
     <ClInclude Include="DirectX Hooks\CD3D9Proxy.h" />

@@ -41,9 +41,6 @@ void CLoader::Initialize(HMODULE hMod)
 
 	// Hook the D3D9Device functions.
 	CDirectX::HookD3DFunctions();
-
-	CLog log = CLog("hooks.txt");
-	log.Write("inst directxhooks");
 	
 	// Load the command line in a string (mostly the host, and port so we can connect later)
 	std::map < std::string, std::string > cmdline;
@@ -66,7 +63,11 @@ void CLoader::Initialize(HMODULE hMod)
 
 	// Force process elevation once the game has loaded. This will terminate the current process and run a new one.
 	if (IsWindowsVistaOrGreater())
+	{
 		CheckElevation();
+	}
+
+	//CDirectX::LoadImages();
 
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 7);
