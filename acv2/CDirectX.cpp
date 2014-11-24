@@ -83,14 +83,12 @@ void CDirectX::LoadImages()
 	}
 }
 
-void CDirectX::Present()
+void CDirectX::PreEndScene()
 {
 	if (logo)
 	{
 		if (logo->isInitialized())
 		{
-			CLog log = CLog("test.txt");
-			log.Write("drawing");
 			logo->Draw();
 		}
 	}

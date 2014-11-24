@@ -626,6 +626,7 @@
     <ClInclude Include="Network\CRakClient.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
     <ClInclude Include="Network\Network.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="VersionHelpers.h" />
     <ClInclude Include="VMProtectSDK.h" />
   </ItemGroup>
@@ -643,6 +644,12 @@
     <None Include="DirectX\xnamathmatrix.inl" />
     <None Include="DirectX\xnamathmisc.inl" />
     <None Include="DirectX\xnamathvector.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ACv2_Client.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="png1.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,6 @@
 #include "CSprite.h"
 #include "CLog.h"
+#include "Addresses.h"
 
 Sprite::Sprite()
 {
@@ -44,28 +45,22 @@ Sprite::~Sprite()
 
 bool Sprite::Init(LPDIRECT3DDEVICE9 device, int width, int height)
 {
+
+	if (device == NULL || initialized == true) return false;
+
 	m_device = device;
 
 	center = D3DXVECTOR2((width / 2), (height / 2));
 	scale = D3DXVECTOR2(width, height);
 
-	HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDB_PNG1), RT_RCDATA);
-
-	HGLOBAL hData = LoadResource(NULL, hRes);
-	LPVOID data = LockResource(hData);
-
-	CLog log = CLog("testa.txt");
-
 	if (FAILED(D3DXCreateTextureFromResourceEx(device, GetModuleHandle("ACv2_Client.asi"), MAKEINTRESOURCE(IDB_PNG1), width, height, D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, D3DPOOL_MANAGED,
 		D3DX_DEFAULT, D3DX_DEFAULT, 0, NULL, NULL, &tex)))
 	{
-		log.Write("first failed");
 		return false;
 	}
 
 	if (FAILED(D3DXCreateSprite(device, &sprite)))
 	{
-		log.Write("second failed");
 		return false;
 	}
 

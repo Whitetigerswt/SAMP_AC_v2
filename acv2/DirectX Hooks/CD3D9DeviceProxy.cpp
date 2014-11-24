@@ -105,8 +105,6 @@ HRESULT CD3D9DeviceProxy::Present(CONST RECT* pSourceRect,CONST RECT* pDestRect,
 	// add horrible terrible awful code to check for cped special flags until one can be properly made.
 	if (PLAYER_POINTER != 0 && VAR_CPED_SPECIAL_FLAGS != 0 && VAR_CPED_SPECIAL_FLAGS != 252) ExitProcess(0);
 
-	CDirectX::Present();
-
 	return m_pDirect3DDevice9->Present(pSourceRect, pDestRect, hDestWindowOverride, pDirtyRegion);
 }
 
@@ -222,6 +220,7 @@ HRESULT CD3D9DeviceProxy::BeginScene()
 
 HRESULT CD3D9DeviceProxy::EndScene() 
 {
+	CDirectX::PreEndScene();
 	return m_pDirect3DDevice9->EndScene();
 }
 
