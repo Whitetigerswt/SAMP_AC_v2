@@ -10,20 +10,21 @@ class Sprite
 {
 public:
 	Sprite();
-	Sprite(int x, int y);
+	Sprite(float x, float y);
 	~Sprite();
 
-	bool Init(LPDIRECT3DDEVICE9 device, int width, int height);
+	bool Init(LPDIRECT3DDEVICE9 device, float width, float height);
 	bool isInitialized();
 
 	void Draw();
-	void Resize(int width, int height);
-	void Move(int x, int y);
+	void Resize(float width, float height);
+	void Move(float x, float y);
 	void Rotate(float angle);
 
 	void Reset();
 	void OnLostDevice();
 	void OnResetDevice();
+	void DeleteSelf();
 
 private:
 	D3DXVECTOR2 pos;
@@ -42,5 +43,10 @@ private:
 
 	float rotation;
 
+	int m_ColorTick;
+	int m_CurrAlpha;
+	int m_Type;
+	bool m_FadeType;
+	ID3DXFont* m_pFont;
 	void SetTransformation();
 };

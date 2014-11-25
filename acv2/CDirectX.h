@@ -23,7 +23,7 @@ public:
 	static void DirectXCreationHookEU();
 	static void DirectXCreationProxy();
 	static void LoadImages();
-	static void PreEndScene();
+	static void Present();
 	static void OnLost();
 	static void OnReset();
 

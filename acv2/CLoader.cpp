@@ -52,7 +52,6 @@ void CLoader::Initialize(HMODULE hMod)
 		// Stop CLEO from loading, and other memory hooks.
 		CHookManager::Load();
 
-		// Load AC logo
 		CDirectX::LoadImages();
 
 		// Wait until the game is loaded in an infinite loop.
@@ -69,6 +68,7 @@ void CLoader::Initialize(HMODULE hMod)
 	{
 		CheckElevation();
 	}
+
 
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 7);

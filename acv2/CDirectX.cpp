@@ -77,17 +77,17 @@ void CDirectX::LoadImages()
 		int width = GetSystemMetrics(SM_CXSCREEN);
 		int height = GetSystemMetrics(SM_CYSCREEN);
 
-		logo = new Sprite(width / 2, height / 2);
+		logo = new Sprite((float)width / 2, (float)height / 2);
 
 		logo->Init(m_pDevice, 311, 152);
 	}
 }
 
-void CDirectX::PreEndScene()
+void CDirectX::Present()
 {
 	if (logo)
 	{
-		if (logo->isInitialized())
+		if (logo->isInitialized() && ADDRESS_LOADED > 8)
 		{
 			logo->Draw();
 		}
