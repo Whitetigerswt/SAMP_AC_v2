@@ -239,6 +239,7 @@
     <ClCompile Include="Network\CRPCCallback.cpp" />
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="CSprite.cpp" />
+    <ClCompile Include="PatternScan.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\Boost\aligned_storage.hpp" />
@@ -626,6 +627,7 @@
     <ClInclude Include="Network\CRakClient.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
     <ClInclude Include="Network\Network.h" />
+    <ClInclude Include="PatternScan.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="VersionHelpers.h" />
     <ClInclude Include="VMProtectSDK.h" />

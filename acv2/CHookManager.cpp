@@ -5,6 +5,7 @@
 #include "Misc.h"
 #include "Network\Network.h"
 #include "../Shared/Network/CRPC.h"
+#include "PatternScan.h"
 
 #include <Windows.h>
 
@@ -144,7 +145,7 @@ int CHookManager::iLastPress = 0;
 
 float CHookManager::LiteFoot = 0.0f;
 
-#define MAX_SPRINT_SPEED 6.5f
+#define MAX_SPRINT_SPEED 7.0f
 
 void CHookManager::Load()
 {
@@ -316,7 +317,7 @@ void CHookManager::Load()
 	if (samp)
 	{
 		// Add address offset
-		samp += 0x86963;
+		samp = FindPattern("\x8B\x90\xD5\x03\x00\x00\x8A\x42\x2F\x84\xC0\x74\x04", "xxxxxxxxxxxxx") + 0xD;
 
 		// Unprotect memory.
 		VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);

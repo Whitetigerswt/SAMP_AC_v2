@@ -456,6 +456,9 @@
     <ClCompile Include="CSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PatternScan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h">
@@ -1620,6 +1623,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PatternScan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
