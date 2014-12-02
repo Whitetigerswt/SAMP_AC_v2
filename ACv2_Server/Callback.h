@@ -37,4 +37,6 @@ namespace Callback
 	void KickPlayer(int timerid, void* params);
 
 	static bool ACToggle;
+
+	bool GetACEnabled();
 }

@@ -205,6 +205,11 @@ namespace Callback
 		}
 	}
 
+	bool GetACEnabled()
+	{
+		return ACToggle;
+	}
+
 	void OnACClosed(unsigned int playerid, int type)
 	{
 		// If the player is connected, and /actoggle has been turned on (aka, AC is on)

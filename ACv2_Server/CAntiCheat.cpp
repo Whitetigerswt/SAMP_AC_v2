@@ -7,7 +7,6 @@
 #include "../Shared/Network/CRPC.h"
 #include "CServerUpdater.h"
 
-
 std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;
 std::vector<std::string> CAntiCheat::m_MD5s;
@@ -66,7 +65,7 @@ CClientSocketInfo* CAntiCheat::GetConnectionInfo()
 void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 {
 	// Create new variable that will hold if this .exe is a bad exe.
-	bool found;
+	bool found = false;
 
 	// Loop through the list of bad processes to see if we can find a match to the one just sent to us by the client.
 	for (std::vector<std::string>::iterator it = m_ProcessMD5s.begin(); it != m_ProcessMD5s.end(); ++it)
@@ -75,11 +74,13 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 		if (it->compare(md5) == 0)
 		{
 			found = true;
+			break;
 		}
 	}
 
 	// If AC Main checks are enabled
-	if (Callback::ACToggle == true)
+
+	if (Callback::GetACEnabled() == true)
 	{
 		// Loop through the list of bad processes to see if we can find a match to the one just sent to us by the client.
 		if(found)
@@ -103,6 +104,7 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 			SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 		}
 	}
+
 	// Execute the PAWN callback.
 	Callback::Execute("AC_OnFileExecuted", "issi", found, md5, processpath, ID);
 }
@@ -110,7 +112,7 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 {
 	// If AC Main checks are enabled
-	if (Callback::ACToggle == true)
+	if (Callback::GetACEnabled() == true)
 	{
 		// The start of the weapon.dat block of HITMAN skills only.
 		if (address == 0xC8C418)
@@ -178,7 +180,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 	}
 
 	// If AC Main checks are enabled
-	if (Callback::ACToggle == true)
+	if (Callback::GetACEnabled() == true)
 	{
 		// Check if an md5 matches, and if it doesn't kick the player.
 		if (!found)
@@ -217,7 +219,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 {
 	// If AC Main checks are enabled
-	if (Callback::ACToggle == true)
+	if (Callback::GetACEnabled() == true)
 	{
 		// We already know the file is modified, so we don't need to check for that.
 		// Create 2 variables, one to hold the player name and one to send a formatted message to the whole server telling them what happened.
