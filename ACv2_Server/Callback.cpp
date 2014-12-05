@@ -317,6 +317,9 @@ namespace Callback
 			// Send them the formatted message.
 			SendClientMessageToAll(-1, msg);
 
+			// Tell them where to get the AC and install it.
+			SendClientMessage(playerid, -1, "{FFFFFF}You can download the latest version of Whitetiger's Anti-Cheat at: {FF0000}http://samp-ac.com");
+
 			// Write in the console what we just did.
 			Utility::Printf("%s has been kicked from the server for not connecting with AC while AC is on.", name);
 

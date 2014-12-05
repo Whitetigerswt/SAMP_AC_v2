@@ -52,7 +52,7 @@ void CLoader::Initialize(HMODULE hMod)
 		// Stop CLEO from loading, and other memory hooks.
 		CHookManager::Load();
 
-		CDirectX::LoadImages();
+		//CDirectX::LoadImages();
 
 		// Wait until the game is loaded in an infinite loop.
 		Sleep(5);

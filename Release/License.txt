@@ -2,7 +2,7 @@ TERMS:
 
 (a) You must meet all license requirements of the SA-MP CLIENT AND SERVER SOFTWARE LICENSE AGREEMENT to use this software.
 
-(b) Any information on your computer may be scanned and checked, and sent to our servers.
+(b) Any information on your computer may be scanned and checked, and sent to your connected server, Crash reports are sent to sixtytiger.com.
 
 (c) It is forbidden for anyone to create derivative software of this software in the form of reverse engineering.
 
