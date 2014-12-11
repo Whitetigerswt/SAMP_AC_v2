@@ -4,7 +4,8 @@ script:
   - sudo apt-get update -qq
   - sudo apt-get install -y build-essential libc6-i386 libc6-dev-i386 lib32gcc1 lib32stdc++6 g++4.4
   - sudo ln -s /usr/lib32/libstdc++.so.6 /usr/lib32/libstdc++.so
-  - make ACv2_Server
+  - cd ACv2_Server
+  - make
 
 notifications:
   email: whitetigerswt@gmail.com
