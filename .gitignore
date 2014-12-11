@@ -28,6 +28,7 @@
 !LICENSE
 !makefile
 !acv2/libs/detours.pdb
+!.travis.yml
 !.gitkeep
 !*.cpp
 !*.h
