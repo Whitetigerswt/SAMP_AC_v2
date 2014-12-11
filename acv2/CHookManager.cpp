@@ -572,6 +572,7 @@ HOOK CHookManager::GravityHook()
 	if (*(BYTE*)0x543081 != 0xD9)
 	{
 		// Crash the client.
+
 		VirtualProtect((void*)0x543081, 5, PAGE_EXECUTE_READWRITE, NULL);
 		memcpy((void*)0x543081, "\x90\x90\x90\x90\x90", 5);
 	}
