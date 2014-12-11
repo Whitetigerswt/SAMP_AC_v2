@@ -5,7 +5,7 @@
 # make SAMPAC
 #
 
-GPP = g++
+GPP = g++-4.4
 GCC = gcc
 AC_OUTFILE = "bin/sampac.so"
 
