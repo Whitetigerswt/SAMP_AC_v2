@@ -1,5 +1,5 @@
 #include "Network.h"
-#include "../GDK/a_players.h"
+#include "../GDK/sampgdk.h"
 #include "../../Shared/Network/CRPC.h"
 #include "CRPCCallback.h"
 #include "../../Shared/RakNet/SuperFastHash.h"

@@ -5,7 +5,7 @@
 #include <cstdarg>
 #include <cstdio>
 
-#include "GDK/a_http.h"
+#include "GDK/sampgdk.h"
 
 #ifdef __linux
 #include <stdlib.h>

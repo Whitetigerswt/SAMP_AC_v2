@@ -1,7 +1,7 @@
 #include "Callback.h"
 #include "Network/Network.h"
 #include "Utility.h"
-#include "GDK/a_players.h"
+#include "GDK/sampgdk.h"
 #include "CAntiCheat.h"
 #include "CPlayer.h"
 #include "../Shared/Network/CRPC.h"

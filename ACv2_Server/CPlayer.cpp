@@ -1,5 +1,5 @@
 #include "CPlayer.h"
-#include "GDK/a_players.h"
+#include "GDK/sampgdk.h"
 
 
 CPlayer::CPlayer(int playerid) : ID(playerid)

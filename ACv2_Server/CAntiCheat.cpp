@@ -1,6 +1,6 @@
 #include "CAntiCheat.h"
 #include "Utility.h"
-#include "GDK/a_players.h"
+#include "GDK/sampgdk.h"
 #include "Network/Network.h"
 #include "Callback.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"

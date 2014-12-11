@@ -414,6 +414,9 @@
     <ClCompile Include="CServerUpdater.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GDK\sampgdk.c">
+      <Filter>Source Files\SDK\samp-gdk</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h">
@@ -911,57 +914,6 @@
     <ClInclude Include="Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GDK\a_http.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\a_http-decl.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\a_objects.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\a_objects-decl.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\a_players.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\a_players-decl.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\a_samp.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\a_samp-decl.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\a_vehicles.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\a_vehicles-decl.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\bool.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\core.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\export.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\interop.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\platform.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\sdk.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\version.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
     <ClInclude Include="Callback.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -976,6 +928,9 @@
     </ClInclude>
     <ClInclude Include="CServerUpdater.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\sampgdk.h">
+      <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
