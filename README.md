@@ -31,16 +31,14 @@ Client Specific
 Linux
 ----------
 ```
-1) Use Ubuntu 14.04 LTS
-2) sudo apt-get install g++4.4 && sudo apt-get install make
-3) sudo apt-get update
-4) sudo apt-get upgrade
-5) sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev cmake
-6) Install boost v1.56 (NOT 1.57 or newer!):
-    - wget -O boost_1_56_0.tar.gz http://sourceforge.net/projects/boost/files/boost/1.56.0/boost_1_56_0.tar.gz/download
-	- tar xzvf boost_1_56_0.tar.gz
-	- cd boost_1_56_0/
-	- ./bootstrap.sh --prefix=/usr/local
-7) make sure all software updates have been completed.
-8) cd into ACv2_Server folder && run "make"
+1) Use Ubuntu 14.04 LTS Through VMWare (Although any form of linux will work, you'll just have to accomodate the steps with yum or whatever package system)
+2) sudo apt-get update
+3) sudo apt-get upgrade
+4) sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev cmake g++4.4 make
+5) You cannot directly use git as this is a private repo, clone the repo from the GitHub app on Windows
+6) Create a new folder on Virtual machine, title it whatever
+7) Paste "ACv2_Server" and "Shared" into the new folder.
+8) cd to "ACv2_Server"
+9) "make"
+10) sampac.so should be located in ACv2_Server/bin/
 ```
