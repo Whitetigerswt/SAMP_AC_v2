@@ -20,13 +20,13 @@ Windows
 
 Client Specific
 ----------
-~~Pirate~~ Acquire VMProtect Ultimate v2.12.3.
-Move ACv2_Client.map from "acv2" to "Release".
-Open ACv2_Client.asi - Max FPS.vmp with VMProtect.
-Press the green play button.
-Rename ACv2_Client.vmp.asi to "ACv2_Client.asi"
-Download nullsoft scriptable install system v2.46. - http://nsis.sourceforge.net/Download
-Run sampac.nsi
+* ~~Pirate~~ Acquire VMProtect Ultimate v2.12.3.
+* Move ACv2_Client.map from "acv2" to "Release".
+* Open ACv2_Client.asi - Max FPS.vmp with VMProtect.
+* Press the green play button.
+* Rename ACv2_Client.vmp.asi to "ACv2_Client.asi"
+* Download nullsoft scriptable install system v2.46. - http://nsis.sourceforge.net/Download
+* Run sampac.nsi
 
 Linux
 ----------
