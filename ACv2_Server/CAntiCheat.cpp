@@ -18,27 +18,7 @@ std::vector<std::string> CAntiCheat::m_ProcessMD5s;
 
 CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m_pSockInfo(socketInfo), ID(playerid)
 {
-
-	// If m_FileNames is empty, that's a problem.
-	if (m_FileNames.empty())
-	{
-		// m_FileNames should never be empty.
-		m_FileNames = Cmd5Info::GetGtaDirectoryFilesNames();
-	}
-
-	// Now, check the md5's list for the same thing.
-	if (m_MD5s.empty())
-	{
-		// Again, it should never be empty.
-		m_MD5s = Cmd5Info::GetGtaDirectoryFilesMd5();
-	}
-
-	// We need to do the same for the list of bad processes too.
-	if (m_ProcessMD5s.empty())
-	{
-		// Get the list of bad processes from the internet.
-		m_ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
-	}
+	UpdateCheatList();
 
 	// Set the default values for the variables.
 	m_LiteFoot = false;
@@ -54,6 +34,21 @@ CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m
 CAntiCheat::~CAntiCheat()
 {
 	delete m_pSockInfo;
+}
+
+void CAntiCheat::UpdateCheatList()
+{
+	// If the list hasn't been updated in 24 hours...
+	if (time(NULL) > m_LastCheatUpdate + 86400)
+	{
+		// Update our cheat lists!
+		m_ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
+		m_MD5s = Cmd5Info::GetGtaDirectoryFilesMd5();
+		m_FileNames = Cmd5Info::GetGtaDirectoryFilesNames();
+
+		// Set the last update to the current time.
+		m_LastCheatUpdate = (int)time(NULL);
+	}
 }
 
 CClientSocketInfo* CAntiCheat::GetConnectionInfo()

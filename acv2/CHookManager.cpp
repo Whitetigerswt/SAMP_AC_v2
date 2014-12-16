@@ -361,7 +361,7 @@ void CHookManager::SetConnectPatches()
 	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
 
 	LPVOID patchAddress = NULL;
-	// ALLOW ALT+TABBING WITHOUT PAUSING
+	// ALLOW ALT+TABBING WITHOUT PAUSING - doesn't work atm
 	if (*(BYTE *)0x748ADD == 0xFF && *(BYTE *)0x748ADE == 0x53)
 		patchAddress = (LPVOID)0x748A8D;
 	else
@@ -421,6 +421,9 @@ void CHookManager::VerifyFilePaths()
 {
 	// These addresses tell gta_sa where to find the data files
 	// We need to verify they're the same so the game doesn't try to cheat and load the wrong files ;)
+
+	// I question if this can be done in a better way.
+	// e.g: Writing asm hooks and changing the address gta_sa.exe reads for these strings to something in this .asi.
 
 	CheckMemoryAddr(VAR_GTA3_IMG_PATH, 15, "MODELS\\GTA3.IMG");
 	CheckMemoryAddr(VAR_ANIM_IMG_PATH, 12, "ANIM\\PED.IFP");
@@ -594,6 +597,7 @@ HOOK CHookManager::GravityHook()
 DWORD gtasa_markers_jmp_pointer = 0x584A79;
 HOOK CHookManager::MarkersHook()
 {
+	// todo: slight speed improvement by writing this in asm completely?
 	__asm pushad
 
 	if (Misc::GetVehicleBlips() == false)

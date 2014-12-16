@@ -2,6 +2,10 @@
 #include <Windows.h>
 #include <vector>
 
+// PURPOSE OF THIS CLASS: PREVENT STEALTH INJECTORS
+// NOT WORKING AT THE MOMENT
+// TODO
+
 typedef HMODULE(WINAPI* LoadLibrary_t)(LPCSTR);
 
 class CModuleSecurity

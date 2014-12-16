@@ -32,36 +32,61 @@ public:
 
 private:
 
+	// PURPOSE: Hook CLEO funcs and make CLEO of various versions not load cleo scripts 
+	// REQUIRES: NULL
+	// NOTES: This doesn't prevent CLEO.asi from loading, it will load, what it does prevent is cleo *.cs scripts from loading.
+	// NOTES: e.g: If you paused the game it will always say "Cleo scripts loaded: 0"
 	static void LoadScriptsHook();
+
+	// PURPOSE: Check a memory address equals a certain value.
+	// REQUIRES: address, size, and a string to match.
 	static void CheckMemoryAddr(void* address, int size, char* tomatch);
+
+	// PURPOSE: Scans gta_sa.exe for edited file paths redirecting to a different .dat, .cfg, or .img
+	// REQUIRES: NULL
 	static void VerifyFilePaths();
 
+	// PURPOSE: Prevent werner from working
 	static void LoadShotgunBullet();
 	static void LoadBullet();
 
 	//static void CPed_Special_Flags();
 
+	// hooks for when pauseing
 	static void OnPause();
 	static void OnUnPause();
 	static void OnPauseChange();
 
+	// fatulous: some random hack from 2006
 	static void Fatulous1();
 	static void Fatulous2();
 	static void Fatulous3();
 
+	// name tag hack: http://ugbase.eu/releases/)2014(-nametag-distance-los-(0-3z)/
 	static void NameTagHook();
 
+	// Makes widescreen mod crash the game
 	static void WidescreenPatch();
 
+	// Makes https://github.com/Whitetigerswt/samp-fov-changer crash the game
 	static void FOVPatch();
 
+	// Hook for all key presses
+	// protip: keylogger found here
 	static void KeyPress();
 
+	// Hook to limit sprint
 	static void SprintHook();
+
+	// Hook to prevent litefooting, hooks inside some weird sprint function after you shoot
+	// note: only partially works, people can still litefoot :(
+	// needs further research...
 	static void LiteFootHook();
 
+	// Hooks gravity function which causes sobeit to crash.
 	static void GravityHook();
 
+	// Hook to allow us to turn on/off vehicle blips
 	static void MarkersHook();
 
 	static float CameraXPos;
@@ -72,6 +97,10 @@ private:
 	static int iTickOffset;
 
 	static float LiteFoot;
+
+	// TOO MANY HOOKS TO DOCUMENT
+	// basically all the camera hooks do is redirect the game's X and Y camera pos's to the variables "CameraXPos" and "CameraYPos"
+	// We hook this to prevent aimbots from editing the traditional addresses.
 
 	static void CameraXWriteHook1();
 	static void CameraXWriteHook2();

@@ -16,8 +16,16 @@ extern "C" IMAGE_DOS_HEADER __ImageBase;
 
 namespace Utility
 {
+	// PURPOSE: Load the plugin data, and get logprintf address.
+	// REQUIRES: pointer to amx data
 	void Initialize(void** ppData);
+
+	// PURPOSE: Print a line out to the server console.
+	// REQUIRES: A string to print.
 	void Printf(const char* szFormat, ...);
+
+	// PURPOSE: Get path to main server program.
+	// REQUIRES: NULL
 	char* GetServerPath();
 }
 

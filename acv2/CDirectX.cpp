@@ -12,6 +12,8 @@ ID3DXFont* CDirectX::m_pFont = NULL;
 ID3DXSprite* CDirectX::m_pSprite = NULL;
 Sprite* CDirectX::logo = NULL;
 
+#define STUPID_STUFF 0
+
 void CDirectX::HookD3DFunctions()
 {
 	char	filename[MAX_PATH];
@@ -66,6 +68,7 @@ void CDirectX::DirectXCreationProxy()
 
 void CDirectX::LoadImages()
 {
+#if STUPID_STUFF == 1
 	if (m_pDevice != NULL && logo == NULL)
 	{
 		/*D3DXCreateSprite(m_pDevice, &m_pSprite);
@@ -81,6 +84,7 @@ void CDirectX::LoadImages()
 
 		logo->Init(m_pDevice, 311, 152);
 	}
+#endif
 }
 
 void CDirectX::Present()
