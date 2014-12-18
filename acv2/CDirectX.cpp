@@ -21,6 +21,8 @@ void CDirectX::HookD3DFunctions()
 	strcat(filename, "\\d3d9.dll");
 	HMODULE d3d9 = LoadLibrary(filename);
 
+	m_pDirect3DCreate9 = (Direct3DCreate9_t)GetProcAddress(GetModuleHandle("d3d9.dll"), "Direct3DCreate9");
+
 	if (Misc::GetGameVersion() == 1)
 	{
 		CMem::ApplyJmp(DIRECT_CREATE_US, (DWORD)DirectXCreationHookUS, 5);
@@ -63,7 +65,7 @@ __declspec(naked) void CDirectX::DirectXCreationHookEU()
 
 void CDirectX::DirectXCreationProxy()
 {
-	DIRECT_D3D9 = new CD3D9Proxy(Direct3DCreate9(D3D_SDK_VERSION));
+	DIRECT_D3D9 = new CD3D9Proxy(m_pDirect3DCreate9(D3D_SDK_VERSION));
 }
 
 void CDirectX::LoadImages()
