@@ -361,7 +361,7 @@ void CHookManager::SetConnectPatches()
 	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
 
 	LPVOID patchAddress = NULL;
-	// ALLOW ALT+TABBING WITHOUT PAUSING - doesn't work atm
+	/*// ALLOW ALT+TABBING WITHOUT PAUSING - doesn't work atm
 	if (*(BYTE *)0x748ADD == 0xFF && *(BYTE *)0x748ADE == 0x53)
 		patchAddress = (LPVOID)0x748A8D;
 	else
@@ -370,16 +370,18 @@ void CHookManager::SetConnectPatches()
 	CMem::Set(patchAddress, 0x90, 6);
 
 	// Disable menu after alt-tab
-	CMem::PutSingle < BYTE >(0x53BC78, 0x00);
+	CMem::PutSingle < BYTE >(0x53BC78, 0x00);*/
 	
 	// HACK to prevent RealTimeShadowManager crash, also disables ped shadows including shadow mods
 	CMem::PutSingle < BYTE >(0x0706AB0, 0xC3);
 
-	// The instanthit function for bullets ignores the first few bullets shot by
-	// remote players after reloading because some flag isn't set (no bullet impact
-	// graphics, no damage). Makes e.g. sawnoffs completely ineffective.
-	// Remove this check so that no bullets are ignored.
-	CMem::PutSingle < BYTE >(0x73FDF9, 0xEB);
+	// Prevent autoaim (Doesn't work anyway because of above camera X/Y hooks) (unfinished/not quite working)
+	CMem::Cpy((void*)0x686905, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
+	CMem::Cpy((void*)0x52A93C, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
+	CMem::Cpy((void*)0x521A16, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
+	CMem::Cpy((void*)0x5221FC, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
+	CMem::Cpy((void*)0x52A93C, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
+	CMem::Cpy((void*)0x686CE6, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
