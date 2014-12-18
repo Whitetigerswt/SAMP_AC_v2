@@ -32,6 +32,8 @@ namespace Network
 			return;
 		}
 
+		boost::thread NetworkThread(&Network::Process);
+
 		bInitialized = true;
 	}
 
@@ -76,69 +78,73 @@ namespace Network
 
 	void Process()
 	{
-		if (!IsInitialized())
+		while (true)
 		{
-			return;
-		}
-
-		RakNet::Packet* pPacket;
-
-		while ((pPacket = pRakClient->Receive()))
-		{
-			if (!pPacket->length)
+			if (!IsInitialized())
 			{
 				return;
 			}
 
-			RakNet::BitStream bitStream(&pPacket->data[1], pPacket->length - 1, false);
+			RakNet::Packet* pPacket;
 
-			switch (pPacket->data[0])
+			while ((pPacket = pRakClient->Receive()))
 			{
-			case PACKET_PLAYER_REGISTERED:
-			{
-				bConnected = true;
-				bServerHasPlugin = true;
-				CRPCCallback::Initialize();
-
-				break;
-			}
-			case PACKET_RPC:
-			{
-				unsigned short usRpcId;
-
-				if (bitStream.Read(usRpcId))
+				if (!pPacket->length)
 				{
-					CRPC::Process(usRpcId, bitStream);
+					return;
 				}
 
-				return;
-			}
-			case PACKET_CONNECTION_REJECTED:
-			case PACKET_PLAYER_PROPER_DISCONNECT:
-			{
-				bServerHasPlugin = false;
+				RakNet::BitStream bitStream(&pPacket->data[1], pPacket->length - 1, false);
 
-				break;
-			}
-			case ID_DISCONNECTION_NOTIFICATION:
-			case ID_CONNECTION_LOST:
-			{
-				bConnected = false;
+				switch (pPacket->data[0])
+				{
+				case PACKET_PLAYER_REGISTERED:
+				{
+					bConnected = true;
+					bServerHasPlugin = true;
+					CRPCCallback::Initialize();
 
-				if (ServerHasPlugin())
-					boost::thread ConnectionThread(&Reconnect);
+					break;
+				}
+				case PACKET_RPC:
+				{
+					unsigned short usRpcId;
 
-				break;
-			}
-			default:
-				break;
+					if (bitStream.Read(usRpcId))
+					{
+						CRPC::Process(usRpcId, bitStream);
+					}
 
-			}
+					return;
+				}
+				case PACKET_CONNECTION_REJECTED:
+				case PACKET_PLAYER_PROPER_DISCONNECT:
+				{
+					bServerHasPlugin = false;
 
-			if (pPacket != NULL)
-			{
-				pRakClient->DeallocatePacket(pPacket);
+					break;
+				}
+				case ID_DISCONNECTION_NOTIFICATION:
+				case ID_CONNECTION_LOST:
+				{
+					bConnected = false;
+
+					if (ServerHasPlugin())
+						boost::thread ConnectionThread(&Reconnect);
+
+					break;
+				}
+				default:
+					break;
+
+				}
+
+				if (pPacket != NULL)
+				{
+					pRakClient->DeallocatePacket(pPacket);
+				}
 			}
+			Sleep(10);
 		}
 		return;
 	}

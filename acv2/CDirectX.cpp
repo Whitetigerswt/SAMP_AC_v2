@@ -16,18 +16,25 @@ Sprite* CDirectX::logo = NULL;
 
 void CDirectX::HookD3DFunctions()
 {
+	// Make sure the right d3d9 is loaded.
 	char	filename[MAX_PATH];
 	GetSystemDirectory(filename, (UINT)(MAX_PATH - strlen("\\d3d9.dll") - 1));
 	strcat(filename, "\\d3d9.dll");
 	HMODULE d3d9 = LoadLibrary(filename);
 
+	// Get the address of the DirectX creation func
 	m_pDirect3DCreate9 = (Direct3DCreate9_t)GetProcAddress(GetModuleHandle("d3d9.dll"), "Direct3DCreate9");
 
-	if (Misc::GetGameVersion() == 1)
+	if (m_pDirect3DCreate9 == NULL)
+	{
+		// What now?
+	}
+
+	if (Misc::GetGameVersion() == 1) // is game us version
 	{
 		CMem::ApplyJmp(DIRECT_CREATE_US, (DWORD)DirectXCreationHookUS, 5);
 	}
-	else
+	else // else it's eu
 	{
 		CMem::ApplyJmp(DIRECT_CREATE_EU, (DWORD)DirectXCreationHookEU, 5);
 	}

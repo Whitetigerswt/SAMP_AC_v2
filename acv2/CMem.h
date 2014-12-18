@@ -18,6 +18,7 @@ public:
 
 	static void ApplyJmp(BYTE* pAddress, DWORD dwProxy, DWORD dwLen);
 	static void Cpy(void* address, const void* src, int size);
+	static void RedirectCall(int address, void *func);
 
 private:
 	static DWORD m_dwUnprotectDummy;

@@ -25,3 +25,11 @@ void CMem::Cpy(void* address, const void* src, int size)
 	DWORD dwOldProt = 0;
 	VirtualProtect(address, size, m_dwUnprotectDummy, &dwOldProt);
 }
+
+void CMem::RedirectCall(int address, void *func)
+{
+	int temp = 0xE8;
+	Cpy((void *)address, &temp, 1);
+	temp = (int)func - ((int)address + 5);
+	Cpy((void *)((int)address + 1), &temp, 4);
+}

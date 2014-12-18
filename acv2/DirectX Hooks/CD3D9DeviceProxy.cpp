@@ -92,8 +92,6 @@ HRESULT CD3D9DeviceProxy::Reset(D3DPRESENT_PARAMETERS* pPresentationParameters)
 
 HRESULT CD3D9DeviceProxy::Present(CONST RECT* pSourceRect,CONST RECT* pDestRect,HWND hDestWindowOverride,CONST RGNDATA* pDirtyRegion) 
 {
-	Network::Process();
-
 	DWORD currentTime = timeGetTime();
 	if ((float)(currentTime - LastFrameTime) < (float)(1000 / Misc::GetFPSLimit()))
 	{
