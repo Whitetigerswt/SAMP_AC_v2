@@ -31,6 +31,7 @@
 !.gitkeep
 !*.cpp
 !*.h
+!*.c
 !*.sln
 !*.vcxproj
 !*.dll
