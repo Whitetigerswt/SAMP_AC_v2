@@ -375,21 +375,24 @@ void CHookManager::SetConnectPatches()
 	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
 
 	LPVOID patchAddress = NULL;
-	/*// ALLOW ALT+TABBING WITHOUT PAUSING - doesn't work atm
-	if (*(BYTE *)0x748ADD == 0xFF && *(BYTE *)0x748ADE == 0x53)
+	// ALLOW ALT+TABBING WITHOUT PAUSING - doesn't work atm
+	/*if (*(BYTE *)0x748ADD == 0xFF && *(BYTE *)0x748ADE == 0x53)
 		patchAddress = (LPVOID)0x748A8D;
 	else
 		patchAddress = (LPVOID)0x748ADD;
 
-	CMem::Set(patchAddress, 0x90, 6);
-
-	// Disable menu after alt-tab
-	CMem::PutSingle < BYTE >(0x53BC78, 0x00);*/
+	CMem::Set(patchAddress, 0x90, 6);*/
 	
 	// HACK to prevent RealTimeShadowManager crash, also disables ped shadows including shadow mods
 	CMem::PutSingle < BYTE >(0x0706AB0, 0xC3);
 
-	// Prevent autoaim (Doesn't work anyway because of above camera X/Y hooks) (unfinished/not quite working)
+	// Hack to make SA-MP think the game is unpaused
+	CMem::Cpy((void*)0x53E9B3, "\x75\x44\x90\x90\x90\x90", 6); // jne 0x53E9F9
+
+	// Hack to make the game run in the background when paused
+	CMem::PutSingle < BYTE >(0x561AF6, 0x00); // mov byte ptr [0xB7CB49],01 -> mov byte ptr [0xB7CB49],00
+
+	// Prevent autoaim (Doesn't work anyway because of above camera X/Y hooks)
 	CMem::Cpy((void*)0x686905, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x52A93C, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x521A16, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
