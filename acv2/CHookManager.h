@@ -96,6 +96,8 @@ private:
 	static int iLastPress;
 	static int iTickOffset;
 
+	static int NameTagHookAddr;
+
 	static float LiteFoot;
 
 	// TOO MANY HOOKS TO DOCUMENT

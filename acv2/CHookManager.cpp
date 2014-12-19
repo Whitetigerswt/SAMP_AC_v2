@@ -6,6 +6,7 @@
 #include "Network\Network.h"
 #include "../Shared/Network/CRPC.h"
 #include "PatternScan.h"
+#include "CLog.h"
 
 #include <Windows.h>
 
@@ -144,6 +145,11 @@ int CHookManager::iTickOffset = 222;
 int CHookManager::iLastPress = 0;
 
 float CHookManager::LiteFoot = 0.0f;
+
+int CHookManager::NameTagHookAddr = 0;
+DWORD NameTag_je1;
+DWORD NameTag_je2;
+DWORD NameTagHookJmpBack;
 
 #define MAX_SPRINT_SPEED 7.0f
 
@@ -317,13 +323,21 @@ void CHookManager::Load()
 	if (samp)
 	{
 		// Add address offset
-		samp = FindPattern("\x8B\x90\xD5\x03\x00\x00\x8A\x42\x2F\x84\xC0\x74\x04", "xxxxxxxxxxxxx") + 0xD;
+		samp = FindPattern("\x74\x04\x85\xC9\x74\x61\x57\x57\x8B\xCB", "xxxxxxxxxx");
 
-		// Unprotect memory.
-		VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+		// If we found an address that matches the pattern
+		if (samp)
+		{
+			NameTag_je1 = samp + 0x6;
+			NameTag_je2 = samp + 0x67;
+			NameTagHookJmpBack = NameTag_je1;
 
-		// Install hook
-		CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 6);
+			// Unprotect memory.
+			VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+			// Install hook
+			CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 6);
+		}
 	}
 	
 	CMem::ApplyJmp(FUNC_LiteFoot, (DWORD)LiteFootHook, 6);
@@ -508,42 +522,21 @@ void CHookManager::OnPause()
 	}
 }
 
-DWORD samp_base;
-DWORD je1;
-DWORD je2;
-DWORD NameTagHookJmpBack;
-void CHookManager::NameTagHook()
+HOOK CHookManager::NameTagHook()
 {
-
 	__asm
 	{
-		pushad
-	}
-
-	samp_base = (DWORD)GetModuleHandle("samp.dll");
-	je1 = samp_base + 0x86969;
-	je2 = samp_base + 0x869CA;
-	NameTagHookJmpBack = je1;
-
-	__asm
-	{
-		popad
-		pop edi
-		pop esi
-		pop ebx
-		pop ebp
 		je jmp_if_equal
 		test ecx,ecx
 		je jmp_if_equal_2
 
-	jmp_if_equal:
-		jmp je1
+		jmp_if_equal:
+			jmp NameTag_je1
 
-	jmp_if_equal_2:
-		jmp je2
+		jmp_if_equal_2:
+			jmp NameTag_je2
 
-	jmp NameTagHookJmpBack
-
+		jmp NameTagHookJmpBack
 	}
 }
 #pragma warning(default:4731)
