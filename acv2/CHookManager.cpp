@@ -396,6 +396,7 @@ void CHookManager::SetConnectPatches()
 	CMem::Cpy((void*)0x5221FC, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x52A93C, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x686CE6, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
+	CMem::Cpy((void*)0x686C64, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
