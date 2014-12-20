@@ -89,6 +89,8 @@ private:
 	// Hook to allow us to turn on/off vehicle blips
 	static void MarkersHook();
 
+	static void SetCursorPosHook();
+
 	static float CameraXPos;
 	static float CameraYPos;
 

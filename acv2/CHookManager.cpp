@@ -6,7 +6,7 @@
 #include "Network\Network.h"
 #include "../Shared/Network/CRPC.h"
 #include "PatternScan.h"
-#include "CLog.h"
+#include "DirectX Hooks\CMessageProxy.h"
 
 #include <Windows.h>
 
@@ -137,6 +137,8 @@ static DWORD GravityHookJmpBack2 = 0x543093;
 static DWORD PauseJmpBack = 0x576C2D;
 static DWORD SprintHookJmpBack = 0x60A760;
 
+static DWORD SetCursorPosHookJmpBack = 0x745433;
+
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
 
@@ -146,7 +148,6 @@ int CHookManager::iLastPress = 0;
 
 float CHookManager::LiteFoot = 0.0f;
 
-int CHookManager::NameTagHookAddr = 0;
 DWORD NameTag_je1;
 DWORD NameTag_je2;
 DWORD NameTagHookJmpBack;
@@ -392,6 +393,8 @@ void CHookManager::SetConnectPatches()
 	// Hack to make the game run in the background when paused
 	CMem::PutSingle < BYTE >(0x561AF6, 0x00); // mov byte ptr [0xB7CB49],01 -> mov byte ptr [0xB7CB49],00
 
+	CMem::PutSingle <BYTE>(0x748054, 0x90);
+
 	// Prevent autoaim (Doesn't work anyway because of above camera X/Y hooks)
 	CMem::Cpy((void*)0x686905, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x52A93C, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
@@ -400,6 +403,11 @@ void CHookManager::SetConnectPatches()
 	CMem::Cpy((void*)0x52A93C, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x686CE6, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x686C64, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
+
+	// Hack to make the game not set cursor position while alt tabbed
+	CMem::ApplyJmp(FUNC_SetCursorPos, (DWORD)SetCursorPosHook, 8);
+
+	CMem::PutSingle <BYTE>(0x748054, 0x90);
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
@@ -626,6 +634,31 @@ HOOK CHookManager::MarkersHook()
 		}
 	}
 
+}
+
+HOOK CHookManager::SetCursorPosHook()
+{
+
+	__asm pushad
+
+
+	if (CMessageProxy::GetAltTabbed())
+	{
+		__asm
+		{
+			popad
+			jmp[SetCursorPosHookJmpBack]
+		}
+	}
+
+	__asm
+	{
+		popad
+		push eax // y
+		push ecx // x
+		call SetCursorPos
+		jmp[SetCursorPosHookJmpBack]
+	}
 }
 
 DWORD Fatulous1AlternativeJmpBack = 0x6D827E;

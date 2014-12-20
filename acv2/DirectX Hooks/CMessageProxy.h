@@ -10,12 +10,14 @@ public:
 
 	static HWND GetWindowHandle();
 	static WNDPROC GetOriginalProcedure();
-	static BOOL OnSetCursorPos(int iX, int iY);
+	static BOOL GetAltTabbed() { return AltTabbed; }
 
 private:
 	static LRESULT CALLBACK Process(HWND wnd, UINT umsg, WPARAM wparam, LPARAM lparam);
+	static void Pulse();
 
 	static HWND m_hWindowOrig;
 	static WNDPROC m_wProcOrig;
+	static bool AltTabbed;
 
 };

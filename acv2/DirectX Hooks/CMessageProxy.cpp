@@ -5,9 +5,11 @@
 #include "../../Shared/Network/CRPC.h"
 #include "../Addresses.h"
 #include "../Misc.h"
+#include <Boost\thread.hpp>
 
 HWND CMessageProxy::m_hWindowOrig;
 WNDPROC CMessageProxy::m_wProcOrig;
+bool CMessageProxy::AltTabbed = false;
 
 void CMessageProxy::Initialize(HWND hWindow)
 {
@@ -39,11 +41,6 @@ WNDPROC CMessageProxy::GetOriginalProcedure()
 //TODO: use Process for something useful
 LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
-	if (GetForegroundWindow() != CURRENT_HWND)
-	{
-		return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
-	}
-
 	UINT vKey = (UINT)wparam;
 
 	switch (umsg)
@@ -60,10 +57,12 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 				return 0;
 			}
 		}
+
 		case WM_HOTKEY:
 		{
 			return 0;
 		}
+
 		case WM_SETFOCUS:
 		{
 			RakNet::BitStream bsData;
@@ -71,7 +70,12 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 			bsData.Write(true);
 
 			Network::SendRPC(TOGGLE_PAUSE, &bsData);
+
+			AltTabbed = false;
+
+			return true;
 		}
+
 		case WM_KILLFOCUS:
 		{
 			RakNet::BitStream bsData;
@@ -79,7 +83,12 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 			bsData.Write(false);
 
 			Network::SendRPC(TOGGLE_PAUSE, &bsData);
+
+			AltTabbed = true;
+
+			return true;
 		}
+
 		case WM_KEYUP:
 		{
 			if (vKey == VK_F8)
@@ -87,6 +96,16 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 				Network::SendRPC(TAKE_SCREENSHOT);
 			}
 		}
+
+		case WM_ACTIVATE:
+		{
+			if ((WORD)wparam == WA_INACTIVE)
+			{
+				AltTabbed = true;
+				return true;
+			}
+		}
+
 		default:
 		{
 
