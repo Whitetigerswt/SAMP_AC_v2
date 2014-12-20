@@ -387,13 +387,11 @@ void CHookManager::SetConnectPatches()
 	// HACK to prevent RealTimeShadowManager crash, also disables ped shadows including shadow mods
 	CMem::PutSingle < BYTE >(0x0706AB0, 0xC3);
 
-	// Hack to make SA-MP think the game is unpaused
+	// Hack to make SA-MP think the game is always unpaused
 	CMem::Cpy((void*)0x53E9B3, "\x75\x44\x90\x90\x90\x90", 6); // jne 0x53E9F9
 
 	// Hack to make the game run in the background when paused
 	CMem::PutSingle < BYTE >(0x561AF6, 0x00); // mov byte ptr [0xB7CB49],01 -> mov byte ptr [0xB7CB49],00
-
-	CMem::PutSingle <BYTE>(0x748054, 0x90);
 
 	// Prevent autoaim (Doesn't work anyway because of above camera X/Y hooks)
 	CMem::Cpy((void*)0x686905, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
@@ -404,10 +402,14 @@ void CHookManager::SetConnectPatches()
 	CMem::Cpy((void*)0x686CE6, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x686C64, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 
+	// Hack to make the game think we never alt tabbed when we have.
+	CMem::PutSingle <BYTE>(0x748054, 0x90);
+
 	// Hack to make the game not set cursor position while alt tabbed
 	CMem::ApplyJmp(FUNC_SetCursorPos, (DWORD)SetCursorPosHook, 8);
 
-	CMem::PutSingle <BYTE>(0x748054, 0x90);
+	// Hack so SA-MP continues to send packets while alt tabbed.
+	CMem::Cpy((void*)0x53EA88, "\x90\x90\x90\x90\x90\x90", 6); // nop 
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)

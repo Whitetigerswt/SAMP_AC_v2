@@ -86,7 +86,7 @@ void CLoader::Initialize(HMODULE hMod)
 		Modules.Scan();
 
 		// Check for a tamper attempt.
-		if (VMProtectIsDebuggerPresent(true) || VMProtectIsVirtualMachinePresent())
+		if (VMProtectIsDebuggerPresent(true))
 		{
 			// Make sure the user is connected.
 			if (!Network::IsConnected())
