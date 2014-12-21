@@ -19,6 +19,5 @@ private:
 	static HWND m_hWindowOrig;
 	static WNDPROC m_wProcOrig;
 	static bool AltTabbed;
-	static int Interior;
 
 };

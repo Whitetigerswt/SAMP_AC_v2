@@ -10,7 +10,6 @@
 HWND CMessageProxy::m_hWindowOrig;
 WNDPROC CMessageProxy::m_wProcOrig;
 bool CMessageProxy::AltTabbed = false;
-int CMessageProxy::Interior = 0;
 
 void CMessageProxy::Initialize(HWND hWindow)
 {
