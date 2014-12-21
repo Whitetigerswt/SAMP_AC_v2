@@ -39,7 +39,7 @@
 #define FUNC_Gravity						(BYTE*)0x54307B
 
 // MARKERS HOOK.
-#define FUNC_MARKERS						(BYTE*)0x584770
+#define FUNC_Markers						(BYTE*)0x584770
 
 // PAUSE PATCH - DETECT WHEN THE GAME IS PAUSED
 #define FUNC_GamePaused						(BYTE*)0x576C27

@@ -457,7 +457,7 @@ void CAntiCheat::ToggleVehicleBlips(bool toggle)
 	// Send RPC to player.
 	Network::PlayerSendRPC(TOGGLE_VEHICLE_BLIPS, ID, &bsData);
 
-	// Set the crouch bug variable to true.
+	// Set the vehicle blips variable.
 	m_VehicleBlips = toggle;
 }
 

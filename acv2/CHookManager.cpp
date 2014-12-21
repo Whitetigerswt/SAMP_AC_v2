@@ -157,7 +157,7 @@ DWORD NameTagHookJmpBack;
 void CHookManager::Load()
 {
 	DWORD dwOldProt;
-
+	
 	// Prevent CLEO 4 from loading scripts
 	VirtualProtect(FUNC_Init_SCM1, 5, PAGE_EXECUTE_READWRITE, &dwOldProt);
 	memcpy(FUNC_Init_SCM1, "\xE8\x74\xCF\xF2\xFF", 5);
@@ -345,8 +345,6 @@ void CHookManager::Load()
 
 	CMem::ApplyJmp(FUNC_Gravity, (DWORD)GravityHook, 6);
 
-	CMem::ApplyJmp(FUNC_MARKERS, (DWORD)MarkersHook, 6);
-
 	// Check data file integrity.
 	VerifyFilePaths();
 }
@@ -371,6 +369,9 @@ void CHookManager::SetConnectPatches()
 	// Disable changing of FOV. 
 	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer
 	CMem::ApplyJmp(FUNC_FOVPatch, (DWORD)FOVPatch, 5);
+
+	// Hook markers in the game so we can control if there are vehicle blips or not.
+	CMem::ApplyJmp(FUNC_Markers, (DWORD)MarkersHook, 6);
 
 	// Detect when a player is pausing.
 	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
@@ -612,7 +613,6 @@ HOOK CHookManager::GravityHook()
 DWORD gtasa_markers_jmp_pointer = 0x584A79;
 HOOK CHookManager::MarkersHook()
 {
-	// todo: slight speed improvement by writing this in asm completely?
 	__asm pushad
 
 	if (Misc::GetVehicleBlips() == false)
@@ -628,7 +628,7 @@ HOOK CHookManager::MarkersHook()
 
 
 			return_hook:
-				mov eax, 0h
+				xor eax,eax
 				ret
 		}
 	}
@@ -641,7 +641,6 @@ HOOK CHookManager::MarkersHook()
 			jmp dword ptr[eax]
 		}
 	}
-
 }
 
 HOOK CHookManager::SetCursorPosHook()
