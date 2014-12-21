@@ -707,6 +707,22 @@
 				MapAddress="CHookManager::KeyPress(void)"
 				CompilationType="1"
 			/>
+			<Procedure
+				MapAddress="CHookManager::ToggleSprintOnAllSurfaces(bool)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::MarkersHook(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::SetCursorPosHook(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CMessageProxy::GetAltTabbed(void)"
+				CompilationType="1"
+			/>
 		</Procedures>
 	</Protection>
 	<DLLBox

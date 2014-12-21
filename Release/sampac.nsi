@@ -85,7 +85,7 @@ FunctionEnd
 
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)"
-!define PRODUCT_WEBSITE "http://whitetigerswt.github.io/SAMP_AC_v2/"
+!define PRODUCT_WEBSITE "http://samp-ac.com"
 
 Section "Main Components" SecMain
 

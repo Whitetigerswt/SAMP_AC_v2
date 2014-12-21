@@ -410,6 +410,12 @@ void CHookManager::SetConnectPatches()
 
 	// Hack so SA-MP continues to send packets while alt tabbed.
 	CMem::Cpy((void*)0x53EA88, "\x90\x90\x90\x90\x90\x90", 6); // nop 
+
+	// If you alt tab when you're in an interior, some weird graphics bugs happen
+	// So fix that:
+	CMem::Cpy((void*)0x53EA12, "\x90\x90\x90\x90\x90", 5);
+
+	CMem::ApplyJmp((BYTE*)0x540698, (DWORD)AimHook, 5);
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
@@ -663,6 +669,26 @@ HOOK CHookManager::SetCursorPosHook()
 	}
 }
 
+
+HOOK CHookManager::AimHook()
+{
+	if (VAR_CURRENT_WEAPON <= 15)
+	{
+		__asm
+		{
+			xor al,al
+			ret
+		}
+	}
+
+	__asm
+	{
+		cmp word ptr[ecx + 0Ch], 0h
+		setne al
+		ret
+	}
+}
+
 DWORD Fatulous1AlternativeJmpBack = 0x6D827E;
 HOOK CHookManager::Fatulous1()
 {
@@ -712,6 +738,20 @@ HOOK CHookManager::KeyPress()
 		{
 			// Set the sprint speed 
 			VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
+		}
+	}
+	// Sprint key is NOT pressed
+	else
+	{
+		// And aim key is pressed
+		if (AIM_KEY != 0 || FIRE_KEY != 0)
+		{
+			// And litefoot is disabled
+			if (LiteFoot == 0)
+			{
+				// Set sprint to 0
+				VAR_SPRINT_SPEED = 0.0f;
+			}
 		}
 	}
 
