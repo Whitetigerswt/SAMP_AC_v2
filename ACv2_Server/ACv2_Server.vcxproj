@@ -70,7 +70,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;SAMPGDK_BUILD_AMALGAMATION;SAMPGDK_STATIC;NO_BOOST_DATE_TIME_INLINE;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;SAMPGDK_BUILD_AMALGAMATION;SAMPGDK_STATIC;NO_BOOST_DATE_TIME_INLINE;SUBHOOK_STATIC;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -210,6 +210,8 @@
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="plugin.cpp" />
     <ClCompile Include="SDK\samp-sdk\amxplugin.cpp" />
+    <ClCompile Include="Hooks.cpp" />
+    <ClCompile Include="subhook\subhook.c" />
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -375,6 +377,7 @@
     <ClInclude Include="CPlayer.h" />
     <ClInclude Include="CServerUpdater.h" />
     <ClInclude Include="GDK\sampgdk.h" />
+    <ClInclude Include="Hooks.h" />
     <ClInclude Include="Network\CClientSocketInfo.h" />
     <ClInclude Include="Network\CRakServer.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
@@ -383,6 +386,7 @@
     <ClInclude Include="SDK\samp-sdk\amx\amx.h" />
     <ClInclude Include="SDK\samp-sdk\amx\sclinux.h" />
     <ClInclude Include="SDK\samp-sdk\plugincommon.h" />
+    <ClInclude Include="subhook\subhook.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>

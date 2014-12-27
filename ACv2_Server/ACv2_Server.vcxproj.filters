@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Shared\MD5 Info">
       <UniqueIdentifier>{7fae54c2-50db-4ff3-a46b-2ad8076031ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\subhook">
+      <UniqueIdentifier>{efb6d013-e5b4-44ba-9113-6de5ebd6a7ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp">
@@ -416,6 +419,12 @@
     </ClCompile>
     <ClCompile Include="GDK\sampgdk.c">
       <Filter>Source Files\SDK\samp-gdk</Filter>
+    </ClCompile>
+    <ClCompile Include="Hooks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="subhook\subhook.c">
+      <Filter>Source Files\subhook</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -931,6 +940,12 @@
     </ClInclude>
     <ClInclude Include="GDK\sampgdk.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
+    </ClInclude>
+    <ClInclude Include="subhook\subhook.h">
+      <Filter>Source Files\subhook</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooks.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

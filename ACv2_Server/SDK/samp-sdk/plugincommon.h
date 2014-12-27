@@ -19,7 +19,7 @@
   #define PLUGIN_EXTERN_C 
 #endif
 
-#if defined(__LINUX__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(LINUX)
+#if defined __linux__ || defined __FreeBSD__ || defined __OpenBSD__
   #ifndef __GNUC__
     #pragma message "Warning: Not using a GNU compiler."
   #endif
@@ -30,14 +30,14 @@
   #else
     #define PLUGIN_EXPORT PLUGIN_EXTERN_C 
   #endif
-#elif defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+#elif defined _WIN32
   #ifndef _MSC_VER
     #pragma message "Warning: Not using a VC++ compiler."
   #endif
   #define PLUGIN_CALL __stdcall
   #define PLUGIN_EXPORT PLUGIN_EXTERN_C
 #else
-  #error "You must define one of WIN32, LINUX or FREEBSD"
+  #error "Unknown operating system."
 #endif
 
 //----------------------------------------------------------
@@ -56,6 +56,11 @@ enum PLUGIN_DATA_TYPE
 {
 	// For some debugging
 	PLUGIN_DATA_LOGPRINTF		= 0x00,	// void (*logprintf)(char* format, ...)
+	PLUGIN_DATA_NETGAME			= 0xE1,	// CNetGame* GetNetGame();
+	PLUGIN_DATA_RAKSERVER		= 0xE2, // RakServerInterface* PluginGetRakServer()
+	PLUGIN_DATA_LOADFSCRIPT		= 0xE3, // bool LoadFilterscriptFromMemory(char* pFileName, char* pFileData)
+	PLUGIN_DATA_UNLOADFSCRIPT	= 0xE5, // bool UnloadFilterScript(char* pFileName)
+	PLUGIN_DATA_CONSOLE			= 0xE4, // CConsole* GetConsole();
 
 	// AMX
 	PLUGIN_DATA_AMX_EXPORTS		= 0x10,	// void* AmxFunctionTable[]    (see PLUGIN_AMX_EXPORT)

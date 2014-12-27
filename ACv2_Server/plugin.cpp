@@ -354,13 +354,14 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	// Initialize
+	bool load = sampgdk::Load(ppData);
 	Utility::Initialize(ppData);
 
 	// Print out that we've loaded successfully.
 	Utility::Printf("SA-MP Anti-Cheat v%0.2f Has loaded successfully.", CURRENT_VERSION);
 
 	// Load sampGDK.
-	return sampgdk::Load(ppData);
+	return load;
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload()
@@ -395,6 +396,7 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "GetPlayerVehicleBlips", GetPlayerVehicleBlipsProc },
 	{ 0, 0 }
 };
+
 
 PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAmx)
 {
