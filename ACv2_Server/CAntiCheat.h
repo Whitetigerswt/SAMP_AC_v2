@@ -177,7 +177,7 @@ private:
 	// PURPOSE: A list of processes that are not allowed to be used while the AC is enabled.
 	static std::vector<std::string> m_ProcessMD5s;
 
-	int m_LastCheatUpdate = 0;
+	int m_LastCheatUpdate;
 
 	// PURPOSE: Update the list of cheats if it's needed.
 	// REQUIRES: NULL

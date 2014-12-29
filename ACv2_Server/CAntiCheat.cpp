@@ -29,6 +29,7 @@ CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m
 	m_MacroLimits = true;
 	m_SprintOnAllSurfaces = false;
 	m_VehicleBlips = true;
+	m_LastCheatUpdate = 0;
 }
 
 CAntiCheat::~CAntiCheat()

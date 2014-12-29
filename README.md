@@ -31,13 +31,13 @@ Client Specific
 Linux
 ----------
 ```
-1) Use Ubuntu 14.04 LTS Through VMWare (Although any form of linux will work, you'll just have to accomodate the steps with yum or whatever package system)
+1) Use 32-bit Ubuntu 14.04.1 LTS Through VMWare (http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-i386.iso) (Although any form of linux will work, you'll just have to accomodate the steps with yum or whatever package system)
 2) sudo apt-get update
 3) sudo apt-get upgrade
-4) sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev cmake g++4.4 make
-5) You cannot directly use git as this is a private repo, clone the repo from the GitHub app on Windows
-6) Create a new folder on Virtual machine, title it whatever
-7) Paste "ACv2_Server" and "Shared" into the new folder.
+4) sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev cmake g++4.4 make git geomview
+5) Follow steps here to generate an ssh key and add to github: https://help.github.com/articles/generating-ssh-keys/
+6) navigate to Shared and rename "Boost" to "boost" - case matters.
+7) git clone git@github.com:Whitetigerswt/SAMP_AC_v2.git
 8) cd to "ACv2_Server"
 9) "make"
 10) sampac.so should be located in ACv2_Server/bin/
