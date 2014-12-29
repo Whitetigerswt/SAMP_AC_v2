@@ -2,10 +2,9 @@
 #include <zcmd>
 #include <sampac>
 
-
 public OnFilterScriptInit()
 {
-
+	printf("IsUsingACPlugin: %d", IsACPluginLoaded());
 }
 
 CMD:blips(playerid, params[])

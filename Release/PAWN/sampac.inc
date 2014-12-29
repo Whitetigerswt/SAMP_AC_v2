@@ -214,6 +214,7 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 // Returns: bool - True if vehicle blips are enabled.
 #define GetPlayerVehicleBlips(%0) ac_gateway_param1("GetPlayerVehicleBlips", %0)
 
+#define IsACPluginLoaded() ((_:GetGravity()) != (IsPlayerUsingSampAC(9999)))
 // PURPOSE: Callback for when a new AC connection has been accepted.
 // REQUIRES: The client is using AC.
 //
