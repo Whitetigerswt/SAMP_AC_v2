@@ -2,6 +2,7 @@
 #include <zcmd>
 #include <sampac>
 
+
 public OnFilterScriptInit()
 {
 

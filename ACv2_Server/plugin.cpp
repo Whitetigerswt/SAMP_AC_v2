@@ -353,14 +353,16 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 
 PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
-	// Initialize
+	// Load SampGDK
 	bool load = sampgdk::Load(ppData);
+
+	// Initialize
 	Utility::Initialize(ppData);
 
 	// Print out that we've loaded successfully.
 	Utility::Printf("SA-MP Anti-Cheat v%0.2f Has loaded successfully.", CURRENT_VERSION);
 
-	// Load sampGDK.
+	// return SampGDK load value
 	return load;
 }
 
@@ -397,6 +399,10 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ 0, 0 }
 };
 
+AMX_NATIVE_INFO* GetPluginNatives()
+{
+	return PluginNatives;
+}
 
 PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAmx)
 {
