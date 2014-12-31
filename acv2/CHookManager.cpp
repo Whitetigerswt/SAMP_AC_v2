@@ -722,6 +722,9 @@ HOOK CHookManager::Fatulous3()
 }
 
 DWORD KeyPressCall = 0x53EF80;
+
+// true when pressing sprint before pressing aim/fire, else false.
+bool bSlideFix = false;
 HOOK CHookManager::KeyPress()
 {
 	__asm
@@ -738,10 +741,30 @@ HOOK CHookManager::KeyPress()
 			// Set the sprint speed 
 			VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
 		}
+		
+		// Disable some sliding
+		if (AIM_KEY != 0 || FIRE_KEY != 0)
+		{
+			bSlideFix = true;
+		}
+
+		// If pressing sprint and trying to press fire or aim key
+		if (bSlideFix)
+		{
+			// Disable them to prevent sliding
+			AIM_KEY = 0;
+			
+			// Though allow punching with melee weapons
+			if (VAR_CURRENT_WEAPON > 15)
+			{
+				FIRE_KEY = 0;
+			}
+		}
 	}
 	// Sprint key is NOT pressed
 	else
 	{
+		bSlideFix = false;
 		// And aim key is pressed
 		if (AIM_KEY != 0 || FIRE_KEY != 0)
 		{
