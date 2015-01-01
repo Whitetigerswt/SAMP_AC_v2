@@ -337,12 +337,8 @@ namespace Callback
 		// If the player was connected to the AC before disconnecting.
 		if (Network::IsPlayerConnectedToAC(playerid) != NULL)
 		{
-			// And they weren't kicked/banned or timed out.
-			if (reason)
-			{
-				// Send them a goodbye packet :(
-				Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, playerid);
-			}
+			// Send them a goodbye packet :(
+			Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, playerid);
 
 			// Close off the connection cleanly.
 			Network::CloseConnection(playerid);
