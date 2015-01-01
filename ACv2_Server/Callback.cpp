@@ -128,26 +128,29 @@ namespace Callback
 			return;
 		}
 
-		// Make sure the player is connected to the server and AC.
-		if (!Network::IsPlayerConnectedToAC(playerid))
+		if (ACToggle)
 		{
-			// Create new variables to hold strings we'll send to the server.
-			char msg[144], name[MAX_PLAYER_NAME];
+			// Make sure the player is connected to the server and AC.
+			if (!Network::IsPlayerConnectedToAC(playerid))
+			{
+				// Create new variables to hold strings we'll send to the server.
+				char msg[144], name[MAX_PLAYER_NAME];
 
-			// Get the player's name
-			GetPlayerName(playerid, name, sizeof(name));
+				// Get the player's name
+				GetPlayerName(playerid, name, sizeof(name));
 
-			// Format the main string
-			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server ({FF0000}AC Lost Connection{FFFFFF})", name);
+				// Format the main string
+				snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server ({FF0000}AC Lost Connection{FFFFFF})", name);
 
-			// Send the message to the rest of the players on the server.
-			SendClientMessageToAll(-1, msg);
+				// Send the message to the rest of the players on the server.
+				SendClientMessageToAll(-1, msg);
 
-			// Kick the player from the server.
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+				// Kick the player from the server.
+				SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 
-			// Don't continue in the function.
-			return;
+				// Don't continue in the function.
+				return;
+			}
 		}
 
 		// Get the player's CAntiCheat pointer.
@@ -162,20 +165,36 @@ namespace Callback
 			// If it's empty, the client didn't respond to our PACKET_PLAYER_REGISTERED from OnPlayerConnect
 			// (When the player first connects it sends the players HardwareID immediately after receiving that packet)
 
-			// Create new variables for strings we'll send to the rest of the players telling them what happened.
-			char msg[144], name[MAX_PLAYER_NAME];
+			if (ACToggle)
+			{
+				// Create new variables for strings we'll send to the rest of the players telling them what happened.
+				char msg[144], name[MAX_PLAYER_NAME];
 
-			// Get the player's name
-			GetPlayerName(playerid, name, sizeof(name));
+				// Get the player's name
+				GetPlayerName(playerid, name, sizeof(name));
 
-			// Format the main string we'll send to the players on the server.
-			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s AC did not respond in time.", name);
+				// Format the main string we'll send to the players on the server.
+				snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s AC did not respond in time.", name);
 
-			// Send the message to the server
-			SendClientMessageToAll(-1, msg);
+				// Send the message to the server
+				SendClientMessageToAll(-1, msg);
 
-			// Kick the player from the server.
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+				// Kick the player from the server.
+				SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+			}
+
+			// Send them a goodbye packet :(
+			Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, playerid);
+
+			// Close off the connection cleanly.
+			Network::CloseConnection(playerid);
+
+			// Get player's IP.
+			char ip[MAX_PLAYER_NAME];
+			GetPlayerIp(playerid, ip, sizeof(ip));
+
+			// Tell scripts this players AC was closed.
+			OnACClosed(ip, 0);
 		}
 	}
 	
@@ -290,13 +309,9 @@ namespace Callback
 
 			if(Default_FrameLimit != 9999) ac->SetFPSLimit(Default_FrameLimit);			
 			
-			// Check if AC is on
-			if (ACToggle)
-			{
-				// Check for a response packet from PACKET_PLAYER_REGISTERED. (The client should send back the HWID ASAP).
-				// If we don't get a response, then directX failed to hook(?) on client side.
-				SetTimer(10000, 0, CheckPacketResponse, (void*)playerid);
-			}
+			// Check for a response packet from PACKET_PLAYER_REGISTERED. (The client should send back the HWID ASAP).
+			// If we don't get a response, then the AC is not loaded correctly.
+			SetTimer(10000, 0, CheckPacketResponse, (void*)playerid);
 		}
 
 		// If the player is not running the AC, and /actoggle has been turned on (aka AC is on)

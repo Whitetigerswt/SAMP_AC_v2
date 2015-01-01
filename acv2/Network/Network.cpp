@@ -120,7 +120,7 @@ namespace Network
 				case PACKET_CONNECTION_REJECTED:
 				case PACKET_PLAYER_PROPER_DISCONNECT:
 				{
-					bServerHasPlugin = false;
+					Disconnect();
 
 					break;
 				}
