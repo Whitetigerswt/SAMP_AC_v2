@@ -32,12 +32,12 @@ namespace Network
 	void Initialize(const char* szHostAddress, t_port usPort, int iConnections)
 	{
 		pRakServer = new CRakServer();
+		RakNet::StartupResult sr = pRakServer->Startup(szHostAddress, usPort, iConnections);
 		if (pRakServer->Startup(szHostAddress, usPort, iConnections) != RakNet::RAKNET_STARTED)
-#ifdef LINUX
-			pthread_exit(0);
-#else
-			ExitThread(0);	
-#endif
+		{
+			Utility::Printf("Failed to initialize AC server, Is port %d already in use?", usPort);
+			return;
+		}
 
 		Utility::Printf("Initialized AC server.");
 		bInitialized = true;
