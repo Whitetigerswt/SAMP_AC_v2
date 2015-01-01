@@ -725,6 +725,7 @@ DWORD KeyPressCall = 0x53EF80;
 
 // true when pressing sprint before pressing aim/fire, else false.
 bool bSlideFix = false;
+int iLastTick = 0;
 HOOK CHookManager::KeyPress()
 {
 	__asm
@@ -778,7 +779,7 @@ HOOK CHookManager::KeyPress()
 	}
 
 	// Check if the crouch key is pressed.
-	if (CROUCH_KEY == 255)
+	if (CROUCH_KEY > 0)
 	{
 		// Check the tick variable since the last shot.
 		if (VAR_SHOT_TICK > Misc::GetCrouchBug())
@@ -786,6 +787,33 @@ HOOK CHookManager::KeyPress()
 			// Unset the crouch key.
 			CROUCH_KEY = 0;
 		}
+
+		// Disable floor bug
+		if (VAR_CPED_STATE == 61)
+		{
+			CROUCH_KEY = 0;
+		}
+	}
+
+	// Fix weird slide related to switch weapons
+
+	// if sprinting and pressed fire key while holding a melee weapon
+	if (VAR_CPED_STATE == 154 && FIRE_KEY == 255 && VAR_CURRENT_WEAPON < 16)
+	{
+		iLastTick = GetTickCount()+350;
+	}
+
+	if (iLastTick > GetTickCount())
+	{
+		// Tell the game to ignore weapon switch input
+		CMem::Cpy((void*)0x540666, "\x00", 1);
+		CMem::Cpy((void*)0x540636, "\x00", 1);
+	}
+	else
+	{
+		// Tell the game to not ignore weapon switch input
+		CMem::Cpy((void*)0x540666, "\x01", 1);
+		CMem::Cpy((void*)0x540636, "\x01", 1);
 	}
 
 	__asm
