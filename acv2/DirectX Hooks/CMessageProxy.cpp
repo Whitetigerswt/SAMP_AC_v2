@@ -38,80 +38,85 @@ WNDPROC CMessageProxy::GetOriginalProcedure()
 	return m_wProcOrig;
 }
 
-//TODO: use Process for something useful
 LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
-	UINT vKey = (UINT)wparam;
-
-	switch (umsg)
+	// Make sure we're connected to the AC server
+	if (Network::IsConnected())
 	{
-		case WM_SYSKEYDOWN:
-		case WM_KEYDOWN:
+		UINT vKey = (UINT)wparam;
+
+		switch (umsg)
 		{
-			if ((GetAsyncKeyState(vKey) & 0x8000) || Misc::GetMacroLocks() == false)
+			case WM_SYSKEYDOWN:
+			case WM_KEYDOWN:
 			{
-				return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
+				if ((GetAsyncKeyState(vKey) & 0x8000) || Misc::GetMacroLocks() == false)
+				{
+					return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
+				}
+				else
+				{
+					return 0;
+				}
 			}
-			else
+
+			case WM_HOTKEY:
 			{
 				return 0;
 			}
-		}
 
-		case WM_HOTKEY:
-		{
-			return 0;
-		}
-
-		case WM_SETFOCUS:
-		{
-			RakNet::BitStream bsData;
-			bsData.Write(1);
-			bsData.Write(true);
-
-			Network::SendRPC(TOGGLE_PAUSE, &bsData);
-
-			AltTabbed = false;
-
-			return true;
-		}
-
-		case WM_KILLFOCUS:
-		{
-			RakNet::BitStream bsData;
-			bsData.Write(1);
-			bsData.Write(false);
-
-			Network::SendRPC(TOGGLE_PAUSE, &bsData);
-
-			AltTabbed = true;
-
-			return true;
-		}
-
-		case WM_KEYUP:
-		{
-			if (vKey == VK_F8)
+			case WM_SETFOCUS:
 			{
-				Network::SendRPC(TAKE_SCREENSHOT);
-			}
-		}
+				// Tell the server we came back into the game from an alt tab
+				RakNet::BitStream bsData;
+				bsData.Write(1);
+				bsData.Write(true);
 
-		case WM_ACTIVATE:
-		{
-			if ((WORD)wparam == WA_INACTIVE)
-			{
-				AltTabbed = true;
+				Network::SendRPC(TOGGLE_PAUSE, &bsData);
 
+				AltTabbed = false;
+
+				// Ignore alt tabs (allow the game to run in the background)
 				return true;
 			}
-		}
 
-		default:
-		{
+			case WM_KILLFOCUS:
+			{
+				RakNet::BitStream bsData;
+				bsData.Write(1);
+				bsData.Write(false);
 
+				Network::SendRPC(TOGGLE_PAUSE, &bsData);
+
+				AltTabbed = true;
+
+				// Ignore alt tabs (allow the game to run in the background)
+				return true;
+			}
+
+			case WM_KEYUP:
+			{
+				if (vKey == VK_F8)
+				{
+					Network::SendRPC(TAKE_SCREENSHOT);
+				}
+			}
+
+			case WM_ACTIVATE:
+			{
+				if ((WORD)wparam == WA_INACTIVE)
+				{
+					AltTabbed = true;
+
+					return true;
+				}
+			}
+
+			default:
+			{
+
+			}
 		}
 	}
 	return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
-
 }
