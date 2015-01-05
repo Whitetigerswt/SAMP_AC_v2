@@ -351,7 +351,6 @@ void CHookManager::Load()
 
 void CHookManager::SetConnectPatches()
 {
-
 	// Hook key presses, this is an all key presses hook.
 	CMem::ApplyJmp(FUNC_KeyPress, (DWORD)KeyPress, 8);
 
@@ -373,27 +372,6 @@ void CHookManager::SetConnectPatches()
 	// Hook markers in the game so we can control if there are vehicle blips or not.
 	CMem::ApplyJmp(FUNC_Markers, (DWORD)MarkersHook, 6);
 
-	// Detect when a player is pausing.
-	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
-
-	LPVOID patchAddress = NULL;
-	// ALLOW ALT+TABBING WITHOUT PAUSING - doesn't work atm
-	/*if (*(BYTE *)0x748ADD == 0xFF && *(BYTE *)0x748ADE == 0x53)
-		patchAddress = (LPVOID)0x748A8D;
-	else
-		patchAddress = (LPVOID)0x748ADD;
-
-	CMem::Set(patchAddress, 0x90, 6);*/
-	
-	// HACK to prevent RealTimeShadowManager crash, also disables ped shadows including shadow mods
-	CMem::PutSingle < BYTE >(0x0706AB0, 0xC3);
-
-	// Hack to make SA-MP think the game is always unpaused
-	CMem::Cpy((void*)0x53E9B3, "\x75\x44\x90\x90\x90\x90", 6); // jne 0x53E9F9
-
-	// Hack to make the game run in the background when paused
-	CMem::PutSingle < BYTE >(0x561AF6, 0x00); // mov byte ptr [0xB7CB49],01 -> mov byte ptr [0xB7CB49],00
-
 	// Prevent autoaim (Doesn't work anyway because of above camera X/Y hooks)
 	CMem::Cpy((void*)0x686905, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x52A93C, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
@@ -402,6 +380,17 @@ void CHookManager::SetConnectPatches()
 	CMem::Cpy((void*)0x52A93C, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x686CE6, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x686C64, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
+
+	CMem::ApplyJmp((BYTE*)0x540698, (DWORD)AimHook, 5);
+
+	// Detect when a player is pausing.
+	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
+
+	// Hack to make SA-MP think the game is always unpaused
+	CMem::Cpy((void*)0x53E9B3, "\x75\x44\x90\x90\x90\x90", 6); // jne 0x53E9F9
+
+	// Hack to make the game run in the background when paused
+	CMem::PutSingle < BYTE >(0x561AF6, 0x00); // mov byte ptr [0xB7CB49],01 -> mov byte ptr [0xB7CB49],00
 
 	// Hack to make the game think we never alt tabbed when we have.
 	CMem::PutSingle <BYTE>(0x748054, 0x90);
@@ -415,8 +404,6 @@ void CHookManager::SetConnectPatches()
 	// If you alt tab when you're in an interior, some weird graphics bugs happen
 	// So fix that:
 	CMem::Cpy((void*)0x53EA12, "\x90\x90\x90\x90\x90", 5);
-
-	CMem::ApplyJmp((BYTE*)0x540698, (DWORD)AimHook, 5);
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
@@ -725,7 +712,7 @@ DWORD KeyPressCall = 0x53EF80;
 
 // true when pressing sprint before pressing aim/fire, else false.
 bool bSlideFix = false;
-int iLastTick = 0;
+DWORD iLastTick = 0;
 HOOK CHookManager::KeyPress()
 {
 	__asm
@@ -798,7 +785,7 @@ HOOK CHookManager::KeyPress()
 	// Fix weird slide related to switch weapons
 
 	// if sprinting and pressed fire key while holding a melee weapon
-	if (VAR_CPED_STATE == 154 && FIRE_KEY == 255 && VAR_CURRENT_WEAPON < 16)
+	if (PLAYER_POINTER != 0 && VAR_CPED_STATE == 154 && FIRE_KEY == 255 && VAR_CURRENT_WEAPON < 16)
 	{
 		iLastTick = GetTickCount()+350;
 	}
