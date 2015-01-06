@@ -8,6 +8,8 @@
 #include "SDK/samp-sdk/amx/amx.h"
 #include "CServerUpdater.h"
 
+void **PluginData;
+
 cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 {
 	// Make sure the parameter count is correct.
@@ -359,6 +361,8 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Initialize
 	Utility::Initialize(ppData);
 
+	PluginData = ppData;
+
 	// Print out that we've loaded successfully.
 	Utility::Printf("SA-MP Anti-Cheat v%0.2f Has loaded successfully.", CURRENT_VERSION);
 
@@ -408,6 +412,14 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAmx)
 {
 	// Add a new AMX script to our list of running AMX files.
 	Callback::GetAMXList().push_back(pAmx);
+
+	static bool bFirst = false;
+	if (!bFirst)
+	{
+		Network::Initialize(PluginData);
+
+		bFirst = true;
+	}
 	
 	// Allow the new loaded script to use our plugin's functions.
 	return amx_Register(pAmx, PluginNatives, -1);

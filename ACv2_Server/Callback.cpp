@@ -3,7 +3,6 @@
 #include "Utility.h"
 #include "GDK/sampgdk.h"
 #include "CAntiCheat.h"
-#include "CPlayer.h"
 #include "../Shared/Network/CRPC.h"
 #include "CServerUpdater.h"
 
@@ -186,9 +185,6 @@ namespace Callback
 			// Send them a goodbye packet :(
 			Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, playerid);
 
-			// Close off the connection cleanly.
-			Network::CloseConnection(playerid);
-
 			// Get player's IP.
 			char ip[MAX_PLAYER_NAME];
 			GetPlayerIp(playerid, ip, sizeof(ip));
@@ -366,13 +362,6 @@ namespace Callback
 		// Check for an update to this plugin version.
 		CServerUpdater::CheckForUpdate();
 
-		// Check if the AC server is already started.
-		if (!Network::IsInitialized())
-		{
-			// Initialize raknet server to be connected to by the AC.
-			Network::Initialize("", GetServerVarAsInt("port") - 7, GetServerVarAsInt("maxplayers") + 100);
-		}
-
 		// Check memory pretty frequently in a new timer.
 		SetTimer(60000, 1, CheckPlayersMemory, NULL);
 
@@ -397,6 +386,16 @@ namespace Callback
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid, const char* params)
 	{
 		// If the user typed /actoggle and they're allowed to run that command.
+
+		if (!strcmp(params, "/actest"))
+		{
+			int RPC_Weather = 0x98;
+			RakNet::BitStream bsData;
+			bsData.Write((BYTE)42);
+			Network::PlayerSendRPC2(&RPC_Weather, playerid, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED, 0);
+
+			return 1;
+		}
 		if (!strcmp(params, "/actoggle") && CAntiCheat::CanEnableAC(playerid))
 		{ 
 			// Set ACToggle to whatever it wasn't previously.

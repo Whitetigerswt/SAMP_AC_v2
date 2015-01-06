@@ -16,7 +16,7 @@ std::vector<std::string> CAntiCheat::m_ProcessMD5s;
 #define snprintf sprintf_s
 #endif
 
-CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m_pSockInfo(socketInfo), ID(playerid)
+CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 {
 	UpdateCheatList();
 
@@ -34,7 +34,7 @@ CAntiCheat::CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid) : m
 
 CAntiCheat::~CAntiCheat()
 {
-	delete m_pSockInfo;
+
 }
 
 void CAntiCheat::UpdateCheatList()
@@ -51,12 +51,6 @@ void CAntiCheat::UpdateCheatList()
 		m_LastCheatUpdate = (int)time(NULL);
 	}
 }
-
-CClientSocketInfo* CAntiCheat::GetConnectionInfo()
-{
-	return m_pSockInfo;
-}
-
 
 void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 {

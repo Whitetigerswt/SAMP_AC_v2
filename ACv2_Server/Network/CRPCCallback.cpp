@@ -2,7 +2,6 @@
 #include "../Utility.h"
 #include "../Callback.h"
 #include "Network.h"
-#include "../CPlayer.h"
 
 #include <string>
 

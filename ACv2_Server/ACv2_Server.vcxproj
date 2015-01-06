@@ -80,7 +80,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>plugin.def</ModuleDefinitionFile>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -201,11 +201,8 @@
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp" />
     <ClCompile Include="Callback.cpp" />
     <ClCompile Include="CAntiCheat.cpp" />
-    <ClCompile Include="CPlayer.cpp" />
     <ClCompile Include="CServerUpdater.cpp" />
     <ClCompile Include="GDK\sampgdk.c" />
-    <ClCompile Include="Network\CClientSocketInfo.cpp" />
-    <ClCompile Include="Network\CRakServer.cpp" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="plugin.cpp" />
@@ -374,19 +371,19 @@
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h" />
     <ClInclude Include="Callback.h" />
     <ClInclude Include="CAntiCheat.h" />
-    <ClInclude Include="CPlayer.h" />
     <ClInclude Include="CServerUpdater.h" />
+    <ClInclude Include="CVector.h" />
     <ClInclude Include="GDK\sampgdk.h" />
     <ClInclude Include="Hooks.h" />
-    <ClInclude Include="Network\CClientSocketInfo.h" />
-    <ClInclude Include="Network\CRakServer.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
     <ClInclude Include="Network\Network.h" />
     <ClInclude Include="plugin.h" />
     <ClInclude Include="SDK\samp-sdk\amx\amx.h" />
     <ClInclude Include="SDK\samp-sdk\amx\sclinux.h" />
     <ClInclude Include="SDK\samp-sdk\plugincommon.h" />
+    <ClInclude Include="Structs.h" />
     <ClInclude Include="subhook\subhook.h" />
+    <ClInclude Include="Types.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
