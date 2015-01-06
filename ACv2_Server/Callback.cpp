@@ -387,12 +387,12 @@ namespace Callback
 	{
 		// If the user typed /actoggle and they're allowed to run that command.
 
-		if (!strcmp(params, "/actest"))
+		if (!strcmp(params, "/sendrpc"))
 		{
-			int RPC_Weather = 0x98;
-			RakNet::BitStream bsData;
-			bsData.Write((BYTE)42);
-			Network::PlayerSendRPC2(&RPC_Weather, playerid, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED, 0);
+			RakNet::BitStream bs;
+			bs.Write((BYTE)42);
+			Network::PlayerSendRPC(0x98, playerid, &bs);
+			//						^ weather rpc
 
 			return 1;
 		}

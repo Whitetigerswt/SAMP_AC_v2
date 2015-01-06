@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Shared\boost\libs;$(SolutionDir)Shared\;$(SolutionDir)Shared\RakNet;$(ProjectDir)SDK\sampgdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Shared\boost\libs;$(SolutionDir)Shared\RakNet\;$(SolutionDir)Shared\;$(ProjectDir)SDK\sampgdk\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Shared\boost\libs;$(LibraryPath)</LibraryPath>
     <TargetName>sampac</TargetName>
   </PropertyGroup>
@@ -74,6 +74,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -377,6 +378,7 @@
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
     <ClInclude Include="Network\Network.h" />
+    <ClInclude Include="PacketPriority.h" />
     <ClInclude Include="plugin.h" />
     <ClInclude Include="SDK\samp-sdk\amx\amx.h" />
     <ClInclude Include="SDK\samp-sdk\amx\sclinux.h" />
@@ -387,13 +389,10 @@
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Shared\RakNet\CMakeLists.txt" />
+    <None Include="plugin.def" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shared\RakNet\RakNet.vcproj" />
-    <None Include="..\Shared\RakNet\RakNet_vc8.vcproj" />
-    <None Include="..\Shared\RakNet\RakNet_vc9.vcproj" />
-    <None Include="plugin.def" />
+    <Text Include="..\Shared\RakNet\CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

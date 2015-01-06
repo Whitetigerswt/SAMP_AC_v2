@@ -65,21 +65,20 @@ namespace Network
 		return pRakServer;
 	}
 
-	unsigned int PlayerSend(ePacketType packetType, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
+	unsigned int PlayerSend(ePacketType packetType, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, int priority, int reliability, char cOrderingChannel)
 	{
 		return pRakServer->Send(pBitStream, priority, reliability, cOrderingChannel, pRakServer->GetPlayerIDFromIndex(uiPlayerId), false);
 	}
 
-	unsigned int PlayerSendRPC(int usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
+	unsigned int PlayerSendRPC(int usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, int priority, int reliability, char cOrderingChannel)
 	{
-		return pRakServer->RPC(&usRPCId, pBitStream, priority, reliability, cOrderingChannel, pRakServer->GetPlayerIDFromIndex(uiPlayerId), false, false);
+		return pRakServer->RPC(&usRPCId, pBitStream, (PacketPriority)priority, (PacketReliability)reliability, cOrderingChannel, pRakServer->GetPlayerIDFromIndex(uiPlayerId), false, false);
 	}
 
 
-	unsigned int PlayerSendRPC2(int* usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
+	unsigned int PlayerSendRPC2(int* usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, int priority, int reliability, char cOrderingChannel)
 	{
-		pRakServer->RPC(usRPCId, pBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, pRakServer->GetPlayerIDFromIndex(uiPlayerId), 0, 0);
-		return 1;
+		return pRakServer->RPC(usRPCId, pBitStream, (PacketPriority)priority, (PacketReliability)reliability, cOrderingChannel, pRakServer->GetPlayerIDFromIndex(uiPlayerId), 0, 0);
 	}
 
 	int HandleConnection(int playerid) { return 0; }

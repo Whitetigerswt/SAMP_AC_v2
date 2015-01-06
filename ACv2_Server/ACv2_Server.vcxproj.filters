@@ -16,9 +16,6 @@
     <Filter Include="Source Files\Shared">
       <UniqueIdentifier>{3712d3f0-5b7b-4711-9e7a-166cdb333c49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Shared\RakNet">
-      <UniqueIdentifier>{7f98d707-713f-44e7-b66b-a827338ede9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\SDK">
       <UniqueIdentifier>{d4d29af1-20b8-4fcf-8553-58295ed94561}</UniqueIdentifier>
     </Filter>
@@ -37,24 +34,93 @@
     <Filter Include="Source Files\SDK\samp-gdk">
       <UniqueIdentifier>{02d1c414-56ba-4703-babd-4ca308570f71}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Shared\RakNet\cat">
-      <UniqueIdentifier>{39b0037e-5788-4192-92d1-6203a26011f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Shared\MD5 Info">
       <UniqueIdentifier>{7fae54c2-50db-4ff3-a46b-2ad8076031ab}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\subhook">
       <UniqueIdentifier>{efb6d013-e5b4-44ba-9113-6de5ebd6a7ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shared\RakNet">
+      <UniqueIdentifier>{4eb44e0c-fbe4-4259-9b54-553b2ff40598}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="SDK\samp-sdk\amxplugin.cpp">
+      <Filter>Source Files\SDK\samp-sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\CRPCCallback.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Network.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\Network\CRPC.cpp">
+      <Filter>Source Files\Shared\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Callback.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CAntiCheat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp">
+      <Filter>Source Files\Shared\MD5 Info</Filter>
+    </ClCompile>
+    <ClCompile Include="CServerUpdater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\sampgdk.c">
+      <Filter>Source Files\SDK\samp-gdk</Filter>
+    </ClCompile>
+    <ClCompile Include="Hooks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="subhook\subhook.c">
+      <Filter>Source Files\subhook</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\BitStream.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\RakMemoryOverride.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\RakNetTypes.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\RakString.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\RakWString.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\WSAStartupSingleton.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\RakNetSocket2.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\LinuxStrings.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\StringCompressor.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\SimpleMutex.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\RakNet\Itoa.cpp">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClCompile>
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\RakNet\Base64Encoder.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\BitStream.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\RakNet\CCRakNetSlidingWindow.cpp">
@@ -153,12 +219,6 @@
     <ClCompile Include="..\Shared\RakNet\IncrementalReadInterface.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\Itoa.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\LinuxStrings.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shared\RakNet\LocklessTypes.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
@@ -213,16 +273,10 @@
     <ClCompile Include="..\Shared\RakNet\Rackspace.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\RakMemoryOverride.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shared\RakNet\RakNetCommandParser.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\RakNet\RakNetSocket.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\RakNetSocket2.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\RakNet\RakNetSocket2_360_720.cpp">
@@ -261,22 +315,13 @@
     <ClCompile Include="..\Shared\RakNet\RakNetTransport2.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\RakNetTypes.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shared\RakNet\RakPeer.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\RakNet\RakSleep.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\RakString.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shared\RakNet\RakThread.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\RakWString.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\RakNet\Rand.cpp">
@@ -312,16 +357,10 @@
     <ClCompile Include="..\Shared\RakNet\SignaledEvent.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\SimpleMutex.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shared\RakNet\SocketLayer.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\RakNet\StatisticsHistory.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\StringCompressor.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\RakNet\StringTable.cpp">
@@ -375,50 +414,110 @@
     <ClCompile Include="..\Shared\RakNet\VitaIncludes.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shared\RakNet\WSAStartupSingleton.cpp">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClCompile>
-    <ClCompile Include="SDK\samp-sdk\amxplugin.cpp">
-      <Filter>Source Files\SDK\samp-sdk</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\CRPCCallback.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\Network.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\Network\CRPC.cpp">
-      <Filter>Source Files\Shared\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="plugin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Callback.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CAntiCheat.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp">
-      <Filter>Source Files\Shared\MD5 Info</Filter>
-    </ClCompile>
-    <ClCompile Include="CServerUpdater.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GDK\sampgdk.c">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClCompile>
-    <ClCompile Include="Hooks.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="subhook\subhook.c">
-      <Filter>Source Files\subhook</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SDK\samp-sdk\plugincommon.h">
+      <Filter>Source Files\SDK\samp-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\samp-sdk\amx\amx.h">
+      <Filter>Source Files\SDK\samp-sdk\amx</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\samp-sdk\amx\sclinux.h">
+      <Filter>Source Files\SDK\samp-sdk\amx</Filter>
+    </ClInclude>
+    <ClInclude Include="plugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\CRPCCallback.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Network.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Network\Network.h">
+      <Filter>Source Files\Shared\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Network\CRPC.h">
+      <Filter>Source Files\Shared\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Callback.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CAntiCheat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h">
+      <Filter>Source Files\Shared\MD5 Info</Filter>
+    </ClInclude>
+    <ClInclude Include="CServerUpdater.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\sampgdk.h">
+      <Filter>Source Files\SDK\samp-gdk</Filter>
+    </ClInclude>
+    <ClInclude Include="subhook\subhook.h">
+      <Filter>Source Files\subhook</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CVector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\BitStream.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\RakMemoryOverride.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\RakNetDefines.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\Export.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\RakNetTypes.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\RakString.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\RakWString.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\RakAssert.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\WindowsIncludes.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\WSAStartupSingleton.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\SocketDefines.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\RakNetSocket2.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\LinuxStrings.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\SimpleMutex.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\RakNet\Itoa.h">
+      <Filter>Source Files\Shared\RakNet</Filter>
+    </ClInclude>
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
@@ -429,9 +528,6 @@
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\RakNet\Base64Encoder.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\BitStream.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\RakNet\CCRakNetSlidingWindow.h">
@@ -551,9 +647,6 @@
     <ClInclude Include="..\Shared\RakNet\EpochTimeToString.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\Export.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
     <ClInclude Include="..\Shared\RakNet\FileList.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
@@ -602,13 +695,7 @@
     <ClInclude Include="..\Shared\RakNet\InternalPacket.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\Itoa.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
     <ClInclude Include="..\Shared\RakNet\Kbhit.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\LinuxStrings.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\RakNet\LocklessTypes.h">
@@ -692,16 +779,7 @@
     <ClInclude Include="..\Shared\RakNet\RakAlloca.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\RakAssert.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\RakMemoryOverride.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
     <ClInclude Include="..\Shared\RakNet\RakNetCommandParser.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\RakNetDefines.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\RakNet\RakNetDefinesOverrides.h">
@@ -713,9 +791,6 @@
     <ClInclude Include="..\Shared\RakNet\RakNetSocket.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\RakNetSocket2.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
     <ClInclude Include="..\Shared\RakNet\RakNetStatistics.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
@@ -723,9 +798,6 @@
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\RakNet\RakNetTransport2.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\RakNetTypes.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\RakNet\RakNetVersion.h">
@@ -740,13 +812,7 @@
     <ClInclude Include="..\Shared\RakNet\RakSleep.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\RakString.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
     <ClInclude Include="..\Shared\RakNet\RakThread.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\RakWString.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\RakNet\Rand.h">
@@ -788,16 +854,10 @@
     <ClInclude Include="..\Shared\RakNet\SignaledEvent.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\SimpleMutex.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
     <ClInclude Include="..\Shared\RakNet\SimpleTCPServer.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\RakNet\SingleProducerConsumer.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\SocketDefines.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\RakNet\SocketIncludes.h">
@@ -872,90 +932,21 @@
     <ClInclude Include="..\Shared\RakNet\VitaIncludes.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\WindowsIncludes.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\RakNet\WSAStartupSingleton.h">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </ClInclude>
     <ClInclude Include="..\Shared\RakNet\XBox360Includes.h">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\samp-sdk\plugincommon.h">
-      <Filter>Source Files\SDK\samp-sdk</Filter>
-    </ClInclude>
-    <ClInclude Include="SDK\samp-sdk\amx\amx.h">
-      <Filter>Source Files\SDK\samp-sdk\amx</Filter>
-    </ClInclude>
-    <ClInclude Include="SDK\samp-sdk\amx\sclinux.h">
-      <Filter>Source Files\SDK\samp-sdk\amx</Filter>
-    </ClInclude>
-    <ClInclude Include="plugin.h">
+    <ClInclude Include="PacketPriority.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Network\CRPCCallback.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\Network.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\Network\Network.h">
-      <Filter>Source Files\Shared\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\Network\CRPC.h">
-      <Filter>Source Files\Shared\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Callback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CAntiCheat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h">
-      <Filter>Source Files\Shared\MD5 Info</Filter>
-    </ClInclude>
-    <ClInclude Include="CServerUpdater.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GDK\sampgdk.h">
-      <Filter>Source Files\SDK\samp-gdk</Filter>
-    </ClInclude>
-    <ClInclude Include="subhook\subhook.h">
-      <Filter>Source Files\subhook</Filter>
-    </ClInclude>
-    <ClInclude Include="Hooks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Structs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CVector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="plugin.def">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Shared\RakNet\CMakeLists.txt">
       <Filter>Source Files\Shared\RakNet</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Shared\RakNet\RakNet.vcproj">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </None>
-    <None Include="..\Shared\RakNet\RakNet_vc8.vcproj">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </None>
-    <None Include="..\Shared\RakNet\RakNet_vc9.vcproj">
-      <Filter>Source Files\Shared\RakNet</Filter>
-    </None>
-    <None Include="plugin.def">
-      <Filter>Source Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

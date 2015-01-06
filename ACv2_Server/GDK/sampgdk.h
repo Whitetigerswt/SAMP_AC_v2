@@ -16,6 +16,10 @@
 #ifndef SAMPGDK_BOOL_H
 #define SAMPGDK_BOOL_H
 
+#ifdef _WIN32
+#include <Windows.h> // avoids https://github.com/Zeex/sampgdk/issues/90
+#endif
+
 /* bool */
 #if !defined __cplusplus && !defined HAVE_BOOL
   /* If HAVE_BOOL is not defined we attempt to detect stdbool.h first,
