@@ -2,6 +2,8 @@
 
 #include "RakClient.h"
 #include "HookedRakClient.h"
+#include "CRPCCallback.h"
+#include "../../Shared/Network/Network.h"
 
 #include "../CLog.h"
 
@@ -64,7 +66,37 @@ bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority
 
 Packet* HookedRakClientInterface::Receive( void )
 {
-	return client->GetRakClientInterface()->Receive();
+	Packet* p = NULL;
+	if ((p = client->GetRakClientInterface()->Receive()))
+	{
+		if (!p->length || p->length == 40)
+		{
+			return p;
+		}
+
+		CLog log = CLog("rpclog.txt");
+		log.Write("length: %d, bitsize: %d", p->length, p->bitSize);
+
+		switch (p->data[0])
+		{
+			case PACKET_RPC:
+			{
+				// Read the data sent
+				RakNet::BitStream bsData(p->data, p->length, false);
+				unsigned short usRpcId;
+
+				if (bsData.Read(usRpcId))
+				{
+					// Process the RPC
+					CLog log = CLog("rpc.txt");
+					log.Write("launching rpc id: %d", usRpcId);
+					CRPC::Process(usRpcId, bsData, p->playerIndex);
+				}
+			}
+		}
+	}
+
+	return p;
 }
 
 void HookedRakClientInterface::DeallocatePacket( Packet *packet )

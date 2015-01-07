@@ -285,10 +285,16 @@ void CAntiCheat::CheckGTAFiles(int playerid)
 
 		// Prepare to send the data to the client.
 		RakNet::BitStream bsData;
+
+		// Write header
+		bsData.Write((unsigned char)PACKET_RPC);
+		bsData.Write(MD5_FILE);
+
+		// Write file to packet
 		bsData.WriteCasted<unsigned char*, const char*>(szFile.c_str());
 
 		// Send the data to the client and have them calculate the md5 of that file.
-		Network::PlayerSendRPC(MD5_FILE, playerid, &bsData);
+		Network::PlayerSend(playerid, &bsData);
 	}
 }
 
@@ -351,8 +357,12 @@ void CAntiCheat::CheckVersionCompatible(float version)
 		// Send the message to the user.
 		SendClientMessage(ID, -1, msg);
 
+		RakNet::BitStream bsData;
+		bsData.Write((unsigned char)PACKET_RPC);
+		bsData.Write(VERSION_NOT_COMPATIBLE);
+
 		// And send an RPC telling the client's AC not to continue to monitor things.
-		Network::PlayerSendRPC(VERSION_NOT_COMPATIBLE, ID);
+		Network::PlayerSend(ID, &bsData);
 
 		// Close the connection.
 		Network::CloseConnection(ID);
@@ -369,10 +379,16 @@ void CAntiCheat::ToggleLiteFoot(bool toggle)
 {
 	// Prepare to send RPC to client.
 	RakNet::BitStream bsData;
+
+	// Write header
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(TOGGLE_LITE_FOOT);
+
+	// meat n potatoes
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSendRPC(TOGGLE_LITE_FOOT, ID, &bsData);
+	Network::PlayerSend(ID, &bsData);
 
 	// Set the lite foot variable to true.
 	m_LiteFoot = toggle;
@@ -382,10 +398,16 @@ void CAntiCheat::ToggleCrouchBug(int toggle)
 {
 	// Prepare to send RPC to client.
 	RakNet::BitStream bsData;
+
+	// Write header to packet
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(TOGGLE_CROUCH_BUG);
+
+	// Main data
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSendRPC(TOGGLE_CROUCH_BUG, ID, &bsData);
+	Network::PlayerSend(ID, &bsData);
 
 	// Set the crouch bug variable to true.
 	m_CBug = toggle;
@@ -395,10 +417,16 @@ void CAntiCheat::ToggleSwitchReload(bool toggle)
 {
 	// Prepare to send RPC to client.
 	RakNet::BitStream bsData;
+
+	// Write header to packet
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(TOGGLE_SWITCH_RELOAD);
+
+	// Main data
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSendRPC(TOGGLE_SWITCH_RELOAD, ID, &bsData);
+	Network::PlayerSend(ID, &bsData);
 
 	// Set the crouch bug variable to true.
 	m_SwitchReload = toggle;
@@ -408,10 +436,16 @@ void CAntiCheat::ToggleUnlimitedSprint(bool toggle)
 {
 	// Prepare to send RPC to client.
 	RakNet::BitStream bsData;
+
+	// Write header to packet
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(TOGGLE_UNLIMITED_SPRINT);
+
+	// Main data
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSendRPC(TOGGLE_UNLIMITED_SPRINT, ID, &bsData);
+	Network::PlayerSend(ID, &bsData);
 
 	// Set the sprint variable to true.
 	m_UnlimitedSprint = toggle;
@@ -421,10 +455,16 @@ void CAntiCheat::ToggleMacroLimitations(bool toggle)
 {
 	// Prepare to send RPC to client.
 	RakNet::BitStream bsData;
+
+	// Write header to packet
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(TOGGLE_MACRO_LIMITS);
+
+	// Main data
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSendRPC(TOGGLE_MACRO_LIMITS, ID, &bsData);
+	Network::PlayerSend(ID, &bsData);
 
 	// Set the crouch bug variable to true.
 	m_MacroLimits = toggle;
@@ -434,10 +474,16 @@ void CAntiCheat::ToggleSprintOnAllSurfaces(bool toggle)
 {
 	// Prepare to send RPC to client.
 	RakNet::BitStream bsData;
+
+	// Write header to packet
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(TOGGLE_SPRINT_ALL_SURFACES);
+
+	// Main data
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSendRPC(TOGGLE_SPRINT_ALL_SURFACES, ID, &bsData);
+	Network::PlayerSend(ID, &bsData);
 
 	// Set the crouch bug variable to true.
 	m_SprintOnAllSurfaces = toggle;
@@ -447,10 +493,16 @@ void CAntiCheat::ToggleVehicleBlips(bool toggle)
 {
 	// Prepare to send RPC to client.
 	RakNet::BitStream bsData;
+
+	// Write header to packet
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(TOGGLE_VEHICLE_BLIPS);
+
+	// Main data
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSendRPC(TOGGLE_VEHICLE_BLIPS, ID, &bsData);
+	Network::PlayerSend(ID, &bsData);
 
 	// Set the vehicle blips variable.
 	m_VehicleBlips = toggle;

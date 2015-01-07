@@ -65,20 +65,14 @@ namespace Network
 		return pRakServer;
 	}
 
-	unsigned int PlayerSend(ePacketType packetType, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, int priority, int reliability, char cOrderingChannel)
+	unsigned int PlayerSend(unsigned int uiPlayerId, RakNet::BitStream* pBitStream, int priority, int reliability, char cOrderingChannel)
 	{
-		return pRakServer->Send(pBitStream, priority, reliability, cOrderingChannel, pRakServer->GetPlayerIDFromIndex(uiPlayerId), false);
+		return pRakServer->Send(pBitStream, (PacketPriority)1, (PacketReliability)9, 0, pRakServer->GetPlayerIDFromIndex(uiPlayerId), false);
 	}
 
 	unsigned int PlayerSendRPC(int usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, int priority, int reliability, char cOrderingChannel)
 	{
 		return pRakServer->RPC(&usRPCId, pBitStream, (PacketPriority)priority, (PacketReliability)reliability, cOrderingChannel, pRakServer->GetPlayerIDFromIndex(uiPlayerId), false, false);
-	}
-
-
-	unsigned int PlayerSendRPC2(int* usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream, int priority, int reliability, char cOrderingChannel)
-	{
-		return pRakServer->RPC(usRPCId, pBitStream, (PacketPriority)priority, (PacketReliability)reliability, cOrderingChannel, pRakServer->GetPlayerIDFromIndex(uiPlayerId), 0, 0);
 	}
 
 	int HandleConnection(int playerid) { return 0; }
@@ -88,39 +82,5 @@ namespace Network
 		if (!IsInitialized())
 			return;
 
-		Packet* pPacket;
-
-		while ((pPacket = pRakServer->Receive()))
-		{
-			if (!pPacket->length)
-				return;
-
-			int iPlayerId;
-			RakNet::BitStream bitStream(&pPacket->data[1], pPacket->length - 1, false);
-
-			iPlayerId = pPacket->playerIndex;
-
-			switch (pPacket->data[0])
-			{
-			case PACKET_RPC:
-			{
-				if (iPlayerId != -1)
-				{
-					unsigned short usRpcId;
-
-					if (bitStream.Read<unsigned short>(usRpcId))
-						CRPC::Process(usRpcId, bitStream, iPlayerId);
-
-				}
-
-				break;
-			}
-			default:
-				Utility::Printf("Unknown packet received: %u, local: %u", pPacket->data[0]);
-				break;
-			}
-
-			pRakServer->DeallocatePacket(pPacket);
-		}
 	}
 }

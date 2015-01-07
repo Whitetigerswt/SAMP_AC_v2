@@ -414,6 +414,9 @@
     <ClCompile Include="..\Shared\RakNet\VitaIncludes.cpp">
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClCompile>
+    <ClCompile Include="CAntiCheatHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SDK\samp-sdk\plugincommon.h">
@@ -936,6 +939,9 @@
       <Filter>Source Files\Shared\RakNet</Filter>
     </ClInclude>
     <ClInclude Include="PacketPriority.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CAntiCheatHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,6 +5,7 @@
 #include "CAntiCheat.h"
 #include "../Shared/Network/CRPC.h"
 #include "CServerUpdater.h"
+#include "CAntiCheatHandler.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -183,7 +184,7 @@ namespace Callback
 			}
 
 			// Send them a goodbye packet :(
-			Network::PlayerSend(PACKET_PLAYER_PROPER_DISCONNECT, playerid);
+			//Network::PlayerSend(PACKET_PLAYER_PROPER_DISCONNECT, playerid);
 
 			// Get player's IP.
 			char ip[MAX_PLAYER_NAME];
@@ -204,11 +205,16 @@ namespace Callback
 			{
 				// Verify the players weapon.dat values.
 				RakNet::BitStream bsData;
+
+				// Write header
+				bsData.Write((unsigned char)PACKET_RPC);
+				bsData.Write(MD5_MEMORY_REGION);
+
 				bsData.Write(0xC8C418);
 				bsData.Write(0x460);
 
 				// Send RPC.
-				Network::PlayerSendRPC(MD5_MEMORY_REGION, i, &bsData);
+				Network::PlayerSend(i, &bsData);
 
 				/*// Verify the players handling.cfg values
 				RakNet::BitStream bsData2;
@@ -286,7 +292,7 @@ namespace Callback
 		if (Network::HandleConnection(playerid))
 		{
 			// If it was successful, send this player a greeting packet!
-			Network::PlayerSend(PACKET_PLAYER_REGISTERED, playerid);
+			//Network::PlayerSend(PACKET_PLAYER_REGISTERED, playerid);
 
 			// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
 			CAntiCheat* ac = Network::GetPlayerFromPlayerid(playerid);
@@ -311,7 +317,7 @@ namespace Callback
 		}
 
 		// If the player is not running the AC, and /actoggle has been turned on (aka AC is on)
-		if (!Network::IsPlayerConnectedToAC(playerid) && ACToggle)
+		if (!CAntiCheatHandler::IsConnected(playerid) && ACToggle)
 		{
 			// Notify them that this isn't allowed.
 			SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for not running Whitetiger's Anti-Cheat (v2)");
@@ -346,13 +352,9 @@ namespace Callback
 		// If the player has just disconnected from the server, we need to handle AC disconnect as well.
 
 		// If the player was connected to the AC before disconnecting.
-		if (Network::IsPlayerConnectedToAC(playerid) != NULL)
+		if (CAntiCheatHandler::IsConnected(playerid))
 		{
-			// Send them a goodbye packet :(
-			Network::PlayerSend(PACKET_PLAYER_PROPER_DISCONNECT, playerid);
-
-			// Close off the connection cleanly.
-			Network::CloseConnection(playerid);
+			CAntiCheatHandler::Remove(playerid);
 		}
 		return true;
 	}

@@ -2,6 +2,7 @@
 #include "../Utility.h"
 #include "../Callback.h"
 #include "Network.h"
+#include "../CAntiCheatHandler.h"
 
 #include <string>
 
@@ -38,14 +39,12 @@ RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 	if (bsData.Read((char*)processpath) && bsData.Read((char*)md5))
 	{
 		// Call the main OnFileExecuted function.
-		Network::GetPlayerFromPlayerid(iExtra)->OnFileExecuted((char*)processpath, (char*)md5);
-		Utility::Printf("process: %s, md5: %s", processpath, md5);
+		CAntiCheatHandler::GetAntiCheat(iExtra)->OnFileExecuted((char*)processpath, (char*)md5);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnMD5Calculated(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("md5 calc called: iExtra: %d", iExtra);
 	// Create variables
 	int address, size;
 	unsigned char md5[128];
@@ -57,13 +56,12 @@ RPC_CALLBACK CRPCCallback::OnMD5Calculated(RakNet::BitStream &bsData, int iExtra
 	if (bsData.Read(address) && bsData.Read(size) && bsData.Read((char*)md5))
 	{
 		// Call the main function with the info we got.
-		Network::GetPlayerFromPlayerid(iExtra)->OnMD5Calculated(address, size, (char*)md5);
+		CAntiCheatHandler::GetAntiCheat(iExtra)->OnMD5Calculated(address, size, (char*)md5);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnFileCalculated(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("filecalc called: iExtra: %d", iExtra);
 	// Create variables to hold the file path and md5
 	unsigned char path[MAX_PATH + 1];
 	unsigned char md5[33];
@@ -76,13 +74,12 @@ RPC_CALLBACK CRPCCallback::OnFileCalculated(RakNet::BitStream &bsData, int iExtr
 	if(bsData.Read((char*)path) && bsData.Read((char*)md5)) 
 	{
 		// Call the main function with the info we got.
-		Network::GetPlayerFromPlayerid(iExtra)->OnFileCalculated((char*)path, (char*)md5);
+		CAntiCheatHandler::GetAntiCheat(iExtra)->OnFileCalculated((char*)path, (char*)md5);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnImgFileModified(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("imgmod called: iExtra: %d", iExtra);
 	// Create variables to hold the file path and md5
 	unsigned char path[MAX_PATH + 1];
 	unsigned char md5[33];
@@ -95,13 +92,12 @@ RPC_CALLBACK CRPCCallback::OnImgFileModified(RakNet::BitStream &bsData, int iExt
 	if (bsData.Read((char*)path) && bsData.Read((char*)md5))
 	{
 		// Use our helper class's function.
-		Network::GetPlayerFromPlayerid(iExtra)->OnImgFileModified((char*)path, (char*)md5);
+		CAntiCheatHandler::GetAntiCheat(iExtra)->OnImgFileModified((char*)path, (char*)md5);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("macro called: iExtra: %d", iExtra);
 	// Create an int var to hold the virtual key the macro was detected on.
 	int vKey;
 
@@ -109,13 +105,14 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 	if (bsData.Read(vKey))
 	{
 		// Let our helper class know.
-		Network::GetPlayerFromPlayerid(iExtra)->OnMacroDetected(vKey);
+		CAntiCheatHandler::GetAntiCheat(iExtra)->OnMacroDetected(vKey);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("initial info called: iExtra: %d", iExtra);
+	CAntiCheatHandler::Init(iExtra);
+
 	// Create a big variable to hold hardware ID.
 	unsigned char hwid[2048];
 	float version;
@@ -127,23 +124,29 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	if (bsData.Read((char*)hwid) && bsData.Read(version))
 	{
 		// Send to our helper class so it can store it.
-		Network::GetPlayerFromPlayerid(iExtra)->OnHardwareCalculated((char*)hwid);
+		CAntiCheatHandler::GetAntiCheat(iExtra)->OnHardwareCalculated((char*)hwid);
 
 		// Check the version compatiblity.
-		Network::GetPlayerFromPlayerid(iExtra)->CheckVersionCompatible(version);
+		CAntiCheatHandler::GetAntiCheat(iExtra)->CheckVersionCompatible(version);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnTamperAttempt(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("tamper called: iExtra: %d", iExtra);
-	Network::GetPlayerFromPlayerid(iExtra)->OnTamperAttempt();
-	Network::PlayerSendRPC(EXIT_PROCESS, iExtra);
+	CAntiCheatHandler::GetAntiCheat(iExtra)->OnTamperAttempt();
+
+	// Create packet
+	RakNet::BitStream bitStream;
+
+	// Write header to packet
+	bitStream.Write((unsigned char)PACKET_RPC);
+	bitStream.Write(EXIT_PROCESS);
+
+	Network::PlayerSend(iExtra, &bitStream);
 }
 
 RPC_CALLBACK CRPCCallback::OnPauseToggled(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("pause called: iExtra: %d", iExtra);
 	// Record the data the client sent us.
 	int iType;
 	bool bPause;
@@ -151,12 +154,11 @@ RPC_CALLBACK CRPCCallback::OnPauseToggled(RakNet::BitStream &bsData, int iExtra)
 	// Read the data.
 	if (bsData.Read(iType) && bsData.Read(bPause))
 	{
-		Network::GetPlayerFromPlayerid(iExtra)->TogglePause(iType, bPause);
+		CAntiCheatHandler::GetAntiCheat(iExtra)->TogglePause(iType, bPause);
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnTakeScreenshot(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("TakeScreenshot called: iExtra: %d", iExtra);
-	Network::GetPlayerFromPlayerid(iExtra)->OnScreenshotTaken();
+	CAntiCheatHandler::GetAntiCheat(iExtra)->OnScreenshotTaken();
 }

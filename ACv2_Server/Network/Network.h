@@ -38,14 +38,12 @@ namespace Network
 	// PURPOSE: Send a packet to a specified playerid.
 	// REQUIRES: A Packet Type.
 	// REQUIRES: A playerid.
-	unsigned int PlayerSend(ePacketType packetType, unsigned int uiPlayerId, RakNet::BitStream* pBitStream = NULL, int priority = 1, int reliability = 9, char cOrderingChannel = 0x7F);
+	unsigned int PlayerSend(unsigned int uiPlayerId, RakNet::BitStream* pBitStream = NULL, int priority = 1, int reliability = 9, char cOrderingChannel = 0x7F);
 	
 	// PURPOSE: Send an RPC to a playerid.
 	// REQUIRES: an RPC id.
 	// REQUIRES: a playerid.
 	unsigned int PlayerSendRPC(int usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream = NULL, int priority = 1, int reliability = 9, char cOrderingChannel = 0x7F);
-
-	unsigned int PlayerSendRPC2(int *usRPCId, unsigned int uiPlayerId, RakNet::BitStream* pBitStream = NULL, int priority = 1, int reliability = 9, char cOrderingChannel = 0x7F);
 
 	// PURPOSE: Process packets sent to the server.
 	// REQUIRES: The server is initialized.

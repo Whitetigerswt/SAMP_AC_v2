@@ -4,9 +4,9 @@
 #include "RakClient.h"
 #include "HookedRakClient.h"
 #include "../s0beit/samp.h"
-#include "../CLog.h"
 #include "../../Shared/Network/Network.h"
 
+#include "CRPCCallback.h"
 #include "CRakClientHandler.h"
 
 static RakClient* client = NULL;
@@ -21,14 +21,14 @@ void CRakClientHandler::Load()
 	client = new RakClient(samp->pRakClientInterface);
 	samp->pRakClientInterface = new HookedRakClientInterface(client);
 
-	//MAKE LOG HERE	- see if null
-
 	// Even though we have the raknet interfaces, doesn't mean it's connected yet.
 	// Make sure it's connected before we continue.
-	while (samp->pRakClientInterface == NULL || !client->GetRakClientInterface()->IsConnected())
+	while (samp->pRakClientInterface == NULL)
 	{
 		Sleep(5);
 	}
+
+	CRPCCallback::Initialize();
 }
 
 void CRakClientHandler::CustomSend(RakNet::BitStream *bs)

@@ -100,19 +100,21 @@ static BYTE HOOK_GetPacketID(Packet *p)
 
 	BYTE packetId = GetPacketID(p);
 
+	// If packetId is our custom RPC sending function
 	if (packetId == PACKET_RPC)
 	{
+		// Read the data sent
 		RakNet::BitStream bsData(&p->data[1], p->length - 1, false);
-
 		unsigned short usRpcId;
 
 		if (bsData.Read(usRpcId))
 		{
-			Utility::Printf("Calling rpc id: %d", usRpcId);
+			// Process the RPC
 			CRPC::Process(usRpcId, bsData, p->playerIndex);
 		}
 
-		// return? - need SOME function to call rakserver->deallocatepacket(p)...
+		// return invalid packet (so SA-MP doesn't process it)
+		return 0xFF;
 	}
 
 	return GetPacketID(p);
