@@ -14,7 +14,7 @@
 #include "CLog.h"
 #include "Detours\detours.h"
 #include "CModuleSecurity.h"
-#include "Network\Test.h"
+#include "Network\CRakClientHandler.h"
 
 #include <map>
 #include <Shellapi.h>
@@ -70,8 +70,9 @@ void CLoader::Initialize(HMODULE hMod)
 		CheckElevation();
 	}
 
+	// Init server
 	Sleep(20000);
-	Load_RakClient();
+	new CRakClientHandler();
 
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 7);

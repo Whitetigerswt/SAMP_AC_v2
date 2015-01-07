@@ -211,7 +211,7 @@ enum PacketEnumeration
 };
 
 /// These enumerations are used to describe when packets are delivered.
-/*enum PacketPriority
+enum PacketPriority
 {
 	SYSTEM_PRIORITY,   /// \internal Used by RakNet to send above-high priority messages.
 	HIGH_PRIORITY,   /// High priority messages are send before medium priority messages.
@@ -229,9 +229,7 @@ enum PacketReliability
 	RELIABLE,   /// The message is sent reliably, but not necessarily in any order.  Same overhead as UNRELIABLE.
 	RELIABLE_ORDERED,   /// This message is reliable and will arrive in the order you sent it.  Messages will be delayed while waiting for out of order messages.  Same overhead as UNRELIABLE_SEQUENCED.
 	RELIABLE_SEQUENCED /// This message is reliable and will arrive in the sequence you sent it.  Out or order messages will be dropped.  Same overhead as UNRELIABLE_SEQUENCED.
-};*/
-
-#include <RakNet\PacketPriority.h>
+};
 
 
 typedef unsigned short PlayerIndex;
@@ -452,6 +450,7 @@ class RakClient
 {
 public:
 	RakClient( void *pRakClientInterface );
+	~RakClient();
 	bool RPC(int rpcId, RakNet::BitStream *bitStream, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = RELIABLE_ORDERED, char orderingChannel = 0, bool shiftTimestamp = false);
 	bool Send(RakNet::BitStream *bitStream, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = UNRELIABLE_SEQUENCED, char orderingChannel = 0);
 	void SendDeath( uint16_t killerId, uint8_t reason );

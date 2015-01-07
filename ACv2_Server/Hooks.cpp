@@ -2,6 +2,10 @@
 #include "Utility.h"
 #include "plugin.h"
 #include "Structs.h"
+#include "Network\CRPCCallback.h"
+
+#include "../Shared/Network/Network.h"
+#include "../Shared/Network/CRPC.h"
 
 #ifdef _WIN32
 	#include <Psapi.h>
@@ -96,6 +100,20 @@ static BYTE HOOK_GetPacketID(Packet *p)
 
 	BYTE packetId = GetPacketID(p);
 
+	if (packetId == Network::PACKET_RPC)
+	{
+		RakNet::BitStream bsData(&p->data[1], p->length - 1, false);
+
+		unsigned short usRpcId;
+
+		if (bsData.Read(usRpcId))
+		{
+			CRPC::Process(usRpcId, bsData, p->playerIndex);
+		}
+
+		// return? - need SOME function to call rakserver->deallocatepacket(p)...
+	}
+
 	return GetPacketID(p);
 }
 
@@ -116,6 +134,7 @@ void InstallHooks()
 	amx_Register_hook.Install((void*)*(unsigned long*)((unsigned long)pAMXFunctions + (PLUGIN_AMX_EXPORT_Register * 4)), (void*)HOOK_amx_Register);
 	if (FindAddresses())
 	{
+		CRPCCallback::Initialize();
 		GetPacketID_hook.Install((void*)FUNC_GetPacketID, (void*)HOOK_GetPacketID);
 	}
 	else

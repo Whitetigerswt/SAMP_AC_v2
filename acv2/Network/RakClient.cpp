@@ -7,6 +7,7 @@
 
 #include <Windows.h>
 #include <RakNet\BitStream.h>
+#include "../CLog.h"
 
 #include "RakClient.h"
 
@@ -15,6 +16,11 @@ RakClient *g_RakClient = NULL;
 RakClient::RakClient( void *pRakClientInterface )
 {
 	pRakClient = (RakClientInterface *)pRakClientInterface;
+}
+
+RakClient::~RakClient()
+{
+	delete pRakClient;
 }
 
 bool RakClient::RPC( int rpcId, RakNet::BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp )
@@ -40,7 +46,7 @@ void  RakClient::SendDeath( uint16_t killerId, uint8_t reason )
 
 	bsDeath.Write( reason );
 	bsDeath.Write( killerId );
-	g_RakClient->RPC( RPC_Death, &bsDeath );
+	RPC( RPC_Death, &bsDeath, (PacketPriority)1, (PacketReliability)9  );
 }
 
 void RakClient::SendPickUp( int pickupId )
@@ -57,7 +63,7 @@ void  RakClient::RequestClass( int classId )
 	RakNet::BitStream bsClass;
 
 	bsClass.Write( classId );
-	g_RakClient->RPC( RPC_RequestClass, &bsClass );
+	RPC( RPC_RequestClass, &bsClass );
 }
 
 void  RakClient::SendSCMEvent( int vehicleID, int eventId, int param1, int param2 )
@@ -75,6 +81,6 @@ void RakClient::SendSpawn( void )
 {
 	RakNet::BitStream bsSpawn;
 
-	g_RakClient->RPC( RPC_RequestSpawn, &bsSpawn );
-	g_RakClient->RPC( RPC_Spawn, &bsSpawn );
+	RPC( RPC_RequestSpawn, &bsSpawn, (PacketPriority)1, (PacketReliability)9 );
+	RPC(RPC_Spawn, &bsSpawn, (PacketPriority)1, (PacketReliability)9);
 }

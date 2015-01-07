@@ -26,6 +26,7 @@ void CRPCCallback::Initialize()
 
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 {
+	Utility::Printf("filexec called: iExtra: %d", iExtra);
 	// Allocate space for the process path and md5 parameters.
 	unsigned char processpath[256];
 	unsigned char md5[256];
@@ -44,6 +45,7 @@ RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 
 RPC_CALLBACK CRPCCallback::OnMD5Calculated(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("md5 calc called: iExtra: %d", iExtra);
 	// Create variables
 	int address, size;
 	unsigned char md5[128];
@@ -61,6 +63,7 @@ RPC_CALLBACK CRPCCallback::OnMD5Calculated(RakNet::BitStream &bsData, int iExtra
 
 RPC_CALLBACK CRPCCallback::OnFileCalculated(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("filecalc called: iExtra: %d", iExtra);
 	// Create variables to hold the file path and md5
 	unsigned char path[MAX_PATH + 1];
 	unsigned char md5[33];
@@ -79,6 +82,7 @@ RPC_CALLBACK CRPCCallback::OnFileCalculated(RakNet::BitStream &bsData, int iExtr
 
 RPC_CALLBACK CRPCCallback::OnImgFileModified(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("imgmod called: iExtra: %d", iExtra);
 	// Create variables to hold the file path and md5
 	unsigned char path[MAX_PATH + 1];
 	unsigned char md5[33];
@@ -97,6 +101,7 @@ RPC_CALLBACK CRPCCallback::OnImgFileModified(RakNet::BitStream &bsData, int iExt
 
 RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("macro called: iExtra: %d", iExtra);
 	// Create an int var to hold the virtual key the macro was detected on.
 	int vKey;
 
@@ -110,6 +115,7 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("initial info called: iExtra: %d", iExtra);
 	// Create a big variable to hold hardware ID.
 	unsigned char hwid[2048];
 	float version;
@@ -130,12 +136,14 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 
 RPC_CALLBACK CRPCCallback::OnTamperAttempt(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("tamper called: iExtra: %d", iExtra);
 	Network::GetPlayerFromPlayerid(iExtra)->OnTamperAttempt();
 	Network::PlayerSendRPC(EXIT_PROCESS, iExtra);
 }
 
 RPC_CALLBACK CRPCCallback::OnPauseToggled(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("pause called: iExtra: %d", iExtra);
 	// Record the data the client sent us.
 	int iType;
 	bool bPause;
@@ -149,5 +157,6 @@ RPC_CALLBACK CRPCCallback::OnPauseToggled(RakNet::BitStream &bsData, int iExtra)
 
 RPC_CALLBACK CRPCCallback::OnTakeScreenshot(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("TakeScreenshot called: iExtra: %d", iExtra);
 	Network::GetPlayerFromPlayerid(iExtra)->OnScreenshotTaken();
 }

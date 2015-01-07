@@ -10,6 +10,11 @@ HookedRakClientInterface::HookedRakClientInterface(RakClient * rakclient) : clie
 
 }
 
+HookedRakClientInterface::~HookedRakClientInterface()
+{
+	delete client;
+}
+
 bool HookedRakClientInterface::Connect( const char* host, unsigned short serverPort, unsigned short clientPort, unsigned int depreciated, int threadSleepTimer )
 {
 	return client->GetRakClientInterface()->Connect( host, serverPort, clientPort, depreciated, threadSleepTimer );

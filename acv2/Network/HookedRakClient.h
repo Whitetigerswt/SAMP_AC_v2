@@ -3,7 +3,7 @@ class HookedRakClientInterface/* : public OrigRakClientInterface*/
 {
 public:
 	HookedRakClientInterface(RakClient* rakclient);
-	virtual ~HookedRakClientInterface() { };
+	virtual ~HookedRakClientInterface();
 	virtual bool Connect( const char* host, unsigned short serverPort, unsigned short clientPort, unsigned int depreciated, int threadSleepTimer );
 	virtual void Disconnect( unsigned int blockDuration, unsigned char orderingChannel=0 );
 	virtual void InitializeSecurity( const char *privKeyP, const char *privKeyQ );

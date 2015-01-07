@@ -236,12 +236,12 @@
     <ClCompile Include="IMG.cpp" />
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="Network\CRakClient.cpp" />
+    <ClCompile Include="Network\CRakClientHandler.cpp" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
     <ClCompile Include="Network\HookedRakClient.cpp" />
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="Network\RakClient.cpp" />
-    <ClCompile Include="Network\Test.cpp" />
     <ClCompile Include="PatternScan.cpp" />
     <ClCompile Include="s0beit\samp.cpp" />
   </ItemGroup>
@@ -629,11 +629,11 @@
     <ClInclude Include="md5.h" />
     <ClInclude Include="Misc.h" />
     <ClInclude Include="Network\CRakClient.h" />
+    <ClInclude Include="Network\CRakClientHandler.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
     <ClInclude Include="Network\HookedRakClient.h" />
     <ClInclude Include="Network\Network.h" />
     <ClInclude Include="Network\RakClient.h" />
-    <ClInclude Include="Network\Test.h" />
     <ClInclude Include="PatternScan.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="s0beit\samp.h" />
@@ -642,12 +642,6 @@
     <ClInclude Include="VMProtectSDK.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Shared\RakNet\CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Shared\RakNet\RakNet.vcproj" />
-    <None Include="..\Shared\RakNet\RakNet_vc8.vcproj" />
-    <None Include="..\Shared\RakNet\RakNet_vc9.vcproj" />
     <None Include="DirectX\D3DX10math.inl" />
     <None Include="DirectX\d3dx9math.inl" />
     <None Include="DirectX\D3DX_DXGIFormatConvert.inl" />
@@ -661,6 +655,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="png1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Shared\RakNet\CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
