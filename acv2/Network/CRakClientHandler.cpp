@@ -9,10 +9,10 @@
 
 #include "CRakClientHandler.h"
 
-RakClient* client = NULL;
-stSAMP* samp = NULL;
+static RakClient* client = NULL;
+static stSAMP* samp = NULL;
 
-CRakClientHandler::CRakClientHandler()
+void CRakClientHandler::Load()
 {
 	// Get the main SAMP structure.
 	samp = stGetSampInfo();
@@ -21,23 +21,19 @@ CRakClientHandler::CRakClientHandler()
 	client = new RakClient(samp->pRakClientInterface);
 	samp->pRakClientInterface = new HookedRakClientInterface(client);
 
+	//MAKE LOG HERE	- see if null
+
 	// Even though we have the raknet interfaces, doesn't mean it's connected yet.
 	// Make sure it's connected before we continue.
 	while (samp->pRakClientInterface == NULL || !client->GetRakClientInterface()->IsConnected())
 	{
 		Sleep(5);
 	}
-
-	RakNet::BitStream bsData;
-	bsData.Write((unsigned char)Network::PACKET_RPC); // packetid
-	bsData.Write((unsigned short)20U); // TAKE_SCREENSHOT
-
-	CustomRPC(&bsData);
 }
 
-void CRakClientHandler::CustomRPC(RakNet::BitStream *bs)
+void CRakClientHandler::CustomSend(RakNet::BitStream *bs)
 {
-	if (client->GetRakClientInterface()->IsConnected())
+	if (client != NULL && client->GetRakClientInterface()->IsConnected())
 	{
 		client->Send(bs);
 	}

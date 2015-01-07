@@ -1,3 +1,6 @@
+#include <Windows.h>
+#include <Boost\thread.hpp>
+
 #include "CHookManager.h"
 #include "CPatch.h"
 #include "Hooks.h"
@@ -9,8 +12,7 @@
 #include "DirectX Hooks\CMessageProxy.h"
 #include "s0beit\samp.h"
 #include "CLog.h"
-
-#include <Windows.h>
+#include "Network\CRakClientHandler.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -585,12 +587,18 @@ HOOK CHookManager::LiteFootHook()
 	}
 }
 
+void LoadRakClient()
+{
+	boost::thread thread(&CRakClientHandler::Load);
+}
+
 HOOK CHookManager::GetSampInfo()
 {
 	__asm
 	{
 		mov g_SAMP,eax
 		pushad
+		call LoadRakClient
 	}
 	// remove hook now that we got the address.
 	CMem::Cpy((void*)sampInfoAddr, "\x8B\x80\xD9\x03\x00\x00", 6);

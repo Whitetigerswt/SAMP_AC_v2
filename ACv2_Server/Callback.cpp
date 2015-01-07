@@ -183,7 +183,7 @@ namespace Callback
 			}
 
 			// Send them a goodbye packet :(
-			Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, playerid);
+			Network::PlayerSend(PACKET_PLAYER_PROPER_DISCONNECT, playerid);
 
 			// Get player's IP.
 			char ip[MAX_PLAYER_NAME];
@@ -286,7 +286,7 @@ namespace Callback
 		if (Network::HandleConnection(playerid))
 		{
 			// If it was successful, send this player a greeting packet!
-			Network::PlayerSend(Network::PACKET_PLAYER_REGISTERED, playerid);
+			Network::PlayerSend(PACKET_PLAYER_REGISTERED, playerid);
 
 			// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
 			CAntiCheat* ac = Network::GetPlayerFromPlayerid(playerid);
@@ -349,7 +349,7 @@ namespace Callback
 		if (Network::IsPlayerConnectedToAC(playerid) != NULL)
 		{
 			// Send them a goodbye packet :(
-			Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, playerid);
+			Network::PlayerSend(PACKET_PLAYER_PROPER_DISCONNECT, playerid);
 
 			// Close off the connection cleanly.
 			Network::CloseConnection(playerid);

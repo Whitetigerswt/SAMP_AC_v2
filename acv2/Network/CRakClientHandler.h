@@ -3,9 +3,8 @@
 class CRakClientHandler
 {
 public:
-	CRakClientHandler();
-	void CustomRPC(RakNet::BitStream *bs);
-	void Send();
+	static void Load();
+	static void CustomSend(RakNet::BitStream *bs);
 
 private:
 };

@@ -70,10 +70,6 @@ void CLoader::Initialize(HMODULE hMod)
 		CheckElevation();
 	}
 
-	// Init server
-	Sleep(20000);
-	new CRakClientHandler();
-
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 7);
 	Network::Connect();

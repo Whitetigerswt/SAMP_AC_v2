@@ -41,7 +41,7 @@ namespace Network
 
 	// PURPOSE: Send a packet to the server.
 	// REQUIRES: The user is connected.
-	unsigned int Send(Network::ePacketType packetType, RakNet::BitStream* pBitStream = NULL, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = RELIABLE_ORDERED, char cOrderingChannel = 0x7F);
+	unsigned int Send(ePacketType packetType, RakNet::BitStream* pBitStream = NULL, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = RELIABLE_ORDERED, char cOrderingChannel = 0x7F);
 	
 	// PURPOSE: Send an RPC to the server.
 	// REQUIRES: The user is connected.

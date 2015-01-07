@@ -2,6 +2,7 @@
 #include "md5.h"
 #include "../Shared/Network/CRPC.h"
 #include "Network\Network.h"
+#include "Network\CRakClientHandler.h"
 
 #include <string>
 
@@ -139,11 +140,16 @@ void CCheats::OnFileExecuted(const char* file, const char* md5)
 
 		// Prepare to send the info to the server.
 		RakNet::BitStream bitStream;
+
+		// Add header info
+		bitStream.Write((unsigned char)PACKET_RPC);
+		bitStream.Write(ON_FILE_EXECUTED);
+
 		bitStream.Write(szFile.c_str());
 		bitStream.Write(md5);
 
 		// Send the RPC to the server.
-		Network::SendRPC(ON_FILE_EXECUTED, &bitStream);
+		CRakClientHandler::CustomSend(&bitStream);
 	}
 	return;
 }

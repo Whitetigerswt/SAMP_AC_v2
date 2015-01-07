@@ -26,7 +26,6 @@ void CRPCCallback::Initialize()
 
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 {
-	Utility::Printf("filexec called: iExtra: %d", iExtra);
 	// Allocate space for the process path and md5 parameters.
 	unsigned char processpath[256];
 	unsigned char md5[256];
@@ -40,6 +39,7 @@ RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 	{
 		// Call the main OnFileExecuted function.
 		Network::GetPlayerFromPlayerid(iExtra)->OnFileExecuted((char*)processpath, (char*)md5);
+		Utility::Printf("process: %s, md5: %s", processpath, md5);
 	}
 }
 

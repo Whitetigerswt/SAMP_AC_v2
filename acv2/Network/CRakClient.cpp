@@ -42,7 +42,7 @@ RakNet::SystemAddress* CRakClient::GetRemoteAddress()
 	return m_pSystemAddress;
 }
 
-unsigned int CRakClient::Send(Network::ePacketType packetType, const RakNet::SystemAddress& systemAddress, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
+unsigned int CRakClient::Send(ePacketType packetType, const RakNet::SystemAddress& systemAddress, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
 {
 	RakNet::BitStream bitStream;
 	bitStream.Write((unsigned char)packetType);
@@ -59,7 +59,7 @@ unsigned int CRakClient::SendRPC(unsigned short usRPCId, const RakNet::SystemAdd
 	if (pBitStream)
 		bitStream.Write((char*)pBitStream->GetData(), pBitStream->GetNumberOfBytesUsed());
 
-	return Send(Network::PACKET_RPC, systemAddress, &bitStream, priority, reliability, cOrderingChannel);
+	return Send(PACKET_RPC, systemAddress, &bitStream, priority, reliability, cOrderingChannel);
 }
 
 void CRakClient::Disconnect()

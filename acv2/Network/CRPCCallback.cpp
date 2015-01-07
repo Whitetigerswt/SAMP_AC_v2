@@ -9,6 +9,7 @@
 #include "../CClientUpdater.h"
 #include "../CHookManager.h"
 #include "../CMem.h"
+#include "CRakClientHandler.h"
 
 #include <Boost\thread.hpp>
 
@@ -36,6 +37,10 @@ void CRPCCallback::ResendFileInformation()
 {
 	// Send the server our hardware ID incase they wanna ban us.
 	RakNet::BitStream bsData;
+
+	// Add header info
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(ON_INITIAL_INFO);
 	
 	// Get the number of required bytes in the hardwareID.
 	INT nSize = VMProtectGetCurrentHWID(NULL, 0);
@@ -53,7 +58,7 @@ void CRPCCallback::ResendFileInformation()
 	bsData.Write(CURRENT_MAJOR_VERSION);
 
 	// Send the info to the server.
-	Network::SendRPC(ON_INITIAL_INFO, &bsData);
+	CRakClientHandler::CustomSend(&bsData);
 	
 	// Free memory.
 	delete[] pBuf; 
@@ -76,12 +81,17 @@ void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)
 
 		// Send the result of the hash back to the server.
 		RakNet::BitStream bitStream;
+
+		// Add header info to packet
+		bitStream.Write((unsigned char)PACKET_RPC);
+		bitStream.Write(ON_MD5_CALCULATED);
+
 		bitStream.Write(address);
 		bitStream.Write(size);
 		bitStream.Write(md5.c_str());
 
 		// Send the RPC to the server.
-		Network::SendRPC(ON_MD5_CALCULATED, &bitStream);
+		CRakClientHandler::CustomSend(&bitStream);
 	}
 }
 
@@ -103,6 +113,10 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 		int i = szFile.find("$(GtaDirectory)/");
 
 		RakNet::BitStream bsData;
+
+		// Add header info to packet.
+		bsData.Write((unsigned char)PACKET_RPC);
+		bsData.Write(ON_FILE_CALCULATED);
 		
 		// Cut out the $(GtaDirectory) macro when we send it back to the server.
 		bsData.Write(szFile.substr(i+16).c_str());
@@ -111,7 +125,7 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 		bsData.Write(result.c_str());
 
 		// Call the RPC.
-		Network::SendRPC(ON_FILE_CALCULATED, &bsData);
+		CRakClientHandler::CustomSend(&bsData);
 	}
 }
 

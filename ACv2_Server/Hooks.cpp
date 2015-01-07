@@ -100,7 +100,7 @@ static BYTE HOOK_GetPacketID(Packet *p)
 
 	BYTE packetId = GetPacketID(p);
 
-	if (packetId == Network::PACKET_RPC)
+	if (packetId == PACKET_RPC)
 	{
 		RakNet::BitStream bsData(&p->data[1], p->length - 1, false);
 
@@ -108,6 +108,7 @@ static BYTE HOOK_GetPacketID(Packet *p)
 
 		if (bsData.Read(usRpcId))
 		{
+			Utility::Printf("Calling rpc id: %d", usRpcId);
 			CRPC::Process(usRpcId, bsData, p->playerIndex);
 		}
 

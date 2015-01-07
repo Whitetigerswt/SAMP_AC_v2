@@ -9,6 +9,7 @@
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "Addresses.h"
 #include "CLog.h"
+#include "Network\CRakClientHandler.h"
 
 #include <Boost\filesystem.hpp>
 
@@ -101,10 +102,14 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 				// Tell the server that the MD5 doesn't match on this file.
 				RakNet::BitStream bitStream;
 
+				// Add header info
+				bitStream.Write((unsigned char)PACKET_RPC);
+				bitStream.Write(ON_IMG_FILE_MODIFIED);
+
 				bitStream.Write(filename);
 				bitStream.Write(md5.c_str());
 
-				Network::SendRPC(ON_IMG_FILE_MODIFIED, &bitStream);
+				CRakClientHandler::CustomSend(&bitStream);
 			}
 
 			// Free memory!

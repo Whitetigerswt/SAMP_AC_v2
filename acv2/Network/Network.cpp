@@ -148,7 +148,7 @@ namespace Network
 		return;
 	}
 
-	unsigned int Send(Network::ePacketType packetType, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
+	unsigned int Send(ePacketType packetType, RakNet::BitStream* pBitStream, PacketPriority priority, PacketReliability reliability, char cOrderingChannel)
 	{
 		if (!IsConnected())
 			return 0;

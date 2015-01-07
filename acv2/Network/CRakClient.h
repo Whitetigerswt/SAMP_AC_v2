@@ -26,7 +26,7 @@ public:
 	// PURPOSE: Send a packet to the server.
 	// REQUIRES: The packet type
 	// REQUIRES: The system address of the server.
-	unsigned int Send(Network::ePacketType packetType, const RakNet::SystemAddress& systemAddress, RakNet::BitStream* pBitStream = NULL, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = RELIABLE_ORDERED, char cOrderingChannel = 0x7F);
+	unsigned int Send(ePacketType packetType, const RakNet::SystemAddress& systemAddress, RakNet::BitStream* pBitStream = NULL, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = RELIABLE_ORDERED, char cOrderingChannel = 0x7F);
 	
 	// PURPOSE: Send an RPC to the server.
 	// REQUIRES: RPC id.
