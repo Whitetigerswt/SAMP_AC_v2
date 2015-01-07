@@ -1,23 +1,23 @@
 /*
 
 PROJECT:		mod_sa
-LICENSE:		See LICENSE in the top level directory
-COPYRIGHT:		Copyright we_sux, FYP
+			LICENSE : See LICENSE in the top level directory
+				  COPYRIGHT : Copyright we_sux, FYP
 
-mod_sa is available from http://code.google.com/p/m0d-s0beit-sa/
+							  mod_sa is available from http ://code.google.com/p/m0d-s0beit-sa/
 
-mod_sa is free software: you can redistribute it and/or modify
+mod_sa is free software : you can redistribute it and / or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 mod_sa is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with mod_sa.  If not, see <http://www.gnu.org/licenses/>.
+along with mod_sa.If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -34,75 +34,11 @@ along with mod_sa.  If not, see <http://www.gnu.org/licenses/>.
 #define MAX_CLIENTCMDS				144
 #define SAMP_MENUS_MAX				128
 
-#define SAMP_CHAT_INFO_OFFSET			0x212A6C
-#define SAMP_CHAT_INPUT_INFO_OFFSET		0x212A70
-#define SAMP_KILL_INFO_OFFSET			0x212A74
-#define SAMP_INFO_OFFSET				0x212A80
-#define SAMP_MISC_INFO					0x212A94
-
-#define SAMP_COLOR_OFFSET				0x1FA378
-#define VALUE_DRAWING_DISTANCE			0xCECF0
-
-// used in proxyIDirect3DDevice9.cpp
-#define SAMP_SCOREBOARD_INFO			0x212A3C
-#define SAMP_FUNCUPDATESCOREBOARDDATA	0x7D10
-#define SAMP_PATCH_NOCARCOLORRESETTING	0x776F0
-#define SAMP_DRAWTEXTLABELS				0x86EA1
-
-enum Gamestate
-{
-	GAMESTATE_WAIT_CONNECT = 10,
-	GAMESTATE_CONNECTING,
-	GAMESTATE_AWAIT_JOIN,
-	GAMESTATE_CONNECTED,
-	GAMESTATE_DISCONNECTED,
-	GAMESTATE_RESTARTING = 17
-};
-
-enum PlayerState
-{
-	PLAYER_STATE_NONE = 0,
-	PLAYER_STATE_ONFOOT = 17,
-	PLAYER_STATE_PASSENGER,
-	PLAYER_STATE_DRIVER,
-	PLAYER_STATE_WASTED = 32,
-	PLAYER_STATE_SPAWNED
-};
-
-enum MarkersMode
-{
-	PLAYER_MARKERS_MODE_OFF,
-	PLAYER_MARKERS_MODE_GLOBAL,
-	PLAYER_MARKERS_MODE_STREAMED,
-};
-
-enum SpecialAction
-{
-	SPECIAL_ACTION_NONE,
-	SPECIAL_ACTION_DUCK,
-	SPECIAL_ACTION_USEJETPACK,
-	SPECIAL_ACTION_ENTER_VEHICLE,
-	SPECIAL_ACTION_EXIT_VEHICLE,
-	SPECIAL_ACTION_DANCE1,
-	SPECIAL_ACTION_DANCE2,
-	SPECIAL_ACTION_DANCE3,
-	SPECIAL_ACTION_DANCE4,
-	SPECIAL_ACTION_HANDSUP,
-	SPECIAL_ACTION_USECELLPHONE,
-	SPECIAL_ACTION_SITTING,
-	SPECIAL_ACTION_STOPUSECELLPHONE,
-	SPECIAL_ACTION_DRINK_BEER = 20,
-	SPECIAL_ACTION_SMOKE_CIGGY,
-	SPECIAL_ACTION_DRINK_WINE,
-	SPECIAL_ACTION_DRINK_SPRUNK,
-	SPECIAL_ACTION_CUFFED,
-	SPECIAL_ACTION_CARRY,
-};
-
-
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// SAMP STRUCTURES ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
+
+
 struct stSAMPPools
 {
 #pragma pack( 1 )
@@ -682,7 +618,6 @@ struct stTranslateGTASAMP_pedPool
 ///////////////////////////////////// FUNCTIONS //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 struct stSAMP									*stGetSampInfo(void);
-struct stInputInfo								*stGetInputInfo(void);
 
 // global pointer externals
 extern struct stSAMP							*g_SAMP;

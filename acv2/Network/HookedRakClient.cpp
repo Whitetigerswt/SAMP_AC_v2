@@ -3,6 +3,8 @@
 #include "RakClient.h"
 #include "HookedRakClient.h"
 
+#include "../CLog.h"
+
 HookedRakClientInterface::HookedRakClientInterface(RakClient * rakclient) : client(rakclient)
 {
 
@@ -45,6 +47,12 @@ bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority
 	/*BYTE packetId;
 	bitStream->Read( packetId );
 	Log( "< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed() );*/
+
+	CLog log = CLog("send.txt");
+
+	BYTE packetId;
+	bitStream->Read(packetId);
+	log.Write("< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed());
 
 	return client->GetRakClientInterface()->Send( bitStream, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel );
 }

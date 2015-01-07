@@ -89,6 +89,9 @@ private:
 	// Hook to allow us to turn on/off vehicle blips
 	static void MarkersHook();
 
+	// Obtain stSAMP struct
+	static void GetSampInfo();
+
 	static void AltTabHook();
 
 	static void AimHook();
@@ -201,7 +204,6 @@ private:
 	static void CameraYAccessHook24();
 	static void CameraYAccessHook25();
 	static void CameraYAccessHook26();
-	static void CameraYAccessHook27();
-	
+	static void CameraYAccessHook27();	
 };
 

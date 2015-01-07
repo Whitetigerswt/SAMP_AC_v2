@@ -7,6 +7,8 @@
 #include "../Shared/Network/CRPC.h"
 #include "PatternScan.h"
 #include "DirectX Hooks\CMessageProxy.h"
+#include "s0beit\samp.h"
+#include "CLog.h"
 
 #include <Windows.h>
 
@@ -138,6 +140,8 @@ static DWORD PauseJmpBack = 0x576C2D;
 static DWORD SprintHookJmpBack = 0x60A760;
 
 static DWORD SetCursorPosHookJmpBack = 0x745433;
+
+static DWORD sampInfoAddr = NULL;
 
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
@@ -338,6 +342,21 @@ void CHookManager::Load()
 
 			// Install hook
 			CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 6);
+		}
+
+		// Find address to stSAMP struct (So we can hook RakClient later)
+		samp = FindPattern("\x8B\x80\xD9\x03\x00\x00\x8B\x48\x08\x85\xC9", "xxxxxxxxxxx");
+
+		if (samp && g_SAMP == NULL)
+		{
+			// Save memory so we can remove hook later.
+			sampInfoAddr = samp;
+
+			// Unprotect memory so we can apply a jmp
+			VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+			// Install hook
+			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 6);
 		}
 	}
 	
@@ -566,6 +585,21 @@ HOOK CHookManager::LiteFootHook()
 	}
 }
 
+HOOK CHookManager::GetSampInfo()
+{
+	__asm
+	{
+		mov g_SAMP,eax
+		pushad
+	}
+	// remove hook now that we got the address.
+	CMem::Cpy((void*)sampInfoAddr, "\x8B\x80\xD9\x03\x00\x00", 6);
+	__asm
+	{
+		popad
+		jmp[sampInfoAddr]
+	}
+}
 
 HOOK CHookManager::GravityHook()
 {
