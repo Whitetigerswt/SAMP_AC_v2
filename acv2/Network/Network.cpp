@@ -26,7 +26,6 @@ namespace Network
 		bConnected = false;
 		bServerHasPlugin = false;
 
-
 		if (pRakClient->Startup() != RakNet::RAKNET_STARTED)
 		{
 			return;

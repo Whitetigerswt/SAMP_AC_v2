@@ -14,6 +14,7 @@
 #include "CLog.h"
 #include "Detours\detours.h"
 #include "CModuleSecurity.h"
+#include "Network\Test.h"
 
 #include <map>
 #include <Shellapi.h>
@@ -68,6 +69,9 @@ void CLoader::Initialize(HMODULE hMod)
 	{
 		CheckElevation();
 	}
+
+	Sleep(20000);
+	Load_RakClient();
 
 	// Connect to AC Network.
 	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 7);

@@ -46,6 +46,9 @@
     <Filter Include="Header Files\CrashRpt">
       <UniqueIdentifier>{45930d95-395b-4ea5-878b-73067833ce6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\s0beit">
+      <UniqueIdentifier>{46b323ee-f600-4dc5-b493-d63879e64390}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -390,9 +393,6 @@
     <ClCompile Include="CLog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Network\CRakClient.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="Network\CRPCCallback.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
@@ -458,6 +458,21 @@
     </ClCompile>
     <ClCompile Include="PatternScan.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="s0beit\samp.cpp">
+      <Filter>Source Files\s0beit</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\HookedRakClient.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\RakClient.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\CRakClient.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Test.cpp">
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -934,9 +949,6 @@
     </ClInclude>
     <ClInclude Include="CLog.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\CRakClient.h">
-      <Filter>Source Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="Network\CRPCCallback.h">
       <Filter>Source Files\Network</Filter>
@@ -1627,6 +1639,24 @@
     </ClInclude>
     <ClInclude Include="PatternScan.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="s0beit\samp.h">
+      <Filter>Source Files\s0beit</Filter>
+    </ClInclude>
+    <ClInclude Include="s0beit\stdtypes.h">
+      <Filter>Source Files\s0beit</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\HookedRakClient.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\RakClient.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\CRakClient.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Test.h">
+      <Filter>Source Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -237,9 +237,13 @@
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="Network\CRakClient.cpp" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
+    <ClCompile Include="Network\HookedRakClient.cpp" />
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="CSprite.cpp" />
+    <ClCompile Include="Network\RakClient.cpp" />
+    <ClCompile Include="Network\Test.cpp" />
     <ClCompile Include="PatternScan.cpp" />
+    <ClCompile Include="s0beit\samp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\Boost\aligned_storage.hpp" />
@@ -626,9 +630,14 @@
     <ClInclude Include="Misc.h" />
     <ClInclude Include="Network\CRakClient.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
+    <ClInclude Include="Network\HookedRakClient.h" />
     <ClInclude Include="Network\Network.h" />
+    <ClInclude Include="Network\RakClient.h" />
+    <ClInclude Include="Network\Test.h" />
     <ClInclude Include="PatternScan.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="s0beit\samp.h" />
+    <ClInclude Include="s0beit\stdtypes.h" />
     <ClInclude Include="VersionHelpers.h" />
     <ClInclude Include="VMProtectSDK.h" />
   </ItemGroup>
