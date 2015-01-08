@@ -1,10 +1,12 @@
 #include "CMessageProxy.h"
 #include "../CDirectX.h"
 #include <RakNet\BitStream.h>
-#include "../Network/Network.h"
 #include "../../Shared/Network/CRPC.h"
+#include "../../Shared/Network/Network.h"
 #include "../Addresses.h"
 #include "../Misc.h"
+#include "../Network/CRakClientHandler.h"
+
 #include <Boost\thread.hpp>
 
 HWND CMessageProxy::m_hWindowOrig;
@@ -41,7 +43,7 @@ WNDPROC CMessageProxy::GetOriginalProcedure()
 LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	// Make sure we're connected to the AC server
-	if (Network::IsConnected())
+	if (CRakClientHandler::IsConnected())
 	{
 		UINT vKey = (UINT)wparam;
 
@@ -69,10 +71,16 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 			{
 				// Tell the server we came back into the game from an alt tab
 				RakNet::BitStream bsData;
+
+				// Write header info
+				bsData.Write((unsigned char)PACKET_RPC);
+				bsData.Write(TOGGLE_PAUSE);
+
+				// main info
 				bsData.Write(1);
 				bsData.Write(true);
 
-				Network::SendRPC(TOGGLE_PAUSE, &bsData);
+				CRakClientHandler::CustomSend(&bsData);
 
 				AltTabbed = false;
 
@@ -83,10 +91,15 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 			case WM_KILLFOCUS:
 			{
 				RakNet::BitStream bsData;
+
+				// you get the idea...
+				bsData.Write((unsigned char)PACKET_RPC);
+				bsData.Write(TOGGLE_PAUSE);
+
 				bsData.Write(1);
 				bsData.Write(false);
 
-				Network::SendRPC(TOGGLE_PAUSE, &bsData);
+				CRakClientHandler::CustomSend(&bsData);
 
 				AltTabbed = true;
 
@@ -98,7 +111,12 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 			{
 				if (vKey == VK_F8)
 				{
-					Network::SendRPC(TAKE_SCREENSHOT);
+					RakNet::BitStream bsData;
+
+					bsData.Write((unsigned char)PACKET_RPC);
+					bsData.Write(TAKE_SCREENSHOT);
+
+					CRakClientHandler::CustomSend(&bsData);
 				}
 			}
 

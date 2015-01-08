@@ -5,8 +5,6 @@
  * FILE: RakClient.h
 */
 
-extern class RakClient *g_RakClient;
-
 typedef unsigned int RakNetTime;
 typedef long long RakNetTimeNS;
 

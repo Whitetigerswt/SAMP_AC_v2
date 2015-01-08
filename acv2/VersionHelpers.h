@@ -20,8 +20,6 @@
 
 #if !defined(__midl) && !defined(SORTPP_PASS)
 
-#if (NTDDI_VERSION >= NTDDI_WINXP)
-
 #ifdef __cplusplus
 
 #define VERSIONHELPERAPI inline bool
@@ -112,8 +110,6 @@ IsWindowsServer()
 
 	return !VerifyVersionInfoW(&osvi, VER_PRODUCT_TYPE, dwlConditionMask);
 }
-
-#endif // NTDDI_VERSION
 
 #endif // defined(__midl)
 

@@ -4,8 +4,8 @@
 #include "HookedRakClient.h"
 #include "CRPCCallback.h"
 #include "../../Shared/Network/Network.h"
-
-#include "../CLog.h"
+#include "CRakClientHandler.h"
+#include "../s0beit/samp.h"
 
 HookedRakClientInterface::HookedRakClientInterface(RakClient * rakclient) : client(rakclient)
 {
@@ -14,7 +14,7 @@ HookedRakClientInterface::HookedRakClientInterface(RakClient * rakclient) : clie
 
 HookedRakClientInterface::~HookedRakClientInterface()
 {
-	delete client;
+
 }
 
 bool HookedRakClientInterface::Connect( const char* host, unsigned short serverPort, unsigned short clientPort, unsigned int depreciated, int threadSleepTimer )
@@ -164,7 +164,13 @@ void HookedRakClientInterface::RegisterClassMemberRPC( int* uniqueID, void *func
 }
 
 void HookedRakClientInterface::UnregisterAsRemoteProcedureCall( int* uniqueID )
-{
+{ 
+	// Only called when the game is closing.
+	// Fix a crash when the game closes by setting the raknet interface back to the one SA-MP expects.
+
+	stSAMP* samp = stGetSampInfo();
+	samp->pRakClientInterface = client->GetRakClientInterface();
+
 	client->GetRakClientInterface()->UnregisterAsRemoteProcedureCall( uniqueID );
 }
 

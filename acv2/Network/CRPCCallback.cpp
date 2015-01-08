@@ -2,13 +2,13 @@
 #include "../CLog.h"
 #include "../CLoader.h"
 #include "../Misc.h"
-#include "Network.h"
 #include "../Misc.h"
 #include "../VMProtectSDK.h"
 #include "../Addresses.h"
 #include "../CClientUpdater.h"
 #include "../CHookManager.h"
 #include "../CMem.h"
+#include "../../Shared/Network/Network.h"
 #include "CRakClientHandler.h"
 
 #include <Boost\thread.hpp>
@@ -184,15 +184,13 @@ void CRPCCallback::ToggleCrouchBug(RakNet::BitStream &bsData, int iExtra)
 
 void CRPCCallback::ExitThisProcess(RakNet::BitStream &bsData, int iExtra)
 {
-	// Disconnect from the network, and exit the process.
-	Network::Disconnect();
 	ExitProcess(0);
 }
 
 void CRPCCallback::VersionNotCompatible(RakNet::BitStream &bsData, int iExtra)
 {
 	// Disconnect from the server.
-	Network::Disconnect();
+	//Network::Disconnect();
 }
 
 void CRPCCallback::ToggleLiteFoot(RakNet::BitStream &bsData, int iExtra)

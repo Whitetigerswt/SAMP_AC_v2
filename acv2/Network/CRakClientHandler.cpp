@@ -38,3 +38,14 @@ void CRakClientHandler::CustomSend(RakNet::BitStream *bs)
 		client->Send(bs);
 	}
 }
+
+bool CRakClientHandler::IsConnected()
+{
+	if (!client)
+		return false;
+
+	if (!client->GetRakClientInterface())
+		return false;
+
+	return client->GetRakClientInterface()->IsConnected();
+}

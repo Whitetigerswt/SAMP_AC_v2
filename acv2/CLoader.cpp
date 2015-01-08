@@ -1,20 +1,19 @@
 #include "CLoader.h"
 #include "../Shared/Network/Network.h"
 #include "CParseCommandLine.h"
-#include "Network/Network.h"
 #include "Addresses.h"
 #include "CClientUpdater.h"
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "CHookManager.h"
 #include "VMProtectSDK.h"
-#include "VersionHelpers.h"
 #include "../Shared/Network/CRPC.h"
 #include "CCrashHandler.h"
 #include "CLog.h"
 #include "Detours\detours.h"
 #include "CModuleSecurity.h"
 #include "Network\CRakClientHandler.h"
+#include "VersionHelpers.h"
 
 #include <map>
 #include <Shellapi.h>
@@ -70,10 +69,6 @@ void CLoader::Initialize(HMODULE hMod)
 		CheckElevation();
 	}
 
-	// Connect to AC Network.
-	Network::Initialize(cmdline["Host"], atoi(cmdline["Port"].c_str()) - 7);
-	Network::Connect();
-
 	// Setup memory one more time.
 	CHookManager::Load();
 
@@ -89,14 +84,18 @@ void CLoader::Initialize(HMODULE hMod)
 		if (VMProtectIsDebuggerPresent(true))
 		{
 			// Make sure the user is connected.
-			if (!Network::IsConnected())
+			if (!CRakClientHandler::IsConnected())
 			{
 				// Close the process.
 				ExitProcess(0);
 			}
 
+			RakNet::BitStream bsData;
+
+			bsData.Write((unsigned char)PACKET_RPC);
+			bsData.Write(ON_TAMPER_ATTEMPT);
 			// Tell the server we've done some naughty stuff.
-			Network::SendRPC(ON_TAMPER_ATTEMPT);
+			CRakClientHandler::CustomSend(&bsData);
 		}
 
 		// Sleep

@@ -66,9 +66,6 @@
     <ClCompile Include="Network\CRPCCallback.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="Network\Network.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="CLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -136,9 +133,6 @@
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="Network\RakClient.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\CRakClient.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\RakNet\_FindFirst.cpp">
@@ -489,9 +483,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Network\CRPCCallback.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\Network.h">
       <Filter>Source Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\Boost\aligned_storage.hpp">
@@ -1188,9 +1179,6 @@
       <Filter>Source Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="Network\RakClient.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\CRakClient.h">
       <Filter>Source Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\RakNet\_FindFirst.h">

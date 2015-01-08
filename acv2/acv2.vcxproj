@@ -235,11 +235,9 @@
     <ClCompile Include="GTASA_CRC32.cpp" />
     <ClCompile Include="IMG.cpp" />
     <ClCompile Include="Misc.cpp" />
-    <ClCompile Include="Network\CRakClient.cpp" />
     <ClCompile Include="Network\CRakClientHandler.cpp" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
     <ClCompile Include="Network\HookedRakClient.cpp" />
-    <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="Network\RakClient.cpp" />
     <ClCompile Include="PatternScan.cpp" />
@@ -628,11 +626,9 @@
     <ClInclude Include="IMG.h" />
     <ClInclude Include="md5.h" />
     <ClInclude Include="Misc.h" />
-    <ClInclude Include="Network\CRakClient.h" />
     <ClInclude Include="Network\CRakClientHandler.h" />
     <ClInclude Include="Network\CRPCCallback.h" />
     <ClInclude Include="Network\HookedRakClient.h" />
-    <ClInclude Include="Network\Network.h" />
     <ClInclude Include="Network\RakClient.h" />
     <ClInclude Include="PatternScan.h" />
     <ClInclude Include="resource.h" />

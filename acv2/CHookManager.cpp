@@ -524,10 +524,13 @@ void CHookManager::OnPauseChange()
 	isPaused = !isPaused;
 
 	RakNet::BitStream bsData;
+
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(TOGGLE_PAUSE);
 	bsData.Write(0);
 	bsData.Write(isPaused);
 
-	Network::SendRPC(TOGGLE_PAUSE, &bsData);
+	CRakClientHandler::CustomSend(&bsData);
 }
 
 #pragma warning(disable:4731)

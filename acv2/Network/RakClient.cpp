@@ -7,11 +7,9 @@
 
 #include <Windows.h>
 #include <RakNet\BitStream.h>
-#include "../CLog.h"
+#include "CRakClientHandler.h"
 
 #include "RakClient.h"
-
-RakClient *g_RakClient = NULL;
 
 RakClient::RakClient( void *pRakClientInterface )
 {
@@ -20,7 +18,7 @@ RakClient::RakClient( void *pRakClientInterface )
 
 RakClient::~RakClient()
 {
-	delete pRakClient;
+
 }
 
 bool RakClient::RPC( int rpcId, RakNet::BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp )
