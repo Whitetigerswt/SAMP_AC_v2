@@ -55,12 +55,6 @@ bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority
 	bitStream->Read( packetId );
 	Log( "< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed() );*/
 
-	CLog log = CLog("send.txt");
-
-	BYTE packetId;
-	bitStream->Read(packetId);
-	log.Write("< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed());
-
 	return client->GetRakClientInterface()->Send( bitStream, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel );
 }
 
@@ -69,28 +63,23 @@ Packet* HookedRakClientInterface::Receive( void )
 	Packet* p = NULL;
 	if ((p = client->GetRakClientInterface()->Receive()))
 	{
-		if (!p->length || p->length == 40)
+		if (!p->bitSize)
 		{
 			return p;
 		}
-
-		CLog log = CLog("rpclog.txt");
-		log.Write("length: %d, bitsize: %d", p->length, p->bitSize);
 
 		switch (p->data[0])
 		{
 			case PACKET_RPC:
 			{
 				// Read the data sent
-				RakNet::BitStream bsData(p->data, p->length, false);
+				RakNet::BitStream bsData(&p->data[1], p->length, false);
 				unsigned short usRpcId;
 
 				if (bsData.Read(usRpcId))
 				{
 					// Process the RPC
-					CLog log = CLog("rpc.txt");
-					log.Write("launching rpc id: %d", usRpcId);
-					CRPC::Process(usRpcId, bsData, p->playerIndex);
+					CRPC::Process(usRpcId, bsData);
 				}
 			}
 		}

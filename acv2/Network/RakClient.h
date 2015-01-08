@@ -264,9 +264,6 @@ struct NetworkID
 /// This represents a user message from another system.
 struct Packet
 {
-	/// Server only - this is the index into the player array that this playerId maps to
-	PlayerIndex playerIndex;
-
 	/// The system that send this packet.
 	PlayerID playerId;
 
