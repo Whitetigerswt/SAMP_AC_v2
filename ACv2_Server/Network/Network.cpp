@@ -30,11 +30,6 @@ namespace Network
 		return bInitialized;
 	}
 
-	void CloseConnection(int playerid)
-	{
-		pRakServer->Kick(pRakServer->GetPlayerIDFromIndex(playerid));
-	}
-
 	std::map<unsigned int, CAntiCheat*>& GetPlayers()
 	{
 		return players;

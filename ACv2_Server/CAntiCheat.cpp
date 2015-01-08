@@ -365,7 +365,7 @@ void CAntiCheat::CheckVersionCompatible(float version)
 		Network::PlayerSend(ID, &bsData);
 
 		// Close the connection.
-		Network::CloseConnection(ID);
+		Kick(ID);
 	}
 }
 

@@ -40,7 +40,7 @@
 #include "CVector.h"
 #include "Types.h"
 
-#include "GDK\sampgdk.h"
+#include "GDK/sampgdk.h"
 
 class CGangZonePool;
 #define PAD(a, b)			char a[b]
@@ -1012,7 +1012,7 @@ public:
 	virtual void _20(); // 
 	virtual void _24();
 	virtual Packet* Receive(void);
-	virtual void Kick(const PlayerID playerId); // 0x2C
+	virtual void CloseConection(const PlayerID playerId); // 0x2C
 	virtual void DeallocatePacket(Packet* asd);
 	virtual void SetAllowedPlayers(unsigned short numberAllowed); // 0x34
 	virtual unsigned short GetAllowedPlayers(void) const;

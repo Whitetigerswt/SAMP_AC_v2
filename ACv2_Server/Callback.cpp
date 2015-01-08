@@ -392,7 +392,7 @@ namespace Callback
 		if (!strcmp(params, "/sendrpc"))
 		{
 			RakNet::BitStream bs;
-			bs.Write((BYTE)42);
+			bs.Write((unsigned char)42);
 			Network::PlayerSendRPC(0x98, playerid, &bs);
 			//						^ weather rpc
 

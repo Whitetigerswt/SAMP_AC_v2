@@ -51,7 +51,4 @@ namespace Network
 
 	// temp
 	int HandleConnection(int playerid);
-
-	void CloseConnection(int playerid);
-
 }

@@ -2,7 +2,7 @@
 #include "Utility.h"
 #include "plugin.h"
 #include "Structs.h"
-#include "Network\CRPCCallback.h"
+#include "Network/CRPCCallback.h"
 
 #include "../Shared/Network/Network.h"
 #include "../Shared/Network/CRPC.h"
