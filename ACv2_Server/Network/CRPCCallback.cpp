@@ -4,7 +4,7 @@
 #include "Network.h"
 #include "../CAntiCheatHandler.h"
 
-#include <string>
+#include <cstring>
 
 #ifndef MAX_PATH
 #define MAX_PATH 260

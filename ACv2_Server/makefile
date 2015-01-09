@@ -35,6 +35,5 @@ SAMPAC: clean
 	$(GPP) $(SAMPAC) ./Network/*.cpp
 	$(GPP) $(SAMPAC) ../Shared/MD5_Info/*.cpp
 	$(GPP) $(SAMPAC) ../Shared/Network/*.cpp
-	$(GPP) $(SAMPAC) ../Shared/RakNet/*.cpp
 	$(GPP) -m32 -O2 -fshort-wchar -static -o $(AC_OUTFILE) *.o $(LDFLAGS) $(LIBS)
 

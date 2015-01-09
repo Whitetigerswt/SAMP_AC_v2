@@ -34,13 +34,14 @@
 #define YSF_STRUCTS_H
 
 #include "Network/BitStream.h"
-#include <map>
-
 #include "PacketPriority.h"
 #include "CVector.h"
 #include "Types.h"
 
 #include "GDK/sampgdk.h"
+
+#include <map>
+#include <cstdio>
 
 class CGangZonePool;
 #define PAD(a, b)			char a[b]
