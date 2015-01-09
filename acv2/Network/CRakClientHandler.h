@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RakNet\BitStream.h>
+#include "../../Shared/Network/BitStream.h"
 
 class CRakClientHandler
 {

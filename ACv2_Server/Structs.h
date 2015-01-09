@@ -33,7 +33,7 @@
 #ifndef YSF_STRUCTS_H
 #define YSF_STRUCTS_H
 
-#include <RakNet/BitStream.h>
+#include "Network/BitStream.h"
 #include <map>
 
 #include "PacketPriority.h"

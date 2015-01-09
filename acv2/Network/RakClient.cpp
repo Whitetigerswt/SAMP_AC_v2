@@ -6,9 +6,10 @@
 */
 
 #include <Windows.h>
-#include <RakNet\BitStream.h>
-#include "CRakClientHandler.h"
 
+#include "../../Shared/Network/BitStream.h"
+#include "CRakClientHandler.h"
+#include "../s0beit/stdtypes.h"
 #include "RakClient.h"
 
 RakClient::RakClient( void *pRakClientInterface )

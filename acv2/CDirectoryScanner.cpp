@@ -2,7 +2,7 @@
 #include <boost/network/protocol/http/client.hpp>
 #include "IMG.h"
 #include <md5.h>
-#include <BitStream.h>
+#include "../Shared/Network/BitStream.h"
 #include "Network\Network.h"
 #include "../Shared/Network/CRPC.h"
 #include "Misc.h"

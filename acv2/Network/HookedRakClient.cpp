@@ -1,5 +1,6 @@
-#include <RakNet\BitStream.h>
+#include "../../Shared/Network/BitStream.h"
 
+#include "../s0beit/stdtypes.h"
 #include "RakClient.h"
 #include "HookedRakClient.h"
 #include "CRPCCallback.h"

@@ -21,6 +21,9 @@ along with mod_sa.If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+#include "stdtypes.h"
+#include <Windows.h>
+
 #define SAMP_PLAYER_MAX				1004
 #define SAMP_VEHICLE_MAX			2000
 #define SAMP_PICKUP_MAX				4096

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <map>
-#include "../RakNet/BitStream.h"
+#include "BitStream.h"
 
 #define RPC_CALLBACK void
 #define RPC_ARGS RakNet::BitStream& bsData, int iExtra

@@ -4,6 +4,7 @@
 #include "Network\Network.h"
 #include "Network\CRakClientHandler.h"
 
+#include <Windows.h>
 #include <string>
 
 CCheats::CCheats()

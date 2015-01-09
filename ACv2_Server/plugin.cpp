@@ -1,6 +1,6 @@
 #include "plugin.h"
 #include "Utility.h"
-#include "../Shared/RakNet/BitStream.h"
+#include "Network/BitStream.h"
 #include "../Shared/Network/CRPC.h"
 #include "GDK/sampgdk.h"
 #include "GDK/sampgdk.h"
@@ -43,8 +43,8 @@ cell AMX_NATIVE_CALL MD5_MemoryProc(AMX* pAmx, cell* pParams)
 	bitStream.Write(MD5_MEMORY_REGION);
 
 	// All cell's need to be casted as an int. 
-	bitStream.WriteCasted<int, cell>(pParams[2]);
-	bitStream.WriteCasted<int, cell>(pParams[3]);
+	bitStream.Write((int)pParams[2]);
+	bitStream.Write((int)pParams[3]);
 
 	// Send the RPC to the client and return.
 	return Network::PlayerSend(pParams[1], &bitStream);
@@ -133,7 +133,7 @@ cell AMX_NATIVE_CALL SetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	bsData.Write(SET_FRAME_LIMIT);
 
 	// Write new frame limit to packet
-	bsData.WriteCasted<int, cell>(pParams[2]);
+	bsData.Write((int)pParams[2]);
 
 	return Network::PlayerSend(pParams[1], &bsData);
 }
@@ -357,9 +357,6 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
-	// Handle network related processing.
-	Network::Process();
-
 	// Handle sampGDK ticking.
 	return sampgdk::ProcessTick();
 }

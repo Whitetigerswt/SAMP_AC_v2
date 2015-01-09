@@ -20,6 +20,9 @@ You should have received a copy of the GNU General Public License
 along with mod_sa.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+
+#pragma once
+
 typedef signed char			int8_t;
 typedef unsigned char		uint8_t;
 typedef signed short		int16_t;
