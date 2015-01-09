@@ -26,6 +26,7 @@
 #ifndef SUBHOOK_H
 #define SUBHOOK_H
 
+
 #if defined _M_IX86 || defined __i386__
 	#define SUBHOOK_X86
 	#define SUBHOOK_BITS 32
