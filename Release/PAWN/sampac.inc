@@ -220,25 +220,6 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 // Returns: bool - true if the plugin is loaded, else false
 #define IsACPluginLoaded() ((_:GetGravity()) != (IsPlayerUsingSampAC(9999)))
 
-// PURPOSE: Callback for when a new AC connection has been accepted.
-// REQUIRES: The client is using AC.
-//
-// Params:
-// ip[]         - IP of the player who has opened the AC.
-//
-// Returns: irrelevant
-forward OnACOpened(ip[]);
-
-// PURPOSE: Callback for when a player has disconnected from the AC server.
-// REQUIRES: The client is using AC.
-//
-// Params:
-// ip[]         - IP of the player who unloaded AC (most likely the game closed/crashed)
-// type:        - Type of disconnection, 0 = normal disconnect, 1 = timeout
-//
-// Returns: irrelevant
-forward OnACClosed(ip[], type);
-
 // PURPOSE: Callback for MD5_Memory
 // REQUIRES: MD5_Memorys return value will be sent to this function sometime after MD5_Memory is called.
 //
@@ -258,10 +239,10 @@ forward AC_OnMD5Calculated(playerid, address, size, md5[]);
 // playerid     	- Player whom a new file was executed
 // module[]     	- The name of the file (should usually be ignored as people can name it whatever they want)
 // md5[]        	- The file's MD5
-// bool:isAllowed   - false if this file is on the AC blacklist.
+// bool:isCheat   - true if this file is on the AC blacklist.
 //
 // Returns: irrelevant
-forward AC_OnFileExecuted(playerid, module[], md5[], bool:isAllowed);
+forward AC_OnFileExecuted(playerid, module[], md5[], bool:isCheat);
 
 // PURPOSE: Callback for when the AC has detected there is a file inside gta3.img that is modifed that is also on the list of bad gta3.img files. (Files that can't be modified in gta3.img)
 // REQUIRES: The player is using AC.
@@ -281,10 +262,10 @@ forward AC_OnImgFileModifed(playerid, filename[], md5[]);
 // playerid         - Player who's file was calculated
 // filename[]       - The file name of the file that was calculated
 // md5[]            - MD5 of the file
-// bool:isAllowed   - false if the file IS on the AC blacklist
+// bool:isCheat   	- true if the file IS on the AC blacklist
 //
 // Returns: irrelevant
-forward AC_OnFileCalculated(playerid, filename[], md5[], bool:isAllowed);
+forward AC_OnFileCalculated(playerid, filename[], md5[], bool:isCheat);
 
 // PURPOSE: Callback for when a player pauses, unpauses, or alt tabs from the game
 // REQUIRES: The player is using AC.

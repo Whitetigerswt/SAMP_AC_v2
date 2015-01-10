@@ -237,6 +237,7 @@ namespace Callback
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
+		Utility::Printf("OnPlayerConnect");
 		// if the AC is on, let the user know this server is protected.
 		if (ACToggle)
 		{

@@ -38,6 +38,7 @@ RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 	// Read new values for those variables.
 	if (bsData.ReadString(processpath) && bsData.ReadString(md5))
 	{
+		Utility::Printf("process path: %s, %s", processpath, md5);
 		// Call the main OnFileExecuted function.
 		CAntiCheatHandler::GetAntiCheat(iExtra)->OnFileExecuted((char*)processpath, (char*)md5);
 	}
@@ -127,6 +128,8 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("Hello, initial info! %d", iExtra);
+
 	CAntiCheatHandler::Init(iExtra);
 
 	// Create a big variable to hold hardware ID.
