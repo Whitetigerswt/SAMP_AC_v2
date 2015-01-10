@@ -3,6 +3,7 @@
 #include "../Callback.h"
 #include "Network.h"
 #include "../CAntiCheatHandler.h"
+#include "../GDK/sampgdk.h"
 
 #include <cstring>
 
@@ -31,15 +32,22 @@ RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 	unsigned char processpath[256];
 	unsigned char md5[256];
 
-	// Reset those variables values.
 	memset(processpath, 0, sizeof(processpath));
 	memset(md5, 0, sizeof(md5));
 
 	// Read new values for those variables.
-	if (bsData.Read(processpath) && bsData.Read(md5))
+	if (bsData.ReadString(processpath) && bsData.ReadString(md5))
 	{
 		// Call the main OnFileExecuted function.
 		CAntiCheatHandler::GetAntiCheat(iExtra)->OnFileExecuted((char*)processpath, (char*)md5);
+	}
+	else
+	{
+		// user sent an invalid length for the strings
+
+		char str[128];
+		snprintf(str, sizeof(str), "(1) AC Error: playerid: %d sent invalid string length to the server. You should report this problem.", iExtra);
+		SendClientMessage(iExtra, -1, str);
 	}
 }
 
@@ -53,7 +61,7 @@ RPC_CALLBACK CRPCCallback::OnMD5Calculated(RakNet::BitStream &bsData, int iExtra
 	memset(md5, 0, sizeof(md5));
 
 	// Read values sent from client.
-	if (bsData.Read(address) && bsData.Read(size) && bsData.Read(md5))
+	if (bsData.Read(address) && bsData.Read(size) && bsData.ReadString(md5))
 	{
 		// Call the main function with the info we got.
 		CAntiCheatHandler::GetAntiCheat(iExtra)->OnMD5Calculated(address, size, (char*)md5);
@@ -71,10 +79,18 @@ RPC_CALLBACK CRPCCallback::OnFileCalculated(RakNet::BitStream &bsData, int iExtr
 	memset(md5, 0, sizeof(md5));
 
 	// Read the data the client sent us.
-	if(bsData.Read(path) && bsData.Read(md5)) 
+	if(bsData.ReadString(path) && bsData.ReadString(md5)) 
 	{
 		// Call the main function with the info we got.
 		CAntiCheatHandler::GetAntiCheat(iExtra)->OnFileCalculated((char*)path, (char*)md5);
+	}
+	else
+	{
+		// user sent an invalid length for the strings
+
+		char str[128];
+		snprintf(str, sizeof(str), "(2) AC Error: playerid: %d sent invalid string length to the server. You should report this problem.", iExtra);
+		SendClientMessage(iExtra, -1, str);
 	}
 }
 
@@ -89,7 +105,7 @@ RPC_CALLBACK CRPCCallback::OnImgFileModified(RakNet::BitStream &bsData, int iExt
 	memset(md5, 0, sizeof(md5));
 
 	// Read the data sent to us by the server.
-	if (bsData.Read(path) && bsData.Read(md5))
+	if (bsData.ReadString(path) && bsData.ReadString(md5))
 	{
 		// Use our helper class's function.
 		CAntiCheatHandler::GetAntiCheat(iExtra)->OnImgFileModified((char*)path, (char*)md5);
@@ -121,7 +137,7 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	memset(hwid, 0, sizeof(hwid));
 
 	// Read the hardware ID from the client.
-	if (bsData.Read(hwid) && bsData.Read(version))
+	if (bsData.ReadString(hwid) && bsData.Read(version))
 	{
 		// Send to our helper class so it can store it.
 		CAntiCheatHandler::GetAntiCheat(iExtra)->OnHardwareCalculated((char*)hwid);

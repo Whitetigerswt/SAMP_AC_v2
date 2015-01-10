@@ -32,11 +32,11 @@ void CRakClientHandler::Load()
 	CRPCCallback::Initialize();
 }
 
-void CRakClientHandler::CustomSend(RakNet::BitStream *bs)
+void CRakClientHandler::CustomSend(RakNet::BitStream *bs, PacketPriority priority, PacketReliability reliability, char orderingChannel)
 {
 	if (client != NULL && client->GetRakClientInterface()->IsConnected())
 	{
-		client->Send(bs);
+		client->Send(bs, priority, reliability, orderingChannel);
 	}
 }
 
@@ -49,4 +49,15 @@ bool CRakClientHandler::IsConnected()
 		return false;
 
 	return client->GetRakClientInterface()->IsConnected();
+}
+
+void CRakClientHandler::Disconnect()
+{
+	if (!client)
+		return;
+
+	if (!client->GetRakClientInterface())
+		return;
+
+	return client->GetRakClientInterface()->Disconnect(500);
 }

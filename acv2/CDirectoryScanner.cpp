@@ -106,9 +106,13 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 				bitStream.Write((unsigned char)PACKET_RPC);
 				bitStream.Write(ON_IMG_FILE_MODIFIED);
 
-				bitStream.Write(filename);
-				bitStream.Write(md5.c_str());
+				// Add strings
+				bitStream.Write((unsigned short)strlen(filename));
+				bitStream.Write((const char*)filename, strlen(filename));
+				bitStream.Write((unsigned short)md5.length());
+				bitStream.Write((const char*)md5.c_str(), md5.length());
 
+				// Send
 				CRakClientHandler::CustomSend(&bitStream);
 			}
 

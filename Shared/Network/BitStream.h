@@ -303,7 +303,10 @@ namespace RakNet
 		/// \param[in] output The result byte array. It should be larger than @em numberOfBytes. 
 		/// \param[in] numberOfBytes The number of byte to read
 		/// \return true on success false if there is some missing bytes. 
-		bool Read( char* output, const int numberOfBytes );
+		bool Read(char* output, const int numberOfBytes);
+
+
+		bool ReadString(unsigned char* output);
 
 		/// Read a normalized 3D vector, using (at most) 4 bytes + 3 bits instead of 12-24 bytes.  Will further compress y or z axis aligned vectors.
 		/// Accurate to 1/32767.5.
@@ -420,6 +423,14 @@ namespace RakNet
 		/// \param[in] numberOfBytesToRead The number of byte to read from the internal state 
 		/// \return true if there is enough byte. 
 		bool ReadAlignedBytes( unsigned char *output,	const int numberOfBytesToRead );
+
+		/// Read bits, Note that the modulus 8 starting offset of the sequence must be the same as
+		/// was used with WriteBits. This will be a problem with packet
+		/// coalescence unless you byte align the coalesced packets.
+		/// \param[in] output The byte array larger than @em numberOfBytesToRead
+		/// \param[in] numberOfBytesToRead The number of byte to read from the internal state 
+		/// \return true if there is enough byte. 
+		bool ReadBytes(unsigned char* output, const int numberOfBytesToRead);
 		
 		/// Align the next write and/or read to a byte boundary.  This can
 		/// be used to 'waste' bits to byte align for efficiency reasons It

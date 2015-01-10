@@ -291,7 +291,8 @@ void CAntiCheat::CheckGTAFiles(int playerid)
 		bsData.Write(MD5_FILE);
 
 		// Write file to packet
-		bsData.Write((unsigned char*)szFile.c_str());
+		bsData.Write((unsigned short)szFile.length());
+		bsData.Write((const char*)szFile.c_str(), szFile.length());
 
 		// Send the data to the client and have them calculate the md5 of that file.
 		Network::PlayerSend(playerid, &bsData);

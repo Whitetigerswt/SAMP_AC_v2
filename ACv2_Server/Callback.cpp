@@ -12,9 +12,6 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 
-#ifdef WIN32
-#define snprintf sprintf_s
-#endif
 
 namespace Callback
 {
@@ -178,19 +175,24 @@ namespace Callback
 		} // CAntiCheatHandler::IsConnected(playerid)
 		else if (ACToggle)
 		{
-			// Create new variables to hold strings we'll send to the server.
-			char msg[144], name[MAX_PLAYER_NAME];
+			// Notify them that this isn't allowed.
+			SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for not running Whitetiger's Anti-Cheat (v2)");
 
-			// Get the player's name
+			char msg[160], name[MAX_PLAYER_NAME];
+
+			// Get the player name and store it in the name variable.
 			GetPlayerName(playerid, name, sizeof(name));
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for not running Whitetiger's Anti-Cheat (v2)", name);
 
-			// Format the main string
-			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server ({FF0000}AC Lost Connection{FFFFFF})", name);
-
-			// Send the message to the rest of the players on the server.
+			// Send them the formatted message.
 			SendClientMessageToAll(-1, msg);
 
-			// Kick the player from the server.
+			// Tell them where to get the AC and install it.
+			SendClientMessage(playerid, -1, "{FFFFFF}You can download the latest version of Whitetiger's Anti-Cheat at: {FF0000}http://samp-ac.com");
+
+			Utility::Printf("%s has been kicked from the server for not connecting with AC while AC is on.", name);
+
+			// Finally, kick the player.
 			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 
 			return;

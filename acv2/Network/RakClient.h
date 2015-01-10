@@ -4,6 +4,9 @@
  * DATE: 21.02.2013
  * FILE: RakClient.h
 */
+#pragma once
+
+#include "../s0beit/stdtypes.h"
 
 typedef unsigned int RakNetTime;
 typedef long long RakNetTimeNS;
@@ -458,7 +461,7 @@ public:
 	RakClient( void *pRakClientInterface );
 	~RakClient();
 	bool RPC(int rpcId, RakNet::BitStream *bitStream, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = RELIABLE_ORDERED, char orderingChannel = 0, bool shiftTimestamp = false);
-	bool Send(RakNet::BitStream *bitStream, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = UNRELIABLE_SEQUENCED, char orderingChannel = 0);
+	bool Send(RakNet::BitStream *bitStream, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = RELIABLE, char orderingChannel = 0);
 	void SendDeath( uint16_t killerId, uint8_t reason );
 	void RequestClass( int classId );
 	void SendSCMEvent( int vehicleID, int eventId, int param1, int param2 );

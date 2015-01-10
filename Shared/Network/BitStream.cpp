@@ -215,23 +215,23 @@ void BitStream::Write( BitStream *bitStream, int numberOfBits )
 }
 
 // Read an array or casted stream
-bool BitStream::Read( char* output, const int numberOfBytes )
+bool BitStream::Read(char* output, const int numberOfBytes)
 {
 	// Optimization:
 	if ((readOffset & 7) == 0)
 	{
-		if ( readOffset + ( numberOfBytes << 3 ) > numberOfBitsUsed )
+		if (readOffset + (numberOfBytes << 3) > numberOfBitsUsed)
 			return false;
 
 		// Write the data
-		memcpy( output, data + ( readOffset >> 3 ), numberOfBytes );
+		memcpy(output, data + (readOffset >> 3), numberOfBytes);
 
 		readOffset += numberOfBytes << 3;
 		return true;
 	}
 	else
 	{
-		return ReadBits( ( unsigned char* ) output, numberOfBytes * 8 );
+		return ReadBits((unsigned char*)output, numberOfBytes * 8);
 	}
 }
 
@@ -297,6 +297,7 @@ void BitStream::WriteAlignedBytes( const unsigned char* input,
 	Write((const char*) input, numberOfBytesToWrite);
 }
 
+
 // Read bits, starting at the next aligned bits. Note that the modulus 8 starting offset of the
 // sequence must be the same as was used with WriteBits. This will be a problem with packet coalescence
 // unless you byte align the coalesced packets.
@@ -321,6 +322,43 @@ bool BitStream::ReadAlignedBytes( unsigned char* output, const int numberOfBytes
 	readOffset += numberOfBytesToRead << 3;
 	
 	return true;
+}
+
+bool BitStream::ReadBytes(unsigned char* output, const int numberOfBytesToRead)
+{
+#ifdef _DEBUG
+	assert(numberOfBytesToRead > 0);
+#endif
+
+	if (numberOfBytesToRead <= 0)
+		return false;
+
+	if (readOffset + (numberOfBytesToRead << 3) > numberOfBitsUsed)
+		return false;
+
+	// Write the data
+	memcpy(output, data + (readOffset >> 3), numberOfBytesToRead);
+
+	readOffset += numberOfBytesToRead << 3;
+
+	return true;
+}
+
+bool BitStream::ReadString(unsigned char* output)
+{
+	// Get string length
+	unsigned short len;
+	Read(len);
+
+	// note: since client sends the string length and we make sure it's less than 256, clients can evade a lot of AC checks by sending a len value of greater than 256
+
+	if (len < 256 && len > 0)
+	{
+		ReadBytes(output, len);
+		output[len] = '\0';
+		return true;
+	}
+	return false;
 }
 
 // Align the next write and/or read to a byte boundary.  This can be used to 'waste' bits to byte align for efficiency reasons
