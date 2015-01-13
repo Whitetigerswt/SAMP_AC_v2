@@ -15,7 +15,10 @@ namespace Network
 		int(*pfn_GetRakServer)(void) = (int(*)(void))ppData[PLUGIN_DATA_RAKSERVER];
 		pRakServer = (CCRakServer*)pfn_GetRakServer();
 
-		Utility::Printf("pRakServer: 0x%x", pRakServer);
+		if (pRakServer == NULL)
+		{
+			Utility::Printf("This SA-MP server version is not supported! Let us know of this problem at www.samp-ac.com");
+		}
 	}
 
 	CCRakServer* GetRakServer()

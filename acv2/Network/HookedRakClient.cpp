@@ -7,6 +7,7 @@
 #include "../../Shared/Network/Network.h"
 #include "CRakClientHandler.h"
 #include "../s0beit/samp.h"
+#include "../CLog.h"
 
 HookedRakClientInterface::HookedRakClientInterface(RakClient * rakclient) : client(rakclient)
 {
@@ -50,11 +51,15 @@ bool HookedRakClientInterface::Send( const char *data, const int length, int pri
 
 bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority, int reliability, char orderingChannel )
 {
+	BYTE packetId;
+	bitStream->Read(packetId);
+	CLog log = CLog("packets_sent.txt");
+	log.Write("< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed());
 
-	// use this if you wanna log outgoing packets
-	/*BYTE packetId;
-	bitStream->Read( packetId );
-	Log( "< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed() );*/
+	if (packetId == ID_AUTH_KEY)
+	{
+		CRPCCallback::Initialize();
+	}
 
 	return client->GetRakClientInterface()->Send( bitStream, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel );
 }

@@ -28,8 +28,6 @@ void CRakClientHandler::Load()
 	{
 		Sleep(5);
 	}
-
-	CRPCCallback::Initialize();
 }
 
 void CRakClientHandler::CustomSend(RakNet::BitStream *bs, PacketPriority priority, PacketReliability reliability, char orderingChannel)

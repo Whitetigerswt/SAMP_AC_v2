@@ -38,9 +38,13 @@ RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 	// Read new values for those variables.
 	if (bsData.ReadString(processpath) && bsData.ReadString(md5))
 	{
-		Utility::Printf("process path: %s, %s", processpath, md5);
-		// Call the main OnFileExecuted function.
-		CAntiCheatHandler::GetAntiCheat(iExtra)->OnFileExecuted((char*)processpath, (char*)md5);
+		// Make sure they've already sent intial info
+		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
+		if (ac)
+		{
+			// Call the main OnFileExecuted function.
+			ac->OnFileExecuted((char*)processpath, (char*)md5);
+		}
 	}
 	else
 	{
@@ -64,8 +68,13 @@ RPC_CALLBACK CRPCCallback::OnMD5Calculated(RakNet::BitStream &bsData, int iExtra
 	// Read values sent from client.
 	if (bsData.Read(address) && bsData.Read(size) && bsData.ReadString(md5))
 	{
-		// Call the main function with the info we got.
-		CAntiCheatHandler::GetAntiCheat(iExtra)->OnMD5Calculated(address, size, (char*)md5);
+		// Make sure the AC pointer is created
+		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
+		if (ac)
+		{
+			// Call the main function with the info we got.
+			ac->OnMD5Calculated(address, size, (char*)md5);
+		}
 	}
 }
 
@@ -82,8 +91,12 @@ RPC_CALLBACK CRPCCallback::OnFileCalculated(RakNet::BitStream &bsData, int iExtr
 	// Read the data the client sent us.
 	if(bsData.ReadString(path) && bsData.ReadString(md5)) 
 	{
-		// Call the main function with the info we got.
-		CAntiCheatHandler::GetAntiCheat(iExtra)->OnFileCalculated((char*)path, (char*)md5);
+		// Check the CAntiCheat pointer is valid.
+		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
+		if (ac)
+		{
+			ac->OnFileCalculated((char*)path, (char*)md5);
+		}
 	}
 	else
 	{
@@ -108,8 +121,12 @@ RPC_CALLBACK CRPCCallback::OnImgFileModified(RakNet::BitStream &bsData, int iExt
 	// Read the data sent to us by the server.
 	if (bsData.ReadString(path) && bsData.ReadString(md5))
 	{
-		// Use our helper class's function.
-		CAntiCheatHandler::GetAntiCheat(iExtra)->OnImgFileModified((char*)path, (char*)md5);
+		// Check the CAntiCheat pointer is valid.
+		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
+		if (ac)
+		{
+			ac->OnImgFileModified((char*)path, (char*)md5);
+		}
 	}
 }
 
@@ -128,8 +145,6 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("Hello, initial info! %d", iExtra);
-
 	CAntiCheatHandler::Init(iExtra);
 
 	// Create a big variable to hold hardware ID.
@@ -142,17 +157,26 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	// Read the hardware ID from the client.
 	if (bsData.ReadString(hwid) && bsData.Read(version))
 	{
-		// Send to our helper class so it can store it.
-		CAntiCheatHandler::GetAntiCheat(iExtra)->OnHardwareCalculated((char*)hwid);
+		// Make sure AC pointer is valid
+		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
+		if (ac)
+		{
+			// Send to our helper class so it can store it.
+			ac->OnHardwareCalculated((char*)hwid);
 
-		// Check the version compatiblity.
-		CAntiCheatHandler::GetAntiCheat(iExtra)->CheckVersionCompatible(version);
+			// Check the version compatiblity.
+			ac->CheckVersionCompatible(version);
+		}
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnTamperAttempt(RakNet::BitStream &bsData, int iExtra)
 {
-	CAntiCheatHandler::GetAntiCheat(iExtra)->OnTamperAttempt();
+	CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
+	if (ac)
+	{
+		ac->OnTamperAttempt();
+	}
 
 	// Create packet
 	RakNet::BitStream bitStream;
@@ -173,11 +197,22 @@ RPC_CALLBACK CRPCCallback::OnPauseToggled(RakNet::BitStream &bsData, int iExtra)
 	// Read the data.
 	if (bsData.Read(iType) && bsData.Read(bPause))
 	{
-		CAntiCheatHandler::GetAntiCheat(iExtra)->TogglePause(iType, bPause);
+		// Make sure AC pointer is valid
+		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
+		if (ac)
+		{
+			// Call togglepause func
+			ac->TogglePause(iType, bPause);
+		}
 	}
 }
 
 RPC_CALLBACK CRPCCallback::OnTakeScreenshot(RakNet::BitStream &bsData, int iExtra)
 {
-	CAntiCheatHandler::GetAntiCheat(iExtra)->OnScreenshotTaken();
+	// Make sure AC pointer is valid.
+	CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
+	if (ac)
+	{
+		ac->OnScreenshotTaken();
+	}
 }

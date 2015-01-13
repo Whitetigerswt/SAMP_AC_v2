@@ -348,18 +348,18 @@ void CHookManager::Load()
 
 		// Find address to stSAMP struct (So we can hook RakClient later)
 		//samp = FindPattern("\x8B\x80\xD9\x03\x00\x00\x8B\x48\x08\x85\xC9", "xxxxxxxxxxx");
-		DWORD newsamp = FindPattern("\x8B\x88\xD9\x03\x00\x00\x8B\x51\x14\x8B\x4A\x22\x39\x19", "xxxxxxxxxxxxxx");
+		samp = FindPattern("\x8B\x88\xD9\x03\x00\x00\x8B\x51\x14\x8B\x4A\x22\x39\x19", "xxxxxxxxxxxxxx");
 
-		if (newsamp != 0 && g_SAMP == NULL)
+		if (samp != 0 && g_SAMP == NULL)
 		{
 			// Save memory so we can remove hook later.
-			sampInfoAddr = newsamp;
+			sampInfoAddr = samp;
 
 			// Unprotect memory so we can apply a jmp
-			VirtualProtect((void*)newsamp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+			VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
 
 			// Install hook
-			CMem::ApplyJmp((BYTE*)newsamp, (DWORD)GetSampInfo, 6);
+			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 6);
 		}
 	}
 	

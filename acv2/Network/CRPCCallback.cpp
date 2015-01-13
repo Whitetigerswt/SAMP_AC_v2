@@ -29,18 +29,23 @@ void CRPCCallback::Initialize()
 	CRPC::Add(TOGGLE_SPRINT_ALL_SURFACES, ToggleSprintOnAllSurfaces);
 	CRPC::Add(TOGGLE_VEHICLE_BLIPS, ToggleVehicleBlips);
 
-	OnConnect();
+	boost::thread connectThread(&OnConnect);
 }
 
 void CRPCCallback::OnConnect()
 {
-	if (CRakClientHandler::IsConnected())
-	{
-		CHookManager::SetConnectPatches();
-		SendInitialInfo();
+	CLog log = CLog("log.txt");
 
-		boost::thread ResendFilesThread(&ResendFileInformation);
+	CHookManager::SetConnectPatches();
+	while (!CRakClientHandler::IsConnected())
+	{
+		log.Write("sleeping...");
+		Sleep(5);
 	}
+
+	SendInitialInfo();
+	log.Write("sent intial info");
+	ResendFileInformation();
 }
 
 void CRPCCallback::SendInitialInfo()
@@ -69,7 +74,7 @@ void CRPCCallback::SendInitialInfo()
 	bsData.Write(CURRENT_MAJOR_VERSION);
 
 	// Send the info to the server.
-	CRakClientHandler::CustomSend(&bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED);
+	CRakClientHandler::CustomSend(&bsData, SYSTEM_PRIORITY, RELIABLE);
 
 	// Free memory.
 	delete[] pBuf;
