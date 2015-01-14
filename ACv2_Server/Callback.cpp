@@ -11,7 +11,8 @@
 #include <stdlib.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
-
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 
 namespace Callback
 {
@@ -271,20 +272,37 @@ namespace Callback
 		// Check memory pretty frequently in a new timer.
 		SetTimer(60000, 1, CheckPlayersMemory, NULL);
 
-		// Load config.
-		boost::property_tree::ptree pt;
-		boost::property_tree::ini_parser::read_ini("ac_config.ini", pt);
+		if (!boost::filesystem::exists("ac_config.ini"))
+		{
+			Utility::Printf("Warning: ac_config.ini is missing, loading default AC values.");
 
-		// Load default values.
-		ACToggle = pt.get<bool>("defaults.main_ac_checks");
-		Default_InfSprint = pt.get<bool>("defaults.inf_sprint");
-		Default_SprintOnAllSurfaces = pt.get<bool>("defaults.sprint_all_surfaces");
-		Default_MacroLimits = pt.get<bool>("defaults.macro_limits");
-		Default_SwitchReload = pt.get<bool>("defaults.switch_reload");
-		Default_CrouchBug = pt.get<int>("defaults.crouch_bug");
-		Default_LiteFoot = pt.get<bool>("defaults.lite_foot");
-		Default_FrameLimit = pt.get<int>("defaults.frame_limit");
-		Default_VehicleBlips = pt.get<bool>("defaults.vehicle_blips");
+			ACToggle = true;
+			Default_InfSprint = true;
+			Default_SprintOnAllSurfaces = true;
+			Default_MacroLimits = true;
+			Default_LiteFoot = true;
+			Default_VehicleBlips = true;
+
+			Default_CrouchBug = 9999;
+			Default_FrameLimit = 9999;
+		}
+		else
+		{
+			// Load config.
+			boost::property_tree::ptree pt;
+			boost::property_tree::ini_parser::read_ini("ac_config.ini", pt);
+
+			// Load default values from file.
+			ACToggle = pt.get<bool>("defaults.main_ac_checks");
+			Default_InfSprint = pt.get<bool>("defaults.inf_sprint");
+			Default_SprintOnAllSurfaces = pt.get<bool>("defaults.sprint_all_surfaces");
+			Default_MacroLimits = pt.get<bool>("defaults.macro_limits");
+			Default_SwitchReload = pt.get<bool>("defaults.switch_reload");
+			Default_CrouchBug = pt.get<int>("defaults.crouch_bug");
+			Default_LiteFoot = pt.get<bool>("defaults.lite_foot");
+			Default_FrameLimit = pt.get<int>("defaults.frame_limit");
+			Default_VehicleBlips = pt.get<bool>("defaults.vehicle_blips");
+		}
 
 		return true;
 	}
