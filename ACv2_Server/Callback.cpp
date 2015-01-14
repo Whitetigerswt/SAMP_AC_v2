@@ -124,6 +124,59 @@ namespace Callback
 			// Return
 			return;
 		}
+	}
+	
+	void SAMPGDK_CALL CheckPlayersMemory(int timerid, void *params) 
+	{
+		// Loop through all players.
+		for (int i = 0; i < MAX_PLAYERS; ++i)
+		{
+			// Make sure the player is connected to the AC and the server.
+			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
+			{
+				// Verify the players weapon.dat values.
+				RakNet::BitStream bsData;
+
+				// Write header
+				bsData.Write((unsigned char)PACKET_RPC);
+				bsData.Write(MD5_MEMORY_REGION);
+
+				bsData.Write(0xC8C418);
+				bsData.Write(0x460);
+
+				// Send RPC.
+				Network::PlayerSend(i, &bsData);
+
+				/*// Verify the players handling.cfg values
+				RakNet::BitStream bsData2;
+				bsData2.Write(0xC2B9DC);
+				bsData2.Write(0xAF00);
+
+				Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData2);*/
+			}
+		}
+	}
+
+	bool GetACEnabled()
+	{
+		return ACToggle;
+	}
+
+	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
+	{
+		// if the AC is on, let the user know this server is protected.
+		if (ACToggle)
+		{
+			// Tell the player we're using the AC on this server.
+			SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
+		}
+
+		// Make sure the new connected user isn't an NPC.
+		if (IsPlayerNPC(playerid))
+		{
+			// Return
+			return true;
+		}
 
 		if (CAntiCheatHandler::IsConnected(playerid))
 		{
@@ -168,9 +221,6 @@ namespace Callback
 					SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 				}
 
-				// Get player's IP.
-				char ip[MAX_PLAYER_NAME];
-				GetPlayerIp(playerid, ip, sizeof(ip));
 			} // hwid.empty()
 		} // CAntiCheatHandler::IsConnected(playerid)
 		else if (ACToggle)
@@ -195,65 +245,8 @@ namespace Callback
 			// Finally, kick the player.
 			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 
-			return;
-		}
-	}
-	
-	void SAMPGDK_CALL CheckPlayersMemory(int timerid, void *params) 
-	{
-		// Loop through all players.
-		for (int i = 0; i < MAX_PLAYERS; ++i)
-		{
-			// Make sure the player is connected to the AC and the server.
-			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
-			{
-				// Verify the players weapon.dat values.
-				RakNet::BitStream bsData;
-
-				// Write header
-				bsData.Write((unsigned char)PACKET_RPC);
-				bsData.Write(MD5_MEMORY_REGION);
-
-				bsData.Write(0xC8C418);
-				bsData.Write(0x460);
-
-				// Send RPC.
-				Network::PlayerSend(i, &bsData);
-
-				/*// Verify the players handling.cfg values
-				RakNet::BitStream bsData2;
-				bsData2.Write(0xC2B9DC);
-				bsData2.Write(0xAF00);
-
-				Network::PlayerSendRPC(MD5_MEMORY_REGION, playerid, &bsData2);*/
-			}
-		}
-	}
-
-	bool GetACEnabled()
-	{
-		return ACToggle;
-	}
-
-	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
-	{
-		Utility::Printf("OnPlayerConnect");
-		// if the AC is on, let the user know this server is protected.
-		if (ACToggle)
-		{
-			// Tell the player we're using the AC on this server.
-			SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
-		}
-
-		// Make sure the new connected user isn't an NPC.
-		if (IsPlayerNPC(playerid))
-		{
-			// Return
 			return true;
 		}
-
-		// Check AC stuff later
-		SetTimer(10000, 0, CheckAC, (void*)playerid);
 
 		return true;
 	}
