@@ -23,8 +23,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _WIN32
-
 #include <stddef.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -40,4 +38,3 @@ void *subhook_unprotect(void *address, size_t size) {
 
 	return address;
 }
-#endif

@@ -3,18 +3,15 @@
 #include "Utility.h"
 #include "GDK/sampgdk.h"
 #include "CAntiCheat.h"
-#include "CPlayer.h"
 #include "../Shared/Network/CRPC.h"
 #include "CServerUpdater.h"
+#include "CAntiCheatHandler.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 
-#ifdef WIN32
-#define snprintf sprintf_s
-#endif
 
 namespace Callback
 {
@@ -116,7 +113,7 @@ namespace Callback
 		}
 	}
 
-	void SAMPGDK_CALL CheckPacketResponse(int timerid, void *params)
+	void SAMPGDK_CALL CheckAC(int timerid, void *params)
 	{
 		// Convert the params into a playerid.
 		int playerid = (int)params;
@@ -127,75 +124,6 @@ namespace Callback
 			// Return
 			return;
 		}
-
-		if (ACToggle)
-		{
-			// Make sure the player is connected to the server and AC.
-			if (!Network::IsPlayerConnectedToAC(playerid))
-			{
-				// Create new variables to hold strings we'll send to the server.
-				char msg[144], name[MAX_PLAYER_NAME];
-
-				// Get the player's name
-				GetPlayerName(playerid, name, sizeof(name));
-
-				// Format the main string
-				snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server ({FF0000}AC Lost Connection{FFFFFF})", name);
-
-				// Send the message to the rest of the players on the server.
-				SendClientMessageToAll(-1, msg);
-
-				// Kick the player from the server.
-				SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
-
-				// Don't continue in the function.
-				return;
-			}
-		}
-
-		// Get the player's CAntiCheat pointer.
-		CAntiCheat* ac = Network::GetPlayerFromPlayerid(playerid);
-		
-		// Get the player's Hardware ID.
-		std::string hwid = ac->GetPlayerHardwareID();
-
-		// Check if it's an empty string
-		if (hwid.empty())
-		{
-			// If it's empty, the client didn't respond to our PACKET_PLAYER_REGISTERED from OnPlayerConnect
-			// (When the player first connects it sends the players HardwareID immediately after receiving that packet)
-
-			if (ACToggle)
-			{
-				// Create new variables for strings we'll send to the rest of the players telling them what happened.
-				char msg[144], name[MAX_PLAYER_NAME];
-
-				// Get the player's name
-				GetPlayerName(playerid, name, sizeof(name));
-
-				// Format the main string we'll send to the players on the server.
-				snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s AC did not respond in time.", name);
-
-				// Send the message to the server
-				SendClientMessageToAll(-1, msg);
-
-				// Kick the player from the server.
-				SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
-			}
-
-			// Send them a goodbye packet :(
-			Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, playerid);
-
-			// Close off the connection cleanly.
-			Network::CloseConnection(playerid);
-
-			// Get player's IP.
-			char ip[MAX_PLAYER_NAME];
-			GetPlayerIp(playerid, ip, sizeof(ip));
-
-			// Tell scripts this players AC was closed.
-			OnACClosed(ip, 0);
-		}
 	}
 	
 	void SAMPGDK_CALL CheckPlayersMemory(int timerid, void *params) 
@@ -204,15 +132,20 @@ namespace Callback
 		for (int i = 0; i < MAX_PLAYERS; ++i)
 		{
 			// Make sure the player is connected to the AC and the server.
-			if (IsPlayerConnected(i) && Network::IsPlayerConnectedToAC(i))
+			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
 			{
 				// Verify the players weapon.dat values.
 				RakNet::BitStream bsData;
+
+				// Write header
+				bsData.Write((unsigned char)PACKET_RPC);
+				bsData.Write(MD5_MEMORY_REGION);
+
 				bsData.Write(0xC8C418);
 				bsData.Write(0x460);
 
 				// Send RPC.
-				Network::PlayerSendRPC(MD5_MEMORY_REGION, i, &bsData);
+				Network::PlayerSend(i, &bsData);
 
 				/*// Verify the players handling.cfg values
 				RakNet::BitStream bsData2;
@@ -227,47 +160,6 @@ namespace Callback
 	bool GetACEnabled()
 	{
 		return ACToggle;
-	}
-
-	void OnACClosed(unsigned int playerid, int type)
-	{
-		// If the player is connected, and /actoggle has been turned on (aka, AC is on)
-		if (IsPlayerConnected(playerid) && ACToggle && type == 1)
-		{
-			// Kick the user from the server.
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
-		}
-	}
-
-	void OnACClosed(std::string ip, int type)
-	{
-		// If someone's AC is closed, and we only have their IP, we need to get their playerid to do anything.
-
-		// Loop through MAX_PLAYERS
-		for (int i = 0; i < MAX_PLAYERS; ++i)
-		{
-			// Make sure the player is connected to the server.
-			if (IsPlayerConnected(i))
-			{
-				// Create a new variable to store the player's IP address.
-				char IP[MAX_PLAYER_NAME];
-
-				// Get the player's IP address and store it in the variable we just created.
-				GetPlayerIp(i, IP, sizeof(IP));
-
-				// Convert their IP address to an std::string as it's easier to work with.
-				std::string userip(IP);
-
-				// Compare the string to the string passed in as a parameter to this function
-				if (ip.compare(userip) == 0)
-				{
-					// If they match, we just found our playerid, and send it to the other OnACClosed so we can handle this situation properly.
-					OnACClosed(i, type);
-				}
-			}
-		}
-		// Execute the callback to PAWN.
-		Execute("OnACClosed", "is", type, ip.c_str());
 	}
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
@@ -286,14 +178,10 @@ namespace Callback
 			return true;
 		}
 
-		// If there is an IP address connected to the AC, try and associate it with this playerid.
-		if (Network::HandleConnection(playerid))
+		if (CAntiCheatHandler::IsConnected(playerid))
 		{
-			// If it was successful, send this player a greeting packet!
-			Network::PlayerSend(Network::PACKET_PLAYER_REGISTERED, playerid);
-
 			// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
-			CAntiCheat* ac = Network::GetPlayerFromPlayerid(playerid);
+			CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
 
 			// Send the client the files we need them to return md5's to.
 			ac->CheckGTAFiles(playerid);
@@ -307,40 +195,58 @@ namespace Callback
 			ac->ToggleLiteFoot(Default_LiteFoot);
 			ac->ToggleVehicleBlips(Default_VehicleBlips);
 
-			if(Default_FrameLimit != 9999) ac->SetFPSLimit(Default_FrameLimit);			
-			
-			// Check for a response packet from PACKET_PLAYER_REGISTERED. (The client should send back the HWID ASAP).
-			// If we don't get a response, then the AC is not loaded correctly.
-			SetTimer(10000, 0, CheckPacketResponse, (void*)playerid);
-		}
+			if (Default_FrameLimit != 9999) ac->SetFPSLimit(Default_FrameLimit);
 
-		// If the player is not running the AC, and /actoggle has been turned on (aka AC is on)
-		if (!Network::IsPlayerConnectedToAC(playerid) && ACToggle)
+			// Get the player's Hardware ID.
+			std::string hwid = ac->GetPlayerHardwareID();
+
+			// Check if it's an empty string
+			if (hwid.empty())
+			{
+				if (ACToggle)
+				{
+					// Create new variables for strings we'll send to the rest of the players telling them what happened.
+					char msg[144], name[MAX_PLAYER_NAME];
+
+					// Get the player's name
+					GetPlayerName(playerid, name, sizeof(name));
+
+					// Format the main string we'll send to the players on the server.
+					snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s AC did not respond in time.", name);
+
+					// Send the message to the server
+					SendClientMessageToAll(-1, msg);
+
+					// Kick the player from the server.
+					SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+				}
+
+			} // hwid.empty()
+		} // CAntiCheatHandler::IsConnected(playerid)
+		else if (ACToggle)
 		{
 			// Notify them that this isn't allowed.
 			SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for not running Whitetiger's Anti-Cheat (v2)");
 
-			// Create 2 variables, one to hold the player name, and one to format a string telling all the player's on the server that this player has been kicked for not running the AC.
 			char msg[160], name[MAX_PLAYER_NAME];
 
 			// Get the player name and store it in the name variable.
 			GetPlayerName(playerid, name, sizeof(name));
-
-			// Format the string telling all the users that this newly connected player is not running the AC, and we're going to kick him.
 			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for not running Whitetiger's Anti-Cheat (v2)", name);
-			
+
 			// Send them the formatted message.
 			SendClientMessageToAll(-1, msg);
 
 			// Tell them where to get the AC and install it.
 			SendClientMessage(playerid, -1, "{FFFFFF}You can download the latest version of Whitetiger's Anti-Cheat at: {FF0000}http://samp-ac.com");
 
-			// Write in the console what we just did.
 			Utility::Printf("%s has been kicked from the server for not connecting with AC while AC is on.", name);
 
 			// Finally, kick the player.
 			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
-		} 
+
+			return true;
+		}
 
 		return true;
 	}
@@ -350,13 +256,9 @@ namespace Callback
 		// If the player has just disconnected from the server, we need to handle AC disconnect as well.
 
 		// If the player was connected to the AC before disconnecting.
-		if (Network::IsPlayerConnectedToAC(playerid) != NULL)
+		if (CAntiCheatHandler::IsConnected(playerid))
 		{
-			// Send them a goodbye packet :(
-			Network::PlayerSend(Network::PACKET_PLAYER_PROPER_DISCONNECT, playerid);
-
-			// Close off the connection cleanly.
-			Network::CloseConnection(playerid);
+			CAntiCheatHandler::Remove(playerid);
 		}
 		return true;
 	}
@@ -365,13 +267,6 @@ namespace Callback
 	{
 		// Check for an update to this plugin version.
 		CServerUpdater::CheckForUpdate();
-
-		// Check if the AC server is already started.
-		if (!Network::IsInitialized())
-		{
-			// Initialize raknet server to be connected to by the AC.
-			Network::Initialize("", GetServerVarAsInt("port") - 7, GetServerVarAsInt("maxplayers") + 100);
-		}
 
 		// Check memory pretty frequently in a new timer.
 		SetTimer(60000, 1, CheckPlayersMemory, NULL);
@@ -397,6 +292,16 @@ namespace Callback
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid, const char* params)
 	{
 		// If the user typed /actoggle and they're allowed to run that command.
+
+		if (!strcmp(params, "/sendrpc"))
+		{
+			RakNet::BitStream bs;
+			bs.Write((unsigned char)42);
+			Network::PlayerSendRPC(0x98, playerid, &bs);
+			//						^ weather rpc
+
+			return 1;
+		}
 		if (!strcmp(params, "/actoggle") && CAntiCheat::CanEnableAC(playerid))
 		{ 
 			// Set ACToggle to whatever it wasn't previously.
@@ -422,7 +327,7 @@ namespace Callback
 				for (int i = 0; i < MAX_PLAYERS; ++i)
 				{
 					// If they're connected to the server, and not connected to the AC
-					if (IsPlayerConnected(i) && !IsPlayerNPC(i) && !Network::IsPlayerConnectedToAC(i))
+					if (IsPlayerConnected(i) && !IsPlayerNPC(i) && !CAntiCheatHandler::IsConnected(i))
 					{
 						// Kick them from the server!
 						SetTimer(1000, 0, Callback::KickPlayer, (void*)i);

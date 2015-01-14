@@ -14,6 +14,12 @@ extern "C" IMAGE_DOS_HEADER __ImageBase;
 #else
 #endif
 
+#ifdef WIN32
+#ifndef snprintf
+#define snprintf sprintf_s
+#endif
+#endif
+
 namespace Utility
 {
 	// PURPOSE: Load the plugin data, and get logprintf address.

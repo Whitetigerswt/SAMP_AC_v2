@@ -14,6 +14,14 @@ private:
 	// REQUIRES: NULL
 	static void ResendFileInformation();
 
+	// PURPOSE: do all the things the client should do when we connect to the server.
+	// REQUIRES: The player to have just been connected to the server.
+	static void OnConnect();
+
+	// PURPOSE: Send initial info packet to the server.
+	// REQUIRES: The player is connected to the server.
+	static void SendInitialInfo();
+
 	// PURPOSE: An RPC callback to get an md5 checksum of a specific memory region.
 	// REQUIRES: The server sends the MD5_MEMORY_REGION RPC to the client.
 	static RPC_CALLBACK MD5_Memory_Region(RPC_ARGS);

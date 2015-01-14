@@ -2,13 +2,14 @@
 #include <boost/network/protocol/http/client.hpp>
 #include "IMG.h"
 #include <md5.h>
-#include <BitStream.h>
+#include "../Shared/Network/BitStream.h"
 #include "Network\Network.h"
 #include "../Shared/Network/CRPC.h"
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "Addresses.h"
 #include "CLog.h"
+#include "Network\CRakClientHandler.h"
 
 #include <Boost\filesystem.hpp>
 
@@ -101,10 +102,18 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 				// Tell the server that the MD5 doesn't match on this file.
 				RakNet::BitStream bitStream;
 
-				bitStream.Write(filename);
-				bitStream.Write(md5.c_str());
+				// Add header info
+				bitStream.Write((unsigned char)PACKET_RPC);
+				bitStream.Write(ON_IMG_FILE_MODIFIED);
 
-				Network::SendRPC(ON_IMG_FILE_MODIFIED, &bitStream);
+				// Add strings
+				bitStream.Write((unsigned short)strlen(filename));
+				bitStream.Write((const char*)filename, strlen(filename));
+				bitStream.Write((unsigned short)md5.length());
+				bitStream.Write((const char*)md5.c_str(), md5.length());
+
+				// Send
+				CRakClientHandler::CustomSend(&bitStream);
 			}
 
 			// Free memory!

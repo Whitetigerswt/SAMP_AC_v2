@@ -1,3 +1,6 @@
+#include <Windows.h>
+#include <Boost\thread.hpp>
+
 #include "CHookManager.h"
 #include "CPatch.h"
 #include "Hooks.h"
@@ -7,8 +10,9 @@
 #include "../Shared/Network/CRPC.h"
 #include "PatternScan.h"
 #include "DirectX Hooks\CMessageProxy.h"
-
-#include <Windows.h>
+#include "s0beit\samp.h"
+#include "CLog.h"
+#include "Network\CRakClientHandler.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -138,6 +142,8 @@ static DWORD PauseJmpBack = 0x576C2D;
 static DWORD SprintHookJmpBack = 0x60A760;
 
 static DWORD SetCursorPosHookJmpBack = 0x745433;
+
+static DWORD sampInfoAddr = NULL;
 
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
@@ -339,6 +345,22 @@ void CHookManager::Load()
 			// Install hook
 			CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 6);
 		}
+
+		// Find address to stSAMP struct (So we can hook RakClient later)
+		//samp = FindPattern("\x8B\x80\xD9\x03\x00\x00\x8B\x48\x08\x85\xC9", "xxxxxxxxxxx");
+		samp = FindPattern("\x8B\x88\xD9\x03\x00\x00\x8B\x51\x14\x8B\x4A\x22\x39\x19", "xxxxxxxxxxxxxx");
+
+		if (samp != 0 && g_SAMP == NULL)
+		{
+			// Save memory so we can remove hook later.
+			sampInfoAddr = samp;
+
+			// Unprotect memory so we can apply a jmp
+			VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+			// Install hook
+			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 6);
+		}
 	}
 	
 	CMem::ApplyJmp(FUNC_LiteFoot, (DWORD)LiteFootHook, 6);
@@ -503,10 +525,13 @@ void CHookManager::OnPauseChange()
 	isPaused = !isPaused;
 
 	RakNet::BitStream bsData;
+
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(TOGGLE_PAUSE);
 	bsData.Write(0);
 	bsData.Write(isPaused);
 
-	Network::SendRPC(TOGGLE_PAUSE, &bsData);
+	CRakClientHandler::CustomSend(&bsData);
 }
 
 #pragma warning(disable:4731)
@@ -566,6 +591,27 @@ HOOK CHookManager::LiteFootHook()
 	}
 }
 
+void LoadRakClient()
+{
+	boost::thread thread(&CRakClientHandler::Load);
+}
+
+HOOK CHookManager::GetSampInfo()
+{
+	__asm
+	{
+		mov g_SAMP,eax
+		pushad
+		call LoadRakClient
+	}
+	// remove hook now that we got the address.
+	CMem::Cpy((void*)sampInfoAddr, "\x8B\x88\xD9\x03\x00\x00", 6); // mov ecx,[eax+000003D9]
+	__asm
+	{
+		popad
+		jmp[sampInfoAddr]
+	}
+}
 
 HOOK CHookManager::GravityHook()
 {

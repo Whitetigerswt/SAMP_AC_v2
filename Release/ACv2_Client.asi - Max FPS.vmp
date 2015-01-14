@@ -2,7 +2,7 @@
 <Document>
 	<Protection
 		InputFileName=".\ACv2_Client.asi"
-		Options="8136"
+		Options="6088"
 		CheckKernelDebugger="true"
 		CompressionMode="1"
 		WaterMarkName="ac"

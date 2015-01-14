@@ -1,5 +1,4 @@
 #include "CD3D9DeviceProxy.h"
-#include "../Network/Network.h"
 #include "CMessageProxy.h"
 #include "../CDirectX.h"
 #include "../Misc.h"
@@ -92,7 +91,7 @@ HRESULT CD3D9DeviceProxy::Reset(D3DPRESENT_PARAMETERS* pPresentationParameters)
 
 HRESULT CD3D9DeviceProxy::Present(CONST RECT* pSourceRect,CONST RECT* pDestRect,HWND hDestWindowOverride,CONST RGNDATA* pDirtyRegion) 
 {
-	DWORD currentTime = timeGetTime();
+	DWORD currentTime = GetTickCount();
 	if ((float)(currentTime - LastFrameTime) < (float)(1000 / Misc::GetFPSLimit()))
 	{
 		return 0;

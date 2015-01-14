@@ -2,12 +2,12 @@
 
 #include <string>
 #include <vector>
-#include "Network/CClientSocketInfo.h"
+
 
 class CAntiCheat
 {
 public:
-	CAntiCheat(CClientSocketInfo* socketInfo, unsigned int playerid);
+	CAntiCheat(unsigned int playerid);
 	~CAntiCheat();
 
 	// PURPOSE: Callback for when a new process or module is detected on the clients system.
@@ -130,10 +130,11 @@ public:
 	// REQUIRES: NULL
 	void OnScreenshotTaken();
 
-	CClientSocketInfo* GetConnectionInfo();
+	// PURPOSE: Get player's ID.
+	// REQUIRES: NULL
+	int GetID() { return ID; }
 
 private:
-	CClientSocketInfo* m_pSockInfo;
 
 	// PURPOSE: Remember the player's playerID.
 	int ID;

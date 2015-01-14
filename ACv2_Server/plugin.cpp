@@ -1,12 +1,15 @@
 #include "plugin.h"
 #include "Utility.h"
-#include "../Shared/RakNet/BitStream.h"
+#include "Network/BitStream.h"
 #include "../Shared/Network/CRPC.h"
 #include "GDK/sampgdk.h"
 #include "GDK/sampgdk.h"
 #include "Callback.h"
 #include "SDK/samp-sdk/amx/amx.h"
 #include "CServerUpdater.h"
+#include "CAntiCheatHandler.h"
+
+void **PluginData;
 
 cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 {
@@ -17,7 +20,7 @@ cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 	if (!IsPlayerConnected(pParams[1])) return 0;
 
 	// Return the result if the player is connected to AC or not.
-	return Network::IsPlayerConnectedToAC(pParams[1]);
+	return CAntiCheatHandler::IsConnected(pParams[1]);
 }
 
 cell AMX_NATIVE_CALL MD5_MemoryProc(AMX* pAmx, cell* pParams)
@@ -35,12 +38,16 @@ cell AMX_NATIVE_CALL MD5_MemoryProc(AMX* pAmx, cell* pParams)
 	// Prepare to send the info to the client.
 	RakNet::BitStream bitStream;
 
+	// Write header to packet
+	bitStream.Write((unsigned char)PACKET_RPC);
+	bitStream.Write(MD5_MEMORY_REGION);
+
 	// All cell's need to be casted as an int. 
-	bitStream.WriteCasted<int, cell>(pParams[2]);
-	bitStream.WriteCasted<int, cell>(pParams[3]);
+	bitStream.Write((int)pParams[2]);
+	bitStream.Write((int)pParams[3]);
 
 	// Send the RPC to the client and return.
-	return Network::PlayerSendRPC(MD5_MEMORY_REGION, pParams[1], &bitStream);
+	return Network::PlayerSend(pParams[1], &bitStream);
 }
 
 cell AMX_NATIVE_CALL SetPlayerCanEnableACProc(AMX* pAmx, cell* pParams)
@@ -75,7 +82,7 @@ cell AMX_NATIVE_CALL GetPlayerHardwareIDProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(3, "GetPlayerHardwareID");
 
 	// Get the player's CAntiCheat class pointer.
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -94,7 +101,7 @@ cell AMX_NATIVE_CALL TogglePlayerSwitchReloadProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(2, "TogglePlayerSwitchReload");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -110,7 +117,7 @@ cell AMX_NATIVE_CALL SetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(2, "SetPlayerFPSLimit");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected and the frame limit isn't 0
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL || pParams[2] == 0) return 0;
@@ -120,9 +127,15 @@ cell AMX_NATIVE_CALL SetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 
 	// Create the RPC data to send to the client.
 	RakNet::BitStream bsData;
-	bsData.WriteCasted<int, cell>(pParams[2]);
 
-	return Network::PlayerSendRPC(SET_FRAME_LIMIT, pParams[1], &bsData);
+	// Write header to packet
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(SET_FRAME_LIMIT);
+
+	// Write new frame limit to packet
+	bsData.Write((int)pParams[2]);
+
+	return Network::PlayerSend(pParams[1], &bsData);
 }
 
 cell AMX_NATIVE_CALL GetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
@@ -131,7 +144,7 @@ cell AMX_NATIVE_CALL GetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(1, "GetPlayerFPSLimit");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected and connected to AC
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -146,7 +159,7 @@ cell AMX_NATIVE_CALL SetPlayerCrouchBugProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(2, "SetPlayerCrouchBug");
 
 	// Get CAntiCheat pointer.
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -162,7 +175,7 @@ cell AMX_NATIVE_CALL TogglePlayerLiteFootProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(2, "TogglePlayerLiteFoot");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -179,7 +192,7 @@ cell AMX_NATIVE_CALL GetPlayerLiteFootProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(1, "GetPlayerLiteFoot");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -194,7 +207,7 @@ cell AMX_NATIVE_CALL GetPlayerCrouchBugProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(1, "GetPlayerCrouchBug");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -209,7 +222,7 @@ cell AMX_NATIVE_CALL GetPlayerSwitchReloadProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(1, "GetPlayerSwitchReload");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -223,7 +236,7 @@ cell AMX_NATIVE_CALL TogglePlayerUnlimitedSprintProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(2, "TogglePlayerUnlimitedSprint");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -239,7 +252,7 @@ cell AMX_NATIVE_CALL GetPlayerUnlimitedSprintProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(1, "GetPlayerUnlimitedSprint");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -253,7 +266,7 @@ cell AMX_NATIVE_CALL TogglePlayerMacroLimitsProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(2, "TogglePlayerMacroLimits");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -269,7 +282,7 @@ cell AMX_NATIVE_CALL GetPlayerMacroLimitsProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(1, "GetPlayerMacroLimits");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -283,7 +296,7 @@ cell AMX_NATIVE_CALL TogglePlayerSprintOnAllSurfacesProc(AMX* pAmx, cell* pParam
 	CHECK_PARAMS(2, "TogglePlayerSprintOnAllSurfaces");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -299,7 +312,7 @@ cell AMX_NATIVE_CALL GetPlayerSprintOnAllSurfacesProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(1, "GetPlayerSprintOnAllSurfaces");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -313,7 +326,7 @@ cell AMX_NATIVE_CALL TogglePlayerVehicleBlipsProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(2, "TogglePlayerVehicleBlips");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -329,7 +342,7 @@ cell AMX_NATIVE_CALL GetPlayerVehicleBlipsProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(1, "GetPlayerVehicleBlips");
 
 	// Get CAntiCheat pointer
-	CAntiCheat* ac = Network::GetPlayerFromPlayerid(pParams[1]);
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
@@ -344,9 +357,6 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
-	// Handle network related processing.
-	Network::Process();
-
 	// Handle sampGDK ticking.
 	return sampgdk::ProcessTick();
 }
@@ -358,6 +368,8 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 
 	// Initialize
 	Utility::Initialize(ppData);
+
+	PluginData = ppData;
 
 	// Print out that we've loaded successfully.
 	Utility::Printf("SA-MP Anti-Cheat v%0.2f Has loaded successfully.", CURRENT_VERSION);
@@ -408,6 +420,14 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAmx)
 {
 	// Add a new AMX script to our list of running AMX files.
 	Callback::GetAMXList().push_back(pAmx);
+
+	static bool bFirst = false;
+	if (!bFirst)
+	{
+		Network::Initialize(PluginData);
+
+		bFirst = true;
+	}
 	
 	// Allow the new loaded script to use our plugin's functions.
 	return amx_Register(pAmx, PluginNatives, -1);

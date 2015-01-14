@@ -2,13 +2,14 @@
 #include "../CLog.h"
 #include "../CLoader.h"
 #include "../Misc.h"
-#include "Network.h"
 #include "../Misc.h"
 #include "../VMProtectSDK.h"
 #include "../Addresses.h"
 #include "../CClientUpdater.h"
 #include "../CHookManager.h"
 #include "../CMem.h"
+#include "../../Shared/Network/Network.h"
+#include "CRakClientHandler.h"
 
 #include <Boost\thread.hpp>
 
@@ -28,15 +29,34 @@ void CRPCCallback::Initialize()
 	CRPC::Add(TOGGLE_SPRINT_ALL_SURFACES, ToggleSprintOnAllSurfaces);
 	CRPC::Add(TOGGLE_VEHICLE_BLIPS, ToggleVehicleBlips);
 
-	CHookManager::SetConnectPatches();
-	boost::thread ResendFilesThread(&ResendFileInformation);
+	boost::thread connectThread(&OnConnect);
 }
 
-void CRPCCallback::ResendFileInformation()
+void CRPCCallback::OnConnect()
+{
+	CLog log = CLog("log.txt");
+
+	CHookManager::SetConnectPatches();
+	while (!CRakClientHandler::IsConnected())
+	{
+		log.Write("sleeping...");
+		Sleep(5);
+	}
+
+	SendInitialInfo();
+	log.Write("sent intial info");
+	ResendFileInformation();
+}
+
+void CRPCCallback::SendInitialInfo()
 {
 	// Send the server our hardware ID incase they wanna ban us.
 	RakNet::BitStream bsData;
-	
+
+	// Add header info
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(ON_INITIAL_INFO);
+
 	// Get the number of required bytes in the hardwareID.
 	INT nSize = VMProtectGetCurrentHWID(NULL, 0);
 
@@ -47,17 +67,21 @@ void CRPCCallback::ResendFileInformation()
 	VMProtectGetCurrentHWID(pBuf, nSize);
 
 	// Write the hardwareID to the packet
-	bsData.Write(pBuf);
+	bsData.Write((unsigned short)nSize);
+	bsData.Write((const char*)pBuf, nSize);
 
 	// Write the user's AC version to the packet.
 	bsData.Write(CURRENT_MAJOR_VERSION);
 
 	// Send the info to the server.
-	Network::SendRPC(ON_INITIAL_INFO, &bsData);
-	
-	// Free memory.
-	delete[] pBuf; 
+	CRakClientHandler::CustomSend(&bsData, SYSTEM_PRIORITY, RELIABLE);
 
+	// Free memory.
+	delete[] pBuf;
+}
+
+void CRPCCallback::ResendFileInformation()
+{
 	// Send the server the processes and modules that were loaded while we weren't connected.
 	CLoader::Processes.ResendFiles();
 	CLoader::Modules.ResendFiles();
@@ -76,12 +100,18 @@ void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)
 
 		// Send the result of the hash back to the server.
 		RakNet::BitStream bitStream;
+
+		// Add header info to packet
+		bitStream.Write((unsigned char)PACKET_RPC);
+		bitStream.Write(ON_MD5_CALCULATED);
+
 		bitStream.Write(address);
 		bitStream.Write(size);
-		bitStream.Write(md5.c_str());
+		bitStream.Write((unsigned short)md5.length());
+		bitStream.Write((const char*)md5.c_str(), md5.length());
 
 		// Send the RPC to the server.
-		Network::SendRPC(ON_MD5_CALCULATED, &bitStream);
+		CRakClientHandler::CustomSend(&bitStream);
 	}
 }
 
@@ -91,7 +121,7 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 	unsigned char file[MAX_PATH+1];
 
 	// Read data sent to us by the server (which in this case is the file name)
-	if (bsData.Read(file))
+	if (bsData.ReadString(file))
 	{
 		// MD5 that file and store the result.
 		std::string result = CLoader::GtaDirectory.MD5_Specific_File((char*)file);
@@ -103,15 +133,23 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 		int i = szFile.find("$(GtaDirectory)/");
 
 		RakNet::BitStream bsData;
+
+		// Add header info to packet.
+		bsData.Write((unsigned char)PACKET_RPC);
+		bsData.Write(ON_FILE_CALCULATED);
 		
 		// Cut out the $(GtaDirectory) macro when we send it back to the server.
-		bsData.Write(szFile.substr(i+16).c_str());
+		std::string szFileInGTADirectory = std::string(szFile.substr(i + 16));
+
+		bsData.Write((unsigned short)szFileInGTADirectory.length());
+		bsData.Write((const char*)szFileInGTADirectory.c_str(), szFileInGTADirectory.length());
 
 		// and of course, send the MD5 as a const char*
-		bsData.Write(result.c_str());
+		bsData.Write((unsigned short)result.length());
+		bsData.Write((const char*)result.c_str(), result.length());
 
 		// Call the RPC.
-		Network::SendRPC(ON_FILE_CALCULATED, &bsData);
+		CRakClientHandler::CustomSend(&bsData);
 	}
 }
 
@@ -170,15 +208,14 @@ void CRPCCallback::ToggleCrouchBug(RakNet::BitStream &bsData, int iExtra)
 
 void CRPCCallback::ExitThisProcess(RakNet::BitStream &bsData, int iExtra)
 {
-	// Disconnect from the network, and exit the process.
-	Network::Disconnect();
 	ExitProcess(0);
 }
 
 void CRPCCallback::VersionNotCompatible(RakNet::BitStream &bsData, int iExtra)
 {
 	// Disconnect from the server.
-	Network::Disconnect();
+	//Network::Disconnect();
+	CRakClientHandler::Disconnect();
 }
 
 void CRPCCallback::ToggleLiteFoot(RakNet::BitStream &bsData, int iExtra)

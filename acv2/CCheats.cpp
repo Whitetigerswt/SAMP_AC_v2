@@ -2,7 +2,9 @@
 #include "md5.h"
 #include "../Shared/Network/CRPC.h"
 #include "Network\Network.h"
+#include "Network\CRakClientHandler.h"
 
+#include <Windows.h>
 #include <string>
 
 CCheats::CCheats()
@@ -107,20 +109,26 @@ bool CCheats::FileExists(std::string name)
 
 void CCheats::AddFile(std::string file)
 {
-	// Add the file to our list of executed files.
-	m_FilePaths.push_back(file);
+	if (!file.empty())
+	{
+		// Add the file to our list of executed files.
+		m_FilePaths.push_back(file);
 
-	// Send the info to the server.
-	OnFileExecuted(file.c_str(), GetFileMD5(file.c_str()).c_str());
+		// Send the info to the server.
+		OnFileExecuted(file.c_str(), GetFileMD5(file.c_str()).c_str());
+	}
 }
 
 void CCheats::AddFile(std::string file, std::string md5)
 {
-	// Add the file to our list of executed files.
-	m_FilePaths.push_back(file);
+	if (!file.empty() && !md5.empty())
+	{
+		// Add the file to our list of executed files.
+		m_FilePaths.push_back(file);
 
-	// Send the info to the server.
-	OnFileExecuted(file.c_str(), md5.c_str());
+		// Send the info to the server.
+		OnFileExecuted(file.c_str(), md5.c_str());
+	}
 }
 
 void CCheats::OnFileExecuted(const char* file, const char* md5)
@@ -139,11 +147,18 @@ void CCheats::OnFileExecuted(const char* file, const char* md5)
 
 		// Prepare to send the info to the server.
 		RakNet::BitStream bitStream;
-		bitStream.Write(szFile.c_str());
-		bitStream.Write(md5);
+
+		// Add header info
+		bitStream.Write((unsigned char)PACKET_RPC);
+		bitStream.Write(ON_FILE_EXECUTED);
+
+		bitStream.Write((unsigned short)szFile.length());
+		bitStream.Write((const char*)szFile.c_str(), szFile.length());
+		bitStream.Write((unsigned short)strlen(md5));
+		bitStream.Write((const char*)md5, strlen(md5));
 
 		// Send the RPC to the server.
-		Network::SendRPC(ON_FILE_EXECUTED, &bitStream);
+		CRakClientHandler::CustomSend(&bitStream);
 	}
 	return;
 }
@@ -153,7 +168,10 @@ void CCheats::ResendFiles()
 	// Loop through the file collection
 	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
 	{
+		if (i->empty()) continue;
+
 		// Don't deal with annoying pointers.
+
 		std::string file(i->c_str());
 
 		// Re-send the info to the server that the file was just executed.
