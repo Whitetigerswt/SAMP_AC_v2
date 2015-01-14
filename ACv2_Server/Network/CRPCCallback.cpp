@@ -5,6 +5,7 @@
 #include "../CAntiCheatHandler.h"
 #include "../GDK/sampgdk.h"
 
+#include <stdio.h>
 #include <cstring>
 
 #ifndef MAX_PATH
