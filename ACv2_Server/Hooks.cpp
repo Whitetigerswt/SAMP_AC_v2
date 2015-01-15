@@ -81,6 +81,8 @@ int AMXAPI HOOK_amx_Register(AMX *amx, AMX_NATIVE_INFO *nativelist, int number)
 	return amx_Register(amx, nativelist, number);
 }
 
+typedef BYTE(*getPacketId)(Packet *p);
+
 // GetPacketID hook
 BYTE GetPacketID(Packet *p)
 {
@@ -117,7 +119,7 @@ static BYTE HOOK_GetPacketID(Packet *p)
 		return 0xFF;
 	}
 
-	return GetPacketID(p);
+	return ((getPacketId)GetPacketID_hook.GetTrampoline())(p);
 }
 
 bool FindAddresses()
@@ -135,14 +137,14 @@ void InstallHooks()
 {
 
 	amx_Register_hook.Install((void*)*(unsigned long*)((unsigned long)pAMXFunctions + (PLUGIN_AMX_EXPORT_Register * 4)), (void*)HOOK_amx_Register);
-	if (FindAddresses())
+	if (FUNC_GetPacketID != NULL)
 	{
 		CRPCCallback::Initialize();
 		GetPacketID_hook.Install((void*)FUNC_GetPacketID, (void*)HOOK_GetPacketID);
 	}
 	else
 	{
-		Utility::Printf("Error: Invalid SA-MP server version found.");
+		Utility::Printf("Error: Invalid SA-MP server version found. (Or YSF loaded before sampac)");
 	}
 }
 

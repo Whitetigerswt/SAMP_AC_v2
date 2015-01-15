@@ -8,6 +8,7 @@
 #include "SDK/samp-sdk/amx/amx.h"
 #include "CServerUpdater.h"
 #include "CAntiCheatHandler.h"
+#include "Hooks.h"
 
 void **PluginData;
 
@@ -369,6 +370,9 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Initialize
 	Utility::Initialize(ppData);
 
+	// Find addresses to hook
+	FindAddresses();
+
 	PluginData = ppData;
 
 	// Print out that we've loaded successfully.
@@ -423,7 +427,8 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAmx)
 
 	static bool bFirst = false;
 	if (!bFirst)
-	{
+	{	
+		InstallHooks();
 		Network::Initialize(PluginData);
 
 		bFirst = true;

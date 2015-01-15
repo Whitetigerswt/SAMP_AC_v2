@@ -1,6 +1,5 @@
 #include "Utility.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
-#include "Hooks.h"
 
 #include <ctime>
 #include <cstdarg>
@@ -31,8 +30,6 @@ namespace Utility
 #endif
 		pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 		logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
-
-		InstallHooks();
 	}
 
 	char* GetServerPath()
