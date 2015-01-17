@@ -10,29 +10,30 @@
 #include "CRPCCallback.h"
 #include "CRakClientHandler.h"
 
+#include "../CLog.h"
+
 static RakClient* client = NULL;
 static stSAMP* samp = NULL;
 
 void CRakClientHandler::Load()
 {
-	// Get the main SAMP structure.
+	// get samp struct
 	samp = stGetSampInfo();
 
-	// Get the raknet interfaces.
-	client = new RakClient(samp->pRakClientInterface);
-	samp->pRakClientInterface = new HookedRakClientInterface(client);
-
-	// Even though we have the raknet interfaces, doesn't mean it's connected yet.
-	// Make sure it's connected before we continue.
+	// Make sure rak client interface is initialized
 	while (samp->pRakClientInterface == NULL)
 	{
 		Sleep(5);
 	}
+
+	// Get the raknet interfaces.
+	client = new RakClient(samp->pRakClientInterface);
+	samp->pRakClientInterface = new HookedRakClientInterface(client);
 }
 
 void CRakClientHandler::CustomSend(RakNet::BitStream *bs, PacketPriority priority, PacketReliability reliability, char orderingChannel)
 {
-	if (client != NULL && client->GetRakClientInterface()->IsConnected())
+	if (IsConnected())
 	{
 		client->Send(bs, priority, reliability, orderingChannel);
 	}

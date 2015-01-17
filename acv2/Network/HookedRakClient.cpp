@@ -59,6 +59,8 @@ bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority
 	if (packetId == ID_AUTH_KEY)
 	{
 		CRPCCallback::Initialize();
+		priority = LOW_PRIORITY;
+		reliability = RELIABLE;
 	}
 
 	return client->GetRakClientInterface()->Send( bitStream, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel );

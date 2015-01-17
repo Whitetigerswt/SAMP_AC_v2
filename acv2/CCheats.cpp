@@ -168,7 +168,7 @@ void CCheats::ResendFiles()
 	// Loop through the file collection
 	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
 	{
-		if (i->empty()) continue;
+		if (!i->empty()) continue;
 
 		// Don't deal with annoying pointers.
 

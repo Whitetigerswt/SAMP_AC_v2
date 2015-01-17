@@ -83,7 +83,7 @@ void CProcessList::Scan()
 					if (processpath != NULL) 
 					{
 						std::string path(processpath);
-						if (!DoesFileExist(path))
+						if (!DoesFileExist(path) && !path.empty())
 						{
 							// Add process to the process list.
 							AddFile(path);

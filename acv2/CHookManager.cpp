@@ -348,7 +348,7 @@ void CHookManager::Load()
 
 		// Find address to stSAMP struct (So we can hook RakClient later)
 		//samp = FindPattern("\x8B\x80\xD9\x03\x00\x00\x8B\x48\x08\x85\xC9", "xxxxxxxxxxx");
-		samp = FindPattern("\x8B\x88\xD9\x03\x00\x00\x8B\x51\x14\x8B\x4A\x22\x39\x19", "xxxxxxxxxxxxxx");
+		samp = FindPattern("\x8B\x86\xD9\x03\x00\x00\x8B\x40\x14\x85\xC0\x74", "xxxxxxxxxxxx");
 
 		if (samp != 0 && g_SAMP == NULL)
 		{
@@ -600,12 +600,12 @@ HOOK CHookManager::GetSampInfo()
 {
 	__asm
 	{
-		mov g_SAMP,eax
+		mov g_SAMP,esi
 		pushad
 		call LoadRakClient
 	}
 	// remove hook now that we got the address.
-	CMem::Cpy((void*)sampInfoAddr, "\x8B\x88\xD9\x03\x00\x00", 6); // mov ecx,[eax+000003D9]
+	CMem::Cpy((void*)sampInfoAddr, "\x8B\x86\xD9\x03\x00\x00", 6); // mov eax,[esi+000003D9]
 	__asm
 	{
 		popad
@@ -704,15 +704,32 @@ HOOK CHookManager::SetCursorPosHook()
 
 HOOK CHookManager::AimHook()
 {
+
 	if (VAR_CURRENT_WEAPON <= 15)
 	{
-		__asm
+		if (ENTER_CAR_KEY > 0)
 		{
-			xor al,al
-			ret
+			// Allow aiming
+			__asm
+			{
+				cmp word ptr[ecx + 0Ch], 0h
+				setne al
+				ret
+			}
+		}
+
+		else if (VAR_CPED_STATE != 61 || FIRE_KEY > 0)
+		{
+			// Disallow aiming
+			__asm
+			{
+				xor al, al
+				ret
+			}
 		}
 	}
 
+	// Allow aiming
 	__asm
 	{
 		cmp word ptr[ecx + 0Ch], 0h
@@ -785,8 +802,11 @@ HOOK CHookManager::KeyPress()
 		// If pressing sprint and trying to press fire or aim key
 		if (bSlideFix)
 		{
-			// Disable them to prevent sliding
-			AIM_KEY = 0;
+			/*if (ENTER_CAR_KEY == 0)
+			{
+				// Disable them to prevent sliding
+				AIM_KEY = 0;
+			}*/
 			
 			// Though allow punching with melee weapons
 			if (VAR_CURRENT_WEAPON > 15)
@@ -831,7 +851,7 @@ HOOK CHookManager::KeyPress()
 	// Fix weird slide related to switch weapons
 
 	// if sprinting and pressed fire key while holding a melee weapon
-	if (PLAYER_POINTER != 0 && VAR_CPED_STATE == 154 && FIRE_KEY == 255 && VAR_CURRENT_WEAPON < 16)
+	if (PLAYER_POINTER != 0 && VAR_CPED_STATE == 154 && FIRE_KEY > 0 && VAR_CURRENT_WEAPON < 16)
 	{
 		iLastTick = GetTickCount()+350;
 	}
