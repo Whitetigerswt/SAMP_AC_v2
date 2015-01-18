@@ -60,4 +60,5 @@ public:
 	virtual PlayerIndex GetPlayerIndex( void );
 private:
 	RakClient* client;
+	void SendInitialInfo();
 };

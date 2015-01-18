@@ -3,9 +3,7 @@
 #include "../CLoader.h"
 #include "../Misc.h"
 #include "../Misc.h"
-#include "../VMProtectSDK.h"
 #include "../Addresses.h"
-#include "../CClientUpdater.h"
 #include "../CHookManager.h"
 #include "../CMem.h"
 #include "../../Shared/Network/Network.h"
@@ -34,50 +32,13 @@ void CRPCCallback::Initialize()
 
 void CRPCCallback::OnConnect()
 {
-	CLog log = CLog("log.txt");
-
 	CHookManager::SetConnectPatches();
 	while (!CRakClientHandler::IsConnected())
 	{
-		log.Write("sleeping...");
 		Sleep(5);
 	}
 
-	SendInitialInfo();
-	log.Write("sent intial info");
 	ResendFileInformation();
-}
-
-void CRPCCallback::SendInitialInfo()
-{
-	// Send the server our hardware ID incase they wanna ban us.
-	RakNet::BitStream bsData;
-
-	// Add header info
-	bsData.Write((unsigned char)PACKET_RPC);
-	bsData.Write(ON_INITIAL_INFO);
-
-	// Get the number of required bytes in the hardwareID.
-	INT nSize = VMProtectGetCurrentHWID(NULL, 0);
-
-	// Allocate a buffer.
-	char *pBuf = new char[nSize];
-
-	// Get the hardware ID.
-	VMProtectGetCurrentHWID(pBuf, nSize);
-
-	// Write the hardwareID to the packet
-	bsData.Write((unsigned short)nSize);
-	bsData.Write((const char*)pBuf, nSize);
-
-	// Write the user's AC version to the packet.
-	bsData.Write(CURRENT_MAJOR_VERSION);
-
-	// Send the info to the server.
-	CRakClientHandler::CustomSend(&bsData, SYSTEM_PRIORITY, RELIABLE);
-
-	// Free memory.
-	delete[] pBuf;
 }
 
 void CRPCCallback::ResendFileInformation()

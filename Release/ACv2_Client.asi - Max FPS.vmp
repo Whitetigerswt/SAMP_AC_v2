@@ -723,6 +723,334 @@
 				MapAddress="CMessageProxy::GetAltTabbed(void)"
 				CompilationType="1"
 			/>
+			<Procedure
+				MapAddress="RakNet::BitStream::Write(char const *,int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="RakNet::BitStream::ReadString(unsigned char *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="RakNet::BitStream::WriteBits(unsigned char const *,int,bool)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="RakNet::BitStream::Read&lt;unsigned short&gt;(unsigned short &amp;)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CRPC::Process(unsigned short,class RakNet::BitStream &amp;,int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="LoadRakClient(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::GetSampInfo(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::AimHook(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CMem::Cpy(void *,void const *,int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CModuleSecurity::HOOK_LoadLibrary(char const *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CModuleSecurity::AddAllowedModule(char const *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CModuleSecurity::AddAllowedModules(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="Misc::GetMacroLocks(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="Misc::GetVehicleBlips(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CRakClientHandler::Load(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CRakClientHandler::CustomSend(class RakNet::BitStream *,enum PacketPriority,enum PacketReliability,char)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::OnConnect(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::ToggleMacroLimits(class RakNet::BitStream &amp;,int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::ToggleSprintOnAllSurfaces(class RakNet::BitStream &amp;,int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CRPCCallback::ToggleVehicleBlips(class RakNet::BitStream &amp;,int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="RakNet::BitStream::Read&lt;int&gt;(int &amp;)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="RakNet::BitStream::Write&lt;float&gt;(float)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="RakNet::BitStream::Read&lt;unsigned char&gt;(unsigned char &amp;)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="FindPattern(char *,char *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="RakNet::BitStream::Write&lt;unsigned short&gt;(unsigned short)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="RakNet::BitStream::Write&lt;unsigned char&gt;(unsigned char)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="RakNet::BitStream::Write&lt;int&gt;(int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::`vector deleting destructor&apos;(unsigned int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::Connect(char const *,unsigned short,unsigned short,unsigned int,int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::Disconnect(unsigned int,unsigned char)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::InitializeSecurity(char const *,char const *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::SetPassword(char const *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::HasPassword(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::Send(char const *,int,int,int,char)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::SendInitialInfo(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::Send(class RakNet::BitStream *,int,int,char)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::Receive(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::DeallocatePacket(struct Packet *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::PingServer(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::PingServer(char const *,unsigned short,unsigned short,bool)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetAveragePing(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetLastPing(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetLowestPing(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetPlayerPing(struct PlayerID)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::StartOccasionalPing(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::StopOccasionalPing(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::IsConnected(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetSynchronizedRandomInteger(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GenerateCompressionLayer(unsigned int * const,bool)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::DeleteCompressionLayer(bool)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::RegisterAsRemoteProcedureCall(int *,void (*)(struct RPCParameters *))"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::RegisterClassMemberRPC(int *,void *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::UnregisterAsRemoteProcedureCall(int *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::RPC(int *,char const *,unsigned int,int,int,char,bool)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::RPC(int *,class RakNet::BitStream *,int,int,char,bool)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::SetTrackFrequencyTable(bool)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetSendFrequencyTable(unsigned int * const)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetCompressionRatio(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetDecompressionRatio(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::AttachPlugin(void *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::DetachPlugin(void *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetStaticServerData(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::SetStaticServerData(char const *,int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetStaticClientData(struct PlayerID)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::SetStaticClientData(struct PlayerID,char const *,int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::SendStaticClientDataToServer(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetServerID(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetPlayerID(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetInternalID(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::PlayerIDToDottedIP(struct PlayerID)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::PushBackPacket(struct Packet *,bool)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::SetRouterInterface(void *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::RemoveRouterInterface(void *)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::SetTimeoutTime(unsigned int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::SetMTUSize(int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetMTUSize(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::AllowConnectionResponseIPMigration(bool)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::AdvertiseSystem(char const *,unsigned short,char const *,int)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetStatistics(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::ApplyNetworkSimulator(double,unsigned short,unsigned short)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::IsNetworkSimulatorActive(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="HookedRakClientInterface::GetPlayerIndex(void)"
+				CompilationType="1"
+			/>
 		</Procedures>
 	</Protection>
 	<DLLBox

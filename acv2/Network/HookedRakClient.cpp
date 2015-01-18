@@ -8,6 +8,8 @@
 #include "CRakClientHandler.h"
 #include "../s0beit/samp.h"
 #include "../CLog.h"
+#include "../VMProtectSDK.h"
+#include "../CClientUpdater.h"
 
 HookedRakClientInterface::HookedRakClientInterface(RakClient * rakclient) : client(rakclient)
 {
@@ -49,6 +51,38 @@ bool HookedRakClientInterface::Send( const char *data, const int length, int pri
 	return client->GetRakClientInterface()->Send( data, length, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel );
 }
 
+void HookedRakClientInterface::SendInitialInfo()
+{
+	// Send the server our hardware ID incase they wanna ban us.
+	RakNet::BitStream bsData;
+
+	// Add header info
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(ON_INITIAL_INFO);
+
+	// Get the number of required bytes in the hardwareID.
+	INT nSize = VMProtectGetCurrentHWID(NULL, 0);
+
+	// Allocate a buffer.
+	char *pBuf = new char[nSize];
+
+	// Get the hardware ID.
+	VMProtectGetCurrentHWID(pBuf, nSize);
+
+	// Write the hardwareID to the packet
+	bsData.Write((unsigned short)nSize);
+	bsData.Write((const char*)pBuf, nSize);
+
+	// Write the user's AC version to the packet.
+	bsData.Write(CURRENT_MAJOR_VERSION);
+
+	// Send the info to the server.
+	Send(&bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
+
+	// Free memory.
+	delete[] pBuf;
+}
+
 bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority, int reliability, char orderingChannel )
 {
 	BYTE packetId;
@@ -59,8 +93,6 @@ bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority
 	if (packetId == ID_AUTH_KEY)
 	{
 		CRPCCallback::Initialize();
-		priority = LOW_PRIORITY;
-		reliability = RELIABLE;
 	}
 
 	return client->GetRakClientInterface()->Send( bitStream, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel );
@@ -89,6 +121,10 @@ Packet* HookedRakClientInterface::Receive( void )
 					// Process the RPC
 					CRPC::Process(usRpcId, bsData);
 				}
+			}
+			case ID_CONNECTION_REQUEST_ACCEPTED:
+			{
+				SendInitialInfo();
 			}
 		}
 	}
