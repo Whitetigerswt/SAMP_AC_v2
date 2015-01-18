@@ -1,5 +1,4 @@
 #include "CDirectX.h"
-#include "CLog.h"
 #include "Addresses.h"
 #include "CMem.h"
 #include "Misc.h"

@@ -1,5 +1,4 @@
 #include "CSprite.h"
-#include "CLog.h"
 #include "Addresses.h"
 
 Sprite::Sprite()

@@ -8,7 +8,6 @@
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "Addresses.h"
-#include "CLog.h"
 #include "Network\CRakClientHandler.h"
 
 #include <Boost\filesystem.hpp>

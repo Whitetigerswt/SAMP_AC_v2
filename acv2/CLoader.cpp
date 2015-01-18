@@ -9,7 +9,6 @@
 #include "VMProtectSDK.h"
 #include "../Shared/Network/CRPC.h"
 #include "CCrashHandler.h"
-#include "CLog.h"
 #include "Detours\detours.h"
 #include "CModuleSecurity.h"
 #include "Network\CRakClientHandler.h"

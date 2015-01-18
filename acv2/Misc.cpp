@@ -1,6 +1,5 @@
 #include "Misc.h"
 #include "md5.h"
-#include "CLog.h"
 #include "Addresses.h"
 
 #include <winternl.h>

@@ -1,5 +1,4 @@
 #include "CRPCCallback.h"
-#include "../CLog.h"
 #include "../CLoader.h"
 #include "../Misc.h"
 #include "../Misc.h"

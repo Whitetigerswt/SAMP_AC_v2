@@ -10,8 +10,6 @@
 #include "CRPCCallback.h"
 #include "CRakClientHandler.h"
 
-#include "../CLog.h"
-
 static RakClient* client = NULL;
 static stSAMP* samp = NULL;
 

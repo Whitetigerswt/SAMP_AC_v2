@@ -11,7 +11,6 @@
 #include "PatternScan.h"
 #include "DirectX Hooks\CMessageProxy.h"
 #include "s0beit\samp.h"
-#include "CLog.h"
 #include "Network\CRakClientHandler.h"
 
 // Small children look away, this is gonna get ugly...
