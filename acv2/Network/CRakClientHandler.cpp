@@ -15,6 +15,8 @@
 static RakClient* client = NULL;
 static stSAMP* samp = NULL;
 
+bool CRakClientHandler::isACServer = false;
+
 void CRakClientHandler::Load()
 {
 	// get samp struct
@@ -47,6 +49,9 @@ bool CRakClientHandler::IsConnected()
 	if (!client->GetRakClientInterface())
 		return false;
 
+	if (!isACServer)
+		return false;
+
 	return client->GetRakClientInterface()->IsConnected();
 }
 
@@ -59,4 +64,9 @@ void CRakClientHandler::Disconnect()
 		return;
 
 	return client->GetRakClientInterface()->Disconnect(500);
+}
+
+void CRakClientHandler::SetConnected(bool toggle)
+{
+	isACServer = toggle;
 }

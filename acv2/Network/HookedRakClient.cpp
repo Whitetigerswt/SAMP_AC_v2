@@ -28,6 +28,7 @@ bool HookedRakClientInterface::Connect( const char* host, unsigned short serverP
 
 void HookedRakClientInterface::Disconnect( unsigned int blockDuration, unsigned char orderingChannel )
 {
+	CRakClientHandler::SetConnected(false);
 	client->GetRakClientInterface()->Disconnect(blockDuration, orderingChannel);
 }
 
@@ -112,6 +113,12 @@ Packet* HookedRakClientInterface::Receive( void )
 		{
 			case PACKET_RPC:
 			{
+
+				if (!CRakClientHandler::IsConnected())
+				{
+					CRakClientHandler::SetConnected(true);
+				}
+
 				// Read the data sent
 				RakNet::BitStream bsData(&p->data[1], p->length, false);
 				unsigned short usRpcId;

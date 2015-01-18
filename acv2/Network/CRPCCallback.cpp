@@ -32,12 +32,13 @@ void CRPCCallback::Initialize()
 
 void CRPCCallback::OnConnect()
 {
-	CHookManager::SetConnectPatches();
 	while (!CRakClientHandler::IsConnected())
 	{
+		// note: if the server is NOT an AC server, the AC will be stuck in this loop forever.
 		Sleep(5);
 	}
 
+	CHookManager::SetConnectPatches();
 	ResendFileInformation();
 }
 

@@ -10,6 +10,8 @@ public:
 	static void CustomSend(RakNet::BitStream *bs, PacketPriority priority = (PacketPriority)1, PacketReliability reliability = (PacketReliability)8, char orderingChannel = 0);
 	static bool IsConnected();
 	static void Disconnect();
+	static void SetConnected(bool toggle);
 
 private:
+	static bool isACServer;
 };
