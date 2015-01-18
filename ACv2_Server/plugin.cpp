@@ -370,6 +370,9 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Initialize
 	Utility::Initialize(ppData);
 
+	// hook amx_register
+	InstallAmxHooks();
+
 	// Find addresses to hook
 	FindAddresses();
 

@@ -116,10 +116,24 @@ static BYTE HOOK_GetPacketID(Packet *p)
 		}
 
 		// return invalid packet (so SA-MP doesn't process it)
-		return 0xFF;
+		if (GetPacketID_hook.GetTrampoline() == 0)
+		{
+			return 0xFF;
+		}
 	}
 
-	return ((getPacketId)GetPacketID_hook.GetTrampoline())(p);
+	// for some reason GetTrampoline only returns a useful value if YSF is loaded.
+
+	// if YSF is not loaded
+	if (GetPacketID_hook.GetTrampoline() == 0)
+	{
+		return packetId;
+	}
+	// If YSF is loaded
+	else
+	{
+		return ((getPacketId)GetPacketID_hook.GetTrampoline())(p);
+	}
 }
 
 bool FindAddresses()
@@ -133,10 +147,13 @@ bool FindAddresses()
 	return FUNC_GetPacketID > 0;
 }
 
+void InstallAmxHooks()
+{
+	amx_Register_hook.Install((void*)*(unsigned long*)((unsigned long)pAMXFunctions + (PLUGIN_AMX_EXPORT_Register * 4)), (void*)HOOK_amx_Register);
+}
+
 void InstallHooks()
 {
-
-	amx_Register_hook.Install((void*)*(unsigned long*)((unsigned long)pAMXFunctions + (PLUGIN_AMX_EXPORT_Register * 4)), (void*)HOOK_amx_Register);
 	if (FUNC_GetPacketID != NULL)
 	{
 		CRPCCallback::Initialize();

@@ -832,7 +832,7 @@
 				CompilationType="1"
 			/>
 			<Procedure
-				MapAddress="HookedRakClientInterface::`vector deleting destructor&apos;(unsigned int)"
+				MapAddress="HookedRakClientInterface::`scalar deleting destructor&apos;(unsigned int)"
 				CompilationType="1"
 			/>
 			<Procedure
@@ -1049,6 +1049,10 @@
 			/>
 			<Procedure
 				MapAddress="HookedRakClientInterface::GetPlayerIndex(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="Misc::GetAltTabState(void)"
 				CompilationType="1"
 			/>
 		</Procedures>
