@@ -6,12 +6,12 @@
 #include "../Addresses.h"
 #include "../Misc.h"
 #include "../Network/CRakClientHandler.h"
+#include "../CLog.h"
 
 #include <Boost\thread.hpp>
 
 HWND CMessageProxy::m_hWindowOrig;
 WNDPROC CMessageProxy::m_wProcOrig;
-bool CMessageProxy::AltTabbed = false;
 
 void CMessageProxy::Initialize(HWND hWindow)
 {
@@ -43,7 +43,7 @@ WNDPROC CMessageProxy::GetOriginalProcedure()
 LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	// Make sure we're connected to the AC server
-	if (CRakClientHandler::IsConnected())
+	if (CRakClientHandler::HasEverConnected())
 	{
 		UINT vKey = (UINT)wparam;
 
@@ -52,7 +52,7 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 			case WM_SYSKEYDOWN:
 			case WM_KEYDOWN:
 			{
-				if (((GetAsyncKeyState(vKey) & 0x8000) || Misc::GetMacroLocks() == false) && AltTabbed != true)
+				if ((GetAsyncKeyState(vKey) & 0x8000) || Misc::GetMacroLocks() == false)
 				{
 					return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
 				}
@@ -82,10 +82,10 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 
 				CRakClientHandler::CustomSend(&bsData);
 
-				AltTabbed = false;
+				Misc::SetAltTabState(false);
 
 				// Ignore alt tabs (allow the game to run in the background)
-				return true;
+				return false;
 			}
 
 			case WM_KILLFOCUS:
@@ -101,16 +101,18 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 
 				CRakClientHandler::CustomSend(&bsData);
 
-				AltTabbed = true;
+				Misc::SetAltTabState(true);
 
 				// Ignore alt tabs (allow the game to run in the background)
-				return true;
+				return false;
 			}
 
 			case WM_KEYUP:
 			{
+				// If pressed f8
 				if (vKey == VK_F8)
 				{
+					// Tell the server we took a screenshot
 					RakNet::BitStream bsData;
 
 					bsData.Write((unsigned char)PACKET_RPC);
@@ -124,9 +126,8 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 			{
 				if ((WORD)wparam == WA_INACTIVE)
 				{
-					AltTabbed = true;
-
-					return true;
+					Misc::SetAltTabState(true);
+					return false;
 				}
 			}
 

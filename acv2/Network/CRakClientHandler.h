@@ -11,7 +11,9 @@ public:
 	static bool IsConnected();
 	static void Disconnect();
 	static void SetConnected(bool toggle);
+	static bool HasEverConnected();
 
 private:
+	static bool everConnected;
 	static bool isACServer;
 };

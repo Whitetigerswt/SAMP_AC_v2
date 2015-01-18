@@ -14,6 +14,7 @@ static RakClient* client = NULL;
 static stSAMP* samp = NULL;
 
 bool CRakClientHandler::isACServer = false;
+bool CRakClientHandler::everConnected = false;
 
 void CRakClientHandler::Load()
 {
@@ -67,4 +68,11 @@ void CRakClientHandler::Disconnect()
 void CRakClientHandler::SetConnected(bool toggle)
 {
 	isACServer = toggle;
+	if (!everConnected)
+		everConnected = true;
+}
+
+bool CRakClientHandler::HasEverConnected()
+{
+	return everConnected;
 }
