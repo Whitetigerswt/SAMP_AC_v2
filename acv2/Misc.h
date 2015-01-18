@@ -60,4 +60,12 @@ namespace Misc
 	// REQUIRES: A pattern.
 	// REQUIRES: A mask.
 	DWORD FindPattern(char *pattern, char *mask);
+
+	// PURPOSE: Set the games state as alt tabbed
+	// REQUIRES: a state to set
+	void SetAltTabState(bool toggle);
+
+	// PURPOSE: Get the alt tab state of the game.
+	// REQUIRES: NULL
+	bool GetAltTabState();
 }

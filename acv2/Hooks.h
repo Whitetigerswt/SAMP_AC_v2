@@ -46,6 +46,9 @@
 
 #define FUNC_SetCursorPos					(BYTE*)0x74542B
 
+// slide fix patch
+#define FUNC_SlideFix						(BYTE*)0x686C2F
+
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91

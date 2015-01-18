@@ -141,6 +141,7 @@ static DWORD PauseJmpBack = 0x576C2D;
 static DWORD SprintHookJmpBack = 0x60A760;
 
 static DWORD SetCursorPosHookJmpBack = 0x745433;
+static DWORD SlideFixJmpBack = 0x686C39;
 
 static DWORD sampInfoAddr = NULL;
 
@@ -402,8 +403,6 @@ void CHookManager::SetConnectPatches()
 	CMem::Cpy((void*)0x686CE6, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x686C64, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 
-	CMem::ApplyJmp((BYTE*)0x540698, (DWORD)AimHook, 5);
-
 	// Detect when a player is pausing.
 	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
 
@@ -425,6 +424,9 @@ void CHookManager::SetConnectPatches()
 	// If you alt tab when you're in an interior, some weird graphics bugs happen
 	// So fix that:
 	CMem::Cpy((void*)0x53EA12, "\x90\x90\x90\x90\x90", 5);
+
+	// Fix some slide issues with melee weps
+	CMem::ApplyJmp(FUNC_SlideFix, (DWORD)SlideFix, 6);
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
@@ -516,6 +518,31 @@ void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
 	
 	// Free memory.
 	delete[] memory;
+}
+
+HOOK CHookManager::SlideFix()
+{
+	__asm
+	{
+		mov eax, [esi + 00000480h]
+		pushad
+	}
+
+	if (VAR_CURRENT_WEAPON <= 15)
+	{
+		__asm
+		{
+			popad
+			jmp[SlideFixJmpBack]
+		}
+	}
+
+	__asm
+	{
+		popad
+		or dword ptr[eax + 34h], 08h
+		jmp [SlideFixJmpBack]
+	}
 }
 
 bool isPaused = false;
@@ -681,7 +708,7 @@ HOOK CHookManager::SetCursorPosHook()
 	__asm pushad
 
 
-	if (CMessageProxy::GetAltTabbed())
+	if (Misc::GetAltTabState())
 	{
 		__asm
 		{
@@ -697,43 +724,6 @@ HOOK CHookManager::SetCursorPosHook()
 		push ecx // x
 		call SetCursorPos
 		jmp[SetCursorPosHookJmpBack]
-	}
-}
-
-
-HOOK CHookManager::AimHook()
-{
-
-	if (VAR_CURRENT_WEAPON <= 15)
-	{
-		if (ENTER_CAR_KEY > 0)
-		{
-			// Allow aiming
-			__asm
-			{
-				cmp word ptr[ecx + 0Ch], 0h
-				setne al
-				ret
-			}
-		}
-
-		else if (VAR_CPED_STATE != 61 || FIRE_KEY > 0)
-		{
-			// Disallow aiming
-			__asm
-			{
-				xor al, al
-				ret
-			}
-		}
-	}
-
-	// Allow aiming
-	__asm
-	{
-		cmp word ptr[ecx + 0Ch], 0h
-		setne al
-		ret
 	}
 }
 
@@ -791,28 +781,6 @@ HOOK CHookManager::KeyPress()
 			// Set the sprint speed 
 			VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
 		}
-		
-		// Disable some sliding
-		if (AIM_KEY != 0 || FIRE_KEY != 0)
-		{
-			bSlideFix = true;
-		}
-
-		// If pressing sprint and trying to press fire or aim key
-		if (bSlideFix)
-		{
-			/*if (ENTER_CAR_KEY == 0)
-			{
-				// Disable them to prevent sliding
-				AIM_KEY = 0;
-			}*/
-			
-			// Though allow punching with melee weapons
-			if (VAR_CURRENT_WEAPON > 15)
-			{
-				FIRE_KEY = 0;
-			}
-		}
 	}
 	// Sprint key is NOT pressed
 	else
@@ -866,6 +834,12 @@ HOOK CHookManager::KeyPress()
 		// Tell the game to not ignore weapon switch input
 		CMem::Cpy((void*)0x540666, "\x01", 1);
 		CMem::Cpy((void*)0x540636, "\x01", 1);
+	}
+
+	// Prevent jumping while alt tabbed
+	if (Misc::GetAltTabState())
+	{
+		JUMP_KEY = 0;
 	}
 
 	__asm

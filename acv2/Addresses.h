@@ -16,6 +16,7 @@
 #define AIM_KEY									*(BYTE*)0xB73464
 #define FIRE_KEY								*(BYTE*)0xB7347A
 #define ENTER_CAR_KEY							*(BYTE*)0xB73476
+#define JUMP_KEY								*(BYTE*)0xB73474
 #define WEAPON_SWITCH_FORWARD					*(BYTE*)0xB73496
 #define WEAPON_SWITCH_BACKWARDS					*(BYTE*)0xB73492
 #define DIRECT_CREATE_US						(BYTE*)0x7F6312

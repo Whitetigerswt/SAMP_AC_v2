@@ -94,9 +94,9 @@ private:
 
 	static void AltTabHook();
 
-	static void AimHook();
-
 	static void SetCursorPosHook();
+
+	static void SlideFix();
 
 	static float CameraXPos;
 	static float CameraYPos;

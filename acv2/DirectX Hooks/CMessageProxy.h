@@ -10,7 +10,6 @@ public:
 
 	static HWND GetWindowHandle();
 	static WNDPROC GetOriginalProcedure();
-	static BOOL GetAltTabbed() { return AltTabbed; }
 
 private:
 	static LRESULT CALLBACK Process(HWND wnd, UINT umsg, WPARAM wparam, LPARAM lparam);
@@ -18,6 +17,5 @@ private:
 
 	static HWND m_hWindowOrig;
 	static WNDPROC m_wProcOrig;
-	static bool AltTabbed;
 
 };

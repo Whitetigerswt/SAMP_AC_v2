@@ -161,4 +161,16 @@ namespace Misc
 
 		return NULL;
 	}
+
+	bool AltTabbed = false;
+
+	void SetAltTabState(bool toggle)
+	{
+		AltTabbed = toggle;
+	}
+
+	bool GetAltTabState()
+	{
+		return AltTabbed;
+	}
 }
