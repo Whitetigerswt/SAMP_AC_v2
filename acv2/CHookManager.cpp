@@ -761,9 +761,6 @@ HOOK CHookManager::Fatulous3()
 }
 
 DWORD KeyPressCall = 0x53EF80;
-
-// true when pressing sprint before pressing aim/fire, else false.
-bool bSlideFix = false;
 DWORD iLastTick = 0;
 HOOK CHookManager::KeyPress()
 {
@@ -785,7 +782,6 @@ HOOK CHookManager::KeyPress()
 	// Sprint key is NOT pressed
 	else
 	{
-		bSlideFix = false;
 		// And aim key is pressed
 		if (AIM_KEY != 0 || FIRE_KEY != 0)
 		{
@@ -795,6 +791,16 @@ HOOK CHookManager::KeyPress()
 				// Set sprint to 0
 				VAR_SPRINT_SPEED = 0.0f;
 			}
+		}
+	}
+
+	// fixes: [00:02] [U]27: you have to shoot, then hold all keys down afterwards at the same time (space, C, a, s, d, w (w/e direction) and aim (rmb)
+	// slide issue
+	if (AIM_KEY > 0 && SPRINT_KEY > 0)
+	{
+		if (VAR_CURRENT_WEAPON >= 23)
+		{
+			AIM_KEY = 0;
 		}
 	}
 
