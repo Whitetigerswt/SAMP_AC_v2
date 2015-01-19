@@ -98,10 +98,6 @@
 				CompilationType="1"
 			/>
 			<Procedure
-				MapAddress="CHookManager::CheckMemoryAddr(void *,int,char *)"
-				CompilationType="1"
-			/>
-			<Procedure
 				MapAddress="CHookManager::LoadShotgunBullet(void)"
 				CompilationType="1"
 			/>
@@ -477,10 +473,6 @@
 				CompilationType="1"
 			/>
 			<Procedure
-				MapAddress="RakNet::RakPeer::InitializeSecurity(char const *,char const *,bool)"
-				CompilationType="1"
-			/>
-			<Procedure
 				MapAddress="RakNet::RakPeer::Connect(char const *,unsigned short,char const *,int,struct RakNet::PublicKey *,unsigned int,unsigned int,unsigned int,unsigned int)"
 				IncludedInCompilation="false"
 				CompilationType="1"
@@ -503,10 +495,6 @@
 			<Procedure
 				MapAddress="CDirectX::HOOK_DirectInput8Create(struct HINSTANCE__ *,unsigned long,struct _GUID const &amp;,void * *,struct IUnknown *)"
 				IncludedInCompilation="false"
-				CompilationType="1"
-			/>
-			<Procedure
-				MapAddress="CDirectX::HOOK_Direct3DCreate9(unsigned int)"
 				CompilationType="1"
 			/>
 			<Procedure
@@ -708,19 +696,11 @@
 				CompilationType="1"
 			/>
 			<Procedure
-				MapAddress="CHookManager::ToggleSprintOnAllSurfaces(bool)"
-				CompilationType="1"
-			/>
-			<Procedure
 				MapAddress="CHookManager::MarkersHook(void)"
 				CompilationType="1"
 			/>
 			<Procedure
 				MapAddress="CHookManager::SetCursorPosHook(void)"
-				CompilationType="1"
-			/>
-			<Procedure
-				MapAddress="CMessageProxy::GetAltTabbed(void)"
 				CompilationType="1"
 			/>
 			<Procedure
@@ -749,10 +729,6 @@
 			/>
 			<Procedure
 				MapAddress="CHookManager::GetSampInfo(void)"
-				CompilationType="1"
-			/>
-			<Procedure
-				MapAddress="CHookManager::AimHook(void)"
 				CompilationType="1"
 			/>
 			<Procedure
@@ -812,15 +788,11 @@
 				CompilationType="1"
 			/>
 			<Procedure
-				MapAddress="RakNet::BitStream::Read&lt;unsigned char&gt;(unsigned char &amp;)"
-				CompilationType="1"
-			/>
-			<Procedure
 				MapAddress="FindPattern(char *,char *)"
 				CompilationType="1"
 			/>
 			<Procedure
-				MapAddress="RakNet::BitStream::Write&lt;unsigned short&gt;(unsigned short)"
+				MapAddress="RakNet::BitStream::Write&lt;enum eRPC&gt;(enum eRPC)"
 				CompilationType="1"
 			/>
 			<Procedure
@@ -832,7 +804,7 @@
 				CompilationType="1"
 			/>
 			<Procedure
-				MapAddress="HookedRakClientInterface::`scalar deleting destructor&apos;(unsigned int)"
+				MapAddress="HookedRakClientInterface::`vector deleting destructor&apos;(unsigned int)"
 				CompilationType="1"
 			/>
 			<Procedure
@@ -1053,6 +1025,10 @@
 			/>
 			<Procedure
 				MapAddress="Misc::GetAltTabState(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::SlideFix(void)"
 				CompilationType="1"
 			/>
 		</Procedures>

@@ -7,40 +7,41 @@ public OnFilterScriptInit()
 	printf("IsUsingACPlugin: %d", IsACPluginLoaded());
 }
 
-CMD:blips(playerid, params[])
+public OnPlayerConnect(playerid)
 {
-	new vehblips = TogglePlayerVehicleBlips(playerid, !!strval(params));
-	printf("return value: %d", vehblips);
-	new str[128];
-	format(str, sizeof(str), "GetPlayerVehicleBlips: %d", GetPlayerVehicleBlips(playerid));
-	SendClientMessage(playerid, -1, str);
+	printf("IsPlayerUsingSampAC: %d", IsPlayerUsingSampAC(playerid));	
+	return 1;
 }
 
-CMD:spawncars(playerid, params[])
+public OnPlayerDisconnect(playerid)
 {
-	new Float:X, Float:Y, Float:Z;
-	GetPlayerPos(playerid, X, Y, Z);
-	for(new i=0; i < 25; ++i) {
-	    CreateVehicle(411, X + random(25), Y + random(25), Z + random(25), 0, 0, 0, 0);
-	}
+	return 0;
 }
 
 CMD:acstatus(playerid, params[]) 
 {
+	new targetid = strval(params);
+
 	new str[128];
-	format(str, sizeof(str), "IsPlayerUsingSampAC: %d", IsPlayerUsingSampAC(playerid));
+	new version[50];
+	GetPlayerVersion(targetid, version, sizeof(version));
+	new name[MAX_PLAYER_NAME];
+	GetPlayerName(targetid, name, sizeof(name));
+	format(str, sizeof(str), "Target ID: %s (%d), SA-MP version: %s", name, targetid, version);
+	SendClientMessage(playerid, -1, str);
+	format(str, sizeof(str), "IsPlayerUsingSampAC: %d", IsPlayerUsingSampAC(targetid));
 	SendClientMessage(playerid, -1, str);
 
 
 	new hwid[256];
-	GetPlayerHardwareID(playerid, hwid, sizeof(hwid));
+	GetPlayerHardwareID(targetid, hwid, sizeof(hwid));
 	format(str, sizeof(str), "HardwareID: %s", hwid);
 	SendClientMessage(playerid, -1, str);
 
-	format(str, sizeof(str), "GetPlayerCBug: %d, GetPlayerLiteFoot: %d, GetPlayerSwitchReload: %d", GetPlayerCrouchBug(playerid), GetPlayerLiteFoot(playerid), GetPlayerSwitchReload(playerid));
+	format(str, sizeof(str), "GetPlayerCBug: %d, GetPlayerLiteFoot: %d, GetPlayerSwitchReload: %d", GetPlayerCrouchBug(targetid), GetPlayerLiteFoot(targetid), GetPlayerSwitchReload(targetid));
 	SendClientMessage(playerid, -1, str);
 
-	format(str, sizeof(str), "GetPlayerFPSLimit: %d", GetPlayerFPSLimit(playerid));
+	format(str, sizeof(str), "GetPlayerFPSLimit: %d", GetPlayerFPSLimit(targetid));
 	SendClientMessage(playerid, -1, str);
 
 	return 1;
@@ -111,7 +112,7 @@ public OnACClosed(ip[])
 
 public AC_OnFileExecuted(playerid, module[], md5[])
 {
-	printf("PAWN - OnFileExecuted(%d, %s, %s", playerid, module, md5);
+	printf("PAWN - OnFileExecuted(%d, %s, %s)", playerid, module, md5);
 	new str[180];
 	format(str, sizeof(str), "OnFileExecuted(%d, %s, %s)", playerid, module, md5);
 	//SendClientMessage(playerid, -1, str);

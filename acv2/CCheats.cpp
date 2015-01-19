@@ -158,7 +158,7 @@ void CCheats::OnFileExecuted(const char* file, const char* md5)
 		bitStream.Write((const char*)md5, strlen(md5));
 
 		// Send the RPC to the server.
-		CRakClientHandler::CustomSend(&bitStream);
+		CRakClientHandler::CustomSend(&bitStream, MEDIUM_PRIORITY);
 	}
 	return;
 }
@@ -171,8 +171,8 @@ void CCheats::ResendFiles()
 		if (i->empty()) continue;
 
 		// Don't deal with annoying pointers.
-
-		std::string file(i->c_str());
+		std::string file = "";
+		file = i->c_str();
 
 		// Re-send the info to the server that the file was just executed.
 		OnFileExecuted(file.c_str(), GetFileMD5(file).c_str());
