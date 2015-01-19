@@ -11,6 +11,8 @@
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <iterator>
 
+#include <boost/asio/deadline_timer.hpp>
+
 namespace boost {
 namespace network {
 namespace http {
@@ -25,20 +27,25 @@ struct sync_connection_base;
 template <class Tag, unsigned version_major, unsigned version_minor>
 struct http_sync_connection
     : public virtual sync_connection_base<Tag, version_major, version_minor>,
-      sync_connection_base_impl<Tag, version_major, version_minor> {
+      sync_connection_base_impl<Tag, version_major, version_minor>,
+      boost::enable_shared_from_this<
+          http_sync_connection<Tag, version_major, version_minor> > {
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename string<Tag>::type string_type;
   typedef function<typename resolver_base::resolver_iterator_pair(
-      resolver_type&,
-      string_type const&,
-      string_type const&)> resolver_function_type;
+      resolver_type&, string_type const&, string_type const&)>
+      resolver_function_type;
+  typedef http_sync_connection<Tag, version_major, version_minor> this_type;
   typedef sync_connection_base_impl<Tag, version_major, version_minor>
       connection_base;
   typedef function<bool(string_type&)> body_generator_function_type;
 
-  http_sync_connection(resolver_type& resolver, resolver_function_type resolve)
+  http_sync_connection(resolver_type& resolver, resolver_function_type resolve,
+                       int timeout)
       : connection_base(),
+        timeout_(timeout),
+        timer_(resolver.get_io_service()),
         resolver_(resolver),
         resolve_(resolve),
         socket_(resolver.get_io_service()) {}
@@ -52,22 +59,24 @@ struct http_sync_connection
                          body_generator_function_type generator) {
     boost::asio::streambuf request_buffer;
     linearize(
-        request_,
-        method,
-        version_major,
-        version_minor,
+        request_, method, version_major, version_minor,
         std::ostreambuf_iterator<typename char_<Tag>::type>(&request_buffer));
     connection_base::send_request_impl(socket_, method, request_buffer);
     if (generator) {
       string_type chunk;
       while (generator(chunk)) {
-        std::copy(chunk.begin(),
-                  chunk.end(),
+        std::copy(chunk.begin(), chunk.end(),
                   std::ostreambuf_iterator<typename char_<Tag>::type>(
                       &request_buffer));
         chunk.clear();
         connection_base::send_request_impl(socket_, method, request_buffer);
       }
+    }
+    if (timeout_ > 0) {
+      timer_.expires_from_now(boost::posix_time::seconds(timeout_));
+      timer_.async_wait(boost::bind(&this_type::handle_timeout,
+                                    this_type::shared_from_this(),
+                                    boost::arg<1>()));
     }
   }
 
@@ -97,17 +106,21 @@ struct http_sync_connection
   bool is_open() { return socket_.is_open(); }
 
   void close_socket() {
-    if (!is_open())
-      return;
+    timer_.cancel();
+    if (!is_open()) return;
     boost::system::error_code ignored;
     socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
-    if (ignored)
-      return;
+    if (ignored) return;
     socket_.close(ignored);
   }
 
  private:
+  void handle_timeout(boost::system::error_code const& ec) {
+    if (!ec) close_socket();
+  }
 
+  int timeout_;
+  boost::asio::deadline_timer timer_;
   resolver_type& resolver_;
   resolver_function_type resolve_;
   boost::asio::ip::tcp::socket socket_;

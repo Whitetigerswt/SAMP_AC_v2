@@ -102,6 +102,9 @@ struct sync_connection_base_impl {
   template <class Socket>
   void send_request_impl(Socket& socket_, string_type const& method,
                          boost::asio::streambuf& request_buffer) {
+    // TODO(dberris): review parameter necessity.
+    (void)method;
+
     write(socket_, request_buffer);
   }
 
@@ -109,6 +112,9 @@ struct sync_connection_base_impl {
   void read_body_normal(Socket& socket_, basic_response<Tag>& response_,
                         boost::asio::streambuf& response_buffer,
                         typename ostringstream<Tag>::type& body_stream) {
+    // TODO(dberris): review parameter necessity.
+    (void)response_;
+
     boost::system::error_code error;
     if (response_buffer.size() > 0) body_stream << &response_buffer;
 
@@ -235,35 +241,34 @@ struct sync_connection_base {
       resolver_function_type;
   typedef function<bool(string_type&)> body_generator_function_type;
 
-  // FIXME make the certificate filename and verify path parameters be optional
+  // FIXME make the certificate filename and verify path parameters be
+  // optional
   // ranges
   static sync_connection_base<Tag, version_major, version_minor>*
-  new_connection(resolver_type& resolver, resolver_function_type resolve,
-                 bool https, bool always_verify_peer,
-                 optional<string_type> const& certificate_filename =
-                     optional<string_type>(),
-                 optional<string_type> const& verify_path =
-                     optional<string_type>(),
-                 optional<string_type> const& certificate_file =
-                     optional<string_type>(),
-                 optional<string_type> const& private_key_file =
-                     optional<string_type>()) {
+  new_connection(
+      resolver_type& resolver, resolver_function_type resolve, bool https,
+      bool always_verify_peer, int timeout,
+      optional<string_type> const& certificate_filename =
+          optional<string_type>(),
+      optional<string_type> const& verify_path = optional<string_type>(),
+      optional<string_type> const& certificate_file = optional<string_type>(),
+      optional<string_type> const& private_key_file = optional<string_type>()) {
     if (https) {
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
       return dynamic_cast<
           sync_connection_base<Tag, version_major, version_minor>*>(
           new https_sync_connection<Tag, version_major, version_minor>(
-              resolver, resolve,
-              certificate_filename, verify_path,
-              certificate_file, private_key_file));
+              resolver, resolve, always_verify_peer, timeout,
+              certificate_filename, verify_path, certificate_file,
+              private_key_file));
 #else
       throw std::runtime_error("HTTPS not supported.");
 #endif
     }
     return dynamic_cast<
         sync_connection_base<Tag, version_major, version_minor>*>(
-        new http_sync_connection<Tag, version_major, version_minor>(resolver,
-                                                                    resolve));
+        new http_sync_connection<Tag, version_major, version_minor>(
+            resolver, resolve, timeout));
   }
 
   virtual void init_socket(string_type const& hostname,

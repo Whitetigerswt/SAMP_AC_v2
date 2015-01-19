@@ -309,18 +309,19 @@ namespace Callback
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid, const char* params)
 	{
-		// If the user typed /actoggle and they're allowed to run that command.
 
-		if (!strcmp(params, "/sendrpc"))
+		if (!strcmp(params, "/acinfo"))
 		{
-			RakNet::BitStream bs;
-			bs.Write((unsigned char)42);
-			Network::PlayerSendRPC(0x98, playerid, &bs);
-			//						^ weather rpc
-
+			// This command is here so we can check for abuse, if main_ac_checks is 0 then it can't be proven that the scripter
+			// hasn't added some weird condition that allows him to cheat but not anyone else.
+			char output[128];
+			snprintf(output, sizeof(output), "{d3d3d3}** main_ac_checks: {FFFFFF}%d", ACToggle);
+			SendClientMessage(playerid, -1, output);
 			return 1;
 		}
-		if (!strcmp(params, "/actoggle") && CAntiCheat::CanEnableAC(playerid))
+
+		// If the user typed /actoggle and they're allowed to run that command.
+		else if (!strcmp(params, "/actoggle") && CAntiCheat::CanEnableAC(playerid))
 		{ 
 			// Set ACToggle to whatever it wasn't previously.
 			ACToggle = !ACToggle;

@@ -77,6 +77,12 @@ cell AMX_NATIVE_CALL CanPlayerEnableACProc(AMX* pAmx, cell* pParams)
 	return CAntiCheat::CanEnableAC(pParams[1]);
 }
 
+cell AMX_NATIVE_CALL IsACEnabledProc(AMX* pAmx, cell* pParams)
+{
+	// Return if AC is on or not
+	return Callback::ACToggle;
+}
+
 cell AMX_NATIVE_CALL GetPlayerHardwareIDProc(AMX* pAmx, cell* pParams)
 {
 	// Make sure the parameter count is correct.
@@ -415,6 +421,7 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "GetPlayerSprintOnAllSurfaces", GetPlayerSprintOnAllSurfacesProc },
 	{ "TogglePlayerVehicleBlips", TogglePlayerVehicleBlipsProc },
 	{ "GetPlayerVehicleBlips", GetPlayerVehicleBlipsProc },
+	{ "IsACEnabled", IsACEnabledProc },
 	{ 0, 0 }
 };
 

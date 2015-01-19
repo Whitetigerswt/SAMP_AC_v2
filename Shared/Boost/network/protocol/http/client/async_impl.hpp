@@ -37,13 +37,13 @@ struct async_client
   typedef function<bool(string_type&)> body_generator_function_type;
 
   async_client(bool cache_resolved, bool follow_redirect,
-               bool always_verify_peer,
+               bool always_verify_peer, int timeout,
                boost::shared_ptr<boost::asio::io_service> service,
                optional<string_type> const& certificate_filename,
                optional<string_type> const& verify_path,
                optional<string_type> const& certificate_file,
                optional<string_type> const& private_key_file)
-      : connection_base(cache_resolved, follow_redirect),
+      : connection_base(cache_resolved, follow_redirect, timeout),
         service_ptr(service.get()
                         ? service
                         : boost::make_shared<boost::asio::io_service>()),
@@ -57,11 +57,14 @@ struct async_client
         always_verify_peer_(always_verify_peer) {
     connection_base::resolver_strand_.reset(
         new boost::asio::io_service::strand(service_));
-    lifetime_thread_.reset(new boost::thread(
-        boost::bind(&boost::asio::io_service::run, &service_)));
+    if (!service)
+      lifetime_thread_.reset(new boost::thread(
+          boost::bind(&boost::asio::io_service::run, &service_)));
   }
 
-  ~async_client() throw() {
+  ~async_client() throw() { sentinel_.reset(); }
+
+  void wait_complete() {
     sentinel_.reset();
     if (lifetime_thread_.get()) {
       lifetime_thread_->join();
@@ -75,9 +78,8 @@ struct async_client
       body_generator_function_type generator) {
     typename connection_base::connection_ptr connection_;
     connection_ = connection_base::get_connection(
-        resolver_, request_, always_verify_peer_,
-        certificate_filename_, verify_path_,
-        certificate_file_, private_key_file_);
+        resolver_, request_, always_verify_peer_, certificate_filename_,
+        verify_path_, certificate_file_, private_key_file_);
     return connection_->send_request(method, request_, get_body, callback,
                                      generator);
   }

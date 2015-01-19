@@ -18,7 +18,7 @@
 
 #ifndef BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
 #define BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT 5
-#endif // BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
+#endif  // BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
 
 namespace boost {
 namespace network {
@@ -27,14 +27,12 @@ namespace http {
 template <class Tag, unsigned version_major, unsigned version_minor>
 struct pooled_connection_policy : resolver_policy<Tag>::type {
  protected:
-
   typedef typename string<Tag>::type string_type;
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
   typedef function<typename resolver_base::resolver_iterator_pair(
-      resolver_type&,
-      string_type const&,
-      string_type const&)> resolver_function_type;
+      resolver_type&, string_type const&, string_type const&)>
+      resolver_function_type;
   typedef function<void(iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
   typedef function<bool(string_type&)> body_generator_function_type;
@@ -42,61 +40,53 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
   void cleanup() { host_connection_map().swap(host_connections); }
 
   struct connection_impl {
-    typedef function<shared_ptr<connection_impl>(resolver_type&,
-                                                 basic_request<Tag> const&,
-                                                 optional<string_type> const&,
-                                                 optional<string_type> const&,
-                                                 optional<string_type> const&,
-                                                 optional<string_type> const&)>
-        get_connection_function;
+    typedef function<shared_ptr<connection_impl>(
+        resolver_type&, basic_request<Tag> const&, optional<string_type> const&,
+        optional<string_type> const&, optional<string_type> const&,
+        optional<string_type> const&)> get_connection_function;
 
-    connection_impl(resolver_type& resolver,
-                    bool follow_redirect,
-                    string_type const& host,
-                    string_type const& port,
-                    resolver_function_type resolve,
-                    get_connection_function get_connection,
-                    bool https,
-                    optional<string_type> const& certificate_filename =
-                        optional<string_type>(),
-                    optional<string_type> const& verify_path =
-                        optional<string_type>(),
-                    optional<string_type> const& certificate_file =
-                        optional<string_type>(),
-                    optional<string_type> const&  private_key_file =
-                        optional<string_type>())
+    connection_impl(
+        resolver_type& resolver, bool follow_redirect, string_type const& host,
+        string_type const& port, resolver_function_type resolve,
+        get_connection_function get_connection, bool https,
+        bool always_verify_peer, int timeout,
+        optional<string_type> const& certificate_filename =
+            optional<string_type>(),
+        optional<string_type> const& verify_path = optional<string_type>(),
+        optional<string_type> const& certificate_file = optional<string_type>(),
+        optional<string_type> const& private_key_file = optional<string_type>())
         : pimpl(impl::sync_connection_base<Tag, version_major, version_minor>::
-                    new_connection(resolver,
-                                   resolve,
-                                   https,
-                                   certificate_filename,
-                                   verify_path,
-                                   certificate_file,
-                                   private_key_file)),
+                    new_connection(resolver, resolve, https, always_verify_peer,
+                                   timeout, certificate_filename, verify_path,
+                                   certificate_file, private_key_file)),
           resolver_(resolver),
           connection_follow_redirect_(follow_redirect),
           get_connection_(get_connection),
           certificate_filename_(certificate_filename),
           verify_path_(verify_path),
           certificate_file_(certificate_file),
-          private_key_file_(private_key_file) {}
+          private_key_file_(private_key_file) {
+
+      // TODO(dberris): review parameter necessity.
+      (void)host;
+      (void)port;
+    }
 
     basic_response<Tag> send_request(string_type const& method,
-                                     basic_request<Tag> request_,
-                                     bool get_body,
+                                     basic_request<Tag> request_, bool get_body,
                                      body_callback_function_type callback,
                                      body_generator_function_type generator) {
       return send_request_impl(method, request_, get_body, callback, generator);
     }
 
    private:
-
     basic_response<Tag> send_request_impl(
-        string_type const& method,
-        basic_request<Tag> request_,
-        bool get_body,
+        string_type const& method, basic_request<Tag> request_, bool get_body,
         body_callback_function_type callback,
         body_generator_function_type generator) {
+      // TODO(dberris): review parameter necessity.
+      (void)callback;
+
       boost::uint8_t count = 0;
       bool retry = false;
       do {
@@ -119,7 +109,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         try {
           pimpl->read_status(response_, response_buffer);
         }
-        catch (boost::system::system_error & e) {
+        catch (boost::system::system_error& e) {
           if (!retry && e.code() == boost::asio::error::eof) {
             retry = true;
             pimpl->init_socket(request_.host(),
@@ -159,8 +149,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
               request_.uri(location_header->second);
               connection_ptr connection_;
               connection_ = get_connection_(
-                  resolver_, request_,
-                  certificate_filename_, verify_path_,
+                  resolver_, request_, certificate_filename_, verify_path_,
                   certificate_file_, private_key_file_);
               ++count;
               continue;
@@ -173,9 +162,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       } while (true);
     }
 
-    shared_ptr<
-        http::impl::sync_connection_base<Tag, version_major, version_minor> >
-        pimpl;
+    shared_ptr<http::impl::sync_connection_base<Tag, version_major,
+                                                version_minor> > pimpl;
     resolver_type& resolver_;
     bool connection_follow_redirect_;
     get_connection_function get_connection_;
@@ -190,16 +178,15 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
   typedef unordered_map<string_type, connection_ptr> host_connection_map;
   host_connection_map host_connections;
   bool follow_redirect_;
+  int timeout_;
 
   connection_ptr get_connection(
-      resolver_type& resolver,
-      basic_request<Tag> const& request_,
+      resolver_type& resolver, basic_request<Tag> const& request_,
+      bool always_verify_peer,
       optional<string_type> const& certificate_filename =
           optional<string_type>(),
-      optional<string_type> const& verify_path =
-          optional<string_type>(),
-      optional<string_type> const& certificate_file =
-          optional<string_type>(),
+      optional<string_type> const& verify_path = optional<string_type>(),
+      optional<string_type> const& certificate_file = optional<string_type>(),
       optional<string_type> const& private_key_file = optional<string_type>()) {
     string_type index =
         (request_.host() + ':') + lexical_cast<string_type>(request_.port());
@@ -207,42 +194,31 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
     typename host_connection_map::iterator it = host_connections.find(index);
     if (it == host_connections.end()) {
       connection_.reset(new connection_impl(
-          resolver,
-          follow_redirect_,
-          request_.host(),
+          resolver, follow_redirect_, request_.host(),
           lexical_cast<string_type>(request_.port()),
-          boost::bind(&pooled_connection_policy<Tag,
-                                                version_major,
+          boost::bind(&pooled_connection_policy<Tag, version_major,
                                                 version_minor>::resolve,
-                      this,
-                      _1,
-                      _2,
-                      _3),
-          boost::bind(&pooled_connection_policy<Tag,
-                                                version_major,
+                      this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),
+          boost::bind(&pooled_connection_policy<Tag, version_major,
                                                 version_minor>::get_connection,
-                      this,
-                      _1,
-                      _2,
-                      _3,
-                      _4,
-                      _5,
-                      _6),
+                      this, boost::arg<1>(), boost::arg<2>(),
+                      always_verify_peer, boost::arg<3>(), boost::arg<4>(),
+                      boost::arg<5>(), boost::arg<6>()),
           boost::iequals(request_.protocol(), string_type("https")),
-          certificate_filename,
-          verify_path,
-          certificate_file,
-          private_key_file));
+          always_verify_peer, timeout_, certificate_filename, verify_path,
+          certificate_file, private_key_file));
       host_connections.insert(std::make_pair(index, connection_));
       return connection_;
     }
     return it->second;
   }
 
-  pooled_connection_policy(bool cache_resolved, bool follow_redirect)
+  pooled_connection_policy(bool cache_resolved, bool follow_redirect,
+                           int timeout)
       : resolver_base(cache_resolved),
         host_connections(),
-        follow_redirect_(follow_redirect) {}
+        follow_redirect_(follow_redirect),
+        timeout_(timeout) {}
 };
 
 }  // namespace http
@@ -250,4 +226,3 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_POOLED_CONNECTION_POLICY_20091214
-

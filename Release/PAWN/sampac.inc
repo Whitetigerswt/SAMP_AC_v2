@@ -2,6 +2,7 @@
 	native Float:GetGravity();
 #endif
 
+native ac_gateway_param0(func[]) = GetGravity;
 native ac_gateway_param1(func[], param1) = GetGravity;
 native ac_gateway_param2(func[], param1, param2) = GetGravity;
 native ac_gateway_param3(func[], param1, param2, param3) = GetGravity;
@@ -213,6 +214,14 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 //
 // Returns: bool - True if vehicle blips are enabled.
 #define GetPlayerVehicleBlips(%0) ac_gateway_param1("GetPlayerVehicleBlips", %0)
+
+// PURPOSE: Check if the AC is enabled via /actoggle 
+// REQUIRES: Nothing
+//
+// Params: Nothing
+//
+// returns: bool - true if ac is on or not.
+#define IsACEnabled() ac_gateway_param0("IsACEnabled")
 
 // PURPOSE: Get if the AC plugin is loaded or not
 // REQUIRES: Nothing.
