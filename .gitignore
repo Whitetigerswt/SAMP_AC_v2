@@ -20,8 +20,6 @@
 *.out
 *.app
 
-*.suo
-Release/sampac.lib
 
 *
 !.gitattributes
@@ -59,3 +57,6 @@ Release/sampac.lib
 !*.png
 !*.rc
 !*/
+
+*.suo
+Release/sampac.lib

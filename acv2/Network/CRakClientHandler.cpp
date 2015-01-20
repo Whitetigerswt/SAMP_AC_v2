@@ -6,6 +6,7 @@
 #include "HookedRakClient.h"
 #include "../s0beit/samp.h"
 #include "../../Shared/Network/Network.h"
+#include "../CLoader.h"
 
 #include "CRPCCallback.h"
 #include "CRakClientHandler.h"
@@ -42,13 +43,16 @@ void CRakClientHandler::CustomSend(RakNet::BitStream *bs, PacketPriority priorit
 
 bool CRakClientHandler::IsConnected()
 {
+	if (!CLoader::IsProcessElevated())
+		return false;
+
+	if (!isACServer)
+		return false;
+
 	if (!client)
 		return false;
 
 	if (!client->GetRakClientInterface())
-		return false;
-
-	if (!isACServer)
 		return false;
 
 	return client->GetRakClientInterface()->IsConnected();
@@ -68,8 +72,7 @@ void CRakClientHandler::Disconnect()
 void CRakClientHandler::SetConnected(bool toggle)
 {
 	isACServer = toggle;
-	if (!everConnected)
-		everConnected = true;
+	everConnected = true;
 }
 
 bool CRakClientHandler::HasEverConnected()

@@ -21,6 +21,7 @@
 CInjectedLibraries CLoader::Modules = CInjectedLibraries();
 CProcessList CLoader::Processes = CProcessList();
 CDirectoryScanner CLoader::GtaDirectory = CDirectoryScanner();
+int CLoader::isElevated = false;
 bool CLoader::isLoaded = false;
 HMODULE CLoader::ThishMod = NULL;
 
@@ -110,6 +111,7 @@ void CLoader::CheckElevation()
 		// If it's not, we need to elevate it.
 		// run our elevator .exe program
 		RunElevated();
+		ExitProcess(0);
 	}
 }
 
@@ -130,6 +132,8 @@ void CLoader::RunElevated()
 
 BOOL CLoader::IsProcessElevated()
 {
+	if (isElevated) return 1;
+
 	BOOL fIsRunAsAdmin = FALSE;
 	DWORD dwError = ERROR_SUCCESS;
 	PSID pAdministratorsGroup = NULL;
@@ -169,6 +173,8 @@ Cleanup:
 	{
 		throw dwError;
 	}
+
+	isElevated = fIsRunAsAdmin;
 
 	return fIsRunAsAdmin;
 }

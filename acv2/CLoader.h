@@ -23,6 +23,10 @@ public:
 	// REQUIRES: NULL
 	static bool IsLoaded();
 
+	// PURPOSE: Determine if the process is elevated.
+	// REQUIRES: NULL
+	static BOOL IsProcessElevated();
+
 	static CInjectedLibraries Modules;
 	static CProcessList Processes;
 	static CDirectoryScanner GtaDirectory;
@@ -34,10 +38,8 @@ private:
 	// PROMISE: An elevated process after it returns.
 	static void CheckElevation();
 
-	// PURPOSE: Determine if the process is elevated.
-	// REQUIRES: NULL
-	static BOOL IsProcessElevated();
-
 	static bool isLoaded;
+
+	static int isElevated;
 
 };
