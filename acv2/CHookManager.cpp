@@ -32,6 +32,7 @@ static DWORD CameraXHook8JmpBack = 0x524C51;
 static DWORD CameraXHook9JmpBack = 0x52590C;
 static DWORD CameraXHook10JmpBack = 0x525B0E;
 static DWORD CameraXHook11JmpBack = 0x509C75;
+static DWORD CameraXHook12JmpBack = 0x511DBB;
 
 static DWORD CameraXAccess1JmpBack = 0x5237E5;
 static DWORD CameraXAccess2JmpBack = 0x523804;
@@ -81,6 +82,9 @@ static DWORD CameraXAccess37JmpBack = 0x525B4B;
 static DWORD CameraXAccess38JmpBack = 0x525C5C;
 static DWORD CameraXAccess39JmpBack = 0x525C71;
 static DWORD CameraXAccess40JmpBack = 0x524CAA;
+static DWORD CameraXAccess41JmpBack = 0x511B96;
+static DWORD CameraXAccess42JmpBack = 0x511E47;
+static DWORD CameraXAccess43JmpBack = 0x511E5B;
 
 // CAMERA Y WRITE HOOK JMP BACKS //
 
@@ -94,6 +98,12 @@ static DWORD CameraYWrite8JmpBack = 0x5232A9;
 static DWORD CameraYWrite9JmpBack = 0x5233CC;
 static DWORD CameraYWrite10JmpBack = 0x52260D;
 static DWORD CameraYWrite11JmpBack = 0x522911;
+static DWORD CameraYWrite12JmpBack = 0x511E31;
+static DWORD CameraYWrite13JmpBack = 0x511DD2;
+static DWORD CameraYWrite14JmpBack = 0x51157D;
+static DWORD CameraYWrite15JmpBack = 0x5117AB;
+static DWORD CameraYWrite16JmpBack = 0x511789;
+static DWORD CameraYWrite17JmpBack = 0x51159C;
 
 static DWORD CameraYAccess1JmpBack = 0x523BA7;
 static DWORD CameraYAccess2JmpBack = 0x524153;
@@ -122,6 +132,10 @@ static DWORD CameraYAccess24JmpBack = 0x5119A9;
 static DWORD CameraYAccess25JmpBack = 0x524112;
 static DWORD CameraYAccess26JmpBack = 0x524127;
 static DWORD CameraYAccess27JmpBack = 0x5240DD;
+static DWORD CameraYAccess28JmpBack = 0x5232A9;
+static DWORD CameraYAccess29JmpBack = 0x511E1A;
+static DWORD CameraYAccess30JmpBack = 0x511E37;
+static DWORD CameraYAccess31JmpBack = 0x511E76;
 
 static DWORD CPed_Special_FlagsJmpBack = 0x5448E9;
 static DWORD Fatulous1JmpBack = 0x6D8033;
@@ -213,6 +227,7 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraXWriteHook9, (DWORD)CameraXWriteHook9, 6);
 	CMem::ApplyJmp(FUNC_CameraXWriteHook10, (DWORD)CameraXWriteHook10, 6);
 	CMem::ApplyJmp(FUNC_CameraXWriteHook11, (DWORD)CameraXWriteHook11, 6);
+	CMem::ApplyJmp(FUNC_CameraXWriteHook12, (DWORD)CameraXWriteHook12, 35);
 
 	CMem::ApplyJmp(FUNC_CameraXAccessHook1, (DWORD)CameraXAccessHook1, 8);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook2, (DWORD)CameraXAccessHook2, 8);
@@ -255,6 +270,9 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraXAccessHook38, (DWORD)CameraXAccessHook38, 6);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook39, (DWORD)CameraXAccessHook39, 6);
 	CMem::ApplyJmp(FUNC_CameraXAccessHook40, (DWORD)CameraXAccessHook40, 32);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook41, (DWORD)CameraXAccessHook41, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook42, (DWORD)CameraXAccessHook42, 6);
+	CMem::ApplyJmp(FUNC_CameraXAccessHook43, (DWORD)CameraXAccessHook43, 6);
 
 	// CAMERA Y HOOKS //
 
@@ -271,6 +289,12 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraYWriteHook9, (DWORD)CameraYWriteHook9, 6);
 	CMem::ApplyJmp(FUNC_CameraYWriteHook10, (DWORD)CameraYWriteHook10, 6);
 	CMem::ApplyJmp(FUNC_CameraYWriteHook11, (DWORD)CameraYWriteHook11, 6);
+	CMem::ApplyJmp(FUNC_CameraYWriteHook12, (DWORD)CameraYWriteHook12, 10);
+	CMem::ApplyJmp(FUNC_CameraYWriteHook13, (DWORD)CameraYWriteHook13, 10);
+	CMem::ApplyJmp(FUNC_CameraYWriteHook14, (DWORD)CameraYWriteHook14, 10);
+	CMem::ApplyJmp(FUNC_CameraYWriteHook15, (DWORD)CameraYWriteHook15, 6);
+	CMem::ApplyJmp(FUNC_CameraYWriteHook16, (DWORD)CameraYWriteHook16, 6);
+	CMem::ApplyJmp(FUNC_CameraYWriteHook17, (DWORD)CameraYWriteHook17, 10);
 
 	CMem::ApplyJmp(FUNC_CameraYAccessHook1, (DWORD)CameraYAccessHook1, 6);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook2, (DWORD)CameraYAccessHook2, 6);
@@ -299,6 +323,10 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraYAccessHook25, (DWORD)CameraYAccessHook25, 6);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook26, (DWORD)CameraYAccessHook26, 8);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook27, (DWORD)CameraYAccessHook27, 10);
+	CMem::ApplyJmp(FUNC_CameraYAccessHook28, (DWORD)CameraYAccessHook28, 12);
+	CMem::ApplyJmp(FUNC_CameraYAccessHook29, (DWORD)CameraYAccessHook29, 6);
+	CMem::ApplyJmp(FUNC_CameraYAccessHook30, (DWORD)CameraYAccessHook30, 6);
+	CMem::ApplyJmp(FUNC_CameraYAccessHook31, (DWORD)CameraYAccessHook31, 6);
 
 	// Fix for fatulous.exe health hack
 	CMem::ApplyJmp(FUNC_Fatulous1, (DWORD)Fatulous1, 9);
@@ -796,7 +824,7 @@ HOOK CHookManager::KeyPress()
 
 	// fixes: [00:02] [U]27: you have to shoot, then hold all keys down afterwards at the same time (space, C, a, s, d, w (w/e direction) and aim (rmb)
 	// slide issue
-	if (AIM_KEY > 0 && SPRINT_KEY > 0)
+	if (AIM_KEY > 0 && SPRINT_KEY > 0 && VAR_CPED_STATE != 102 && VAR_CPED_STATE != 205)
 	{
 		if (VAR_CURRENT_WEAPON >= 23)
 		{
@@ -1072,6 +1100,23 @@ HOOK CHookManager::CameraXWriteHook11()
 	}
 }
 
+DWORD RandomCall = 0x509C50;
+HOOK CHookManager::CameraXWriteHook12()
+{
+	__asm
+	{
+		fadd dword ptr[CameraXPos]
+		fstp dword ptr[CameraXPos]
+
+		fadd dword ptr[CameraYPos]
+		fstp dword ptr[CameraYPos]
+
+		call [RandomCall]
+
+		fld dword ptr[CameraYPos]
+		jmp[CameraXHook12JmpBack]
+	}
+}
 
 
 HOOK CHookManager::CameraXAccessHook1()
@@ -1475,6 +1520,32 @@ HOOK CHookManager::CameraXAccessHook40()
 	}
 }
 
+HOOK CHookManager::CameraXAccessHook41()
+{
+	__asm
+	{
+		mov ecx, [CameraXPos]
+		jmp[CameraXAccess41JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook42()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess42JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraXAccessHook43()
+{
+	__asm
+	{
+		fld dword ptr[CameraXPos]
+		jmp[CameraXAccess43JmpBack]
+	}
+}
 
 HOOK CHookManager::CameraYWriteHook2()
 {
@@ -1560,6 +1631,60 @@ HOOK CHookManager::CameraYWriteHook11()
 	{
 		fstp dword ptr[CameraYPos]
 		jmp[CameraYWrite11JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraYWriteHook12()
+{
+	__asm
+	{
+		mov[CameraYPos], 0xBFC7F1E7
+		jmp[CameraYWrite12JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraYWriteHook13()
+{
+	__asm
+	{
+		mov[CameraYPos], 0x3F860A92
+		jmp[CameraYWrite13JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraYWriteHook14()
+{
+	__asm
+	{
+		mov[CameraYPos], 0x3F860A92
+		jmp[CameraYWrite14JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraYWriteHook15()
+{
+	__asm
+	{
+		mov[CameraYPos],eax
+		jmp[CameraYWrite15JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraYWriteHook16()
+{
+	__asm
+	{
+		fstp dword ptr[CameraYPos]
+		jmp[CameraYWrite16JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraYWriteHook17()
+{
+	__asm
+	{
+		mov[CameraYPos], 0xBFBF0243
+		jmp[CameraYWrite17JmpBack]
 	}
 }
 
@@ -1826,5 +1951,43 @@ HOOK CHookManager::CameraYAccessHook27()
 		xor ecx,ecx
 		mov[edi + 0x0000B0], ecx
 		jmp[CameraYAccess27JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraYAccessHook28()
+{
+	__asm
+	{
+		fstp dword ptr[CameraYPos]
+		fld dword ptr[CameraYPos]
+
+		jmp[CameraYAccess28JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraYAccessHook29()
+{
+	__asm
+	{
+		fld dword ptr[CameraYPos]
+		jmp[CameraYAccess29JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraYAccessHook30()
+{
+	__asm
+	{
+		fld dword ptr[CameraYPos]
+		jmp[CameraYAccess30JmpBack]
+	}
+}
+
+HOOK CHookManager::CameraYAccessHook31()
+{
+	__asm
+	{
+		fld dword ptr[CameraYPos]
+		jmp[CameraYAccess31JmpBack]
 	}
 }
