@@ -10,6 +10,7 @@
 #ifdef __linux
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/time.h>
 #endif
 
 extern void* pAMXFunctions;
@@ -47,5 +48,16 @@ namespace Utility
 		va_end(vaArgs);
 
 		logprintf("[SAMP_AC_V2] %s", szBuffer);
+	}
+
+	unsigned getTickCount()
+	{
+#ifdef WIN32
+		return GetTickCount();
+#else
+		struct timeval tv;
+		gettimeofday(&tv, 0);
+		return unsigned((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+#endif
 	}
 }

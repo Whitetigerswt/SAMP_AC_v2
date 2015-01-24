@@ -96,7 +96,7 @@ BYTE GetPacketID(Packet *p)
 	else return (unsigned char)p->data[0];
 }
 
-int LastTicks[MAX_PLAYERS];
+unsigned int LastTicks[MAX_PLAYERS];
 static BYTE HOOK_GetPacketID(Packet *p)
 {
 	SubHook::ScopedRemove remove(&GetPacketID_hook);
@@ -131,10 +131,10 @@ static BYTE HOOK_GetPacketID(Packet *p)
 		// though it's sooo much easier to just leave this here than look for an asm hook
 		if (pSyncData->wKeys & KEY_FIRE && pSyncData->byteWeapon < 15)
 		{
-			LastTicks[p->playerIndex] = GetTickCount() + 350;
+			LastTicks[p->playerIndex] = Utility::getTickCount() + 350;
 		}
 
-		if (LastTicks[p->playerIndex] > GetTickCount() && pSyncData->byteWeapon > 15)
+		if (LastTicks[p->playerIndex] > Utility::getTickCount() && pSyncData->byteWeapon > 15)
 		{
 			pSyncData->byteWeapon = 0;
 		}

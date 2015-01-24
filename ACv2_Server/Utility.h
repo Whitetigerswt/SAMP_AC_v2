@@ -33,6 +33,10 @@ namespace Utility
 	// PURPOSE: Get path to main server program.
 	// REQUIRES: NULL
 	char* GetServerPath();
+
+	// PURPOSE: Crossplatform GetTickCount.
+	// REQUIRES: NULL
+	unsigned getTickCount();
 }
 
 #ifndef CHECK_PARAMS
