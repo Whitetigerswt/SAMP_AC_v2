@@ -96,6 +96,7 @@ BYTE GetPacketID(Packet *p)
 	else return (unsigned char)p->data[0];
 }
 
+int LastTicks[MAX_PLAYERS];
 static BYTE HOOK_GetPacketID(Packet *p)
 {
 	SubHook::ScopedRemove remove(&GetPacketID_hook);
@@ -122,7 +123,24 @@ static BYTE HOOK_GetPacketID(Packet *p)
 		}
 	}
 
-	// for some reason GetTrampoline only returns a useful value if YSF is loaded.
+	if (packetId == ID_PLAYER_SYNC)
+	{
+		CSyncData *pSyncData = (CSyncData*)(&p->data[1]);
+
+		// Fix, yet another, slide issue (punch, switch to any bullet weapon). might be temporary,
+		// though it's sooo much easier to just leave this here than look for an asm hook
+		if (pSyncData->wKeys & KEY_FIRE && pSyncData->byteWeapon < 15)
+		{
+			LastTicks[p->playerIndex] = GetTickCount() + 350;
+		}
+
+		if (LastTicks[p->playerIndex] > GetTickCount() && pSyncData->byteWeapon > 15)
+		{
+			pSyncData->byteWeapon = 0;
+		}
+	}
+
+	// for some reason GetTrampoline only returns a useful value if YSF is loaded. (and crashes otherwise)
 
 	// if YSF is not loaded
 	if (GetPacketID_hook.GetTrampoline() == 0)

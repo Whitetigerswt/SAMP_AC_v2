@@ -323,7 +323,7 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CameraYAccessHook25, (DWORD)CameraYAccessHook25, 6);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook26, (DWORD)CameraYAccessHook26, 8);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook27, (DWORD)CameraYAccessHook27, 10);
-	CMem::ApplyJmp(FUNC_CameraYAccessHook28, (DWORD)CameraYAccessHook28, 12);
+	//CMem::ApplyJmp(FUNC_CameraYAccessHook28, (DWORD)CameraYAccessHook28, 12);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook29, (DWORD)CameraYAccessHook29, 6);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook30, (DWORD)CameraYAccessHook30, 6);
 	CMem::ApplyJmp(FUNC_CameraYAccessHook31, (DWORD)CameraYAccessHook31, 6);
@@ -822,14 +822,20 @@ HOOK CHookManager::KeyPress()
 		}
 	}
 
-	// fixes: [00:02] [U]27: you have to shoot, then hold all keys down afterwards at the same time (space, C, a, s, d, w (w/e direction) and aim (rmb)
-	// slide issue
-	if (AIM_KEY > 0 && SPRINT_KEY > 0 && VAR_CPED_STATE != 102 && VAR_CPED_STATE != 205)
+	if (SPRINT_KEY > 0)
 	{
-		if (VAR_CURRENT_WEAPON >= 23)
+		// fixes: [00:02] [U]27: you have to shoot, then hold all keys down afterwards at the same time (space, C, a, s, d, w (w/e direction) and aim (rmb)
+		// slide issue
+		if (VAR_CURRENT_WEAPON >= 23 && VAR_CURRENT_WEAPON <= 33 && VAR_CPED_STATE != 102 && VAR_CPED_STATE != 205 && AIM_KEY > 0)
 		{
 			AIM_KEY = 0;
 		}
+	}
+
+	// Fixes switch weapon desync while sprinting/running
+	if ((VAR_CPED_STATE == 102 || VAR_CPED_STATE == 205) && AIM_KEY == 0 && VAR_CURRENT_WEAPON > 15)
+	{
+		FIRE_KEY = 0;
 	}
 
 	// Check if the crouch key is pressed.
@@ -849,25 +855,11 @@ HOOK CHookManager::KeyPress()
 		}
 	}
 
-	// Fix weird slide related to switch weapons
-
-	// if sprinting and pressed fire key while holding a melee weapon
-	if (PLAYER_POINTER != 0 && VAR_CPED_STATE == 154 && FIRE_KEY > 0 && VAR_CURRENT_WEAPON < 16)
+	// fix weird client side run-while-seeing-crosshair bug, and slide bug. 2 birds with 1 stone
+	// with VAR_SPEED could this cause an issue if surfing on a vehicle at a high speed?
+	if (VAR_SPEED > 3 && (VAR_AIMING == 53 || VAR_AIMING == 7) && (VAR_CPED_STATE == 102 || VAR_CPED_STATE == 205) && VAR_CURRENT_WEAPON > 15)
 	{
-		iLastTick = GetTickCount()+350;
-	}
-
-	if (iLastTick > GetTickCount())
-	{
-		// Tell the game to ignore weapon switch input
-		CMem::Cpy((void*)0x540666, "\x00", 1);
-		CMem::Cpy((void*)0x540636, "\x00", 1);
-	}
-	else
-	{
-		// Tell the game to not ignore weapon switch input
-		CMem::Cpy((void*)0x540666, "\x01", 1);
-		CMem::Cpy((void*)0x540636, "\x01", 1);
+		AIM_KEY = 0;
 	}
 
 	// Prevent jumping while alt tabbed

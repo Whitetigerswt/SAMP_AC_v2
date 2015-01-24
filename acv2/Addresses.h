@@ -11,7 +11,7 @@
 #define RESOLUTION_X							*(int*)0xC9C040
 #define RESOLUTION_Y							*(int*)0xC9C044
 #define CURRENT_HWND							*(HWND*)0xC97C1C
-#define SPRINT_KEY								*(BYTE*)0xB73478
+#define SPRINT_KEY								*(BYTE*)0xB73478 // sprint AND zoom out key, apparently...
 #define CROUCH_KEY								*(BYTE*)0xB7347C
 #define AIM_KEY									*(BYTE*)0xB73464
 #define FIRE_KEY								*(BYTE*)0xB7347A
@@ -31,3 +31,5 @@
 #define VAR_SPRINT_SPEED						*(float*)0xB7CDB8
 #define VAR_CURRENT_VEHICLE						*(int*)0xBA18FC 
 #define VAR_CURRENT_WEAPON						*(int*)0xBAA410
+#define VAR_SPEED								*(int*)0xB729C0
+#define VAR_AIMING								*(int*)0xB6F858 // might be camera mode?

@@ -20,35 +20,64 @@ public OnPlayerDisconnect(playerid)
 
 CMD:acstatus(playerid, params[]) 
 {
-	new targetid = strval(params);
+	if(IsACPluginLoaded())
+	{
+		new targetid = strval(params);
 
-	new str[128];
-	new version[50];
-	GetPlayerVersion(targetid, version, sizeof(version));
-	new name[MAX_PLAYER_NAME];
-	GetPlayerName(targetid, name, sizeof(name));
-	format(str, sizeof(str), "Target ID: %s (%d), SA-MP version: %s", name, targetid, version);
-	SendClientMessage(playerid, -1, str);
-	format(str, sizeof(str), "IsPlayerUsingSampAC: %d", IsPlayerUsingSampAC(targetid));
-	SendClientMessage(playerid, -1, str);
+		// Also checks if the player is connected.
+		if(IsPlayerUsingSampAC(targetid))
+		{
+			new str[128];
+			new version[50];
+			GetPlayerVersion(targetid, version, sizeof(version));
+			new name[MAX_PLAYER_NAME];
+			GetPlayerName(targetid, name, sizeof(name));
+			format(str, sizeof(str), "Target ID: %s (%d), SA-MP version: %s", name, targetid, version);
+			SendClientMessage(playerid, -1, str);
+			format(str, sizeof(str), "IsPlayerUsingSampAC: %d", IsPlayerUsingSampAC(targetid));
+			SendClientMessage(playerid, -1, str);
 
 
-	new hwid[256];
-	GetPlayerHardwareID(targetid, hwid, sizeof(hwid));
-	format(str, sizeof(str), "HardwareID: %s", hwid);
-	SendClientMessage(playerid, -1, str);
+			new hwid[256];
+			GetPlayerHardwareID(targetid, hwid, sizeof(hwid));
+			format(str, sizeof(str), "HardwareID: %s", hwid);
+			SendClientMessage(playerid, -1, str);
 
-	format(str, sizeof(str), "GetPlayerCBug: %d, GetPlayerLiteFoot: %d, GetPlayerSwitchReload: %d", GetPlayerCrouchBug(targetid), GetPlayerLiteFoot(targetid), GetPlayerSwitchReload(targetid));
-	SendClientMessage(playerid, -1, str);
+			format(str, sizeof(str), "GetPlayerCBug: %d, GetPlayerLiteFoot: %d, GetPlayerSwitchReload: %d", GetPlayerCrouchBug(targetid), GetPlayerLiteFoot(targetid), GetPlayerSwitchReload(targetid));
+			SendClientMessage(playerid, -1, str);
 
-	format(str, sizeof(str), "GetPlayerFPSLimit: %d", GetPlayerFPSLimit(targetid));
-	SendClientMessage(playerid, -1, str);
+			format(str, sizeof(str), "GetPlayerFPSLimit: %d", GetPlayerFPSLimit(targetid));
+			SendClientMessage(playerid, -1, str);
+		} 
+		else
+		{
+			new str[128];
+			format(str, sizeof(str), "{FF0000}Error: {FFFFFF}This player is not running SAMP AC.");
+			SendClientMessage(playerid, -1, str);
+
+			return 1;
+		}
+	} 
+	else
+	{
+		new str[128];
+		format(str, sizeof(str), "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+		SendClientMessage(playerid, -1, str);
+
+		return 1;
+	}
 
 	return 1;
 }
 
 CMD:setmyfps(playerid, params[])
 {
+	if(!IsACPluginLoaded())
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+
+	if(!IsPlayerUsingSampAC(playerid))
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
+
 	SetPlayerFPSLimit(playerid, strval(params));
 
 	new str[128];
@@ -60,6 +89,12 @@ CMD:setmyfps(playerid, params[])
 
 CMD:litefoot(playerid, params[])
 {
+	if(!IsACPluginLoaded())
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+
+	if(!IsPlayerUsingSampAC(playerid))
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
+
 	TogglePlayerLiteFoot(playerid, !!strval(params));
 
 	new str[128];
@@ -71,6 +106,12 @@ CMD:litefoot(playerid, params[])
 
 CMD:cbug(playerid, params[])
 {
+	if(!IsACPluginLoaded())
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+
+	if(!IsPlayerUsingSampAC(playerid))
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
+
 	TogglePlayerCrouchBug(playerid, !!strval(params));
 
 	new str[128];
@@ -82,6 +123,12 @@ CMD:cbug(playerid, params[])
 
 CMD:switchreload(playerid, params[])
 {
+	if(!IsACPluginLoaded())
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+
+	if(!IsPlayerUsingSampAC(playerid))
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
+
 	TogglePlayerSwitchReload(playerid, !!strval(params));
 
 	new str[128];
@@ -93,6 +140,12 @@ CMD:switchreload(playerid, params[])
 
 CMD:togglebugs(playerid, params[])
 {
+	if(!IsACPluginLoaded())
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+
+	if(!IsPlayerUsingSampAC(playerid))
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
+
 	TogglePlayerCrouchBug(playerid, !!strval(params));
 	TogglePlayerLiteFoot(playerid, !!strval(params));
 	TogglePlayerSwitchReload(playerid, !!strval(params));
@@ -100,44 +153,22 @@ CMD:togglebugs(playerid, params[])
 	return 1;
 }
 
-public OnACOpened(ip[])
-{
-	printf("PAWN - OnACOpened(%s)", ip);
-}
-
-public OnACClosed(ip[])
-{
-	printf("PAWN - OnACClosed(%s)", ip);
-}
-
 public AC_OnFileExecuted(playerid, module[], md5[])
 {
 	printf("PAWN - OnFileExecuted(%d, %s, %s)", playerid, module, md5);
-	new str[180];
-	format(str, sizeof(str), "OnFileExecuted(%d, %s, %s)", playerid, module, md5);
-	//SendClientMessage(playerid, -1, str);
 }
 
 public AC_OnMD5Calculated(playerid, address, size, md5[])
 {
 	printf("PAWN - OnMD5Calculated(%d, %d, %d, %s)", playerid, address, size, md5);
-	new str[180];
-	format(str, sizeof(str), "OnMD5Calculated(%d, 0x%x, %d, %s)", playerid, address, size, md5);
-	//SendClientMessage(playerid, -1, str);
 }
 
 public AC_OnImgFileModifed(playerid, filename[], md5[])
 {
 	printf("PAWN - OnImgFileModifed(%d, %s, %s)", playerid, filename, md5);
-	new str[180];
-	format(str, sizeof(str), "OnImgFileModifed(%d, %s, %s)", playerid, filename, md5);
-	//SendClientMessage(playerid, -1, str);
 }
 
 public AC_OnFileCalculated(playerid, filename[], md5[])
 {
 	printf("PAWN - OnFileCalculated(%d, %s, %s)", playerid, filename, md5);
-	new str[180];
-	format(str, sizeof(str), "OnFileCalculated(%d, %s, %s)", playerid, filename, md5);
-	//SendClientMessage(playerid, -1, str);
 }

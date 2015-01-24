@@ -1,0 +1,12 @@
+To setup a server to use AC v2.0 all you need to do is place 
+sampac.dll (if your server is windows) 
+or 
+sampac.so (if your server is linux) in the plugins folder.
+
+open server.cfg and in the plugins line add sampac.dll (Windows) or sampac.so (Linux).
+
+and place ac_config.ini in your server's main directory (where samp-server.exe is on windows, or sam03svr is on linux)
+
+Restart your server. 
+
+The files in the filterscript folder, and in the PAWNO folder are not necessary to install unless you're a scripter.
