@@ -73,7 +73,7 @@ int AMXAPI HOOK_amx_Register(AMX *amx, AMX_NATIVE_INFO *nativelist, int number)
 			bHooksInstalled = true;
 			GetGravity = nativelist[i].func;
 			nativelist[i].func = SecretProc;
-			break;
+			//break;
 		}
 		i++;
 	}

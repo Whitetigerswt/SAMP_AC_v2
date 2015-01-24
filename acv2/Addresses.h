@@ -33,3 +33,6 @@
 #define VAR_CURRENT_WEAPON						*(int*)0xBAA410
 #define VAR_SPEED								*(int*)0xB729C0
 #define VAR_AIMING								*(int*)0xB6F858 // might be camera mode?
+#define VAR_ANIMATION_SOMETHING					*(int*)0xB7CDB0
+#define VAR_ANIMATION_SOMETHING_ELSE			*(int*)0xB7CDC0
+#define VAR_SOMETHING_STATE						*(int*)0xB5EB28

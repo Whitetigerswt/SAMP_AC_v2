@@ -184,25 +184,30 @@ namespace Callback
 			// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
 			CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
 
-			// Send the client the files we need them to return md5's to.
-			ac->CheckGTAFiles(playerid);
+			std::string hwid = "";
 
-			// Set defaults
-			ac->ToggleUnlimitedSprint(Default_InfSprint);
-			ac->ToggleSprintOnAllSurfaces(Default_SprintOnAllSurfaces);
-			ac->ToggleMacroLimitations(Default_MacroLimits);
-			ac->ToggleSwitchReload(Default_SwitchReload);
-			ac->ToggleCrouchBug(Default_CrouchBug);
-			ac->ToggleLiteFoot(Default_LiteFoot);
-			ac->ToggleVehicleBlips(Default_VehicleBlips);
+			if (ac != NULL)
+			{
+				// Send the client the files we need them to return md5's to.
+				ac->CheckGTAFiles(playerid);
 
-			if (Default_FrameLimit != 9999) ac->SetFPSLimit(Default_FrameLimit);
+				// Set defaults
+				ac->ToggleUnlimitedSprint(Default_InfSprint);
+				ac->ToggleSprintOnAllSurfaces(Default_SprintOnAllSurfaces);
+				ac->ToggleMacroLimitations(Default_MacroLimits);
+				ac->ToggleSwitchReload(Default_SwitchReload);
+				ac->ToggleCrouchBug(Default_CrouchBug);
+				ac->ToggleLiteFoot(Default_LiteFoot);
+				ac->ToggleVehicleBlips(Default_VehicleBlips);
 
-			// Get the player's Hardware ID.
-			std::string hwid = ac->GetPlayerHardwareID();
+				if (Default_FrameLimit != 9999) ac->SetFPSLimit(Default_FrameLimit);
+
+				// Get the player's Hardware ID.
+				hwid = ac->GetPlayerHardwareID();
+			}
 
 			// Check if it's an empty string
-			if (hwid.empty())
+			if (ac == NULL || hwid.empty())
 			{
 				if (ACToggle)
 				{

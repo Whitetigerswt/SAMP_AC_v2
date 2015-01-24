@@ -848,17 +848,23 @@ HOOK CHookManager::KeyPress()
 			CROUCH_KEY = 0;
 		}
 
-		// Disable floor bug
-		if (VAR_CPED_STATE == 61)
+		// Disable floor bug, checks if the player is punching
+		if (VAR_SOMETHING_STATE == 77000016)
 		{
 			CROUCH_KEY = 0;
 		}
 	}
 
-	// fix weird client side run-while-seeing-crosshair bug, and slide bug. 2 birds with 1 stone
-	// with VAR_SPEED could this cause an issue if surfing on a vehicle at a high speed?
-	if (VAR_SPEED > 3 && (VAR_AIMING == 53 || VAR_AIMING == 7) && (VAR_CPED_STATE == 102 || VAR_CPED_STATE == 205) && VAR_CURRENT_WEAPON > 15)
+	// fix slide bug.
+	if (VAR_ANIMATION_SOMETHING == 1069547520 && VAR_AIMING == 53 && (VAR_CPED_STATE == 102 || VAR_CPED_STATE == 205) && VAR_CURRENT_WEAPON > 15)
 	{
+		AIM_KEY = 0;
+	}
+
+	// Fix weird client side slide 
+	if (VAR_AIMING == 53 && VAR_ANIMATION_SOMETHING_ELSE == 0 && VAR_ANIMATION_SOMETHING == 1074301065)
+	{
+		VAR_ANIMATION_SOMETHING = 0;
 		AIM_KEY = 0;
 	}
 
