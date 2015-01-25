@@ -51,10 +51,10 @@ public OnPlayerConnect(playerid)
 	GetPlayerIp(playerid, IP, sizeof(IP));
 
 	new str[256];
-	format(str, sizeof(str), "SELECT `Reason`, `Admin`, FROM `bans` WHERE `hwid` = '%s' OR `IP` = '%s' LIMIT 1", escaped_hwid, IP);
+	format(str, sizeof(str), "SELECT `Reason`, `Admin` FROM `bans` WHERE `hwid` = '%s' OR `IP` = '%s' LIMIT 1", escaped_hwid, IP);
 	new DBResult:query_result = db_query(bans_reference, str);
 
-	if(db_num_rows(query_result) > 0)
+	if(db_num_rows(query_result))
 	{
 		new name[MAX_PLAYER_NAME];
 		GetPlayerName(playerid, name, sizeof(name));
@@ -63,6 +63,8 @@ public OnPlayerConnect(playerid)
 
 		Ban(playerid);
 	}
+
+	db_free_result(query_result);
 
 	return 1;
 }
@@ -106,6 +108,11 @@ CMD:hardwareban(playerid, params[])
 	new str[256];
 	format(str, sizeof(str), "INSERT INTO `bans` (`hwid`, `name`, `Reason`, `Admin`, `IP`) VALUES ('%s', '%s', '%s', '%s', '%s');", escaped_hwid, targetName, escaped_reason, adminName, IP);
 	query(str);
+
+	format(str, sizeof(str), "'{FF0000}%s{FFFFFF}' has banned '{FF0000}%s{FFFFFF}' from the server for \"{FF0000}%s{FFFFFF}\"", adminName, targetName, reason);
+	SendClientMessage(playerid, -1, str);
+
+	BanEx(targetid, reason);
 
 	return 1;
 }
