@@ -401,6 +401,28 @@ void CHookManager::Load()
 
 void CHookManager::SetConnectPatches()
 {
+	// Detect when a player is pausing.
+	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
+
+	// Hack to make SA-MP think the game is always unpaused
+	CMem::Cpy((void*)0x53E9B3, "\x75\x44\x90\x90\x90\x90", 6); // jne 0x53E9F9
+
+	// Hack to make the game run in the background when paused
+	CMem::PutSingle < BYTE >(0x561AF6, 0x00); // mov byte ptr [0xB7CB49],01 -> mov byte ptr [0xB7CB49],00
+
+	// Hack to make the game think we never alt tabbed when we have.
+	CMem::PutSingle <BYTE>(0x748054, 0x90);
+
+	// Hack to make the game not set cursor position while alt tabbed
+	CMem::ApplyJmp(FUNC_SetCursorPos, (DWORD)SetCursorPosHook, 8);
+
+	// Hack so SA-MP continues to send packets while alt tabbed.
+	CMem::Cpy((void*)0x53EA88, "\x90\x90\x90\x90\x90\x90", 6); // nop 
+
+	// If you alt tab when you're in an interior, some weird graphics bugs happen
+	// So fix that:
+	CMem::Cpy((void*)0x53EA12, "\x90\x90\x90\x90\x90", 5);
+
 	// Hook key presses, this is an all key presses hook.
 	CMem::ApplyJmp(FUNC_KeyPress, (DWORD)KeyPress, 8);
 
@@ -430,28 +452,6 @@ void CHookManager::SetConnectPatches()
 	CMem::Cpy((void*)0x52A93C, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x686CE6, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
 	CMem::Cpy((void*)0x686C64, "\x66\xB8\x01\x00\x90", 5); // mov ax,1    nop
-
-	// Detect when a player is pausing.
-	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
-
-	// Hack to make SA-MP think the game is always unpaused
-	CMem::Cpy((void*)0x53E9B3, "\x75\x44\x90\x90\x90\x90", 6); // jne 0x53E9F9
-
-	// Hack to make the game run in the background when paused
-	CMem::PutSingle < BYTE >(0x561AF6, 0x00); // mov byte ptr [0xB7CB49],01 -> mov byte ptr [0xB7CB49],00
-
-	// Hack to make the game think we never alt tabbed when we have.
-	CMem::PutSingle <BYTE>(0x748054, 0x90);
-
-	// Hack to make the game not set cursor position while alt tabbed
-	CMem::ApplyJmp(FUNC_SetCursorPos, (DWORD)SetCursorPosHook, 8);
-
-	// Hack so SA-MP continues to send packets while alt tabbed.
-	CMem::Cpy((void*)0x53EA88, "\x90\x90\x90\x90\x90\x90", 6); // nop 
-
-	// If you alt tab when you're in an interior, some weird graphics bugs happen
-	// So fix that:
-	CMem::Cpy((void*)0x53EA12, "\x90\x90\x90\x90\x90", 5);
 
 	// Fix some slide issues with melee weps
 	CMem::ApplyJmp(FUNC_SlideFix, (DWORD)SlideFix, 6);
@@ -797,6 +797,18 @@ HOOK CHookManager::KeyPress()
 		pushad
 	}
 
+	if (PLAYER_POINTER == 0)
+	{
+		__asm
+		{
+			popad
+
+			call[KeyPressCall]
+			lea ecx, [ebx + 78h]
+			jmp[KeyPressJmpBack]
+		}
+	}
+
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.
 	if (SPRINT_KEY != 0)
 	{
@@ -865,7 +877,7 @@ HOOK CHookManager::KeyPress()
 	if (VAR_AIMING == 53 && VAR_ANIMATION_SOMETHING_ELSE == 0 && VAR_ANIMATION_SOMETHING == 1074301065)
 	{
 		VAR_ANIMATION_SOMETHING = 0;
-		AIM_KEY = 0;
+		//AIM_KEY = 0;
 	}
 
 	// Prevent jumping while alt tabbed

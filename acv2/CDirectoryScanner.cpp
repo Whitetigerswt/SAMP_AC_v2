@@ -98,6 +98,7 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 			// Compare the md5 calculated to the list of files we got from the "Internet"
 			if (md5.compare(Gta3ImgDefaults[filename]) != 0)
 			{
+
 				// Tell the server that the MD5 doesn't match on this file.
 				RakNet::BitStream bitStream;
 
@@ -108,11 +109,31 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 				// Add strings
 				bitStream.Write((unsigned short)strlen(filename));
 				bitStream.Write((const char*)filename, strlen(filename));
-				bitStream.Write((unsigned short)md5.length());
-				bitStream.Write((const char*)md5.c_str(), md5.length());
+
+				// convert md5 string to bytes
+				BYTE digest[16];
+
+				// if string isn't null
+				if (strcmp(md5.c_str(), "NULL"))
+				{
+					for (int i = 0; i < 16; ++i)
+					{
+						std::string bt = md5.substr(i * 2, 2);
+						digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+						bitStream.Write(digest[i]);
+					}
+				}
+				else
+				{
+					for (int i = 0; i < 16; ++i)
+					{
+						digest[i] = NULL;
+						bitStream.Write(digest[i]);
+					}
+				}
 
 				// Send
-				CRakClientHandler::CustomSend(&bitStream);
+				CRakClientHandler::CustomSend(&bitStream, LOW_PRIORITY, RELIABLE);
 			}
 
 			// Free memory!

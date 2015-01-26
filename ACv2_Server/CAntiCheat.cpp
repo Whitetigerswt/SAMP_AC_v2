@@ -395,7 +395,7 @@ void CAntiCheat::ToggleLiteFoot(bool toggle)
 	m_LiteFoot = toggle;
 }
 
-void CAntiCheat::ToggleCrouchBug(int toggle)
+void CAntiCheat::ToggleCrouchBug(unsigned short toggle)
 {
 	// Prepare to send RPC to client.
 	RakNet::BitStream bsData;

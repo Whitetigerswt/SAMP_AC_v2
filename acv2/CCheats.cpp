@@ -154,11 +154,32 @@ void CCheats::OnFileExecuted(const char* file, const char* md5)
 
 		bitStream.Write((unsigned short)szFile.length());
 		bitStream.Write((const char*)szFile.c_str(), szFile.length());
-		bitStream.Write((unsigned short)strlen(md5));
-		bitStream.Write((const char*)md5, strlen(md5));
+
+		// convert md5 string to bytes
+		BYTE digest[16];
+		std::string md5_string(md5);
+
+		// if string isn't null
+		if (strcmp(md5, "NULL"))
+		{
+			for (int i = 0; i < 16; ++i) 
+			{
+				std::string bt = md5_string.substr(i * 2, 2);
+				digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+				bitStream.Write(digest[i]);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 16; ++i)
+			{
+				digest[i] = NULL;
+				bitStream.Write(digest[i]);
+			}
+		}
 
 		// Send the RPC to the server.
-		CRakClientHandler::CustomSend(&bitStream, MEDIUM_PRIORITY);
+		CRakClientHandler::CustomSend(&bitStream, LOW_PRIORITY, RELIABLE);
 	}
 	return;
 }
@@ -252,3 +273,4 @@ bool CCheats::DoesFileExist(std::string file)
 	}
 	return false;
 }
+

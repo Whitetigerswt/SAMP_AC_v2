@@ -68,11 +68,32 @@ void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)
 
 		bitStream.Write(address);
 		bitStream.Write(size);
-		bitStream.Write((unsigned short)md5.length());
-		bitStream.Write((const char*)md5.c_str(), md5.length());
+
+		// convert md5 string to bytes
+		BYTE digest[16];
+		std::string md5_string(md5);
+
+		// if string isn't null
+		if (strcmp(md5.c_str(), "NULL"))
+		{
+			for (int i = 0; i < 16; ++i)
+			{
+				std::string bt = md5_string.substr(i * 2, 2);
+				digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+				bitStream.Write(digest[i]);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 16; ++i)
+			{
+				digest[i] = NULL;
+				bitStream.Write(digest[i]);
+			}
+		}
 
 		// Send the RPC to the server.
-		CRakClientHandler::CustomSend(&bitStream);
+		CRakClientHandler::CustomSend(&bitStream, LOW_PRIORITY, RELIABLE);
 	}
 }
 
@@ -90,7 +111,7 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 		// Convert the file into a std::string, so we can remove any macros that were sent in the file name.
 		std::string szFile(reinterpret_cast<char*>(file));
 		
-		// Find the occurand of $(GtaDirectory) macro.
+		// Find the occurance of $(GtaDirectory) macro.
 		int i = szFile.find("$(GtaDirectory)/");
 
 		RakNet::BitStream bsData;
@@ -105,12 +126,30 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 		bsData.Write((unsigned short)szFileInGTADirectory.length());
 		bsData.Write((const char*)szFileInGTADirectory.c_str(), szFileInGTADirectory.length());
 
-		// and of course, send the MD5 as a const char*
-		bsData.Write((unsigned short)result.length());
-		bsData.Write((const char*)result.c_str(), result.length());
+		// convert md5 string to bytes
+		BYTE digest[16];
+
+		// if string isn't null
+		if (strcmp(result.c_str(), "NULL"))
+		{
+			for (int i = 0; i < 16; ++i)
+			{
+				std::string bt = result.substr(i * 2, 2);
+				digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+				bsData.Write(digest[i]);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 16; ++i)
+			{
+				digest[i] = NULL;
+				bsData.Write(digest[i]);
+			}
+		}
 
 		// Call the RPC.
-		CRakClientHandler::CustomSend(&bsData);
+		CRakClientHandler::CustomSend(&bsData, LOW_PRIORITY, RELIABLE);
 	}
 }
 

@@ -74,8 +74,6 @@ public:
 	// PROMISE: File list sent to the server.
 	void ResendFiles();
 
-	// TODO: Add RPC to send cheats
-
 protected:
 	// PURPOSE: Check if a file exists.
 	// REQUIRES: a string (file path)

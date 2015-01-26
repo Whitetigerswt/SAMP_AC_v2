@@ -140,7 +140,7 @@ cell AMX_NATIVE_CALL SetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	bsData.Write(SET_FRAME_LIMIT);
 
 	// Write new frame limit to packet
-	bsData.Write((int)pParams[2]);
+	bsData.Write((unsigned short)pParams[2]);
 
 	return Network::PlayerSend(pParams[1], &bsData);
 }

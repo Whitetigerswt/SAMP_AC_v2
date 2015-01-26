@@ -76,7 +76,7 @@ public:
 
 	// PURPOSE: Set the players crouch bug status.
 	// REQUIRES: The client is using AC.
-	void ToggleCrouchBug(int toggle);
+	void ToggleCrouchBug(unsigned short toggle);
 
 	// PURPOSE: Get the players crouch bug status.
 	// REQUIRES: NULL
@@ -143,7 +143,7 @@ private:
 	bool m_LiteFoot;
 
 	// PURPOSE: Keep track of the player's cbug status.
-	int m_CBug;
+	unsigned short m_CBug;
 
 	// PURPOSE: Keep track of the player's switch reload status.
 	bool m_SwitchReload;
