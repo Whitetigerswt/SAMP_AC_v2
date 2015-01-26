@@ -14,6 +14,11 @@
 #define MAX_PATH 260
 #endif
 
+#ifndef WIN32
+typedef unsigned char BYTE;
+#endif
+
+
 void CRPCCallback::Initialize()
 {
 	// Add RPC Callback functions.
