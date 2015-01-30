@@ -38,11 +38,6 @@ void CRPCCallback::OnConnect()
 	}
 
 	CHookManager::SetConnectPatches();
-
-	// Sleep a bit to prevent the server from getting spammed with packets on connect.
-	Sleep(10000);
-
-	// Then resend info
 	ResendFileInformation();
 }
 
