@@ -6,6 +6,7 @@
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "../Shared/Network/CRPC.h"
 #include "CServerUpdater.h"
+#include "PacketPriority.h"
 
 std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;
@@ -126,26 +127,6 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 				SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 			}
 		}
-
-		// This address is some handling.cfg address, though it seems to include code to and not just data.
-		/*else if (address == 0xC2B9DC)
-		{
-		// Compare the returned md5 to our pre-calculated checksum.
-		if (strcmp(md5, "12c0520d9b5442fbecccfa81ebbf2603") != 0)
-		{
-		// Create 2 new variables, one to hold the player name, and one to send a formatted message to everyone on the server.
-		char msg[144], name[MAX_PLAYER_NAME];
-
-		// Get the player name and store it in the name variable.
-		GetPlayerName(ID, name, sizeof(name));
-
-		// Format the message that we're going to send to everyone.
-		snprintf(msg, sizeof(msg), "[TEST] %s has modified handling.cfg info", name);
-
-		// Send the mssage to everyone connected to the server.
-		SendClientMessageToAll(-1, msg);
-		}
-		}*/
 	}
 	// Execute a PAWN callback.
 	Callback::Execute("AC_OnMD5Calculated", "siii", md5, size, address, ID);
@@ -295,7 +276,7 @@ void CAntiCheat::CheckGTAFiles(int playerid)
 		bsData.Write((const char*)szFile.c_str(), szFile.length());
 
 		// Send the data to the client and have them calculate the md5 of that file.
-		Network::PlayerSend(playerid, &bsData);
+		Network::PlayerSend(playerid, &bsData, LOW_PRIORITY, RELIABLE);
 	}
 }
 
@@ -318,6 +299,20 @@ void CAntiCheat::OnHardwareCalculated(char* hwid)
 {
 	// Set our instance variable to the player's hardware ID so we can store it for later use.
 	m_HardwareID = hwid;
+
+	// Send the client the files we need them to return md5's to.
+	CheckGTAFiles(ID);
+
+	// Set defaults
+	ToggleUnlimitedSprint(Callback::Default_InfSprint);
+	ToggleSprintOnAllSurfaces(Callback::Default_SprintOnAllSurfaces);
+	ToggleMacroLimitations(Callback::Default_MacroLimits);
+	ToggleSwitchReload(Callback::Default_SwitchReload);
+	ToggleCrouchBug(Callback::Default_CrouchBug);
+	ToggleLiteFoot(Callback::Default_LiteFoot);
+	ToggleVehicleBlips(Callback::Default_VehicleBlips);
+
+	if (Callback::Default_FrameLimit != 9999) SetFPSLimit(Callback::Default_FrameLimit);
 
 	// Execute a PAWN callback telling the server we've just calculated the user's Hardware ID.
 	Callback::Execute("AC_OnHardwareIDCalculated", "si", hwid, ID);
@@ -363,7 +358,7 @@ void CAntiCheat::CheckVersionCompatible(float version)
 		bsData.Write(VERSION_NOT_COMPATIBLE);
 
 		// And send an RPC telling the client's AC not to continue to monitor things.
-		Network::PlayerSend(ID, &bsData);
+		Network::PlayerSend(ID, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED);
 
 		// Close the connection.
 		Kick(ID);
@@ -389,7 +384,7 @@ void CAntiCheat::ToggleLiteFoot(bool toggle)
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSend(ID, &bsData);
+	Network::PlayerSend(ID, &bsData, LOW_PRIORITY, RELIABLE);
 
 	// Set the lite foot variable to true.
 	m_LiteFoot = toggle;
@@ -408,7 +403,7 @@ void CAntiCheat::ToggleCrouchBug(unsigned short toggle)
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSend(ID, &bsData);
+	Network::PlayerSend(ID, &bsData, LOW_PRIORITY, RELIABLE);
 
 	// Set the crouch bug variable to true.
 	m_CBug = toggle;
@@ -427,7 +422,7 @@ void CAntiCheat::ToggleSwitchReload(bool toggle)
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSend(ID, &bsData);
+	Network::PlayerSend(ID, &bsData, LOW_PRIORITY, RELIABLE);
 
 	// Set the crouch bug variable to true.
 	m_SwitchReload = toggle;
@@ -446,7 +441,7 @@ void CAntiCheat::ToggleUnlimitedSprint(bool toggle)
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSend(ID, &bsData);
+	Network::PlayerSend(ID, &bsData, LOW_PRIORITY, RELIABLE);
 
 	// Set the sprint variable to true.
 	m_UnlimitedSprint = toggle;
@@ -465,7 +460,7 @@ void CAntiCheat::ToggleMacroLimitations(bool toggle)
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSend(ID, &bsData);
+	Network::PlayerSend(ID, &bsData, LOW_PRIORITY, RELIABLE);
 
 	// Set the crouch bug variable to true.
 	m_MacroLimits = toggle;
@@ -484,7 +479,7 @@ void CAntiCheat::ToggleSprintOnAllSurfaces(bool toggle)
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSend(ID, &bsData);
+	Network::PlayerSend(ID, &bsData, LOW_PRIORITY, RELIABLE);
 
 	// Set the crouch bug variable to true.
 	m_SprintOnAllSurfaces = toggle;
@@ -503,7 +498,7 @@ void CAntiCheat::ToggleVehicleBlips(bool toggle)
 	bsData.Write(toggle);
 
 	// Send RPC to player.
-	Network::PlayerSend(ID, &bsData);
+	Network::PlayerSend(ID, &bsData, LOW_PRIORITY, RELIABLE);
 
 	// Set the vehicle blips variable.
 	m_VehicleBlips = toggle;

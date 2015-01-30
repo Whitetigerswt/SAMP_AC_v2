@@ -6,6 +6,7 @@
 #include "../Shared/Network/CRPC.h"
 #include "CServerUpdater.h"
 #include "CAntiCheatHandler.h"
+#include "PacketPriority.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,15 +19,6 @@ namespace Callback
 {
 	static AMX* amx_allowed = NULL;
 	static std::list<AMX*> amxPointers;
-
-	static bool Default_InfSprint = false;
-	static bool Default_SprintOnAllSurfaces = false;
-	static bool Default_MacroLimits = false;
-	static bool Default_SwitchReload = false;
-	static bool Default_VehicleBlips = true;
-	static bool Default_LiteFoot = false;
-	static int Default_CrouchBug = 9999;
-	static int Default_FrameLimit = 9999;
 
 	std::list<AMX*>& GetAMXList()
 	{
@@ -146,7 +138,7 @@ namespace Callback
 				bsData.Write(0x460);
 
 				// Send RPC.
-				Network::PlayerSend(i, &bsData);
+				Network::PlayerSend(i, &bsData, LOW_PRIORITY, RELIABLE);
 
 				/*// Verify the players handling.cfg values
 				RakNet::BitStream bsData2;
@@ -188,26 +180,12 @@ namespace Callback
 
 			if (ac != NULL)
 			{
-				// Send the client the files we need them to return md5's to.
-				ac->CheckGTAFiles(playerid);
-
-				// Set defaults
-				ac->ToggleUnlimitedSprint(Default_InfSprint);
-				ac->ToggleSprintOnAllSurfaces(Default_SprintOnAllSurfaces);
-				ac->ToggleMacroLimitations(Default_MacroLimits);
-				ac->ToggleSwitchReload(Default_SwitchReload);
-				ac->ToggleCrouchBug(Default_CrouchBug);
-				ac->ToggleLiteFoot(Default_LiteFoot);
-				ac->ToggleVehicleBlips(Default_VehicleBlips);
-
-				if (Default_FrameLimit != 9999) ac->SetFPSLimit(Default_FrameLimit);
-
 				// Get the player's Hardware ID.
 				hwid = ac->GetPlayerHardwareID();
 			}
 
 			// Check if it's an empty string
-			if (ac == NULL || hwid.empty())
+			if (hwid.empty())
 			{
 				if (ACToggle)
 				{
