@@ -8,6 +8,10 @@
 
 #include "../s0beit/stdtypes.h"
 
+// 1 = 0.3.7
+// 0 = 0.3z
+#define SAMP_VERSION 0
+
 typedef unsigned int RakNetTime;
 typedef long long RakNetTimeNS;
 
@@ -157,6 +161,21 @@ enum ScriptRPCEnumeration
 	RPC_ScrWorldPlayerDeath = 166
 };
 
+#if SAMP_VERSION == 1
+
+enum PacketEnumeration
+{
+
+	ID_CONNECTION_REQUEST_ACCEPTED = 41,
+
+	ID_AUTH_KEY = 12,
+	ID_PLAYER_SYNC = 207,
+	ID_AIM_SYNC = 203,
+	ID_VEHICLE_SYNC = 200,
+	ID_STATS_UPDATE = 205,
+	ID_BULLET_SYNC = 206,
+};
+#else
 enum PacketEnumeration
 {
 	ID_INTERNAL_PING = 7,
@@ -210,6 +229,7 @@ enum PacketEnumeration
 	ID_STATS_UPDATE = 223,
 	ID_BULLET_SYNC = 224,
 };
+#endif
 
 /// These enumerations are used to describe when packets are delivered.
 enum PacketPriority

@@ -9,6 +9,9 @@
 #include "../s0beit/samp.h"
 #include "../VMProtectSDK.h"
 #include "../CClientUpdater.h"
+#include "../CLog.h"
+
+bool hasSentInitInfo = false;
 
 HookedRakClientInterface::HookedRakClientInterface(RakClient * rakclient) : client(rakclient)
 {
@@ -22,12 +25,14 @@ HookedRakClientInterface::~HookedRakClientInterface()
 
 bool HookedRakClientInterface::Connect( const char* host, unsigned short serverPort, unsigned short clientPort, unsigned int depreciated, int threadSleepTimer )
 {
+	hasSentInitInfo = false;
 	return client->GetRakClientInterface()->Connect( host, serverPort, clientPort, depreciated, threadSleepTimer );
 }
 
 void HookedRakClientInterface::Disconnect( unsigned int blockDuration, unsigned char orderingChannel )
 {
 	CRakClientHandler::SetConnected(false);
+	hasSentInitInfo = false;
 	client->GetRakClientInterface()->Disconnect(blockDuration, orderingChannel);
 }
 
@@ -53,6 +58,12 @@ bool HookedRakClientInterface::Send( const char *data, const int length, int pri
 
 void HookedRakClientInterface::SendInitialInfo()
 {
+
+	if (hasSentInitInfo)
+		return;
+
+	hasSentInitInfo = true;
+
 	// Send the server our hardware ID incase they wanna ban us.
 	RakNet::BitStream bsData;
 

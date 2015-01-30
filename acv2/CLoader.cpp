@@ -81,7 +81,7 @@ void CLoader::Initialize(HMODULE hMod)
 		Modules.Scan();
 
 		// Check for a tamper attempt.
-		if (VMProtectIsDebuggerPresent(true))
+		/*if (VMProtectIsDebuggerPresent(true))
 		{
 			// Make sure the user is connected.
 			if (!CRakClientHandler::IsConnected())
@@ -96,7 +96,7 @@ void CLoader::Initialize(HMODULE hMod)
 			bsData.Write(ON_TAMPER_ATTEMPT);
 			// Tell the server we've done some naughty stuff.
 			CRakClientHandler::CustomSend(&bsData);
-		}
+		}*/
 
 		// Sleep
 		Sleep(1000);

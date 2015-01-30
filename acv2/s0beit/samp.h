@@ -55,6 +55,30 @@ struct stSAMPPools
 	struct stPickupPool		*pPool_Pickup;
 };
 
+
+#if SAMP_VERSION == 1
+
+// 0.3.7
+// src: http://ugbase.eu/notessnippets/(-collection-of-0-3-7-0-*-*-offsets-)/msg70234/#msg70234
+struct stSAMP
+{
+#pragma pack( 1 )
+	uint8_t               byteUnk[0x20];
+	char               szIP[257];
+	char               szHostname[255];
+	void               *unk1;
+	uint32_t            ulPort;
+	uint32_t            ulMapIcons[99];
+	uint32_t            ulConnectTick; // not tested
+	int                  iLanMode; // not tested
+	int                  iGameState;
+	void               *unk3;
+	struct stSampSettings   *pSettings;
+	void               *pRakClientInterface;
+	struct stSAMPPools      *pPools;
+};
+#else
+// 0.3z
 struct stSAMP
 {
 #pragma pack( 1 )
@@ -71,6 +95,7 @@ struct stSAMP
 	struct stSampSettings	*pSettings;
 	struct stSAMPPools		*pPools;
 };
+#endif
 
 struct stSampSettings
 {

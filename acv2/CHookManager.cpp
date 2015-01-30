@@ -12,6 +12,7 @@
 #include "DirectX Hooks\CMessageProxy.h"
 #include "s0beit\samp.h"
 #include "Network\CRakClientHandler.h"
+#include "CLog.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -158,6 +159,7 @@ static DWORD SetCursorPosHookJmpBack = 0x745433;
 static DWORD SlideFixJmpBack = 0x686C39;
 
 static DWORD sampInfoAddr = NULL;
+static DWORD sampInfoRtnAddr = NULL;
 
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
@@ -376,18 +378,31 @@ void CHookManager::Load()
 
 		// Find address to stSAMP struct (So we can hook RakClient later)
 		//samp = FindPattern("\x8B\x80\xD9\x03\x00\x00\x8B\x48\x08\x85\xC9", "xxxxxxxxxxx");
+
+		// 0.3z
+		// samp = FindPattern("\x8B\x86\xD9\x03\x00\x00\x8B\x40\x14\x85\xC0\x74", "xxxxxxxxxxxx");
+
+#if SAMP_VERSION == 1
+		samp = FindPattern("\xBA\xF0\x47\x56\x00\xFF\xD2\x60\x8B\x35\x40\x5B\x9A\x03\x85\xF6", "xxxxxxxxx?????xx") + 0xE;
+#else if SAMP_VERSION == 0
 		samp = FindPattern("\x8B\x86\xD9\x03\x00\x00\x8B\x40\x14\x85\xC0\x74", "xxxxxxxxxxxx");
+#endif
 
 		if (samp != 0 && g_SAMP == NULL)
 		{
 			// Save memory so we can remove hook later.
 			sampInfoAddr = samp;
+			sampInfoRtnAddr = samp + 0x6;
 
 			// Unprotect memory so we can apply a jmp
-			VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+			VirtualProtect((void*)samp, 8, PAGE_EXECUTE_READWRITE, &dwOldProt);
 
 			// Install hook
+#if SAMP_VERSION == 0
 			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 6);
+#else if SAMP_VERSION == 1
+			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 8);
+#endif
 		}
 	}
 	
@@ -650,11 +665,32 @@ void LoadRakClient()
 	boost::thread thread(&CRakClientHandler::Load);
 }
 
+#if SAMP_VERSION == 1
 HOOK CHookManager::GetSampInfo()
 {
 	__asm
 	{
+		test esi,esi
+		je do_nothing
+
 		mov g_SAMP,esi
+		pushad
+		call LoadRakClient
+
+		popad
+		jmp [sampInfoRtnAddr]
+
+		do_nothing:
+			popad
+			ret
+	}
+}
+#else if SAMP_VERSION == 0
+HOOK CHookManager::GetSampInfo()
+{
+	__asm
+	{
+		mov g_SAMP, esi
 		pushad
 		call LoadRakClient
 	}
@@ -666,6 +702,7 @@ HOOK CHookManager::GetSampInfo()
 		jmp[sampInfoAddr]
 	}
 }
+#endif
 
 HOOK CHookManager::GravityHook()
 {

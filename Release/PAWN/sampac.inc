@@ -300,6 +300,18 @@ forward AC_OnPlayerPause(playerid, type, bool:pause);
 // Returns: irrelevant
 forward AC_OnScreenshotTaken(playerid); 
 
+// PURPOSE: Callback for when a player's hardware ID has been initially calculated.
+// REQUIRES: The player is using AC.
+// NOTES: THIS CALLBACK IS CALLED BEFORE ONPLAYERCONNECT!!! - VERY IMPORTANT!
+//
+// Params:
+// playerid         - Player who just had their hardware id calculated.
+// hwid[]			- The hardware ID
+// len				- The length of the hardware ID.
+//
+// Returns: irrelevant
+forward AC_OnHardwareIDCalculated(playerid, hwid[], len = sizeof(hwid));
+
 stock TogglePlayerCrouchBug(playerid, bool:toggle)
 {
 	SetPlayerCrouchBug(playerid, toggle ? 9999 : 1);

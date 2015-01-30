@@ -315,7 +315,7 @@ void CAntiCheat::OnHardwareCalculated(char* hwid)
 	if (Callback::Default_FrameLimit != 9999) SetFPSLimit(Callback::Default_FrameLimit);
 
 	// Execute a PAWN callback telling the server we've just calculated the user's Hardware ID.
-	Callback::Execute("AC_OnHardwareIDCalculated", "si", hwid, ID);
+	Callback::Execute("AC_OnHardwareIDCalculated", "isi", m_HardwareID.length(), hwid, ID);
 }
 
 void CAntiCheat::OnTamperAttempt()
