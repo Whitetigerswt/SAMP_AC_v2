@@ -33,6 +33,9 @@ void CLoader::Initialize(HMODULE hMod)
 	// Hook LoadLibrary function.
 	CModuleSecurity::HookLoadLibrary();
 
+	// Make sure samp.dll is loaded...
+	LoadLibrary("samp.dll");
+
 	// Record that we're loaded
 	isLoaded = true;
 
@@ -81,7 +84,7 @@ void CLoader::Initialize(HMODULE hMod)
 		Modules.Scan();
 
 		// Check for a tamper attempt.
-		/*if (VMProtectIsDebuggerPresent(true))
+		if (VMProtectIsDebuggerPresent(true))
 		{
 			// Make sure the user is connected.
 			if (!CRakClientHandler::IsConnected())
@@ -96,7 +99,7 @@ void CLoader::Initialize(HMODULE hMod)
 			bsData.Write(ON_TAMPER_ATTEMPT);
 			// Tell the server we've done some naughty stuff.
 			CRakClientHandler::CustomSend(&bsData);
-		}*/
+		}
 
 		// Sleep
 		Sleep(1000);
@@ -120,7 +123,7 @@ void CLoader::RunElevated()
 	// Set our info to run the samp_elevator.exe
 	SHELLEXECUTEINFO sei = { sizeof(sei) };
 	sei.lpVerb = "runas";
-	sei.lpFile = "samp_elevator.exe";
+	sei.lpFile = "gta_sa.exe";
 	sei.nShow = SW_NORMAL;
 	sei.lpParameters = GetCommandLineA();
 

@@ -410,6 +410,11 @@ void CHookManager::Load()
 
 	CMem::ApplyJmp(FUNC_Gravity, (DWORD)GravityHook, 6);
 
+	// Make it so we can launch more than 1 gta_sa.exe (reversed addresses from http://ugbase.eu/releases-52/gtasa-multiprocess/)
+	// This removes the necessity for samp_elevator.exe
+	CMem::Cpy((void*)0x74872D, "\x90\x90\x90\x90\x90\x90\x90\x90\x90", 9);
+	CMem::Cpy((void*)0x406946, "\x00\x00\x00\x00", 4);
+
 	// Check data file integrity.
 	VerifyFilePaths();
 }
