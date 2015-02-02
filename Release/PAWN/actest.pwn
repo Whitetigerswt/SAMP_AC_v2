@@ -10,6 +10,8 @@ public OnFilterScriptInit()
 public OnPlayerConnect(playerid)
 {
 	printf("IsPlayerUsingSampAC: %d", IsPlayerUsingSampAC(playerid));	
+
+	TogglePlayerVehicleBlips(playerid, true);
 	return 1;
 }
 
