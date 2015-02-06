@@ -30,11 +30,11 @@ void CLoader::Initialize(HMODULE hMod)
 	// Install the crash handler.
 	new CCrashHandler();
 
+	// Make sure samp.dll is loaded BEFORE we go ANY further!!
+	LoadLibrary("samp.dll");
+
 	// Hook LoadLibrary function.
 	CModuleSecurity::HookLoadLibrary();
-
-	// Make sure samp.dll is loaded...
-	LoadLibrary("samp.dll");
 
 	// Record that we're loaded
 	isLoaded = true;
