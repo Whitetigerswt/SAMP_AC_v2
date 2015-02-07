@@ -9,10 +9,9 @@
 #include "enigma_ide.h"
 #include "../Shared/Network/CRPC.h"
 #include "CCrashHandler.h"
-#include "Detours\detours.h"
-#include "CModuleSecurity.h"
 #include "Network\CRakClientHandler.h"
 #include "VersionHelpers.h"
+#include "CLog.h"
 
 #include <map>
 #include <Shellapi.h>
@@ -32,9 +31,6 @@ void CLoader::Initialize(HMODULE hMod)
 
 	// Make sure samp.dll is loaded BEFORE we go ANY further!!
 	LoadLibrary("samp.dll");
-
-	// Hook LoadLibrary function.
-	CModuleSecurity::HookLoadLibrary();
 
 	// Record that we're loaded
 	isLoaded = true;
@@ -60,8 +56,6 @@ void CLoader::Initialize(HMODULE hMod)
 		// Wait until the game is loaded in an infinite loop.
 		Sleep(5);
 	}
-
-	CModuleSecurity::AddAllowedModules();
 	
 	// Make sure we're using the latest version of this mod.
 	CClientUpdater::CheckForUpdate(hMod);
@@ -83,8 +77,11 @@ void CLoader::Initialize(HMODULE hMod)
 		// Scan for new injected modules.
 		Modules.Scan();
 
+		CLog log = CLog("logger.txt");
+		log.Write("%d", EP_CheckupIsEnigmaOk());
+
 		// Check for a tamper attempt.
-		/*if (!EP_CheckupIsProtected() || !EP_CheckupIsEnigmaOk() || EP_CheckupVirtualizationTools())
+		/*if (EP_CheckupVirtualizationTools())
 		{
 			// Make sure the user is connected.
 			if (!CRakClientHandler::IsConnected())

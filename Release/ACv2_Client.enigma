@@ -262,7 +262,7 @@ Use the link below to visit our web site.</Text>
   <CheckUp>
     <AntiDebugger>
       <Enabled>True</Enabled>
-      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Debugger warning</Title>
         <Text>A debugger is detected on this computer.
@@ -290,7 +290,7 @@ This program will not execute while debuggers are running.</Text>
       <Enabled>True</Enabled>
       <FileIntegrityChecking>True</FileIntegrityChecking>
       <RTIntegrityChecking>True</RTIntegrityChecking>
-      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Virus warning</Title>
         <Text>Program integrity check failed. 
@@ -621,7 +621,7 @@ Please reinstall application!</Text>
     </ExternalFiles>
     <ExecutedProcesses>
       <Enabled>True</Enabled>
-      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Warning</Title>
         <Text>Spyware tool is executed on this PC. 
@@ -904,7 +904,7 @@ Uninstall service &quot;%CU_INSTSERV%&quot; and try again!</Text>
       <VirtualPC>True</VirtualPC>
       <Sandboxie>False</Sandboxie>
       <TerminateExecution>True</TerminateExecution>
-      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Warning</Title>
         <Text>This program can not be run under %CU_VIRTTOOLS%!</Text>
@@ -965,7 +965,7 @@ try again!</Text>
       <Enabled>True</Enabled>
     </OriginalFileSizePreservation>
     <AdvanceForceImportProtection>
-      <Enabled>False</Enabled>
+      <Enabled>True</Enabled>
     </AdvanceForceImportProtection>
     <WinAPIFunctionsRedirection>
       <Enabled>True</Enabled>
@@ -1113,7 +1113,7 @@ try again!</Text>
     </Common>
     <Filter/>
     <CommandLine/>
-    <Functions Count="178">
+    <Functions Count="175">
       <Function ID="0">
         <Name>RakNet::BitStream::ReadString(unsigned char *)</Name>
         <Address>268732000</Address>
@@ -1820,186 +1820,171 @@ try again!</Text>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="141">
-        <Name>CLoader::Initialize(struct HINSTANCE__ *)</Name>
-        <Address>268765472</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="142">
-        <Name>CLoader::RunElevated(void)</Name>
-        <Address>268765968</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="143">
-        <Name>CLoader::IsProcessElevated(void)</Name>
-        <Address>268766064</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="144">
         <Name>CProcessList::CProcessList(void)</Name>
         <Address>268770656</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="145">
+      <Function ID="142">
         <Name>CProcessList::Scan(void)</Name>
         <Address>268770848</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="146">
+      <Function ID="143">
         <Name>CMessageProxy::Process(struct HWND__ *,unsigned int,unsigned int,long)</Name>
         <Address>268775792</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="147">
+      <Function ID="144">
         <Name>IMG_Entry::ReadEntireFile(void *)</Name>
         <Address>268782912</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="148">
+      <Function ID="145">
         <Name>Misc::MD5_Memory(int,int)</Name>
         <Address>268784992</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="149">
+      <Function ID="146">
         <Name>Misc::GetGTADirectory(void)</Name>
         <Address>268785184</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="150">
+      <Function ID="147">
         <Name>Misc::GetCrouchBug(void)</Name>
         <Address>268785552</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="151">
+      <Function ID="148">
         <Name>Misc::GetMacroLocks(void)</Name>
         <Address>268785568</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="152">
+      <Function ID="149">
         <Name>Misc::GetVehicleBlips(void)</Name>
         <Address>268785584</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="153">
+      <Function ID="150">
         <Name>Misc::GetAltTabState(void)</Name>
         <Address>268785600</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="154">
+      <Function ID="151">
         <Name>CRakClientHandler::Load(void)</Name>
         <Address>268785616</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="155">
+      <Function ID="152">
         <Name>CRakClientHandler::CustomSend(class RakNet::BitStream *,enum PacketPriority,enum PacketReliability,char)</Name>
         <Address>268785776</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="156">
+      <Function ID="153">
         <Name>CRakClientHandler::IsConnected(void)</Name>
         <Address>268785856</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="157">
+      <Function ID="154">
         <Name>CRPCCallback::Initialize(void)</Name>
         <Address>268785904</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="158">
+      <Function ID="155">
         <Name>CRPCCallback::OnConnect(void)</Name>
         <Address>268786384</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="159">
+      <Function ID="156">
         <Name>CRPCCallback::MD5_Memory_Region(class RakNet::BitStream &amp;,int)</Name>
         <Address>268786496</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="160">
+      <Function ID="157">
         <Name>CRPCCallback::MD5_File(class RakNet::BitStream &amp;,int)</Name>
         <Address>268787184</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="161">
+      <Function ID="158">
         <Name>CRPCCallback::ToggleSwitchReload(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788384</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="162">
+      <Function ID="159">
         <Name>CRPCCallback::SetFrameLimit(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788560</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="163">
+      <Function ID="160">
         <Name>CRPCCallback::ToggleCrouchBug(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788672</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="164">
+      <Function ID="161">
         <Name>CRPCCallback::ExitThisProcess(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788736</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="165">
+      <Function ID="162">
         <Name>CRPCCallback::VersionNotCompatible(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788752</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="166">
+      <Function ID="163">
         <Name>CRPCCallback::ToggleLiteFoot(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788784</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="167">
+      <Function ID="164">
         <Name>CRPCCallback::ToggleUnlimitedSprint(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788864</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="168">
+      <Function ID="165">
         <Name>CRPCCallback::ToggleMacroLimits(class RakNet::BitStream &amp;,int)</Name>
         <Address>268789088</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="169">
+      <Function ID="166">
         <Name>CRPCCallback::ToggleSprintOnAllSurfaces(class RakNet::BitStream &amp;,int)</Name>
         <Address>268789168</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="170">
+      <Function ID="167">
         <Name>CRPCCallback::ToggleVehicleBlips(class RakNet::BitStream &amp;,int)</Name>
         <Address>268789360</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="171">
+      <Function ID="168">
         <Name>RakNet::BitStream::Read&lt;int&gt;(int &amp;)</Name>
         <Address>268789440</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="172">
+      <Function ID="169">
         <Name>HookedRakClientInterface::Send(char const *,int,int,int,char)</Name>
         <Address>268789792</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="173">
+      <Function ID="170">
         <Name>HookedRakClientInterface::SendInitialInfo(void)</Name>
         <Address>268789808</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="174">
+      <Function ID="171">
         <Name>HookedRakClientInterface::Send(class RakNet::BitStream *,int,int,char)</Name>
         <Address>268790320</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="175">
+      <Function ID="172">
         <Name>HookedRakClientInterface::Receive(void)</Name>
         <Address>268790480</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="176">
+      <Function ID="173">
         <Name>HookedRakClientInterface::DeallocatePacket(struct Packet *)</Name>
         <Address>268790800</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="177">
+      <Function ID="174">
         <Name>FindPattern(char *,char *)</Name>
         <Address>268792496</Address>
         <Ticker>0</Ticker>

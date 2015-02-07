@@ -31,9 +31,6 @@
     <Filter Include="Header Files\DirectX">
       <UniqueIdentifier>{73b9fd96-5ae1-4394-a121-79f0759d6694}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Detours">
-      <UniqueIdentifier>{e2f70d04-4415-4630-9537-77d84ea29619}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\IMG Reader">
       <UniqueIdentifier>{19750be9-a420-4fa3-9075-98db08c937ac}</UniqueIdentifier>
     </Filter>
@@ -109,9 +106,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CCrashHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CModuleSecurity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CSprite.cpp">
@@ -761,9 +755,6 @@
     <ClInclude Include="DirectX\xnamath.h">
       <Filter>Header Files\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="Detours\detours.h">
-      <Filter>Header Files\Detours</Filter>
-    </ClInclude>
     <ClInclude Include="CDirectX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -823,9 +814,6 @@
     </ClInclude>
     <ClInclude Include="CrashRptProbe.h">
       <Filter>Header Files\CrashRpt</Filter>
-    </ClInclude>
-    <ClInclude Include="CModuleSecurity.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CSprite.h">
       <Filter>Header Files</Filter>

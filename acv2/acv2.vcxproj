@@ -81,7 +81,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_55.lib;libboost_filesystem-vc120-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\enigma_ide.lib;$(ProjectDir)libs\d3d9.lib;$(ProjectDir)libs\d3dx9.lib;$(ProjectDir)libs\CrashRpt1402.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_55.lib;libboost_filesystem-vc120-mt-s-1_55.lib;$(ProjectDir)libs\enigma_ide.lib;$(ProjectDir)libs\d3d9.lib;$(ProjectDir)libs\d3dx9.lib;$(ProjectDir)libs\CrashRpt1402.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -109,7 +109,6 @@
     <ClCompile Include="CLoader.cpp" />
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CMem.cpp" />
-    <ClCompile Include="CModuleSecurity.cpp" />
     <ClCompile Include="CParseCommandLine.cpp" />
     <ClCompile Include="CProcessList.cpp" />
     <ClCompile Include="DirectX Hooks\CD3D9DeviceProxy.cpp" />
@@ -274,14 +273,12 @@
     <ClInclude Include="CLoader.h" />
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CMem.h" />
-    <ClInclude Include="CModuleSecurity.h" />
     <ClInclude Include="CParseCommandLine.h" />
     <ClInclude Include="CPatch.h" />
     <ClInclude Include="CProcessList.h" />
     <ClInclude Include="CrashRpt.h" />
     <ClInclude Include="CrashRptProbe.h" />
     <ClInclude Include="CSprite.h" />
-    <ClInclude Include="Detours\detours.h" />
     <ClInclude Include="DirectX Hooks\CD3D9DeviceProxy.h" />
     <ClInclude Include="DirectX Hooks\CD3D9Proxy.h" />
     <ClInclude Include="DirectX Hooks\CMessageProxy.h" />
