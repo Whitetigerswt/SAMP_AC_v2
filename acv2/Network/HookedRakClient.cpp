@@ -9,6 +9,7 @@
 #include "../s0beit/samp.h"
 #include "../CClientUpdater.h"
 #include "../CLog.h"
+#include "../md5.h"
 
 #include <Windows.h>
 #include "../enigma_ide.h"
@@ -75,10 +76,18 @@ void HookedRakClientInterface::SendInitialInfo()
 
 	// Get the hardware ID
 	std::string hwid = EP_RegHardwareID();
+	BYTE digest[16];
 
-	// Write the hardwareID to the packet
-	bsData.Write((unsigned short)hwid.length());
-	bsData.Write((const char*)hwid.c_str(), hwid.length());
+	MD5 md5 = MD5();
+	hwid = std::string(md5.digestString((char*)hwid.c_str()));
+
+	// string to byte
+	for (int i = 0; i < 16; ++i)
+	{
+		std::string bt = hwid.substr(i * 2, 2);
+		digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+		bsData.Write(digest[i]);
+	}
 
 	// Write the user's AC version to the packet.
 	bsData.Write(CURRENT_MAJOR_VERSION);

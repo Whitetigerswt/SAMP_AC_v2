@@ -45,14 +45,11 @@ RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 	// Read new value for filename
 	if (bsData.ReadString(processpath))
 	{
-		// Read md5.
-		for (int i = 0; i < 16; ++i)
-			bsData.Read(md5[i]);
-
 		// Convert the md5 from bytes to char
 		char digestChars[33];
 		for (int i = 0; i < 16; ++i)
 		{
+			bsData.Read(md5[i]);
 			sprintf(digestChars + (i * 2), "%02X", md5[i]);
 		}
 
@@ -89,14 +86,11 @@ RPC_CALLBACK CRPCCallback::OnMD5Calculated(RakNet::BitStream &bsData, int iExtra
 	// Read values sent from client.
 	if (bsData.Read(address) && bsData.Read(size))
 	{
-		// Read md5.
-		for (int i = 0; i < 16; ++i)
-			bsData.Read(md5[i]);
-
 		// Convert the md5 from bytes to char
 		char digestChars[33];
 		for (int i = 0; i < 16; ++i)
 		{
+			bsData.Read(md5[i]);
 			sprintf(digestChars + (i * 2), "%02X", md5[i]);
 		}
 
@@ -126,14 +120,11 @@ RPC_CALLBACK CRPCCallback::OnFileCalculated(RakNet::BitStream &bsData, int iExtr
 	// Read the data the client sent us.
 	if(bsData.ReadString(path)) 
 	{
-		// Read md5.
-		for (int i = 0; i < 16; ++i)
-			bsData.Read(md5[i]);
-
 		// Convert the md5 from bytes to char
 		char digestChars[33];
 		for (int i = 0; i < 16; ++i)
 		{
+			bsData.Read(md5[i]);
 			sprintf(digestChars + (i * 2), "%02X", md5[i]);
 		}
 
@@ -170,14 +161,11 @@ RPC_CALLBACK CRPCCallback::OnImgFileModified(RakNet::BitStream &bsData, int iExt
 	// Read the data sent to us by the server.
 	if (bsData.ReadString(path))
 	{
-		// Read md5.
-		for (int i = 0; i < 16; ++i)
-			bsData.Read(md5[i]);
-
 		// Convert the md5 from bytes to char
 		char digestChars[33];
 		for (int i = 0; i < 16; ++i)
 		{
+			bsData.Read(md5[i]);
 			sprintf(digestChars + (i * 2), "%02X", md5[i]);
 		}
 
@@ -211,21 +199,29 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	CAntiCheatHandler::Init(iExtra);
 
 	// Create a big variable to hold hardware ID.
-	unsigned char hwid[2048];
 	float version;
 
-	// Reset it's memory.
-	memset(hwid, 0, sizeof(hwid));
+	// Convert the md5 from bytes to char
+	BYTE md5[16];
+	char digestChars[33];
+	for (int i = 0; i < 16; ++i)
+	{
+		bsData.Read(md5[i]);
+		sprintf(digestChars + (i * 2), "%02X", md5[i]);
+	}
+
+	// lower case
+	boost::algorithm::to_lower(digestChars);
 
 	// Read the hardware ID from the client.
-	if (bsData.ReadString(hwid) && bsData.Read(version))
+	if (bsData.Read(version))
 	{
 		// Make sure AC pointer is valid
 		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
 		if (ac)
 		{
 			// Send to our helper class so it can store it.
-			ac->OnHardwareCalculated((char*)hwid);
+			ac->OnHardwareCalculated((char*)digestChars);
 
 			// Check the version compatiblity.
 			ac->CheckVersionCompatible(version);
