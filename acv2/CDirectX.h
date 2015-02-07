@@ -5,6 +5,8 @@
 #include "DirectX Hooks\CMessageProxy.h"
 #include "CSprite.h"
 
+#include <Detours\detours.h>
+
 #include <DirectX/d3d9.h>
 #include <DirectX/d3dx9.h>
 
