@@ -137,8 +137,8 @@
       <UseVolumeSerialDrive>False</UseVolumeSerialDrive>
       <UseSystemVolumeName>False</UseSystemVolumeName>
       <UseComputerName>False</UseComputerName>
-      <UseCPUType>False</UseCPUType>
-      <UseWindowsKey>True</UseWindowsKey>
+      <UseCPUType>True</UseCPUType>
+      <UseWindowsKey>False</UseWindowsKey>
       <UseMotherboard>True</UseMotherboard>
       <UseHDDSerial>True</UseHDDSerial>
       <UseUserName>False</UseUserName>
@@ -965,7 +965,7 @@ try again!</Text>
       <Enabled>True</Enabled>
     </OriginalFileSizePreservation>
     <AdvanceForceImportProtection>
-      <Enabled>False</Enabled>
+      <Enabled>True</Enabled>
     </AdvanceForceImportProtection>
     <WinAPIFunctionsRedirection>
       <Enabled>True</Enabled>
@@ -2024,7 +2024,20 @@ try again!</Text>
       <Watermarks Count="0"/>
     </Watermarks>
     <Plugins>
-      <Plugins Count="0"/>
+      <Plugins Count="3">
+        <Plugin ID="7">
+          <Name>hidecurrentthread.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="10">
+          <Name>isdebuggerpresent.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="18">
+          <Name>writeprocessmemoryinject.dll</Name>
+          <Data/>
+        </Plugin>
+      </Plugins>
     </Plugins>
     <CustomVersionResource>
       <Enabled>False</Enabled>
