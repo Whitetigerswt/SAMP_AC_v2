@@ -6,7 +6,7 @@
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "CHookManager.h"
-#include "VMProtectSDK.h"
+#include "enigma_ide.h"
 #include "../Shared/Network/CRPC.h"
 #include "CCrashHandler.h"
 #include "Detours\detours.h"
@@ -84,7 +84,7 @@ void CLoader::Initialize(HMODULE hMod)
 		Modules.Scan();
 
 		// Check for a tamper attempt.
-		if (VMProtectIsDebuggerPresent(true))
+		/*if (!EP_CheckupIsProtected() || !EP_CheckupIsEnigmaOk() || EP_CheckupVirtualizationTools())
 		{
 			// Make sure the user is connected.
 			if (!CRakClientHandler::IsConnected())
@@ -99,7 +99,7 @@ void CLoader::Initialize(HMODULE hMod)
 			bsData.Write(ON_TAMPER_ATTEMPT);
 			// Tell the server we've done some naughty stuff.
 			CRakClientHandler::CustomSend(&bsData);
-		}
+		}*/
 
 		// Sleep
 		Sleep(1000);

@@ -809,9 +809,6 @@
     <ClInclude Include="CHookManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VMProtectSDK.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Hooks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -856,6 +853,9 @@
     </ClInclude>
     <ClInclude Include="..\Shared\Network\BitStream.h">
       <Filter>Source Files\Shared\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="enigma_ide.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

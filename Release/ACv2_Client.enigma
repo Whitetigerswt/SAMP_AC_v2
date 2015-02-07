@@ -1,0 +1,2450 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<EnigmaProject Version="1.60">
+  <Compatibility>
+    <Level1>True</Level1>
+    <Level2>True</Level2>
+    <Level3>True</Level3>
+    <Level4>True</Level4>
+  </Compatibility>
+  <EnigmaProjectDetails>
+    <FullNameOfProject>SAMP_AC Project</FullNameOfProject>
+    <ProjectDescription>This project is an enigma project to encrypt the SAMP_AC .asi plugin.</ProjectDescription>
+  </EnigmaProjectDetails>
+  <KeysGenerator>
+    <EnableLogging>False</EnableLogging>
+  </KeysGenerator>
+  <Input>
+    <FileName>C:\Users\Whitetiger\Desktop\Coding projects\GitHub\SAMP_AC_v2\Release\ACv2_Client.asi</FileName>
+    <ProductName/>
+    <VersionInfo/>
+    <ProductInfoFromResources>True</ProductInfoFromResources>
+  </Input>
+  <Output>
+    <SameAsInputFile>True</SameAsInputFile>
+    <FileName>C:\Users\Whitetiger\Desktop\Coding projects\GitHub\SAMP_AC_v2\Release\ACv2_Client.asi</FileName>
+    <DoNotBackup>False</DoNotBackup>
+  </Output>
+  <AdvanceInput>
+    <ProtectAfter>False</ProtectAfter>
+    <Files Count="0"/>
+  </AdvanceInput>
+  <Compression>
+    <Type>Best</Type>
+    <Mode>AllResourcesExceptIconAndVersion</Mode>
+  </Compression>
+  <OnlineServices>
+    <Common>
+      <IsConfigured>False</IsConfigured>
+      <ProductId/>
+      <ActivationLinkId/>
+      <ActivationUrlHost/>
+      <ActivationUrlPort>0</ActivationUrlPort>
+      <ActivationUrlEndPoint/>
+      <ProductName/>
+      <ActivationLinkName/>
+      <SiteUrl/>
+      <AdministratorLogin/>
+      <AdministratorPassword/>
+      <TestOrderUrl/>
+    </Common>
+    <OnlineActivationSettings>
+      <ActivateEveryExecution>False</ActivateEveryExecution>
+    </OnlineActivationSettings>
+    <OnlineActivationDialog>
+      <Enabled>False</Enabled>
+      <ShowOnUnregistered>True</ShowOnUnregistered>
+      <ShowSucceededMessage>False</ShowSucceededMessage>
+      <ShowFailedMessage>False</ShowFailedMessage>
+      <MessageSucceeded>
+        <Icon>0</Icon>
+        <Title/>
+        <Text/>
+        <UseHL>False</UseHL>
+        <HLSentence/>
+        <HLURL/>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </MessageSucceeded>
+      <MessageFailed>
+        <Icon>0</Icon>
+        <Title/>
+        <Text/>
+        <UseHL>False</UseHL>
+        <HLSentence/>
+        <HLURL/>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </MessageFailed>
+      <Form>VFBGMCZURW5pZ21hUHJvdGVjdG9yTG9hZGVyUmVnaXN0cmF0aW9uRm9ybRBSZWdpc3RyYXRpb25Gb3JtBExlZnQDegEDVG9wA7gAC0JvcmRlclN0eWxlBwhic0RpYWxvZwdDYXB0aW9uBiUlQXBwTmFtZSUgJUFwcFZlcnMlIEFjdGl2YXRpb24gRGlhbG9nDENsaWVudEhlaWdodAPPAAtDbGllbnRXaWR0aAP0AQVDb2xvcgcJY2xCdG5GYWNlDEZvbnQuQ2hhcnNldAcPREVGQVVMVF9DSEFSU0VUCkZvbnQuQ29sb3IHDGNsV2luZG93VGV4dAtGb250LkhlaWdodAL1CUZvbnQuTmFtZQYNTVMgU2FucyBTZXJpZgpGb250LlN0eWxlCwAOT2xkQ3JlYXRlT3JkZXIICFBvc2l0aW9uBw5wb1NjcmVlbkNlbnRlcgpPbkFjdGl2YXRlBwxGb3JtQWN0aXZhdGUIT25DcmVhdGUHCkZvcm1DcmVhdGUGT25TaG93BwhGb3JtU2hvdwtDbGlja0FjdGlvbgcGY2FOb25lC0Nsb3NlQWN0aW9uBwZjYUV4aXQKRGVzaWduU2l6ZQED9AEDzwAADVBpeGVsc1BlckluY2gCYApUZXh0SGVpZ2h0Ag0AG1RFbmlnbWFQcm90ZWN0b3JMb2FkZXJMYWJlbAZMYWJlbDEETGVmdAIQA1RvcAIQBVdpZHRoA9oABkhlaWdodAINB0NhcHRpb24GJ0FwcGxpY2F0aW9uIHJlcXVpcmVzIE9ubGluZSBBY3RpdmF0aW9uLgxGb250LkNoYXJzZXQHD0RFRkFVTFRfQ0hBUlNFVApGb250LkNvbG9yBwxjbFdpbmRvd1RleHQLRm9udC5IZWlnaHQC9QlGb250Lk5hbWUGDU1TIFNhbnMgU2VyaWYKRm9udC5TdHlsZQsGZnNCb2xkAApQYXJlbnRGb250CAAAG1RFbmlnbWFQcm90ZWN0b3JMb2FkZXJMYWJlbAZMYWJlbDIETGVmdAIQA1RvcAIoBVdpZHRoA9MBBkhlaWdodAIpB0FuY2hvcnMLBmFrTGVmdAVha1RvcAdha1JpZ2h0AAhBdXRvU2l6ZQgHQ2FwdGlvbgb/UGxlYXNlIGVzdGFibGlzaCBpbnRlcm5ldCBjb25uZWN0aW9uLCBlbnRlciBVbmlxdWUgT3JkZXIgSWRlbnRpZmllciBhbmQgY2xpY2sgQWN0aXZhdGUgYnV0dG9uLiBJZiB5b3VyIFdpbmRvd3MgRmlyZXdhbGwgaXMgZW5hYmxlZCwgaXQgbWF5IGJsb2NrIGNvbm5lY3Rpb24gdG8gdGhlIE9ubGluZSBBY3RpdmF0aW9uIHNlcnZlciwgbWFrZSBzdXJlIHRoaXMgYXBwbGljYXRpb24gaXMgbm90IGJsb2NrZWQgdG8gYWNjZXNzIHJlbW90ZSBzZXJ2ZXIuCFdvcmRXcmFwCQAAHlRFbmlnbWFQcm90ZWN0b3JMb2FkZXJHcm91cGJveAlHcm91cGJveDEETGVmdAIQA1RvcAJYBVdpZHRoA9MBBkhlaWdodAI5B0FuY2hvcnMLBmFrTGVmdAVha1RvcAdha1JpZ2h0AAdDYXB0aW9uBhdVbmlxdWUgT3JkZXIgSWRlbnRpZmllcghUYWJPcmRlcgIACkRlc2lnblNpemUBA9MBAjkAABpURW5pZ21hUHJvdGVjdG9yTG9hZGVyRWRpdAVFZGl0MQRMZWZ0AhADVG9wAhgFV2lkdGgDswEGSGVpZ2h0AhUHQW5jaG9ycwsGYWtMZWZ0BWFrVG9wB2FrUmlnaHQACFRhYk9yZGVyAgAHQ29udGVudAcOY2FBY3RpdmF0aW9uSUQOU2hvd0NvcHlCdXR0b24ID1Nob3dQYXN0ZUJ1dHRvbggAAAAcVEVuaWdtYVByb3RlY3RvckxvYWRlckJ1dHRvbgdCdXR0b24xBExlZnQDeAEDVG9wA6AABVdpZHRoAmsGSGVpZ2h0AiEGQ2FuY2VsCQdDYXB0aW9uBgVDbG9zZQxGb250LkNoYXJzZXQHD0RFRkFVTFRfQ0hBUlNFVApGb250LkNvbG9yBwxjbFdpbmRvd1RleHQLRm9udC5IZWlnaHQC9QlGb250Lk5hbWUGDU1TIFNhbnMgU2VyaWYKRm9udC5TdHlsZQsGZnNCb2xkAApQYXJlbnRGb250CAhUYWJPcmRlcgIBC0NsaWNrQWN0aW9uBwZjYUV4aXQAABxURW5pZ21hUHJvdGVjdG9yTG9hZGVyQnV0dG9uB0J1dHRvbjIETGVmdAMAAQNUb3ADoAAFV2lkdGgCawZIZWlnaHQCIQdDYXB0aW9uBghBY3RpdmF0ZQdEZWZhdWx0CQxGb250LkNoYXJzZXQHD0RFRkFVTFRfQ0hBUlNFVApGb250LkNvbG9yBwxjbFdpbmRvd1RleHQLRm9udC5IZWlnaHQC9QlGb250Lk5hbWUGDU1TIFNhbnMgU2VyaWYKRm9udC5TdHlsZQsGZnNCb2xkAApQYXJlbnRGb250CAhUYWJPcmRlcgICC0NsaWNrQWN0aW9uBwpjYUFjdGl2YXRlAAAA</Form>
+    </OnlineActivationDialog>
+  </OnlineServices>
+  <RegistrationFeatures>
+    <RegistrationDataStoring>
+      <Storage>SystemRegistry</Storage>
+      <Registry>
+        <Base>CurrentUser</Base>
+        <Path>\SOFTWARE\\</Path>
+      </Registry>
+      <FileSystem>
+        <Base>MyDocumentsFolder</Base>
+        <Path>\\license.dat</Path>
+        <SetFileAttributes>False</SetFileAttributes>
+        <FileAttributesArchive>False</FileAttributesArchive>
+        <FileAttributesReadOnly>True</FileAttributesReadOnly>
+        <FileAttributesHidden>False</FileAttributesHidden>
+        <FileAttributesSystem>False</FileAttributesSystem>
+      </FileSystem>
+      <EncryptRegInfo>False</EncryptRegInfo>
+      <EncryptWithHardwareId>False</EncryptWithHardwareId>
+    </RegistrationDataStoring>
+    <Common>
+      <Unicode>False</Unicode>
+      <AllowHardwareLockedKeys>False</AllowHardwareLockedKeys>
+      <AllowTimeLimitedKeys>False</AllowTimeLimitedKeys>
+      <AllowExecOnlyIfRegistered>False</AllowExecOnlyIfRegistered>
+      <KeyMode>2</KeyMode>
+      <KeyBase>3</KeyBase>
+      <EncryptApplication>False</EncryptApplication>
+      <AllowRegisterAfterKeys>False</AllowRegisterAfterKeys>
+      <AllowRegisterBeforeKeys>False</AllowRegisterBeforeKeys>
+      <AllowExecutionsKeys>False</AllowExecutionsKeys>
+      <AllowDaysKeys>False</AllowDaysKeys>
+      <AllowRunTimeKeys>False</AllowRunTimeKeys>
+      <AllowGlobalTimeKeys>False</AllowGlobalTimeKeys>
+      <AllowCountryLockedKeys>False</AllowCountryLockedKeys>
+    </Common>
+    <HardwareAssociation>
+      <UseVolumeSerialDrive>False</UseVolumeSerialDrive>
+      <UseSystemVolumeName>False</UseSystemVolumeName>
+      <UseComputerName>False</UseComputerName>
+      <UseCPUType>False</UseCPUType>
+      <UseWindowsKey>True</UseWindowsKey>
+      <UseMotherboard>True</UseMotherboard>
+      <UseHDDSerial>True</UseHDDSerial>
+      <UseUserName>False</UseUserName>
+      <VolumeSerialDriveChange>0</VolumeSerialDriveChange>
+      <SystemVolumeNameChange>0</SystemVolumeNameChange>
+      <ComputerNameChange>0</ComputerNameChange>
+      <CPUTypeChange>0</CPUTypeChange>
+      <MotherboardChange>0</MotherboardChange>
+      <WindowsKeyChange>0</WindowsKeyChange>
+      <HDDSerialChange>0</HDDSerialChange>
+      <UserNameChange>0</UserNameChange>
+    </HardwareAssociation>
+    <Constants>
+      <EncryptedConstant>2113444489</EncryptedConstant>
+      <Secure1>3A44D5C34F6A54B65C7657D6587A7D35</Secure1>
+      <WatermarkConstant>786A6B5894D8BC90AD25443E7271EE55</WatermarkConstant>
+      <Mode512>
+        <PublicKey>0201B810DA4A1ADD4351378790A98138533067CP4S86R7D8THS45GBCVUM635EPRQRMYRP3DAA5DUPZ6ABDSFP7F5ACP7ERGH4A7Y6B6NW6NMMBZF83WVER9Y4MMBNLBQDKR7KFVLGLV067CFDQCWCHGQVVRN24DECEPBL96YJQJTVDCRTNQG3E4WW4GK4GQ5X5L5H88D3XYHCBRBNASPD3P5CNYFKFHBCSDHHD6WPTCC4XVSM5S88067C2JSTCMVT48C8HC7SHKGTFJBM28P6XTBCNWHMV6J6KN6W5Q9TQLVR285U6GVCAAUTZLRTPSRGDQ742B4742XF4MACRR747YDP5FZZ9D</PublicKey>
+        <PrivateKey>00C98B2SF9UBJA605AJX53GJFXJV8UH4A6PY2L6CV4MAMV7V3ERRVY99Y72V2P77Z2J3KBPGWR3WXKG5GF9Z6CKXJHY5VUMBTQ66H2MRZPCU00DLFJ675JTTTNEK00DLFJ675JTTTNEK</PrivateKey>
+      </Mode512>
+      <Mode768>
+        <PublicKey>0201B810DA4A1ADD4351378790A9813853309AEHRR66KMK99UEPX8C54WQFDZQ5Y96WUCVZYMXBC32SJV7T5SBPR54E2DBH8UD9RNHTJ9BLJV6NHX52W7PZDDTTJDDGF3YFVL7PJFL8RS8THTFDF4RY7K3QXLTMXMC8DDSRVRWBVMMP3UYKCDDC7KGL9PG509ACPTRQ4MMUKGDAUJFFFGSCBFLYK9X9E74M58PW5FG9B9RTLXJQ4STPVCHJTEH8BP557VZPQYDBUZJXXJNGVZELFL4UL3LHHE8A645CK593DVWCQBSX4ZCCQ3ST8GCZLW2729XK3NT7GST3LMQGXSHLDWCXE09AENVX2QTX3VLT6FWB4JND875XZWQ26GW76TV3KVVHK7U489LLPBQ39HUWKMA65U3HKWBDHKBZEB525PHEH2YQHRZGNJAAYZXMWN8RNZ9T7VMZAJMP2V3S9NXZ9RHL96F7AT3NTMN36V4ACSFEN4DR6TJR95</PublicKey>
+        <PrivateKey>019VRB95TKY456YC48LBS9FK34YN080VVPDJPPKU6XA9EPLX7HTVN3VSTTNJZFPH4HQAFY58R593KFKSNZ7WEZBA9AZ6PGN735EWEFUAEM3G8XVUFNL2ZFRPXA4V8KVXE4M8GACUJAT7H3TTWZT9ZDE43ZF46HC01AHFR85MVR2UP7K3N53M8MTNWBUP01AHFR85MVR2UP7K3N53M8MTNWBUP</PrivateKey>
+      </Mode768>
+      <Mode1024>
+        <PublicKey>0201B810DA4A1ADD4351378790A981385330CDG9YQSEUK2HT546KWW46NHSCHMD2TNCSPVNSKGQC6CHDUSU9CC4LDPLTD3NLRVD3TFV9BU2SYBUBU9TXKLQ3CTKZE5GN9VFG37R9YNK2FE58K7ZYWTUJYFSJTBMDLLGA9GJ2LJXGHSS9CESGC2K69H65YQGAC7CRGF5T3CPLA5BDJZKVCUWPZRNA2DN7L956LZVZBQUDPX6PF30CDBH26Z82VE4QQ8N85LQHYJYYCJ6WQ89H9K9VVQX925SG5FJ79AGVZB6M8TTFKCJ56FAREP8GSTCNKWCXEALDP9Y2ZLS9QKZV8JRNDHG9D8BRDSCTMDQK9NLAPZ9TGYFS9G7ULXHYJF7F9A89HPXGTU2N4FQQJL98WZ5QND2KTEMMUUZFAX953HCGNSWUWU2M7LBEWZSH9GW5SC0CDJDY2HC4HJYUSVTAVXZ7MYVJWF3CU9WC3SVPSL29WF46DVS2SYKSSAMATPPYGJDE3PBFMGS34CXWQSXKCEAE63L2EXTS9NE2G597XASY3S34XMYST5YZF4THUTYT5DY9UKKXU6PH8MLXRPZMPMMR83JUX2WGNEW8ZGL4SKUCUB8CEAB6UZ4FB66WTP3B64VMX7XG75T4Y35479</PublicKey>
+        <PrivateKey>020MLJ7XTRVLBDNUVMKGUFHCU8XBGMHHVRA0ADSHPBC7NVSZ82AM867XCBELNKMR7CZ56C4SW8KKRD9WZLE5X992GZVSZXS5J6JG9SLDW3Y696TU4DQZP778LVFKVRKANQD6FUGN2ACWUJM9ZK6ME7WXWDZ88LTWHME52RKUDKXSTT7RGWP7HFUJDGWEUG4ZHQ25DCQJ644CLEXRR3G020SAAREJB4WXZ4H2JEH4AB4U8FGFTA4CAF020SAAREJB4WXZ4H2JEH4AB4U8FGFTA4CAF</PrivateKey>
+      </Mode1024>
+      <Mode2048>
+        <PublicKey>0201B810DA4A1ADD4351378790A98138533199H9KZC4CQ5ZKPEGYDW2EHN5AKZA5G5KP4HU8USWJR8XWW7MCH7244RVPSXFHVU6YQRK4LPUHM497XJYPLLA3DHUZWXK3CB5SUYF75NPYLTNPRUAPCTVDHAKYWTRQ97HES2E59WDN2LJKFYA2K8BGFSBHP4A6BF5FSDTS8NWLLC5NEQ76NJ9BAMWXG55UPFFMRQZTU5KV2G6LSPQUJJWA9U4LJ5SCJ9M9ZQZ6K7LZA9UAMJ533UQ5J3JPNQAUWJGZFRFCTGAGSBWPWRRF9HRGF9MCX55QRYGPYMRE6DBJ65SJDX34FVPYWWKWQ48MCKXYXPHQ23BJ42U8ZMDD8CG5DPHZQ5XTXUKA277XK6PKSTLJ88ZZ9EBXH62REMRZZRGNPKHYM34RW722SSZHMPFKY7X8UZ19ADGX3UQ7X444XH7MZXEZYW2YLFHR8YL3PTCXVSYX89ZXN7KW2XNBE8XS3TQRGZVF6KA5USH56NEZYH5RNWBBPVE9LD6H42RQWR5YVQMT5EQYQTK6YM9V8DA5BJCLGGZ2UGD6NPA2X3SNUS47F7HJBNBCWHRAYPPCQ5HWCJNPDHUDQMRN2P6PWJFWJ6CLVNK8HXEFLE4ENPXAFN89CRS43RUMVGDJQCSRB535XYCS6BZYLA9Q6HJV425F26XXHRGA7C8R8BVMELAPEH5DSA9KXTCV4H2RNVDFHG3YJSERZVFPWHYA823LUBENBL5U3J4LJX2KQLWL5XGGESPSE2FQWKSQ4NUCDLBEJPQAT2A2477DYS2XEXKLYEAKUN22622CRLBCAHPFNEV2FJ2H8N3JQGXJRGP19AFHGRW6SS2ZSFYK8EZAPVYL4MCP46UMR64Y9T89FHWEPXBRHKWJCSNNNGPU984J5XW4BWTU6PDWPN24W8RU55A9C3U9H7VHS5PFURASHBT4JAEE5ZKJBSYMCMDVBLU973R72RVPA6U96A2LX8HMASVST9RVJ7W66V4DYWRDZZQ3673W7C7LVF68TWPLNMYEUQ8FDZRNP38D9BX5YA3VENETDUUUMR9U7FFP4NZM7G4Y6J6EASK5SAXXTRMZ8F3AH5FC54E543N739BY5KVZQM7JZWD2P2HPE7BDRMM9JFCGPBWWASTZ7UDNRV6AFHVMBR9AGAERE9M6W6S2ZT8PBTABPDCKBPPPV6QW9DRXZUGAHDDRRSYXM4YXQ2QJX6CL33N7RV8846LK8A3DFLDXWZ2NKF8V</PublicKey>
+        <PrivateKey>02DB825DUDFYHA88AG49NMM742HCQEJDKQQGDR6G3GL7MCED16DU9KTVE47XQ3M92FFKX8FU9ZXT7AK7VTGGJSYQERCZBR8J2DE2CFE3VUU4W7JEQJL49HDUXBW7SNPCV8MHXM7EQHYPQK3GSPQYV5VWESQE4AYWFZHXN2UX7Z3T3CV52XURB3YFKLUCY6CJTRACRVVDD568F6F28U74ABWCZ2ZMC32E83V34JZZPDBF3KEYQWREETGKQT6NANCMAD4XDEXW5LCYBJ3GMDJBM3E7FNK987JEUYEV7QNKGKNTDVMRG3G5L8NC9CNHQS8AVDMDBEGCG3DHGJUGPG22442C9LCD8FJ2LSDMQXLHCGCLP7ZSYQT2UJ4QFGU2CH3BTT3UADZMQSBAV33B3Z2Y8Y8RRD9J754G02DJ372LR8APP7HXKB2GNPHP6T65C3RR48Q8BHGPKEZ6PX2D02DJ372LR8APP7HXKB2GNPHP6T65C3RR48Q8BHGPKEZ6PX2D</PrivateKey>
+      </Mode2048>
+      <Mode3072>
+        <PublicKey>0201B810DA4A1ADD4351378790A98138533267BJBN6W8SY33Y47RWJHWS385XWRV9TSVSB5EM7ECZYNSJ44ZKSD8KV46Y9T6TNC6QMDW4V6DBMADU3YUKLP88TCLEUD9FTEUHGXM6T57AQ2EMB59UPQVNSUT7Z4EHAMDQ6N77VK2A6P847MMWJH9E7C5XX6FNF6MHGWERPWQV9ZLVR9Z7X5D5Z2XQL6MBM7BDCT2DEDVRBFNDDBLG6LHZ9APM48LS5TKTJAGDYFDRVHEGTDH47PCLL8YJ4ZAWCB59F8BN5PZL3NQACP32G3YNBX5E3J7S28XLRGAX55ZML5XE6Q68EUAL38VUBJ2MZ2UGCCHM7CE6S99N44X9RMV7B55HULJ4KHPFYSBDUSPQTCWGS76BEQST2QCZDZ2T4FBA4YUJFF47AACEA4EEFESEYWN48UZCSDZAMGSU5VB9UJKR2XQUSDFS3TNG9QKURQWS7N5Q3VPYT4QAGGQ5GW2MMXHDJYW55FQPHSS255GVJ7WLLP85JHS8K6DVTJWB4W4Y8ZEFF7KP6W74PAA8FVPZVDW4RKGMQ8V56Q6R4V34XFE5HR4FZS8GZ6R36RKW6WN34S2AHR9LCGF8LULB7ZN6NC2AA5RPDZYGWSPPME6267CGLZCPGG98W557RXCDWAETJHDCRPUXX7AD3E8SL9WMGBV9QFHMSV9UFV7H9NTX3QYV95CN9P9DSYQWL35R2BWB4GKW6CTWVB2X6WH3P2WFBE6X55KBLAMDB3SRDSDVY37GKH78MUHY7KDJDC8SJU5FUQRYZ49ULX3YSZL7E284GFVZSGDFTTQNR6VMBM3LLR78SUSVMJW88XT2K4UHEATRU3V9MMR2VGNGCY9S6R7M4ELNPEBBMQP2HVPLY5M5VPA92V7NU8ZZ58YYTW5QK9USZ5LV59UZGB2CFDPZ6HFYU5WB7UU3UYWVNSNKM3W7GBYKJP8TMFW2YN6GNSSE4ZKFVZRLUT8QPZBBEQT5H9H5Z53D7QV4AJTKTX4EMW62TDWXQVK24JZPSG2VXKCMYZLBUASE25R3EEK9KBLJ8VX83ZXGTBL5CCDBY33HJ6FKX8AW3WPRX3XTCS9G2B9SVK2XFFKNSPGFG6FZNS8P2HERFGFL79DKUZZFWHFH4H9UZ7F7F6W3ZWN84JRRA7SU8T89EQMRBEPVYMMGLGSUMFWWMEDLJM5EGP5WEX9LDUAQXS55LKDQVRKX4R8NNBHSYBHSNMFYA2C6KGQQFK3TN267DPSZT3PTKHTLNMUV2YYZZRX3953LPWAKYF8LJUVMEQT3ZC4F9SWMYGUHG6XX66PJFQWSRUW2C79YLGZ6ZAFS7HLXBTH55UD3EGFBZQ5CLNJDZTEJACDVBCM5FQBTX4DKKUDGNSMWWLC5UMQRHW89CTU5636WYDXVZZDAUZ529458LDN2DAR9QADWRZUTU8MCKN8ACH3R36YKE52DDF67SM5UDUH7PTATHXE65UCGFRCV49UTF29BGDSUWGRMC839HUZYQVAG985YUF5KJCAVGKRD8E4YMPJ38KR6HD2KHDGYPJDMJMN4Y3DTJW5MYX3VUPF32637LMAWFM4QCU7BMP74SCF4N5QXZZVBELAQMPYMJC2ZWJ9XFV33YXTTPH3SG9KMUABLL83P7L3UBVM763XJPR5UEHDZ73XJUGR9QP6299K5PU46XGVWKWFAKWYMRXUSLCFJ3WQTEC6QJH6E5V8X2RMA5TXGSBEWLGSMNQ2SH6G9MLKK4S486DN4M4QVDTYTM4JQETAJQGP76NUR4UNDXR4W4JQSNWDTUGX69SEDC3AL8ZF4TJBQQRXSX2A86UUWCDCFHJE94A8EP3Q6A2QTYKEE62MV4VJB2AB</PublicKey>
+        <PrivateKey>04DMQBFL5GKK4RXWEZYPEY8QB5GHBBGW3EY766DFF2Q6PLFLR4SSRWXBNW5CFGFC84UJ8PKRDQQYWN9921AH8AGZAQRWJYZ7C3QUJJCJAAGGT5P5GGLY6K5W4JZJDW7Y8EWS6SSYCS2MCR93MY9DG6VXLBRYVZWDX6XNFU286HMAM9E82KJVZNYGC8RXRW43SFFWDLR8C96R58A42F3TGLXPVWLGMNPPAWS4S2SSMNQLUPBAQMP7AUKAGV5CKL342W6UKQY3TUPXKGFXFES725PEX93UXX4K8JRY3MPQ5S94VNPBXQ5N6LDBLWB67LBLDCGNQS3JEKW667UF8LA8Q6B3AF4XGZKYB7BVVHF49DJUHSFJZRD63S4GMMAPQ8Q87HKN9G3J3575JEL5C29NZLWQW6MSYWJ7S3NKLKPWGU75ZJXKEL6Z9V97HAMDYHM6ARCH58EPWRPZUXN8RRWGCDFM6BH6XUTRTFE3VMAAZAUUKHKL6AFC2PCPXFRDWLVYPZKUGY8QDEZNECK9K5Y5MET9SRWQ36JF77XJ6NUKSMZ6DKUPEH4W43YQAECV7XVFWJ7ZTRVFQJZFU5BS8AL77YLCXDCR5VPFFZ9NP7EBBQ2AA04DP3S86B3YD8AFXQ3KPPNTPHBTQSM8PUHJHG87RUM4EV63GKPBRGSN3VX63FCS646DLWSH86B542U3F04DP3S86B3YD8AFXQ3KPPNTPHBTQSM8PUHJHG87RUM4EV63GKPBRGSN3VX63FCS646DLWSH86B542U3F</PrivateKey>
+      </Mode3072>
+      <Mode4096>
+        <PublicKey>0201B810DA4A1ADD4351378790A98138533334BN75EUD4LFWYFVNFGBRCEMKKXG62QRBXL8GMHQ975B68FJVEMNXQQ7RKR7RCZMWDVP86QPB3LR49G9BM7EUUZXNCRZBXRF4PEY3RX6UXT4X286KWMR7AMEE6QNP9AEHGWJT9AVU3F62F37B5GVX2BQF73QWHRFQSQ6XMRP6MZDRQ8JT89UF3YRK5UL34MM3L8HLDTWAJF5YY7MRWJUFDQRK9JNCJ6C9KJWRE5ACQSNS24NEAHDYKS3AK75HBCTKP9NR2CSL7Q9PPXM4TF7L37USP77Z7WER6JY67F7YGKTP6MFRMKK9H8XFPZ9XWKK97XCFXK7AW4TB96WGEH4BYPF9QRF2DGC3LCHW8VTD2EMHVRDR6EEBUG8R4XYKJPLBPRCJP445DU2BWJWELKAY45GKDU5HLTTDTWRH2JFKJ7AVAKLPEELN29YHX5JR773P9ERW7NUFMWDKD4UL4YPU5QW2L4A7ZN3E8ZDQVEZUR6ZRDQXRLQRLUNHVB4XGBWDHM79NGJARHDBQJCD8NWZCWPBY26QARP7A5S48DCV29F7MUTHU3YAHYVS7ZPGXJZZA5HBBY4K5BQPUG6MVCBG8H3C7VL8KH9EH58NUVCE6F2CGMSM944CQDKNVGWWWRNK4DG26UT88Y9ULUPJ25G9KLTQPK3TBXZEK43X8KPMJT8DF6MTQ5RB94XR2BT9H9NYYTXL29GF8KZY9QNHAW4LTT2RDQTD2ELWPSV44AND9K8G5VKLQ287UBEVHA82CMSMGQQBMNQZVAZ9G8T5TD6G9F7XQHMJTHCL6PFEDUW5MN9JASF2EKPT2H33325A3SFGGM5C3RYKZSYSSQC5FLHNX9VHN4HQVWD66YECY4R97JZHQALRTCHXUWH85LSJCCTQZT8JF52FHG6FV9JUJWEU24K9Z7SKYTYA9NH7GW29FSNKUK3DMFXY48VEYZVDRTTMLFYSJH8BRQXV72REYGSM6SLX89EVQ52CN9N8YDLWHAWCDDNM89YN2FCRTLE8688XNF4MZMFE6GP9JK2JTFJVUKBLES2ZVWSBCJE9N3D7DG9LL9Z3U42QFJJPE2HE5XCRY25UND96R9D7655ZBSCPF796FJZ4GPLY7AMZLGLR77GRP467ELKPXSZ9ZF8MUYFDHV4EFACPZ79CDFTYW56NE9JDWDVUMNLY9EXDSF8ZNABEMDQU6T9RVLTNRMZJJ8EJSUM9TV8YA6MNWF2Y66MD3VQ9L662F5X6VE9ZCPPRTNMEV2DG9BUMFMSL7PUR9H5QG6VVBDBMEU3PLABL57HMSQ5C83E9X8RTPY4QSEH2H7R2QDJHT5LQSFNQJL2NZ24GLNTFXG468WC5UUTDD68G8HM477Z8P4F9ZZHUGZ6VPFF32A2MPWY8LPXNECCKM9EEVLDDPUJ8LXN2AE6KY2Q42FVBCJM9GQTXNRHBED735KCFD4YGV4U5U3LJD6NJ886W6XQLWH3G73VZ6T5YDUQP6DA5ZHLKQSGATDJHUWC2ELTE7QJFXH8H9EAQYZPPMW76JGZ48UBND9VXFXZMSGBNWQPNQG7E4TCBDMVKUSA9TTVSNLN3DXEZNXH787RN7XHFBJNZ5W74DUMNBYVHEQDYMZBQCFMS8LGSDUAU6QE9DD5Q334BX62TJP5WQQDS2ZEWW76XW7VMLX3L7V9UVD7RL297VDBVRFPQ5MYA3YFVBVNVAR5TJXMQ4X2U2PW6UWSKBXT58HG3QPZM2RVEX2PDMCVJDFTJMXR9NPLW4C6AE4Q9A8TTAQ68BSN9WWTFFTSX68ECVARFPDBBH5DMP4KYFARTFVCSWNFFGAPBYYGFJA4MGHEDWTNE54MPGER7EPCZEV2ESJRMM6XDMFGABG97HECN3SZFUBRKCNDZ2TE9F6EERULRCDAV5EMY6KVY9NY9MYNPP2FQ5WFWLMRYD4TNYYHE6EDMQ6KK79HH5Q5KBW6DDQYYNUR365W2454CHEZWZAPU82SX4HKHNZXBRVWAT7G9CJBKHNBPSVEL67X8UJHBFHZH8ZD4NSEVFZM4Y768TJ6QP3BGEKLTY4UZUWHG63QMKVWAQW9E7WRFNJCH4XRD97JHNKMFUTRFVH68G5CKSMGC725AZ9CBSL2JX43P4EY44CMF56AJ6BEXVCJP2ZDWCT9G55K4DF24J7TTJMFXTQH95CBNX67CBPNWEKHCWQV6VD73Y9KCZHNBFUFS8TCYNNWXRGFKNVRDFUKWHDWDDTSPEW8YCKLPMX2GUV3N4JFJMUE6TSJR6Z53C9FSKZAY3EN7G66JPBF5E9S6Y7RQHPWZHSRDQ7XH87PHUJFLJFGD7WNE3Q9PEXMW33LVJBFEUXKNUB6SU7ZYCEX96XT8G27FLUV7XPV4JK64DWDJCX9WV4VL8CK23FQJ28UG9JUZTQJ3DRL32BTJVRD4LVQ6MK9LCE7ZZP925JK7ZD92SCV4DDJJ5EXMVBF</PublicKey>
+        <PrivateKey>067DN6F8YFBTWF5QH8MHJB39Z7VNN2P56HS8RPBURAWB8KPL8FQWX4HSPRTY4HWFMFXAVX2YUY99G2U2KKK56CBE4BCPZWS3KJ98XRW4PY2CDQ3ALFY3HGJG42NRY9ZVGZZB59TE29KGC825BYBX3FRFMYBVN2VTHM8YM2KULXMH24XSHNVK4HEQ9L5264844DMBFUUXSBA9PT9LEXT6449TMAMF7RL6KU6CGP6FU9DNMJCNTUREF2U9WUMJBMXMMHWKWDG4VU5JQNFFNNWCP2YE2DGFDN3H27NTNR58GBNTTZBRK66BKWNVMF8H59KALB6K93Y8UWDUWV5HJZGV8X3AS5EG982DYV4W9CQ3GRRFRR8NABQC98FTAG465SXQ3JPN7X7VULQZX4XUK68URBFPGCW2UPBYH6CRG6C7YBRAURM2KMGN5L8XH4AUQN8WM4P454WNNWRE5SQEC78FK3LHHQU5VLXLYYN8F2NXGG7CCQ92EEC63ZE6S7CC7RTMLUMM3PAXPL5CJZFL26JNNYPVLAHM75NDL8AS8JR48PFXK49D4A6TY2ZU9YXX2Y2TLA3J8T56EPY236FEDGZEHTQR73NE2Y7LKL7423FFKGGPWYL8PB5VWD54PG328ACE6V8VLSGVP9VJMMWS2VDVU459C8K5XK869Z5KM4JWHAVEG56ZESC6HHJ423N6SAH2DW2UQZDQHSMKWUCHPUKZZPJXCQXF55Q3BJW6ZQYK4HM4Q8XWU8NT844E8YM96EGHSYEUKAJ3QDXANN2DELSGARH7LR2XH9UQBQNXGPZGB6JTEQP8HAQK5ZZYJE067DWX6C2JJ7L2HE4NGVXZV5XH9RDP9SNG4WZTC9KEMGXDX7JTQX8RPJJRT4YTA83L8GXDNDDHB7C79CN8UWGLU5EMNMBREQN5MYTYHGYK067DWX6C2JJ7L2HE4NGVXZV5XH9RDP9SNG4WZTC9KEMGXDX7JTQX8RPJJRT4YTA83L8GXDNDDHB7C79CN8UWGLU5EMNMBREQN5MYTYHGYK</PrivateKey>
+      </Mode4096>
+    </Constants>
+    <RegistrationDialog>
+      <Form>VFBGMCZURW5pZ21hUHJvdGVjdG9yTG9hZGVyUmVnaXN0cmF0aW9uRm9ybRBSZWdpc3RyYXRpb25Gb3JtBExlZnQDqgEDVG9wA+kACkF1dG9TY3JvbGwIB0NhcHRpb24GJyVBcHBOYW1lJSAlQXBwVmVycyUgUmVnaXN0cmF0aW9uIERpYWxvZwxDbGllbnRIZWlnaHQDCAELQ2xpZW50V2lkdGgD8gEFQ29sb3IHCWNsQnRuRmFjZQxGb250LkNoYXJzZXQHD0RFRkFVTFRfQ0hBUlNFVApGb250LkNvbG9yBwxjbFdpbmRvd1RleHQLRm9udC5IZWlnaHQC9QlGb250Lk5hbWUGDU1TIFNhbnMgU2VyaWYKRm9udC5TdHlsZQsADk9sZENyZWF0ZU9yZGVyCAhQb3NpdGlvbgcOcG9TY3JlZW5DZW50ZXIKT25BY3RpdmF0ZQcMRm9ybUFjdGl2YXRlCE9uQ3JlYXRlBwpGb3JtQ3JlYXRlBk9uU2hvdwcIRm9ybVNob3cLQ2xpY2tBY3Rpb24HBmNhTm9uZQtDbG9zZUFjdGlvbgcGY2FFeGl0CkRlc2lnblNpemUBA/IBAwgBAA1QaXhlbHNQZXJJbmNoAmAKVGV4dEhlaWdodAINAB5URW5pZ21hUHJvdGVjdG9yTG9hZGVyR3JvdXBib3gJR3JvdXBib3gxBExlZnQCCANUb3ACCAVXaWR0aAPhAQZIZWlnaHQCMQdBbmNob3JzCwZha0xlZnQFYWtUb3AHYWtSaWdodAAHQ2FwdGlvbgYLSGFyZHdhcmUgSUQMRm9udC5DaGFyc2V0Bw9ERUZBVUxUX0NIQVJTRVQKRm9udC5Db2xvcgcMY2xXaW5kb3dUZXh0C0ZvbnQuSGVpZ2h0AvUJRm9udC5OYW1lBg1NUyBTYW5zIFNlcmlmCkZvbnQuU3R5bGULBmZzQm9sZAAKUGFyZW50Rm9udAgIVGFiT3JkZXICAApEZXNpZ25TaXplAQPhAQIxAAAaVEVuaWdtYVByb3RlY3RvckxvYWRlckVkaXQFRWRpdDEETGVmdAIIA1RvcAISBVdpZHRoA7sBBkhlaWdodAIVB0FuY2hvcnMLBmFrTGVmdAVha1RvcAdha1JpZ2h0AAhSZWFkT25seQkIVGFiT3JkZXICAAdDb250ZW50Bwxjb0hhcmR3YXJlSUQOU2hvd0NvcHlCdXR0b24JD1Nob3dQYXN0ZUJ1dHRvbggAAAAeVEVuaWdtYVByb3RlY3RvckxvYWRlckdyb3VwYm94CUdyb3VwYm94MgRMZWZ0AggDVG9wAkAFV2lkdGgD4QEGSGVpZ2h0A5oAB0FuY2hvcnMLBmFrTGVmdAVha1RvcAdha1JpZ2h0CGFrQm90dG9tAAdDYXB0aW9uBhhSZWdpc3RyYXRpb24gSW5mb3JtYXRpb24MRm9udC5DaGFyc2V0Bw9ERUZBVUxUX0NIQVJTRVQKRm9udC5Db2xvcgcMY2xXaW5kb3dUZXh0C0ZvbnQuSGVpZ2h0AvUJRm9udC5OYW1lBg1NUyBTYW5zIFNlcmlmCkZvbnQuU3R5bGULBmZzQm9sZAAKUGFyZW50Rm9udAgIVGFiT3JkZXICAQpEZXNpZ25TaXplAQPhAQOaAAAAG1RFbmlnbWFQcm90ZWN0b3JMb2FkZXJMYWJlbAZMYWJlbDEETGVmdAIIA1RvcAIQBVdpZHRoAhwGSGVpZ2h0Ag0HQ2FwdGlvbgYETmFtZQxGb250LkNoYXJzZXQHD0RFRkFVTFRfQ0hBUlNFVApGb250LkNvbG9yBwxjbFdpbmRvd1RleHQLRm9udC5IZWlnaHQC9QlGb250Lk5hbWUGDU1TIFNhbnMgU2VyaWYKRm9udC5TdHlsZQsAClBhcmVudEZvbnQIAAAbVEVuaWdtYVByb3RlY3RvckxvYWRlckxhYmVsBkxhYmVsMgRMZWZ0AggDVG9wAjgFV2lkdGgCEgZIZWlnaHQCDQdDYXB0aW9uBgNLZXkMRm9udC5DaGFyc2V0Bw9ERUZBVUxUX0NIQVJTRVQKRm9udC5Db2xvcgcMY2xXaW5kb3dUZXh0C0ZvbnQuSGVpZ2h0AvUJRm9udC5OYW1lBg1NUyBTYW5zIFNlcmlmCkZvbnQuU3R5bGULAApQYXJlbnRGb250CAAAGlRFbmlnbWFQcm90ZWN0b3JMb2FkZXJFZGl0BUVkaXQyBExlZnQCCANUb3ACIAVXaWR0aAO7AQZIZWlnaHQCFQdBbmNob3JzCwZha0xlZnQFYWtUb3AHYWtSaWdodAAIVGFiT3JkZXICAAdDb250ZW50BxFjb1JlZ2lzdHJhdGlvTmFtZQ5TaG93Q29weUJ1dHRvbggPU2hvd1Bhc3RlQnV0dG9uCQAAGlRFbmlnbWFQcm90ZWN0b3JMb2FkZXJNZW1vBU1lbW8xBExlZnQCCANUb3ACSAVXaWR0aAO7AQZIZWlnaHQCSgdBbmNob3JzCwZha0xlZnQFYWtUb3AHYWtSaWdodAhha0JvdHRvbQAIVGFiT3JkZXICAQdDb250ZW50BxBjb1JlZ2lzdHJhdGlvS2V5DlNob3dDb3B5QnV0dG9uCA9TaG93UGFzdGVCdXR0b24JAAAAHFRFbmlnbWFQcm90ZWN0b3JMb2FkZXJCdXR0b24HQnV0dG9uMQRMZWZ0AggDVG9wA+MABVdpZHRoA4EABkhlaWdodAIeB0FuY2hvcnMLBmFrTGVmdAhha0JvdHRvbQAHQ2FwdGlvbgYDVHJ5DEZvbnQuQ2hhcnNldAcPREVGQVVMVF9DSEFSU0VUCkZvbnQuQ29sb3IHDGNsV2luZG93VGV4dAtGb250LkhlaWdodAL1CUZvbnQuTmFtZQYNTVMgU2FucyBTZXJpZgpGb250LlN0eWxlCwZmc0JvbGQAClBhcmVudEZvbnQICFRhYk9yZGVyAgILQ2xpY2tBY3Rpb24HCmNhQ29udGludWUAABxURW5pZ21hUHJvdGVjdG9yTG9hZGVyQnV0dG9uB0J1dHRvbjIETGVmdAO4AANUb3AD4wAFV2lkdGgDgQAGSGVpZ2h0Ah4HQW5jaG9ycwsGYWtMZWZ0B2FrUmlnaHQIYWtCb3R0b20AB0NhcHRpb24GCFJlZ2lzdGVyDEZvbnQuQ2hhcnNldAcPREVGQVVMVF9DSEFSU0VUCkZvbnQuQ29sb3IHDGNsV2luZG93VGV4dAtGb250LkhlaWdodAL1CUZvbnQuTmFtZQYNTVMgU2FucyBTZXJpZgpGb250LlN0eWxlCwZmc0JvbGQAClBhcmVudEZvbnQICFRhYk9yZGVyAgMLQ2xpY2tBY3Rpb24HCmNhUmVnaXN0ZXIAABxURW5pZ21hUHJvdGVjdG9yTG9hZGVyQnV0dG9uB0J1dHRvbjMETGVmdANoAQNUb3AD4wAFV2lkdGgDgwAGSGVpZ2h0Ah4HQW5jaG9ycwsHYWtSaWdodAhha0JvdHRvbQAHQ2FwdGlvbgYFQ2xvc2UMRm9udC5DaGFyc2V0Bw9ERUZBVUxUX0NIQVJTRVQKRm9udC5Db2xvcgcMY2xXaW5kb3dUZXh0C0ZvbnQuSGVpZ2h0AvUJRm9udC5OYW1lBg1NUyBTYW5zIFNlcmlmCkZvbnQuU3R5bGULBmZzQm9sZAAKUGFyZW50Rm9udAgIVGFiT3JkZXICBAtDbGlja0FjdGlvbgcGY2FFeGl0AAAA</Form>
+      <Enabled>False</Enabled>
+      <ShowOnTrialExpire>False</ShowOnTrialExpire>
+      <ShowOnUnregistered>True</ShowOnUnregistered>
+      <ShowCorrectMessage>False</ShowCorrectMessage>
+      <ShowIncorrectMessage>False</ShowIncorrectMessage>
+      <MessageCorrect>
+        <Title>The Registration Succeeded</Title>
+        <Text>Thanks for registration!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>The Enigma Protector</HLSentence>
+        <HLURL>http://www.enigmaprotector.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </MessageCorrect>
+      <MessageIncorrect>
+        <Title>The Registration did not succeeded</Title>
+        <Text>Your registration information is incorrect!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>The Enigma Protector</HLSentence>
+        <HLURL>http://www.enigmaprotector.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </MessageIncorrect>
+    </RegistrationDialog>
+    <KeyExpirationReminder>
+      <Enabled>False</Enabled>
+      <DaysBeforeExpiration>30</DaysBeforeExpiration>
+      <Message>
+        <Title>Registration Key Expiration Reminder</Title>
+        <Text>Your registration key will expire in %DaysToKeyExp% days. 
+Please contact to our support team to obtain new one!
+Use the link below to visit our web site.</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>The Enigma Protector</HLSentence>
+        <HLURL>http://enigmaprotector.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </KeyExpirationReminder>
+    <EncryptWithHardwareID>
+      <Enabled>False</Enabled>
+      <HardwareID/>
+    </EncryptWithHardwareID>
+  </RegistrationFeatures>
+  <CheckUp>
+    <AntiDebugger>
+      <Enabled>True</Enabled>
+      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Debugger warning</Title>
+        <Text>A debugger is detected on this computer.
+Applications such as WinIce/SoftIce, OllyDbg, TWD could be executing.
+This program will not execute while debuggers are running.</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Click here for help</HLSentence>
+        <HLURL>http://www.yourcompany.com/help/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </AntiDebugger>
+    <ControlSum>
+      <Enabled>True</Enabled>
+      <FileIntegrityChecking>True</FileIntegrityChecking>
+      <RTIntegrityChecking>True</RTIntegrityChecking>
+      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Virus warning</Title>
+        <Text>Program integrity check failed. 
+Please check for viruses on your computer. 
+If program is not infected, it had been patched 
+or tampered  - please re-download and re-install. 
+This program will now close.</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Click here for help</HLSentence>
+        <HLURL>http://www.yourcompany.com/help/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </ControlSum>
+    <StartupPassword>
+      <Enabled>False</Enabled>
+      <AlwaysAsk>True</AlwaysAsk>
+      <AskFirstTime>False</AskFirstTime>
+      <AskInDays>False</AskInDays>
+      <DaysAfterAsk>30</DaysAfterAsk>
+      <HidePassword>True</HidePassword>
+      <AllowChange>False</AllowChange>
+      <Message>
+        <Title>Invalid password</Title>
+        <Text>You have entered an invalid startup password.
+Try to check it again or contact the software developers:</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Click here for registration</HLSentence>
+        <HLURL>http://www.yourcompany.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+      <Passwords Count="0"/>
+    </StartupPassword>
+    <FileName>
+      <Enabled>False</Enabled>
+      <OriginalFileName>ACv2_Client.asi</OriginalFileName>
+      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Invalid File Name</Title>
+        <Text>The software&apos;s file name had been changed.  
+Please restore the original file name. 
+This program will now close.</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Press here to download official version!</HLSentence>
+        <HLURL>http://www.yourcompany.com/downloads/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </FileName>
+    <DiskDrive>
+      <Enabled>False</Enabled>
+      <Selection>
+        <Removable>False</Removable>
+        <Fixed>True</Fixed>
+        <Remote>False</Remote>
+        <CDROM>True</CDROM>
+        <RAMDisk>True</RAMDisk>
+      </Selection>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Invalid drive type</Title>
+        <Text>The software has checked impossible disk drive type!
+Try to contact to developers or download newest version of this software at:</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Click here for newest version!</HLSentence>
+        <HLURL>http://www.yourcompany.com/downloads/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </DiskDrive>
+    <ExecutedCopies>
+      <Enabled>False</Enabled>
+      <AllowCopies>1</AllowCopies>
+      <ShowMessageIfCopiesCountIsExceeded>True</ShowMessageIfCopiesCountIsExceeded>
+      <Message>
+        <Title>Warning</Title>
+        <Text>You have exceeded maximal number of executed copies. 
+Application won&apos;t be started.</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Software information</HLSentence>
+        <HLURL>http://www.yourcompany.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+      <TerminateExecution>True</TerminateExecution>
+    </ExecutedCopies>
+    <UserLanguage>
+      <Enabled>False</Enabled>
+      <ALB>True</ALB>
+      <DZA>True</DZA>
+      <ARG>True</ARG>
+      <ARM>True</ARM>
+      <AUS>True</AUS>
+      <AUT>True</AUT>
+      <AZE>True</AZE>
+      <BHR>True</BHR>
+      <BLR>True</BLR>
+      <BEL>True</BEL>
+      <BLZ>True</BLZ>
+      <BOL>True</BOL>
+      <BRA>True</BRA>
+      <BRN>True</BRN>
+      <BGR>True</BGR>
+      <KHM>True</KHM>
+      <CAN>True</CAN>
+      <CAF>True</CAF>
+      <TCD>True</TCD>
+      <CHL>True</CHL>
+      <CHN>True</CHN>
+      <COL>True</COL>
+      <CRI>True</CRI>
+      <HRV>True</HRV>
+      <CZE>True</CZE>
+      <DNK>True</DNK>
+      <DOM>True</DOM>
+      <ECU>True</ECU>
+      <EGY>True</EGY>
+      <SLV>True</SLV>
+      <EST>True</EST>
+      <FRO>True</FRO>
+      <FIN>True</FIN>
+      <FRA>True</FRA>
+      <GEO>True</GEO>
+      <DEU>True</DEU>
+      <GRC>True</GRC>
+      <GTM>True</GTM>
+      <HND>True</HND>
+      <HKG>True</HKG>
+      <HUN>True</HUN>
+      <ISL>True</ISL>
+      <IND>True</IND>
+      <IDN>True</IDN>
+      <IRN>True</IRN>
+      <IRQ>True</IRQ>
+      <IRL>True</IRL>
+      <ISR>True</ISR>
+      <ITA>True</ITA>
+      <JAM>True</JAM>
+      <JPN>True</JPN>
+      <JOR>True</JOR>
+      <KAZ>True</KAZ>
+      <KEN>True</KEN>
+      <PRK>True</PRK>
+      <KOR>True</KOR>
+      <KWT>True</KWT>
+      <KGZ>True</KGZ>
+      <LVA>True</LVA>
+      <LBN>True</LBN>
+      <LBR>True</LBR>
+      <LIE>True</LIE>
+      <LTU>True</LTU>
+      <LUX>True</LUX>
+      <MAC>True</MAC>
+      <MKD>True</MKD>
+      <MYS>True</MYS>
+      <MEX>True</MEX>
+      <MDA>True</MDA>
+      <MCO>True</MCO>
+      <MNG>True</MNG>
+      <MAR>True</MAR>
+      <NLD>True</NLD>
+      <NZL>True</NZL>
+      <NIC>True</NIC>
+      <NOR>True</NOR>
+      <OMN>True</OMN>
+      <PAK>True</PAK>
+      <PAN>True</PAN>
+      <PRY>True</PRY>
+      <PER>True</PER>
+      <PHL>True</PHL>
+      <POL>True</POL>
+      <PRT>True</PRT>
+      <PRI>True</PRI>
+      <QAT>True</QAT>
+      <ROU>True</ROU>
+      <RUS>True</RUS>
+      <SAU>True</SAU>
+      <SCG>True</SCG>
+      <SGP>True</SGP>
+      <SVK>True</SVK>
+      <SVN>True</SVN>
+      <ZAF>True</ZAF>
+      <ESP>True</ESP>
+      <SWE>True</SWE>
+      <CHE>True</CHE>
+      <TJK>True</TJK>
+      <THA>True</THA>
+      <TTO>True</TTO>
+      <TUN>True</TUN>
+      <TUR>True</TUR>
+      <TWN>True</TWN>
+      <UKR>True</UKR>
+      <ARE>True</ARE>
+      <GBR>True</GBR>
+      <USA>True</USA>
+      <URY>True</URY>
+      <UZB>True</UZB>
+      <VEN>True</VEN>
+      <VNM>True</VNM>
+      <YEM>True</YEM>
+      <ZWE>True</ZWE>
+      <AFG>True</AFG>
+      <BGD>True</BGD>
+      <BIH>True</BIH>
+      <CAR>True</CAR>
+      <ETH>True</ETH>
+      <GRL>True</GRL>
+      <LAO>True</LAO>
+      <LBY>True</LBY>
+      <MDV>True</MDV>
+      <MLT>True</MLT>
+      <MNE>True</MNE>
+      <NEP>True</NEP>
+      <NGA>True</NGA>
+      <ROM>True</ROM>
+      <RWA>True</RWA>
+      <SEN>True</SEN>
+      <SRB>True</SRB>
+      <LKA>True</LKA>
+      <SYR>True</SYR>
+      <TAJ>True</TAJ>
+      <TKM>True</TKM>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Warning</Title>
+        <Text>You have not permissions to start this application!
+Please, contact to developers.</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Software information</HLSentence>
+        <HLURL>http://www.yourcompany.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </UserLanguage>
+    <ExternalFiles>
+      <Enabled>False</Enabled>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Warning</Title>
+        <Text>The installation package had been modified! 
+File: %CU_EXTFILES% is corrupted!
+Please reinstall application!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Enigma Protector</HLSentence>
+        <HLURL>http://www.enigmaprotector.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+      <Files Count="0"/>
+    </ExternalFiles>
+    <ExecutedProcesses>
+      <Enabled>True</Enabled>
+      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Warning</Title>
+        <Text>Spyware tool is executed on this PC. 
+Please close the application %CU_EXECPR% try again!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Enigma Protector</HLSentence>
+        <HLURL>http://www.enigmaprotector.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+      <CheckEndless>True</CheckEndless>
+      <CheckDelay>2</CheckDelay>
+      <CheckHiddenProcess>True</CheckHiddenProcess>
+      <Processes Count="0"/>
+    </ExecutedProcesses>
+    <LoadedDrivers>
+      <Enabled>False</Enabled>
+      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Warning</Title>
+        <Text>Spyware tool is executed on this PC. 
+Please close this tool try again!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Enigma Protector</HLSentence>
+        <HLURL>http://www.enigmaprotector.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+      <Drivers Count="0"/>
+    </LoadedDrivers>
+    <InstalledServices>
+      <Enabled>False</Enabled>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Warning</Title>
+        <Text>Spyware tool is installed on this PC. 
+Uninstall service &quot;%CU_INSTSERV%&quot; and try again!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Enigma Protector</HLSentence>
+        <HLURL>http://www.enigmaprotector.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+      <Services Count="0"/>
+    </InstalledServices>
+    <WindowsVersion>
+      <Enabled>False</Enabled>
+      <WIN_VER_WINDOWS95>False</WIN_VER_WINDOWS95>
+      <WIN_VER_WINDOWS95OSR2>False</WIN_VER_WINDOWS95OSR2>
+      <WIN_VER_WINDOWS98>False</WIN_VER_WINDOWS98>
+      <WIN_VER_WINDOWS98SE>False</WIN_VER_WINDOWS98SE>
+      <WIN_VER_WINDOWSME>False</WIN_VER_WINDOWSME>
+      <WIN_VER_WINDOWS2000>False</WIN_VER_WINDOWS2000>
+      <WIN_VER_WINDOWS2000PROF>False</WIN_VER_WINDOWS2000PROF>
+      <WIN_VER_WINDOWS2000DATASERVER>False</WIN_VER_WINDOWS2000DATASERVER>
+      <WIN_VER_WINDOWS2000ADVSERVER>False</WIN_VER_WINDOWS2000ADVSERVER>
+      <WIN_VER_WINDOWS2000SERVER>False</WIN_VER_WINDOWS2000SERVER>
+      <WIN_VER_WINDOWSXP>False</WIN_VER_WINDOWSXP>
+      <WIN_VER_WINDOWSXPHOME>False</WIN_VER_WINDOWSXPHOME>
+      <WIN_VER_WINDOWSXPPROF>False</WIN_VER_WINDOWSXPPROF>
+      <WIN_VER_WINDOWSXPPROFx64>False</WIN_VER_WINDOWSXPPROFx64>
+      <WIN_VER_WINDOWSXPPROFDATACENTERx64>False</WIN_VER_WINDOWSXPPROFDATACENTERx64>
+      <WIN_VER_WINDOWSXPPROFENERPRICEx64>False</WIN_VER_WINDOWSXPPROFENERPRICEx64>
+      <WIN_VER_WINDOWSXPPROFSTANDARTx64>False</WIN_VER_WINDOWSXPPROFSTANDARTx64>
+      <WIN_VER_WINDOWS2003SERVER>False</WIN_VER_WINDOWS2003SERVER>
+      <WIN_VER_WINDOWS2003SERVERR2>False</WIN_VER_WINDOWS2003SERVERR2>
+      <WIN_VER_WINDOWS2003STORAGESERVER>False</WIN_VER_WINDOWS2003STORAGESERVER>
+      <WIN_VER_WINDOWS2003DATACENTERITANIUM>False</WIN_VER_WINDOWS2003DATACENTERITANIUM>
+      <WIN_VER_WINDOWS2003ENTERPRICEITANIUM>False</WIN_VER_WINDOWS2003ENTERPRICEITANIUM>
+      <WIN_VER_WINDOWS2003DATACENTERx64>False</WIN_VER_WINDOWS2003DATACENTERx64>
+      <WIN_VER_WINDOWS2003ENERPRICEx64>False</WIN_VER_WINDOWS2003ENERPRICEx64>
+      <WIN_VER_WINDOWS2003STANDARTx64>False</WIN_VER_WINDOWS2003STANDARTx64>
+      <WIN_VER_WINDOWS2003COMPUTE>False</WIN_VER_WINDOWS2003COMPUTE>
+      <WIN_VER_WINDOWS2003DATACENTER>False</WIN_VER_WINDOWS2003DATACENTER>
+      <WIN_VER_WINDOWS2003ENTERPRICE>False</WIN_VER_WINDOWS2003ENTERPRICE>
+      <WIN_VER_WINDOWS2003WEB>False</WIN_VER_WINDOWS2003WEB>
+      <WIN_VER_WINDOWS2003STANDART>False</WIN_VER_WINDOWS2003STANDART>
+      <WIN_VER_WINDOWSVISTA>False</WIN_VER_WINDOWSVISTA>
+      <WIN_VER_WINDOWSVISTA_BUSINESS>False</WIN_VER_WINDOWSVISTA_BUSINESS>
+      <WIN_VER_WINDOWSVISTA_CLUSTER_SERVER>False</WIN_VER_WINDOWSVISTA_CLUSTER_SERVER>
+      <WIN_VER_WINDOWSVISTA_DATACENTER_SERVER>False</WIN_VER_WINDOWSVISTA_DATACENTER_SERVER>
+      <WIN_VER_WINDOWSVISTA_DATACENTER_SERVER_CORE>False</WIN_VER_WINDOWSVISTA_DATACENTER_SERVER_CORE>
+      <WIN_VER_WINDOWSVISTA_DATACENTER_SERVER_CORE_V>False</WIN_VER_WINDOWSVISTA_DATACENTER_SERVER_CORE_V>
+      <WIN_VER_WINDOWSVISTA_DATACENTER_SERVER_V>False</WIN_VER_WINDOWSVISTA_DATACENTER_SERVER_V>
+      <WIN_VER_WINDOWSVISTA_ENTERPRICE>False</WIN_VER_WINDOWSVISTA_ENTERPRICE>
+      <WIN_VER_WINDOWSVISTA_ENTERPRISE_SERVER>False</WIN_VER_WINDOWSVISTA_ENTERPRISE_SERVER>
+      <WIN_VER_WINDOWSVISTA_ENTERPRISE_SERVER_CORE>False</WIN_VER_WINDOWSVISTA_ENTERPRISE_SERVER_CORE>
+      <WIN_VER_WINDOWSVISTA_ENTERPRISE_SERVER_V>False</WIN_VER_WINDOWSVISTA_ENTERPRISE_SERVER_V>
+      <WIN_VER_WINDOWSVISTA_ENTERPRISE_SERVER_CORE_V>False</WIN_VER_WINDOWSVISTA_ENTERPRISE_SERVER_CORE_V>
+      <WIN_VER_WINDOWSVISTA_ENTERPRISE_SERVER_IA64>False</WIN_VER_WINDOWSVISTA_ENTERPRISE_SERVER_IA64>
+      <WIN_VER_WINDOWSVISTA_HOME_BASIC>False</WIN_VER_WINDOWSVISTA_HOME_BASIC>
+      <WIN_VER_WINDOWSVISTA_HOME_PREMIUM>False</WIN_VER_WINDOWSVISTA_HOME_PREMIUM>
+      <WIN_VER_WINDOWSVISTA_HOME_SERVER>False</WIN_VER_WINDOWSVISTA_HOME_SERVER>
+      <WIN_VER_WINDOWSVISTA_SERVER_FOR_SMALLBUSINESS>False</WIN_VER_WINDOWSVISTA_SERVER_FOR_SMALLBUSINESS>
+      <WIN_VER_WINDOWSVISTA_SMALLBUSINESS_SERVER>False</WIN_VER_WINDOWSVISTA_SMALLBUSINESS_SERVER>
+      <WIN_VER_WINDOWSVISTA_SMALLBUSINESS_SERVER_PREMIUM>False</WIN_VER_WINDOWSVISTA_SMALLBUSINESS_SERVER_PREMIUM>
+      <WIN_VER_WINDOWSVISTA_MEDIUMBUSINESS_SERVER_MANAGEMENT>False</WIN_VER_WINDOWSVISTA_MEDIUMBUSINESS_SERVER_MANAGEMENT>
+      <WIN_VER_WINDOWSVISTA_MEDIUMBUSINESS_SERVER_MESSAGING>False</WIN_VER_WINDOWSVISTA_MEDIUMBUSINESS_SERVER_MESSAGING>
+      <WIN_VER_WINDOWSVISTA_MEDIUMBUSINESS_SERVER_SECURITY>False</WIN_VER_WINDOWSVISTA_MEDIUMBUSINESS_SERVER_SECURITY>
+      <WIN_VER_WINDOWSVISTA_STANDARD_SERVER>False</WIN_VER_WINDOWSVISTA_STANDARD_SERVER>
+      <WIN_VER_WINDOWSVISTA_STANDARD_SERVER_V>False</WIN_VER_WINDOWSVISTA_STANDARD_SERVER_V>
+      <WIN_VER_WINDOWSVISTA_STANDARD_SERVER_CORE>False</WIN_VER_WINDOWSVISTA_STANDARD_SERVER_CORE>
+      <WIN_VER_WINDOWSVISTA_STANDARD_SERVER_CORE_V>False</WIN_VER_WINDOWSVISTA_STANDARD_SERVER_CORE_V>
+      <WIN_VER_WINDOWSVISTA_STARTER>False</WIN_VER_WINDOWSVISTA_STARTER>
+      <WIN_VER_WINDOWSVISTA_STORAGE_ENTERPRISE_SERVER>False</WIN_VER_WINDOWSVISTA_STORAGE_ENTERPRISE_SERVER>
+      <WIN_VER_WINDOWSVISTA_STORAGE_EXPRESS_SERVER>False</WIN_VER_WINDOWSVISTA_STORAGE_EXPRESS_SERVER>
+      <WIN_VER_WINDOWSVISTA_STORAGE_STANDARD_SERVER>False</WIN_VER_WINDOWSVISTA_STORAGE_STANDARD_SERVER>
+      <WIN_VER_WINDOWSVISTA_STORAGE_WORKGROUP_SERVER>False</WIN_VER_WINDOWSVISTA_STORAGE_WORKGROUP_SERVER>
+      <WIN_VER_WINDOWSVISTA_UNDEFINED>False</WIN_VER_WINDOWSVISTA_UNDEFINED>
+      <WIN_VER_WINDOWSVISTA_ULTIMATE>False</WIN_VER_WINDOWSVISTA_ULTIMATE>
+      <WIN_VER_WINDOWSVISTA_WEB_SERVER>False</WIN_VER_WINDOWSVISTA_WEB_SERVER>
+      <WIN_VER_WINDOWSVISTA_WEB_SERVER_CORE>False</WIN_VER_WINDOWSVISTA_WEB_SERVER_CORE>
+      <WIN_VER_WINDOWSVISTA_UNLICENSED>False</WIN_VER_WINDOWSVISTA_UNLICENSED>
+      <WIN_VER_WINDOWS2008>False</WIN_VER_WINDOWS2008>
+      <WIN_VER_WINDOWS2008_BUSINESS>False</WIN_VER_WINDOWS2008_BUSINESS>
+      <WIN_VER_WINDOWS2008_CLUSTER_SERVER>False</WIN_VER_WINDOWS2008_CLUSTER_SERVER>
+      <WIN_VER_WINDOWS2008_DATACENTER_SERVER>False</WIN_VER_WINDOWS2008_DATACENTER_SERVER>
+      <WIN_VER_WINDOWS2008_DATACENTER_SERVER_CORE>False</WIN_VER_WINDOWS2008_DATACENTER_SERVER_CORE>
+      <WIN_VER_WINDOWS2008_DATACENTER_SERVER_CORE_V>False</WIN_VER_WINDOWS2008_DATACENTER_SERVER_CORE_V>
+      <WIN_VER_WINDOWS2008_DATACENTER_SERVER_V>False</WIN_VER_WINDOWS2008_DATACENTER_SERVER_V>
+      <WIN_VER_WINDOWS2008_ENTERPRICE>False</WIN_VER_WINDOWS2008_ENTERPRICE>
+      <WIN_VER_WINDOWS2008_ENTERPRISE_SERVER>False</WIN_VER_WINDOWS2008_ENTERPRISE_SERVER>
+      <WIN_VER_WINDOWS2008_ENTERPRISE_SERVER_CORE>False</WIN_VER_WINDOWS2008_ENTERPRISE_SERVER_CORE>
+      <WIN_VER_WINDOWS2008_ENTERPRISE_SERVER_V>False</WIN_VER_WINDOWS2008_ENTERPRISE_SERVER_V>
+      <WIN_VER_WINDOWS2008_ENTERPRISE_SERVER_CORE_V>False</WIN_VER_WINDOWS2008_ENTERPRISE_SERVER_CORE_V>
+      <WIN_VER_WINDOWS2008_ENTERPRISE_SERVER_IA64>False</WIN_VER_WINDOWS2008_ENTERPRISE_SERVER_IA64>
+      <WIN_VER_WINDOWS2008_HOME_BASIC>False</WIN_VER_WINDOWS2008_HOME_BASIC>
+      <WIN_VER_WINDOWS2008_HOME_PREMIUM>False</WIN_VER_WINDOWS2008_HOME_PREMIUM>
+      <WIN_VER_WINDOWS2008_HOME_SERVER>False</WIN_VER_WINDOWS2008_HOME_SERVER>
+      <WIN_VER_WINDOWS2008_SERVER_FOR_SMALLBUSINESS>False</WIN_VER_WINDOWS2008_SERVER_FOR_SMALLBUSINESS>
+      <WIN_VER_WINDOWS2008_SMALLBUSINESS_SERVER>False</WIN_VER_WINDOWS2008_SMALLBUSINESS_SERVER>
+      <WIN_VER_WINDOWS2008_SMALLBUSINESS_SERVER_PREMIUM>False</WIN_VER_WINDOWS2008_SMALLBUSINESS_SERVER_PREMIUM>
+      <WIN_VER_WINDOWS2008_MEDIUMBUSINESS_SERVER_MANAGEMENT>False</WIN_VER_WINDOWS2008_MEDIUMBUSINESS_SERVER_MANAGEMENT>
+      <WIN_VER_WINDOWS2008_MEDIUMBUSINESS_SERVER_MESSAGING>False</WIN_VER_WINDOWS2008_MEDIUMBUSINESS_SERVER_MESSAGING>
+      <WIN_VER_WINDOWS2008_MEDIUMBUSINESS_SERVER_SECURITY>False</WIN_VER_WINDOWS2008_MEDIUMBUSINESS_SERVER_SECURITY>
+      <WIN_VER_WINDOWS2008_STANDARD_SERVER>False</WIN_VER_WINDOWS2008_STANDARD_SERVER>
+      <WIN_VER_WINDOWS2008_STANDARD_SERVER_V>False</WIN_VER_WINDOWS2008_STANDARD_SERVER_V>
+      <WIN_VER_WINDOWS2008_STANDARD_SERVER_CORE>False</WIN_VER_WINDOWS2008_STANDARD_SERVER_CORE>
+      <WIN_VER_WINDOWS2008_STANDARD_SERVER_CORE_V>False</WIN_VER_WINDOWS2008_STANDARD_SERVER_CORE_V>
+      <WIN_VER_WINDOWS2008_STARTER>False</WIN_VER_WINDOWS2008_STARTER>
+      <WIN_VER_WINDOWS2008_STORAGE_ENTERPRISE_SERVER>False</WIN_VER_WINDOWS2008_STORAGE_ENTERPRISE_SERVER>
+      <WIN_VER_WINDOWS2008_STORAGE_EXPRESS_SERVER>False</WIN_VER_WINDOWS2008_STORAGE_EXPRESS_SERVER>
+      <WIN_VER_WINDOWS2008_STORAGE_STANDARD_SERVER>False</WIN_VER_WINDOWS2008_STORAGE_STANDARD_SERVER>
+      <WIN_VER_WINDOWS2008_STORAGE_WORKGROUP_SERVER>False</WIN_VER_WINDOWS2008_STORAGE_WORKGROUP_SERVER>
+      <WIN_VER_WINDOWS2008_UNDEFINED>False</WIN_VER_WINDOWS2008_UNDEFINED>
+      <WIN_VER_WINDOWS2008_ULTIMATE>False</WIN_VER_WINDOWS2008_ULTIMATE>
+      <WIN_VER_WINDOWS2008_WEB_SERVER>False</WIN_VER_WINDOWS2008_WEB_SERVER>
+      <WIN_VER_WINDOWS2008_WEB_SERVER_CORE>False</WIN_VER_WINDOWS2008_WEB_SERVER_CORE>
+      <WIN_VER_WINDOWS2008_UNLICENSED>False</WIN_VER_WINDOWS2008_UNLICENSED>
+      <WIN_VER_WINDOWS2008R2>False</WIN_VER_WINDOWS2008R2>
+      <WIN_VER_WINDOWS2008R2_BUSINESS>False</WIN_VER_WINDOWS2008R2_BUSINESS>
+      <WIN_VER_WINDOWS2008R2_CLUSTER_SERVER>False</WIN_VER_WINDOWS2008R2_CLUSTER_SERVER>
+      <WIN_VER_WINDOWS2008R2_DATACENTER_SERVER>False</WIN_VER_WINDOWS2008R2_DATACENTER_SERVER>
+      <WIN_VER_WINDOWS2008R2_DATACENTER_SERVER_CORE>False</WIN_VER_WINDOWS2008R2_DATACENTER_SERVER_CORE>
+      <WIN_VER_WINDOWS2008R2_DATACENTER_SERVER_CORE_V>False</WIN_VER_WINDOWS2008R2_DATACENTER_SERVER_CORE_V>
+      <WIN_VER_WINDOWS2008R2_DATACENTER_SERVER_V>False</WIN_VER_WINDOWS2008R2_DATACENTER_SERVER_V>
+      <WIN_VER_WINDOWS2008R2_ENTERPRICE>False</WIN_VER_WINDOWS2008R2_ENTERPRICE>
+      <WIN_VER_WINDOWS2008R2_ENTERPRISE_SERVER>False</WIN_VER_WINDOWS2008R2_ENTERPRISE_SERVER>
+      <WIN_VER_WINDOWS2008R2_ENTERPRISE_SERVER_CORE>False</WIN_VER_WINDOWS2008R2_ENTERPRISE_SERVER_CORE>
+      <WIN_VER_WINDOWS2008R2_ENTERPRISE_SERVER_V>False</WIN_VER_WINDOWS2008R2_ENTERPRISE_SERVER_V>
+      <WIN_VER_WINDOWS2008R2_ENTERPRISE_SERVER_CORE_V>False</WIN_VER_WINDOWS2008R2_ENTERPRISE_SERVER_CORE_V>
+      <WIN_VER_WINDOWS2008R2_ENTERPRISE_SERVER_IA64>False</WIN_VER_WINDOWS2008R2_ENTERPRISE_SERVER_IA64>
+      <WIN_VER_WINDOWS2008R2_HOME_BASIC>False</WIN_VER_WINDOWS2008R2_HOME_BASIC>
+      <WIN_VER_WINDOWS2008R2_HOME_PREMIUM>False</WIN_VER_WINDOWS2008R2_HOME_PREMIUM>
+      <WIN_VER_WINDOWS2008R2_HOME_SERVER>False</WIN_VER_WINDOWS2008R2_HOME_SERVER>
+      <WIN_VER_WINDOWS2008R2_SERVER_FOR_SMALLBUSINESS>False</WIN_VER_WINDOWS2008R2_SERVER_FOR_SMALLBUSINESS>
+      <WIN_VER_WINDOWS2008R2_SMALLBUSINESS_SERVER>False</WIN_VER_WINDOWS2008R2_SMALLBUSINESS_SERVER>
+      <WIN_VER_WINDOWS2008R2_SMALLBUSINESS_SERVER_PREMIUM>False</WIN_VER_WINDOWS2008R2_SMALLBUSINESS_SERVER_PREMIUM>
+      <WIN_VER_WINDOWS2008R2_MEDIUMBUSINESS_SERVER_MANAGEMENT>False</WIN_VER_WINDOWS2008R2_MEDIUMBUSINESS_SERVER_MANAGEMENT>
+      <WIN_VER_WINDOWS2008R2_MEDIUMBUSINESS_SERVER_MESSAGING>False</WIN_VER_WINDOWS2008R2_MEDIUMBUSINESS_SERVER_MESSAGING>
+      <WIN_VER_WINDOWS2008R2_MEDIUMBUSINESS_SERVER_SECURITY>False</WIN_VER_WINDOWS2008R2_MEDIUMBUSINESS_SERVER_SECURITY>
+      <WIN_VER_WINDOWS2008R2_STANDARD_SERVER>False</WIN_VER_WINDOWS2008R2_STANDARD_SERVER>
+      <WIN_VER_WINDOWS2008R2_STANDARD_SERVER_V>False</WIN_VER_WINDOWS2008R2_STANDARD_SERVER_V>
+      <WIN_VER_WINDOWS2008R2_STANDARD_SERVER_CORE>False</WIN_VER_WINDOWS2008R2_STANDARD_SERVER_CORE>
+      <WIN_VER_WINDOWS2008R2_STANDARD_SERVER_CORE_V>False</WIN_VER_WINDOWS2008R2_STANDARD_SERVER_CORE_V>
+      <WIN_VER_WINDOWS2008R2_STARTER>False</WIN_VER_WINDOWS2008R2_STARTER>
+      <WIN_VER_WINDOWS2008R2_STORAGE_ENTERPRISE_SERVER>False</WIN_VER_WINDOWS2008R2_STORAGE_ENTERPRISE_SERVER>
+      <WIN_VER_WINDOWS2008R2_STORAGE_EXPRESS_SERVER>False</WIN_VER_WINDOWS2008R2_STORAGE_EXPRESS_SERVER>
+      <WIN_VER_WINDOWS2008R2_STORAGE_STANDARD_SERVER>False</WIN_VER_WINDOWS2008R2_STORAGE_STANDARD_SERVER>
+      <WIN_VER_WINDOWS2008R2_STORAGE_WORKGROUP_SERVER>False</WIN_VER_WINDOWS2008R2_STORAGE_WORKGROUP_SERVER>
+      <WIN_VER_WINDOWS2008R2_UNDEFINED>False</WIN_VER_WINDOWS2008R2_UNDEFINED>
+      <WIN_VER_WINDOWS2008R2_ULTIMATE>False</WIN_VER_WINDOWS2008R2_ULTIMATE>
+      <WIN_VER_WINDOWS2008R2_WEB_SERVER>False</WIN_VER_WINDOWS2008R2_WEB_SERVER>
+      <WIN_VER_WINDOWS2008R2_WEB_SERVER_CORE>False</WIN_VER_WINDOWS2008R2_WEB_SERVER_CORE>
+      <WIN_VER_WINDOWS2008R2_UNLICENSED>False</WIN_VER_WINDOWS2008R2_UNLICENSED>
+      <WIN_VER_WINDOWSSEVEN>False</WIN_VER_WINDOWSSEVEN>
+      <WIN_VER_WINDOWSSEVEN_BUSINESS>False</WIN_VER_WINDOWSSEVEN_BUSINESS>
+      <WIN_VER_WINDOWSSEVEN_CLUSTER_SERVER>False</WIN_VER_WINDOWSSEVEN_CLUSTER_SERVER>
+      <WIN_VER_WINDOWSSEVEN_DATACENTER_SERVER>False</WIN_VER_WINDOWSSEVEN_DATACENTER_SERVER>
+      <WIN_VER_WINDOWSSEVEN_DATACENTER_SERVER_CORE>False</WIN_VER_WINDOWSSEVEN_DATACENTER_SERVER_CORE>
+      <WIN_VER_WINDOWSSEVEN_DATACENTER_SERVER_CORE_V>False</WIN_VER_WINDOWSSEVEN_DATACENTER_SERVER_CORE_V>
+      <WIN_VER_WINDOWSSEVEN_DATACENTER_SERVER_V>False</WIN_VER_WINDOWSSEVEN_DATACENTER_SERVER_V>
+      <WIN_VER_WINDOWSSEVEN_ENTERPRICE>False</WIN_VER_WINDOWSSEVEN_ENTERPRICE>
+      <WIN_VER_WINDOWSSEVEN_ENTERPRISE_SERVER>False</WIN_VER_WINDOWSSEVEN_ENTERPRISE_SERVER>
+      <WIN_VER_WINDOWSSEVEN_ENTERPRISE_SERVER_CORE>False</WIN_VER_WINDOWSSEVEN_ENTERPRISE_SERVER_CORE>
+      <WIN_VER_WINDOWSSEVEN_ENTERPRISE_SERVER_V>False</WIN_VER_WINDOWSSEVEN_ENTERPRISE_SERVER_V>
+      <WIN_VER_WINDOWSSEVEN_ENTERPRISE_SERVER_CORE_V>False</WIN_VER_WINDOWSSEVEN_ENTERPRISE_SERVER_CORE_V>
+      <WIN_VER_WINDOWSSEVEN_ENTERPRISE_SERVER_IA64>False</WIN_VER_WINDOWSSEVEN_ENTERPRISE_SERVER_IA64>
+      <WIN_VER_WINDOWSSEVEN_HOME_BASIC>False</WIN_VER_WINDOWSSEVEN_HOME_BASIC>
+      <WIN_VER_WINDOWSSEVEN_HOME_PREMIUM>False</WIN_VER_WINDOWSSEVEN_HOME_PREMIUM>
+      <WIN_VER_WINDOWSSEVEN_HOME_SERVER>False</WIN_VER_WINDOWSSEVEN_HOME_SERVER>
+      <WIN_VER_WINDOWSSEVEN_SERVER_FOR_SMALLBUSINESS>False</WIN_VER_WINDOWSSEVEN_SERVER_FOR_SMALLBUSINESS>
+      <WIN_VER_WINDOWSSEVEN_SMALLBUSINESS_SERVER>False</WIN_VER_WINDOWSSEVEN_SMALLBUSINESS_SERVER>
+      <WIN_VER_WINDOWSSEVEN_SMALLBUSINESS_SERVER_PREMIUM>False</WIN_VER_WINDOWSSEVEN_SMALLBUSINESS_SERVER_PREMIUM>
+      <WIN_VER_WINDOWSSEVEN_MEDIUMBUSINESS_SERVER_MANAGEMENT>False</WIN_VER_WINDOWSSEVEN_MEDIUMBUSINESS_SERVER_MANAGEMENT>
+      <WIN_VER_WINDOWSSEVEN_MEDIUMBUSINESS_SERVER_MESSAGING>False</WIN_VER_WINDOWSSEVEN_MEDIUMBUSINESS_SERVER_MESSAGING>
+      <WIN_VER_WINDOWSSEVEN_MEDIUMBUSINESS_SERVER_SECURITY>False</WIN_VER_WINDOWSSEVEN_MEDIUMBUSINESS_SERVER_SECURITY>
+      <WIN_VER_WINDOWSSEVEN_STANDARD_SERVER>False</WIN_VER_WINDOWSSEVEN_STANDARD_SERVER>
+      <WIN_VER_WINDOWSSEVEN_STANDARD_SERVER_V>False</WIN_VER_WINDOWSSEVEN_STANDARD_SERVER_V>
+      <WIN_VER_WINDOWSSEVEN_STANDARD_SERVER_CORE>False</WIN_VER_WINDOWSSEVEN_STANDARD_SERVER_CORE>
+      <WIN_VER_WINDOWSSEVEN_STANDARD_SERVER_CORE_V>False</WIN_VER_WINDOWSSEVEN_STANDARD_SERVER_CORE_V>
+      <WIN_VER_WINDOWSSEVEN_STARTER>False</WIN_VER_WINDOWSSEVEN_STARTER>
+      <WIN_VER_WINDOWSSEVEN_STORAGE_ENTERPRISE_SERVER>False</WIN_VER_WINDOWSSEVEN_STORAGE_ENTERPRISE_SERVER>
+      <WIN_VER_WINDOWSSEVEN_STORAGE_EXPRESS_SERVER>False</WIN_VER_WINDOWSSEVEN_STORAGE_EXPRESS_SERVER>
+      <WIN_VER_WINDOWSSEVEN_STORAGE_STANDARD_SERVER>False</WIN_VER_WINDOWSSEVEN_STORAGE_STANDARD_SERVER>
+      <WIN_VER_WINDOWSSEVEN_STORAGE_WORKGROUP_SERVER>False</WIN_VER_WINDOWSSEVEN_STORAGE_WORKGROUP_SERVER>
+      <WIN_VER_WINDOWSSEVEN_UNDEFINED>False</WIN_VER_WINDOWSSEVEN_UNDEFINED>
+      <WIN_VER_WINDOWSSEVEN_ULTIMATE>False</WIN_VER_WINDOWSSEVEN_ULTIMATE>
+      <WIN_VER_WINDOWSSEVEN_WEB_SERVER>False</WIN_VER_WINDOWSSEVEN_WEB_SERVER>
+      <WIN_VER_WINDOWSSEVEN_WEB_SERVER_CORE>False</WIN_VER_WINDOWSSEVEN_WEB_SERVER_CORE>
+      <WIN_VER_WINDOWSSEVEN_UNLICENSED>False</WIN_VER_WINDOWSSEVEN_UNLICENSED>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Warning</Title>
+        <Text>Current Windows Version &quot;%CU_WINVER%&quot; does not support!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Enigma Protector</HLSentence>
+        <HLURL>http://www.enigmaprotector.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </WindowsVersion>
+    <VirtualizationTools>
+      <Enabled>True</Enabled>
+      <VMWare>True</VMWare>
+      <VirtualPC>True</VirtualPC>
+      <Sandboxie>False</Sandboxie>
+      <TerminateExecution>True</TerminateExecution>
+      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Warning</Title>
+        <Text>This program can not be run under %CU_VIRTTOOLS%!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Enigma Protector</HLSentence>
+        <HLURL>http://www.enigmaprotector.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+      <VirtualBox>True</VirtualBox>
+    </VirtualizationTools>
+    <Privileges>
+      <Administrator>
+        <Enabled>False</Enabled>
+        <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+        <Message>
+          <Title>Warning</Title>
+          <Text>You have not enough permissions to run this application. 
+Please switch on administrator privileges of your Windows account and 
+try again!</Text>
+          <UseHL>False</UseHL>
+          <HLSentence>Enigma Protector</HLSentence>
+          <HLURL>http://enigmaprotector.com/</HLURL>
+          <Icon>3</Icon>
+          <AutoClose>False</AutoClose>
+          <CloseDelay>0</CloseDelay>
+          <Disable>False</Disable>
+          <DisableDelay>0</DisableDelay>
+          <FontName/>
+          <FontCharset>0</FontCharset>
+          <FontColor>0</FontColor>
+          <FontSize>0</FontSize>
+          <FontBold>False</FontBold>
+          <FontItalic>False</FontItalic>
+          <FontUnderline>False</FontUnderline>
+          <FontStrikeout>False</FontStrikeout>
+        </Message>
+      </Administrator>
+    </Privileges>
+  </CheckUp>
+  <Protection>
+    <FileAnalyzerDeception>
+      <NameOfTheProtectionCodeSection>.data</NameOfTheProtectionCodeSection>
+      <ProtectionCodeMarker>BorlandDelphi</ProtectionCodeMarker>
+    </FileAnalyzerDeception>
+    <OriginalFileSizePreservation>
+      <Enabled>True</Enabled>
+    </OriginalFileSizePreservation>
+    <AdvanceForceImportProtection>
+      <Enabled>False</Enabled>
+    </AdvanceForceImportProtection>
+    <WinAPIFunctionsRedirection>
+      <Enabled>True</Enabled>
+    </WinAPIFunctionsRedirection>
+    <WinAPIFunctionsEmulation>
+      <Enabled>True</Enabled>
+    </WinAPIFunctionsEmulation>
+    <InlinePatching>
+      <Enabled>False</Enabled>
+      <Threads>3</Threads>
+      <Interval>1000</Interval>
+    </InlinePatching>
+    <ProtectedStrings>
+      <Strings Count="0"/>
+    </ProtectedStrings>
+    <ResourcesProtection>
+      <Type>2</Type>
+    </ResourcesProtection>
+  </Protection>
+  <VirtualBox>
+    <Secure1>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</Secure1>
+    <Secure2>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</Secure2>
+    <PrivateKey>020ZK9M2KNY4DYQ9C2T25F888YTFG5DM33R0ADMGNTR4UZTXQ7GLB4XW4SJ8KPV39QTT7BS2MTLCN8NPCK2RN3LLZCZUNU8AV5FHQ33HSP6KKV966NRTL8Q4ZZSN56V5SUX9FJA8JCED8HX5KECLS9MT5PDY9URC2S4DBMH4DT4VQAULXS8Z2N9J2Y877CWB6DYCS8E6DXJV3NSDUJW020Z22JPP7X3YUBQPEE9VRNHQUYT6Q5GDTP020Z22JPP7X3YUBQPEE9VRNHQUYT6Q5GDTP</PrivateKey>
+    <PublicKey>020D1AADDEF4BFF9D14997B733D8524BEA10CDCEMCBLQBSBSALR59RNL4AKGF2BG7TLY8HD6D75BT2XWG53228YVPWJZS53HSFGJTLX7M22H3MZM4A6HNVR6EN9LV4GM5ZRXP987JTXA3GWQWJ5CX4K9ZJA5CZFWFD4Y24U9VD58QE3FSQE293WNW8AUGU3V6PX3BQYJ4X3CZY62Y62YZ9EQJHQED4ZQ85YM6BWLQ63NZ8LY9G0CCE7CDAPHNFGBWD6RTS3MU5VKEDGAHSVYAHJ2EB3T7AZJCDQ8QCN7EB4X3VARE532YZRT4U8FZJ36R968V5G752DGZQE7BMEAUUC5EPER34LFG7UBP7VEWMME59MENY323NSBLBW9RFDVZB4P8XVNSF4SV78GXE9XWNMTX9NSLDXRVSPZSLKKD6STHDDHBXVQGFFYNPH2PB5ZS0CDJLJKZGYZSFHYZ5PBXLE6BJQ5DR4CUNGUA4TDJVNNNRE8V4B4WP2JSBBTWJL87BLNK749KYBV9P6B9EFKMRNPXPNHH8EFLAS79BLWFA62LMJB8N36VNTH7JP6N2G5XQXTZHJKMYAQFWSYA4X37CGNPB3B3HKYL2JTHL69BTLZTLYS3TN29WEBW79WQWDC3UFSSFMQG64PWY6EF</PublicKey>
+    <Files>
+      <Enabled>False</Enabled>
+      <DeleteExtractedOnExit>False</DeleteExtractedOnExit>
+      <CompressFiles>False</CompressFiles>
+      <Files>
+        <File>
+          <Type>3</Type>
+          <Name>%DEFAULT FOLDER%</Name>
+          <Files>
+            <File>
+              <Type>2</Type>
+              <Name>crashrpt_lang.ini</Name>
+              <File>C:\Users\Whitetiger\Desktop\Coding projects\GitHub\SAMP_AC_v2\Release\crashrpt_lang.ini</File>
+              <ActiveX>False</ActiveX>
+              <ActiveXInstall>False</ActiveXInstall>
+              <Action>0</Action>
+              <OverwriteDateTime>False</OverwriteDateTime>
+              <OverwriteAttributes>False</OverwriteAttributes>
+              <PassCommandLine>False</PassCommandLine>
+            </File>
+            <File>
+              <Type>2</Type>
+              <Name>CrashRpt1402.dll</Name>
+              <File>C:\Users\Whitetiger\Desktop\Coding projects\GitHub\SAMP_AC_v2\Release\CrashRpt1402.dll</File>
+              <ActiveX>False</ActiveX>
+              <ActiveXInstall>False</ActiveXInstall>
+              <Action>0</Action>
+              <OverwriteDateTime>False</OverwriteDateTime>
+              <OverwriteAttributes>False</OverwriteAttributes>
+              <PassCommandLine>False</PassCommandLine>
+            </File>
+            <File>
+              <Type>2</Type>
+              <Name>CrashSender1402.exe</Name>
+              <File>C:\Users\Whitetiger\Desktop\Coding projects\GitHub\SAMP_AC_v2\Release\CrashSender1402.exe</File>
+              <ActiveX>False</ActiveX>
+              <ActiveXInstall>False</ActiveXInstall>
+              <Action>0</Action>
+              <OverwriteDateTime>False</OverwriteDateTime>
+              <OverwriteAttributes>False</OverwriteAttributes>
+              <PassCommandLine>False</PassCommandLine>
+            </File>
+            <File>
+              <Type>2</Type>
+              <Name>dbghelp.dll</Name>
+              <File>C:\Users\Whitetiger\Desktop\Coding projects\GitHub\SAMP_AC_v2\Release\dbghelp.dll</File>
+              <ActiveX>False</ActiveX>
+              <ActiveXInstall>False</ActiveXInstall>
+              <Action>0</Action>
+              <OverwriteDateTime>False</OverwriteDateTime>
+              <OverwriteAttributes>False</OverwriteAttributes>
+              <PassCommandLine>False</PassCommandLine>
+            </File>
+          </Files>
+        </File>
+      </Files>
+    </Files>
+    <Registries>
+      <Enabled>False</Enabled>
+      <Registries>
+        <Registry>
+          <Type>1</Type>
+          <Virtual>True</Virtual>
+          <Name>Classes</Name>
+          <ValueType>0</ValueType>
+          <Value/>
+          <Registries/>
+        </Registry>
+        <Registry>
+          <Type>1</Type>
+          <Virtual>True</Virtual>
+          <Name>User</Name>
+          <ValueType>0</ValueType>
+          <Value/>
+          <Registries/>
+        </Registry>
+        <Registry>
+          <Type>1</Type>
+          <Virtual>True</Virtual>
+          <Name>Machine</Name>
+          <ValueType>0</ValueType>
+          <Value/>
+          <Registries/>
+        </Registry>
+        <Registry>
+          <Type>1</Type>
+          <Virtual>True</Virtual>
+          <Name>Users</Name>
+          <ValueType>0</ValueType>
+          <Value/>
+          <Registries/>
+        </Registry>
+        <Registry>
+          <Type>1</Type>
+          <Virtual>True</Virtual>
+          <Name>Config</Name>
+          <ValueType>0</ValueType>
+          <Value/>
+          <Registries/>
+        </Registry>
+      </Registries>
+    </Registries>
+    <Packaging>
+      <Enabled>False</Enabled>
+      <CheckIntegrity>True</CheckIntegrity>
+    </Packaging>
+    <Options>
+      <MapExecutableWithTemporaryFile>False</MapExecutableWithTemporaryFile>
+      <ShareVirtualSystemToChildProcesses>False</ShareVirtualSystemToChildProcesses>
+      <AllowRunningOfVirtualExeFiles>True</AllowRunningOfVirtualExeFiles>
+    </Options>
+  </VirtualBox>
+  <VirtualMachine>
+    <Enabled>False</Enabled>
+    <Common>
+      <VMType>1</VMType>
+      <RISCVMTrashgen>5</RISCVMTrashgen>
+      <RISCVMObfuscation>2</RISCVMObfuscation>
+      <RISCVMDuplicates>2</RISCVMDuplicates>
+      <RISCVMEncryption>2</RISCVMEncryption>
+    </Common>
+    <Filter/>
+    <CommandLine/>
+    <Functions Count="178">
+      <Function ID="0">
+        <Name>RakNet::BitStream::ReadString(unsigned char *)</Name>
+        <Address>268732000</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="1">
+        <Name>RakNet::BitStream::Read&lt;unsigned short&gt;(unsigned short &amp;)</Name>
+        <Address>268732432</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="2">
+        <Name>CRPC::Process(unsigned short,class RakNet::BitStream &amp;,int)</Name>
+        <Address>268732608</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="3">
+        <Name>CCheats::GetFileMD5(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)</Name>
+        <Address>268738016</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="4">
+        <Name>CCheats::AddFile(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)</Name>
+        <Address>268738464</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="5">
+        <Name>CCheats::OnFileExecuted(char const *,char const *)</Name>
+        <Address>268738736</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="6">
+        <Name>CCheats::ResendFiles(void)</Name>
+        <Address>268739888</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="7">
+        <Name>CCheats::DoesFileExist(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)</Name>
+        <Address>268740256</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="8">
+        <Name>RakNet::BitStream::Write&lt;enum eRPC&gt;(enum eRPC)</Name>
+        <Address>268740768</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="9">
+        <Name>RakNet::BitStream::Write&lt;unsigned short&gt;(unsigned short)</Name>
+        <Address>268740768</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="10">
+        <Name>RakNet::BitStream::Write&lt;unsigned char&gt;(unsigned char)</Name>
+        <Address>268740928</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="11">
+        <Name>CHookManager::SetConnectPatches(void)</Name>
+        <Address>268750816</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="12">
+        <Name>CHookManager::VerifyFilePaths(void)</Name>
+        <Address>268751936</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="13">
+        <Name>CHookManager::SlideFix(void)</Name>
+        <Address>268755184</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="14">
+        <Name>CHookManager::OnPauseChange(void)</Name>
+        <Address>268755232</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="15">
+        <Name>CHookManager::OnPause(void)</Name>
+        <Address>268755664</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="16">
+        <Name>CHookManager::NameTagHook(void)</Name>
+        <Address>268755712</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="17">
+        <Name>CHookManager::LiteFootHook(void)</Name>
+        <Address>268755744</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="18">
+        <Name>CHookManager::GetSampInfo(void)</Name>
+        <Address>268755968</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="19">
+        <Name>CHookManager::GravityHook(void)</Name>
+        <Address>268756016</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="20">
+        <Name>CHookManager::MarkersHook(void)</Name>
+        <Address>268756096</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="21">
+        <Name>CHookManager::SetCursorPosHook(void)</Name>
+        <Address>268756144</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="22">
+        <Name>CHookManager::Fatulous1(void)</Name>
+        <Address>268756192</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="23">
+        <Name>CHookManager::Fatulous2(void)</Name>
+        <Address>268756224</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="24">
+        <Name>CHookManager::Fatulous3(void)</Name>
+        <Address>268756240</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="25">
+        <Name>CHookManager::KeyPress(void)</Name>
+        <Address>268756256</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="26">
+        <Name>CHookManager::SprintHook(void)</Name>
+        <Address>268756752</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="27">
+        <Name>CHookManager::FOVPatch(void)</Name>
+        <Address>268756832</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="28">
+        <Name>CHookManager::WidescreenPatch(void)</Name>
+        <Address>268756880</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="29">
+        <Name>CHookManager::LoadScriptsHook(void)</Name>
+        <Address>268756896</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="30">
+        <Name>CHookManager::LoadShotgunBullet(void)</Name>
+        <Address>268756912</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="31">
+        <Name>CHookManager::LoadBullet(void)</Name>
+        <Address>268756944</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="32">
+        <Name>CHookManager::CameraXWriteHook2(void)</Name>
+        <Address>268756960</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="33">
+        <Name>CHookManager::CameraXWriteHook3(void)</Name>
+        <Address>268756992</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="34">
+        <Name>CHookManager::CameraXWriteHook4(void)</Name>
+        <Address>268757024</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="35">
+        <Name>CHookManager::CameraXWriteHook5(void)</Name>
+        <Address>268757040</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="36">
+        <Name>CHookManager::CameraXWriteHook6(void)</Name>
+        <Address>268757056</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="37">
+        <Name>CHookManager::CameraXWriteHook7(void)</Name>
+        <Address>268757088</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="38">
+        <Name>CHookManager::CameraXWriteHook8(void)</Name>
+        <Address>268757120</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="39">
+        <Name>CHookManager::CameraXWriteHook9(void)</Name>
+        <Address>268757136</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="40">
+        <Name>CHookManager::CameraXWriteHook10(void)</Name>
+        <Address>268757152</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="41">
+        <Name>CHookManager::CameraXWriteHook11(void)</Name>
+        <Address>268757168</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="42">
+        <Name>CHookManager::CameraXWriteHook12(void)</Name>
+        <Address>268757184</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="43">
+        <Name>CHookManager::CameraXAccessHook1(void)</Name>
+        <Address>268757232</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="44">
+        <Name>CHookManager::CameraXAccessHook2(void)</Name>
+        <Address>268757264</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="45">
+        <Name>CHookManager::CameraXAccessHook3(void)</Name>
+        <Address>268757296</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="46">
+        <Name>CHookManager::CameraXAccessHook4(void)</Name>
+        <Address>268757312</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="47">
+        <Name>CHookManager::CameraXAccessHook5(void)</Name>
+        <Address>268757344</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="48">
+        <Name>CHookManager::CameraXAccessHook6(void)</Name>
+        <Address>268757376</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="49">
+        <Name>CHookManager::CameraXAccessHook7(void)</Name>
+        <Address>268757408</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="50">
+        <Name>CHookManager::CameraXAccessHook8(void)</Name>
+        <Address>268757424</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="51">
+        <Name>CHookManager::CameraXAccessHook9(void)</Name>
+        <Address>268757440</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="52">
+        <Name>CHookManager::CameraXAccessHook10(void)</Name>
+        <Address>268757456</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="53">
+        <Name>CHookManager::CameraXAccessHook11(void)</Name>
+        <Address>268757488</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="54">
+        <Name>CHookManager::CameraXAccessHook12(void)</Name>
+        <Address>268757520</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="55">
+        <Name>CHookManager::CameraXAccessHook13(void)</Name>
+        <Address>268757536</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="56">
+        <Name>CHookManager::CameraXAccessHook14(void)</Name>
+        <Address>268757552</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="57">
+        <Name>CHookManager::CameraXAccessHook15(void)</Name>
+        <Address>268757568</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="58">
+        <Name>CHookManager::CameraXAccessHook16(void)</Name>
+        <Address>268757584</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="59">
+        <Name>CHookManager::CameraXAccessHook17(void)</Name>
+        <Address>268757600</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="60">
+        <Name>CHookManager::CameraXAccessHook18(void)</Name>
+        <Address>268757616</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="61">
+        <Name>CHookManager::CameraXAccessHook19(void)</Name>
+        <Address>268757632</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="62">
+        <Name>CHookManager::CameraXAccessHook20(void)</Name>
+        <Address>268757664</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="63">
+        <Name>CHookManager::CameraXAccessHook21(void)</Name>
+        <Address>268757680</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="64">
+        <Name>CHookManager::CameraXAccessHook22(void)</Name>
+        <Address>268757696</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="65">
+        <Name>CHookManager::CameraXAccessHook23(void)</Name>
+        <Address>268757712</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="66">
+        <Name>CHookManager::CameraXAccessHook24(void)</Name>
+        <Address>268757728</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="67">
+        <Name>CHookManager::CameraXAccessHook25(void)</Name>
+        <Address>268757744</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="68">
+        <Name>CHookManager::CameraXAccessHook26(void)</Name>
+        <Address>268757760</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="69">
+        <Name>CHookManager::CameraXAccessHook27(void)</Name>
+        <Address>268757776</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="70">
+        <Name>CHookManager::CameraXAccessHook28(void)</Name>
+        <Address>268757792</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="71">
+        <Name>CHookManager::CameraXAccessHook29(void)</Name>
+        <Address>268757808</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="72">
+        <Name>CHookManager::CameraXAccessHook30(void)</Name>
+        <Address>268757840</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="73">
+        <Name>CHookManager::CameraXAccessHook31(void)</Name>
+        <Address>268757856</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="74">
+        <Name>CHookManager::CameraXAccessHook32(void)</Name>
+        <Address>268757872</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="75">
+        <Name>CHookManager::CameraXAccessHook33(void)</Name>
+        <Address>268757888</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="76">
+        <Name>CHookManager::CameraXAccessHook34(void)</Name>
+        <Address>268757904</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="77">
+        <Name>CHookManager::CameraXAccessHook35(void)</Name>
+        <Address>268757920</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="78">
+        <Name>CHookManager::CameraXAccessHook36(void)</Name>
+        <Address>268757936</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="79">
+        <Name>CHookManager::CameraXAccessHook37(void)</Name>
+        <Address>268757952</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="80">
+        <Name>CHookManager::CameraXAccessHook38(void)</Name>
+        <Address>268757968</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="81">
+        <Name>CHookManager::CameraXAccessHook39(void)</Name>
+        <Address>268757984</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="82">
+        <Name>CHookManager::CameraXAccessHook40(void)</Name>
+        <Address>268758000</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="83">
+        <Name>CHookManager::CameraXAccessHook41(void)</Name>
+        <Address>268758032</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="84">
+        <Name>CHookManager::CameraXAccessHook42(void)</Name>
+        <Address>268758048</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="85">
+        <Name>CHookManager::CameraXAccessHook43(void)</Name>
+        <Address>268758064</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="86">
+        <Name>CHookManager::CameraYWriteHook2(void)</Name>
+        <Address>268758080</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="87">
+        <Name>CHookManager::CameraYWriteHook3(void)</Name>
+        <Address>268758112</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="88">
+        <Name>CHookManager::CameraYWriteHook4(void)</Name>
+        <Address>268758144</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="89">
+        <Name>CHookManager::CameraYWriteHook5(void)</Name>
+        <Address>268758160</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="90">
+        <Name>CHookManager::CameraYWriteHook6(void)</Name>
+        <Address>268758192</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="91">
+        <Name>CHookManager::CameraYWriteHook7(void)</Name>
+        <Address>268758224</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="92">
+        <Name>CHookManager::CameraYWriteHook9(void)</Name>
+        <Address>268758240</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="93">
+        <Name>CHookManager::CameraYWriteHook10(void)</Name>
+        <Address>268758256</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="94">
+        <Name>CHookManager::CameraYWriteHook11(void)</Name>
+        <Address>268758272</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="95">
+        <Name>CHookManager::CameraYWriteHook12(void)</Name>
+        <Address>268758288</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="96">
+        <Name>CHookManager::CameraYWriteHook13(void)</Name>
+        <Address>268758304</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="97">
+        <Name>CHookManager::CameraYWriteHook14(void)</Name>
+        <Address>268758320</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="98">
+        <Name>CHookManager::CameraYWriteHook15(void)</Name>
+        <Address>268758336</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="99">
+        <Name>CHookManager::CameraYWriteHook16(void)</Name>
+        <Address>268758352</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="100">
+        <Name>CHookManager::CameraYWriteHook17(void)</Name>
+        <Address>268758368</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="101">
+        <Name>CHookManager::CameraYAccessHook1(void)</Name>
+        <Address>268758384</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="102">
+        <Name>CHookManager::CameraYAccessHook2(void)</Name>
+        <Address>268758400</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="103">
+        <Name>CHookManager::CameraYAccessHook3(void)</Name>
+        <Address>268758432</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="104">
+        <Name>CHookManager::CameraYAccessHook4(void)</Name>
+        <Address>268758448</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="105">
+        <Name>CHookManager::CameraYAccessHook5(void)</Name>
+        <Address>268758480</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="106">
+        <Name>CHookManager::CameraYAccessHook6(void)</Name>
+        <Address>268758512</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="107">
+        <Name>CHookManager::CameraYAccessHook7(void)</Name>
+        <Address>268758528</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="108">
+        <Name>CHookManager::CameraYAccessHook8(void)</Name>
+        <Address>268758544</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="109">
+        <Name>CHookManager::CameraYAccessHook9(void)</Name>
+        <Address>268758560</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="110">
+        <Name>CHookManager::CameraYAccessHook10(void)</Name>
+        <Address>268758576</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="111">
+        <Name>CHookManager::CameraYAccessHook11(void)</Name>
+        <Address>268758592</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="112">
+        <Name>CHookManager::CameraYAccessHook12(void)</Name>
+        <Address>268758608</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="113">
+        <Name>CHookManager::CameraYAccessHook13(void)</Name>
+        <Address>268758624</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="114">
+        <Name>CHookManager::CameraYAccessHook14(void)</Name>
+        <Address>268758640</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="115">
+        <Name>CHookManager::CameraYAccessHook15(void)</Name>
+        <Address>268758672</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="116">
+        <Name>CHookManager::CameraYAccessHook16(void)</Name>
+        <Address>268758688</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="117">
+        <Name>CHookManager::CameraYAccessHook17(void)</Name>
+        <Address>268758720</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="118">
+        <Name>CHookManager::CameraYAccessHook18(void)</Name>
+        <Address>268758736</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="119">
+        <Name>CHookManager::CameraYAccessHook19(void)</Name>
+        <Address>268758752</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="120">
+        <Name>CHookManager::CameraYAccessHook20(void)</Name>
+        <Address>268758768</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="121">
+        <Name>CHookManager::CameraYAccessHook21(void)</Name>
+        <Address>268758784</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="122">
+        <Name>CHookManager::CameraYAccessHook22(void)</Name>
+        <Address>268758800</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="123">
+        <Name>CHookManager::CameraYAccessHook23(void)</Name>
+        <Address>268758816</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="124">
+        <Name>CHookManager::CameraYAccessHook24(void)</Name>
+        <Address>268758832</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="125">
+        <Name>CHookManager::CameraYAccessHook25(void)</Name>
+        <Address>268758848</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="126">
+        <Name>CHookManager::CameraYAccessHook26(void)</Name>
+        <Address>268758864</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="127">
+        <Name>CHookManager::CameraYAccessHook27(void)</Name>
+        <Address>268758896</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="128">
+        <Name>CHookManager::CameraYAccessHook29(void)</Name>
+        <Address>268758928</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="129">
+        <Name>CHookManager::CameraYAccessHook30(void)</Name>
+        <Address>268758944</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="130">
+        <Name>CHookManager::CameraYAccessHook31(void)</Name>
+        <Address>268758960</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="131">
+        <Name>RakNet::BitStream::Write&lt;int&gt;(int)</Name>
+        <Address>268759184</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="132">
+        <Name>CDirectoryScanner::Scan(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)</Name>
+        <Address>268760416</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="133">
+        <Name>CDirectoryScanner::MD5_Specific_File(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)</Name>
+        <Address>268760640</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="134">
+        <Name>CDirectoryScanner::img_scan(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)</Name>
+        <Address>268760960</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="135">
+        <Name>CDirectX::HookD3DFunctions(void)</Name>
+        <Address>268764336</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="136">
+        <Name>CDirectX::DirectXCreationHookUS(void)</Name>
+        <Address>268764656</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="137">
+        <Name>CDirectX::DirectXCreationHookEU(void)</Name>
+        <Address>268764672</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="138">
+        <Name>CDirectX::DirectXCreationProxy(void)</Name>
+        <Address>268764688</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="139">
+        <Name>CInjectedLibraries::Scan(void)</Name>
+        <Address>268764832</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="140">
+        <Name>IsWindowsVersionOrGreater(unsigned short,unsigned short,unsigned short)</Name>
+        <Address>268765264</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="141">
+        <Name>CLoader::Initialize(struct HINSTANCE__ *)</Name>
+        <Address>268765472</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="142">
+        <Name>CLoader::RunElevated(void)</Name>
+        <Address>268765968</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="143">
+        <Name>CLoader::IsProcessElevated(void)</Name>
+        <Address>268766064</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="144">
+        <Name>CProcessList::CProcessList(void)</Name>
+        <Address>268770656</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="145">
+        <Name>CProcessList::Scan(void)</Name>
+        <Address>268770848</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="146">
+        <Name>CMessageProxy::Process(struct HWND__ *,unsigned int,unsigned int,long)</Name>
+        <Address>268775792</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="147">
+        <Name>IMG_Entry::ReadEntireFile(void *)</Name>
+        <Address>268782912</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="148">
+        <Name>Misc::MD5_Memory(int,int)</Name>
+        <Address>268784992</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="149">
+        <Name>Misc::GetGTADirectory(void)</Name>
+        <Address>268785184</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="150">
+        <Name>Misc::GetCrouchBug(void)</Name>
+        <Address>268785552</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="151">
+        <Name>Misc::GetMacroLocks(void)</Name>
+        <Address>268785568</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="152">
+        <Name>Misc::GetVehicleBlips(void)</Name>
+        <Address>268785584</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="153">
+        <Name>Misc::GetAltTabState(void)</Name>
+        <Address>268785600</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="154">
+        <Name>CRakClientHandler::Load(void)</Name>
+        <Address>268785616</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="155">
+        <Name>CRakClientHandler::CustomSend(class RakNet::BitStream *,enum PacketPriority,enum PacketReliability,char)</Name>
+        <Address>268785776</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="156">
+        <Name>CRakClientHandler::IsConnected(void)</Name>
+        <Address>268785856</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="157">
+        <Name>CRPCCallback::Initialize(void)</Name>
+        <Address>268785904</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="158">
+        <Name>CRPCCallback::OnConnect(void)</Name>
+        <Address>268786384</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="159">
+        <Name>CRPCCallback::MD5_Memory_Region(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268786496</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="160">
+        <Name>CRPCCallback::MD5_File(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268787184</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="161">
+        <Name>CRPCCallback::ToggleSwitchReload(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788384</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="162">
+        <Name>CRPCCallback::SetFrameLimit(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788560</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="163">
+        <Name>CRPCCallback::ToggleCrouchBug(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788672</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="164">
+        <Name>CRPCCallback::ExitThisProcess(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788736</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="165">
+        <Name>CRPCCallback::VersionNotCompatible(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788752</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="166">
+        <Name>CRPCCallback::ToggleLiteFoot(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788784</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="167">
+        <Name>CRPCCallback::ToggleUnlimitedSprint(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788864</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="168">
+        <Name>CRPCCallback::ToggleMacroLimits(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268789088</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="169">
+        <Name>CRPCCallback::ToggleSprintOnAllSurfaces(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268789168</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="170">
+        <Name>CRPCCallback::ToggleVehicleBlips(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268789360</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="171">
+        <Name>RakNet::BitStream::Read&lt;int&gt;(int &amp;)</Name>
+        <Address>268789440</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="172">
+        <Name>HookedRakClientInterface::Send(char const *,int,int,int,char)</Name>
+        <Address>268789792</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="173">
+        <Name>HookedRakClientInterface::SendInitialInfo(void)</Name>
+        <Address>268789808</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="174">
+        <Name>HookedRakClientInterface::Send(class RakNet::BitStream *,int,int,char)</Name>
+        <Address>268790320</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="175">
+        <Name>HookedRakClientInterface::Receive(void)</Name>
+        <Address>268790480</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="176">
+        <Name>HookedRakClientInterface::DeallocatePacket(struct Packet *)</Name>
+        <Address>268790800</Address>
+        <Ticker>0</Ticker>
+      </Function>
+      <Function ID="177">
+        <Name>FindPattern(char *,char *)</Name>
+        <Address>268792496</Address>
+        <Ticker>0</Ticker>
+      </Function>
+    </Functions>
+    <FileEntryPoint>
+      <Enabled>True</Enabled>
+    </FileEntryPoint>
+  </VirtualMachine>
+  <Miscellaneous>
+    <SplashScreenEncapsulation>
+      <Enabled>False</Enabled>
+      <SplashScreenPictureFileName/>
+      <ShowOnTop>True</ShowOnTop>
+      <TimeToShow>2000</TimeToShow>
+      <StopExecution>False</StopExecution>
+      <CloseOnMouseClick>False</CloseOnMouseClick>
+      <ShowAtStart>True</ShowAtStart>
+    </SplashScreenEncapsulation>
+    <Watermarks>
+      <Enabled>True</Enabled>
+      <Watermarks Count="0"/>
+    </Watermarks>
+    <Plugins>
+      <Plugins Count="0"/>
+    </Plugins>
+    <CustomVersionResource>
+      <Enabled>False</Enabled>
+      <MajorVersion>1</MajorVersion>
+      <MinorVersion>0</MinorVersion>
+      <Release>0</Release>
+      <Build>0</Build>
+      <DebugBuild>False</DebugBuild>
+      <Pre-release>False</Pre-release>
+      <SpecialBuild>False</SpecialBuild>
+      <PrivateBuild>False</PrivateBuild>
+      <DLL>False</DLL>
+      <Language>1033</Language>
+      <CompanyName>The Enigma Protector Developers Team</CompanyName>
+      <FileDescription>Software Protection Tool</FileDescription>
+      <FileVersion>1.0.0.0</FileVersion>
+      <InternalName>ENIGMA.EXE</InternalName>
+      <LegalCopyright>Copyrights (C) 2002-2009 Vladimir Sukhov</LegalCopyright>
+      <LegalTrademarks>Trademarks (R) 2002-2009 Vladimir Sukhov</LegalTrademarks>
+      <OriginalFilename>enigma.exe</OriginalFilename>
+      <ProductName>The Enigma Protector</ProductName>
+      <ProductVersion>1.0.0.0</ProductVersion>
+      <Comments>http://enigmaprotector.com/</Comments>
+    </CustomVersionResource>
+    <CustomManifestResource>
+      <Enabled>False</Enabled>
+      <Template>2</Template>
+      <TemplateFile/>
+      <Manifest>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+&lt;assembly
+    xmlns=&quot;urn:schemas-microsoft-com:asm.v1&quot;
+    manifestVersion=&quot;1.0&quot;&gt;
+    &lt;assemblyIdentity
+        version=&quot;1.0.0.0&quot;
+        processorArchitecture=&quot;X86&quot;
+        name=&quot;Enigma.exe&quot;
+        type=&quot;win32&quot; /&gt;
+    &lt;description&gt;The Enigma Protector&lt;/description&gt;
+    &lt;dependency&gt;
+        &lt;dependentAssembly&gt;
+            &lt;assemblyIdentity
+                type=&quot;win32&quot;
+                name=&quot;Microsoft.Windows.Common-Controls&quot;
+                version=&quot;6.0.0.0&quot;
+                processorArchitecture=&quot;X86&quot;
+                publicKeyToken=&quot;6595b64144ccf1df&quot;
+                language=&quot;*&quot; /&gt;
+        &lt;/dependentAssembly&gt;
+    &lt;/dependency&gt;
+&lt;/assembly&gt;</Manifest>
+    </CustomManifestResource>
+    <CommandLine>
+      <Enabled>False</Enabled>
+      <Override>True</Override>
+      <CommandLine/>
+    </CommandLine>
+    <EnvironmentVariables>
+      <Variables Count="0"/>
+    </EnvironmentVariables>
+    <Other>
+      <SupressGraphics>False</SupressGraphics>
+      <DoNotCheckIfCompressed>False</DoNotCheckIfCompressed>
+      <DoNotSearchMarkers>False</DoNotSearchMarkers>
+      <NETSmartAssemblyHooking>False</NETSmartAssemblyHooking>
+      <RemoveOverlayFromProtectedFile>False</RemoveOverlayFromProtectedFile>
+      <KeepOriginalImportDirectory>False</KeepOriginalImportDirectory>
+      <DoNotCompressEncryptCode>False</DoNotCompressEncryptCode>
+      <DeleteDebugDirectory>True</DeleteDebugDirectory>
+      <HookEntireProcessForEnigmaApiCalls>False</HookEntireProcessForEnigmaApiCalls>
+      <NetApplicationsFreezingFixWindowsXP>False</NetApplicationsFreezingFixWindowsXP>
+    </Other>
+  </Miscellaneous>
+  <TrialControl>
+    <Common>
+      <ResetTrialInNewVersion>True</ResetTrialInNewVersion>
+      <OpenFileIfTrialExpired>False</OpenFileIfTrialExpired>
+      <OpenFileName>application.exe</OpenFileName>
+    </Common>
+    <TrialStoring>
+      <Enabled>False</Enabled>
+      <Items Count="0"/>
+    </TrialStoring>
+    <LockTrialToUserLanguage>
+      <Enabled>False</Enabled>
+      <ALB>True</ALB>
+      <DZA>True</DZA>
+      <ARG>True</ARG>
+      <ARM>True</ARM>
+      <AUS>True</AUS>
+      <AUT>True</AUT>
+      <AZE>True</AZE>
+      <BHR>True</BHR>
+      <BLR>True</BLR>
+      <BEL>True</BEL>
+      <BLZ>True</BLZ>
+      <BOL>True</BOL>
+      <BRA>True</BRA>
+      <BRN>True</BRN>
+      <BGR>True</BGR>
+      <KHM>True</KHM>
+      <CAN>True</CAN>
+      <CAF>True</CAF>
+      <TCD>True</TCD>
+      <CHL>True</CHL>
+      <CHN>True</CHN>
+      <COL>True</COL>
+      <CRI>True</CRI>
+      <HRV>True</HRV>
+      <CZE>True</CZE>
+      <DNK>True</DNK>
+      <DOM>True</DOM>
+      <ECU>True</ECU>
+      <EGY>True</EGY>
+      <SLV>True</SLV>
+      <EST>True</EST>
+      <FRO>True</FRO>
+      <FIN>True</FIN>
+      <FRA>True</FRA>
+      <GEO>True</GEO>
+      <DEU>True</DEU>
+      <GRC>True</GRC>
+      <GTM>True</GTM>
+      <HND>True</HND>
+      <HKG>True</HKG>
+      <HUN>True</HUN>
+      <ISL>True</ISL>
+      <IND>True</IND>
+      <IDN>True</IDN>
+      <IRN>True</IRN>
+      <IRQ>True</IRQ>
+      <IRL>True</IRL>
+      <ISR>True</ISR>
+      <ITA>True</ITA>
+      <JAM>True</JAM>
+      <JPN>True</JPN>
+      <JOR>True</JOR>
+      <KAZ>True</KAZ>
+      <KEN>True</KEN>
+      <PRK>True</PRK>
+      <KOR>True</KOR>
+      <KWT>True</KWT>
+      <KGZ>True</KGZ>
+      <LVA>True</LVA>
+      <LBN>True</LBN>
+      <LBR>True</LBR>
+      <LIE>True</LIE>
+      <LTU>True</LTU>
+      <LUX>True</LUX>
+      <MAC>True</MAC>
+      <MKD>True</MKD>
+      <MYS>True</MYS>
+      <MEX>True</MEX>
+      <MDA>True</MDA>
+      <MCO>True</MCO>
+      <MNG>True</MNG>
+      <MAR>True</MAR>
+      <NLD>True</NLD>
+      <NZL>True</NZL>
+      <NIC>True</NIC>
+      <NOR>True</NOR>
+      <OMN>True</OMN>
+      <PAK>True</PAK>
+      <PAN>True</PAN>
+      <PRY>True</PRY>
+      <PER>True</PER>
+      <PHL>True</PHL>
+      <POL>True</POL>
+      <PRT>True</PRT>
+      <PRI>True</PRI>
+      <QAT>True</QAT>
+      <ROU>True</ROU>
+      <RUS>True</RUS>
+      <SAU>True</SAU>
+      <SCG>True</SCG>
+      <SGP>True</SGP>
+      <SVK>True</SVK>
+      <SVN>True</SVN>
+      <ZAF>True</ZAF>
+      <ESP>True</ESP>
+      <SWE>True</SWE>
+      <CHE>True</CHE>
+      <TJK>True</TJK>
+      <THA>True</THA>
+      <TTO>True</TTO>
+      <TUN>True</TUN>
+      <TUR>True</TUR>
+      <TWN>True</TWN>
+      <UKR>True</UKR>
+      <ARE>True</ARE>
+      <GBR>True</GBR>
+      <USA>True</USA>
+      <URY>True</URY>
+      <UZB>True</UZB>
+      <VEN>True</VEN>
+      <VNM>True</VNM>
+      <YEM>True</YEM>
+      <ZWE>True</ZWE>
+      <AFG>True</AFG>
+      <BGD>True</BGD>
+      <BIH>True</BIH>
+      <CAR>True</CAR>
+      <ETH>True</ETH>
+      <GRL>True</GRL>
+      <LAO>True</LAO>
+      <LBY>True</LBY>
+      <MDV>True</MDV>
+      <MLT>True</MLT>
+      <MNE>True</MNE>
+      <NEP>True</NEP>
+      <NGA>True</NGA>
+      <ROM>True</ROM>
+      <RWA>True</RWA>
+      <SEN>True</SEN>
+      <SRB>True</SRB>
+      <LKA>True</LKA>
+      <SYR>True</SYR>
+      <TAJ>True</TAJ>
+      <TKM>True</TKM>
+    </LockTrialToUserLanguage>
+    <CountOfExecutionLimit>
+      <Enabled>False</Enabled>
+      <MaximalCountOfExecutions>0</MaximalCountOfExecutions>
+      <TerminateAfterDelay>True</TerminateAfterDelay>
+      <Delay>0</Delay>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Trial has expired!</Title>
+        <Text>Sorry, but your trial period has expired!
+You have exceeded %TrialExecsTotal% trial executions!
+Please, register this software to remove trial limitations!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Click here for registration</HLSentence>
+        <HLURL>http://www.yourcompany.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </CountOfExecutionLimit>
+    <CountOfDaysLimit>
+      <Enabled>False</Enabled>
+      <MaximalCountOfDays>0</MaximalCountOfDays>
+      <TerminateAfterDelay>True</TerminateAfterDelay>
+      <Delay>0</Delay>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Trial has expired!</Title>
+        <Text>Sorry, but your trial period has expired!
+You have exceeded %TrialDaysTotal% trial days!
+Please, register this software to remove trial limitations!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Click here for registration</HLSentence>
+        <HLURL>http://www.yourcompany.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </CountOfDaysLimit>
+    <ExpirationDateLimit>
+      <Enabled>False</Enabled>
+      <ExpirationDate>2007-12-19T23:59:30.629Z</ExpirationDate>
+      <TerminateAfterDelay>True</TerminateAfterDelay>
+      <Delay>0</Delay>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Trial has expired!</Title>
+        <Text>Sorry, but your trial period has expired!
+The expiration date is %TrialExpDay%/%TrialExpMonth%/%TrialExpYear% (dd/mm/yyyy)
+Please, register this software to remove trial limitations!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Click here for registration</HLSentence>
+        <HLURL>http://www.yourcompany.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </ExpirationDateLimit>
+    <ExpirationFromDateTillDate>
+      <Enabled>False</Enabled>
+      <StartDate>2007-12-19T23:59:30.629Z</StartDate>
+      <EndDate>2007-12-19T23:59:30.629Z</EndDate>
+      <TerminateAfterDelay>True</TerminateAfterDelay>
+      <Delay>0</Delay>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Trial has expired!</Title>
+        <Text>Sorry, but your trial period has expired!
+You can use it from %TrialStartDay%/%TrialStartMonth%/%TrialStartYear% till %TrialEndDay%/%TrialEndMonth%/%TrialEndYear% (dd/mm/yyyy)
+Please, register this software to remove trial limitations!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Click here for registration</HLSentence>
+        <HLURL>http://www.yourcompany.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </ExpirationFromDateTillDate>
+    <ExecutionTimeLimit>
+      <Enabled>False</Enabled>
+      <NumberOfMinutes>0</NumberOfMinutes>
+      <TerminateOnExpiration>True</TerminateOnExpiration>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Trial has expired!</Title>
+        <Text>Sorry, but your trial execution time has expired! 
+Application works only %TrialExecMinsTotal% minutes since start.
+Please, register this software to remove trial limitations!</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Register it now!</HLSentence>
+        <HLURL>http://www.yourcompany.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </ExecutionTimeLimit>
+    <Reminder>
+      <Enabled>False</Enabled>
+      <PeriodOfIterations>0</PeriodOfIterations>
+      <Message>
+        <Title>Shareware reminder!</Title>
+        <Text>This program is shareware - you get to try it before you buy it. 
+If you want to continue using it after the trial 
+period you will have to buy it.
+Please register to remove this nag-screen!
+</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Click here for registration</HLSentence>
+        <HLURL>http://www.yourcompany.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+    </Reminder>
+    <TimeControl>
+      <TerminateOnClockReversing>False</TerminateOnClockReversing>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
+      <Message>
+        <Title>Clock reversing</Title>
+        <Text>The software had determined that the system clock
+had been turned back. Please set the correct date. 
+This program will now close.</Text>
+        <UseHL>False</UseHL>
+        <HLSentence>Click here for registration</HLSentence>
+        <HLURL>http://www.yourcompany.com/</HLURL>
+        <Icon>0</Icon>
+        <AutoClose>False</AutoClose>
+        <CloseDelay>0</CloseDelay>
+        <Disable>False</Disable>
+        <DisableDelay>0</DisableDelay>
+        <FontName/>
+        <FontCharset>0</FontCharset>
+        <FontColor>0</FontColor>
+        <FontSize>0</FontSize>
+        <FontBold>False</FontBold>
+        <FontItalic>False</FontItalic>
+        <FontUnderline>False</FontUnderline>
+        <FontStrikeout>False</FontStrikeout>
+      </Message>
+      <DoNotCheckIfRegistered>False</DoNotCheckIfRegistered>
+      <UseProtectionDate>False</UseProtectionDate>
+      <Terminate>True</Terminate>
+    </TimeControl>
+  </TrialControl>
+</EnigmaProject>
