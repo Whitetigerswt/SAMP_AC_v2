@@ -252,8 +252,6 @@ namespace Callback
 				// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
 				CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
 
-				std::string hwid = "";
-
 				if (ac != NULL)
 				{
 					if (ac->HasOnPlayerConnectCalled())
@@ -264,9 +262,6 @@ namespace Callback
 					{
 						ac->SetPlayerConnected(true);
 					}
-
-					// Get the player's Hardware ID.
-					hwid = ac->GetPlayerHardwareID();
 
 					// Send the client the files we need them to return md5's to.
 					ac->CheckGTAFiles(playerid);
