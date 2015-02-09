@@ -2635,8 +2635,7 @@ static int AMXAPI _sampgdk_amxhooks_Exec(AMX *amx, cell *retval, int index) {
        */
       sampgdk_callback_invoke(amx, "OnGameModeInit", paramcount, retval);
     }
-  } else if (index != AMX_EXEC_CONT && (amx == _sampgdk_amxhooks_main_amx ||
-                                        amx == sampgdk_fakeamx_amx())) {
+  } else if (index != AMX_EXEC_CONT) {
     char *name = NULL;
 
     if (index <= AMX_EXEC_GDK) {

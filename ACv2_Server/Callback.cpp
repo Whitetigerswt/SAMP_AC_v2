@@ -182,18 +182,6 @@ namespace Callback
 			{
 				// Get the player's Hardware ID.
 				hwid = ac->GetPlayerHardwareID();
-
-				// Send the client the files we need them to return md5's to.
-				ac->CheckGTAFiles(playerid);
-
-				// Set defaults
-				ac->ToggleUnlimitedSprint(Callback::Default_InfSprint);
-				ac->ToggleSprintOnAllSurfaces(Callback::Default_SprintOnAllSurfaces);
-				ac->ToggleMacroLimitations(Callback::Default_MacroLimits);
-				ac->ToggleSwitchReload(Callback::Default_SwitchReload);
-				ac->ToggleCrouchBug(Callback::Default_CrouchBug);
-				ac->ToggleLiteFoot(Callback::Default_LiteFoot);
-				ac->ToggleVehicleBlips(Callback::Default_VehicleBlips);
 			}
 
 			// Check if it's an empty string
@@ -244,6 +232,56 @@ namespace Callback
 			return true;
 		}
 
+		return true;
+	}
+
+	PLUGIN_EXPORT bool PLUGIN_CALL OnPublicCall(AMX *amx, const char *name, cell *params, cell *retval)
+	{
+		if (!strcmp(name, "OnPlayerConnect"))
+		{
+			int playerid = params[1];
+
+			if (IsPlayerNPC(playerid))
+			{
+				// Return
+				return true;
+			}
+
+			if (CAntiCheatHandler::IsConnected(playerid))
+			{
+				// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
+				CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
+
+				std::string hwid = "";
+
+				if (ac != NULL)
+				{
+					if (ac->HasOnPlayerConnectCalled())
+					{
+						return true;
+					}
+					else
+					{
+						ac->SetPlayerConnected(true);
+					}
+
+					// Get the player's Hardware ID.
+					hwid = ac->GetPlayerHardwareID();
+
+					// Send the client the files we need them to return md5's to.
+					ac->CheckGTAFiles(playerid);
+
+					// Set defaults
+					ac->ToggleUnlimitedSprint(Callback::Default_InfSprint);
+					ac->ToggleSprintOnAllSurfaces(Callback::Default_SprintOnAllSurfaces);
+					ac->ToggleMacroLimitations(Callback::Default_MacroLimits);
+					ac->ToggleSwitchReload(Callback::Default_SwitchReload);
+					ac->ToggleCrouchBug(Callback::Default_CrouchBug);
+					ac->ToggleLiteFoot(Callback::Default_LiteFoot);
+					ac->ToggleVehicleBlips(Callback::Default_VehicleBlips);
+				}
+			}
+		}
 		return true;
 	}
 
