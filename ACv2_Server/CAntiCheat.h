@@ -134,6 +134,14 @@ public:
 	// REQUIRES: NULL
 	int GetID() { return ID; }
 
+	// PURPOSE: Set the player as connected.
+	// REQUIRES: true or false
+	void SetPlayerConnected(bool toggle) { m_IsConnected = toggle; }
+
+	// PURPOSE: Get if onplayerconnect has been called for this player in any filterscript
+	// REQUIRES: NULL
+	bool HasOnPlayerConnectCalled() { return m_IsConnected; }
+
 private:
 
 	// PURPOSE: Remember the player's playerID.
@@ -162,6 +170,9 @@ private:
 
 	// PURPOSE: Keep track of player's status of vehicle blips.
 	bool m_VehicleBlips;
+
+	// Check if onplayerconnect has been called
+	bool m_IsConnected;
 
 	// PURPOSE: Store the player's hardware ID.
 	std::string m_HardwareID;

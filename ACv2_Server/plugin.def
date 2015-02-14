@@ -10,3 +10,4 @@ EXPORTS
 	OnGameModeInit
 	OnPlayerCommandText
 	OnRconLoginAttempt
+	OnPublicCall
