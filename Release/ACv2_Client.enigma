@@ -145,10 +145,10 @@
       <VolumeSerialDriveChange>0</VolumeSerialDriveChange>
       <SystemVolumeNameChange>0</SystemVolumeNameChange>
       <ComputerNameChange>0</ComputerNameChange>
-      <CPUTypeChange>0</CPUTypeChange>
-      <MotherboardChange>0</MotherboardChange>
+      <CPUTypeChange>1</CPUTypeChange>
+      <MotherboardChange>1</MotherboardChange>
       <WindowsKeyChange>0</WindowsKeyChange>
-      <HDDSerialChange>0</HDDSerialChange>
+      <HDDSerialChange>1</HDDSerialChange>
       <UserNameChange>0</UserNameChange>
     </HardwareAssociation>
     <Constants>
@@ -375,23 +375,22 @@ This program will now close.</Text>
       </Message>
     </FileName>
     <DiskDrive>
-      <Enabled>False</Enabled>
+      <Enabled>True</Enabled>
       <Selection>
         <Removable>False</Removable>
         <Fixed>True</Fixed>
         <Remote>False</Remote>
-        <CDROM>True</CDROM>
-        <RAMDisk>True</RAMDisk>
+        <CDROM>False</CDROM>
+        <RAMDisk>False</RAMDisk>
       </Selection>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Invalid drive type</Title>
-        <Text>The software has checked impossible disk drive type!
-Try to contact to developers or download newest version of this software at:</Text>
+        <Text>This software cannot be run from anything but the Hard Drive.</Text>
         <UseHL>False</UseHL>
         <HLSentence>Click here for newest version!</HLSentence>
         <HLURL>http://www.yourcompany.com/downloads/</HLURL>
-        <Icon>0</Icon>
+        <Icon>3</Icon>
         <AutoClose>False</AutoClose>
         <CloseDelay>0</CloseDelay>
         <Disable>False</Disable>

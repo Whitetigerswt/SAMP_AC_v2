@@ -12,7 +12,7 @@
 #include "../md5.h"
 
 #include <Windows.h>
-#include "../enigma_ide.h"
+#include "../Enigma/enigma_ide.h"
 
 bool hasSentInitInfo = false;
 
