@@ -3,23 +3,31 @@
 #include <zcmd>
 #include <sscanf2>
 
+// Make a DB handle for the sqlite database to hold hardware ID bans
 new DB:bans_reference;
 
+// query macro for when we don't store the result.
 #define query(%0) (db_free_result(db_query(bans_reference, %0)))
 
 public OnFilterScriptInit()
 {
+	// First, check if the AC plugin is even loaded before we bother dong other stuff
 	if(!IsACPluginLoaded())
 	{
 		return printf("Error: The ACv2 plugin is not loaded, Hardware ID ban filterscript will not work.");
 	}
+
+	// Get a reference to the hardware ID bans database
 	bans_reference = db_open("ac_bans.db");
 	if(bans_reference == DB:0)
 	{
 		return printf("Error: Failed to load hardware ID bans.");
 	}
 
+	// Create the table structure
 	query("CREATE TABLE IF NOT EXISTS [bans] ([hwid] VARCHAR(256), [name] VARCHAR(30), [Reason] VARCHAR(256), [Admin] VARCHAR(30), [IP] VARCHAR(30));");
+
+	// Clean the database
 	query("VACUUM");
 
 	printf("** Hardware ID Ban filterscript loaded successfully.");
@@ -29,15 +37,15 @@ public OnFilterScriptInit()
 
 public OnPlayerConnect(playerid)
 {
-	new bool:ip_only = false;
+	// Create a variable to handle a ban if the AC plugin is not loaded (and hardware ID can't be retrived...)
+	new bool:ip_only = !IsACPluginLoaded() || !IsPlayerUsingSampAC(playerid);
 
-	if(!IsACPluginLoaded() || !IsPlayerUsingSampAC(playerid))
-		ip_only = true;
-
+	// Variable to hold hardware ID.
 	new hwid[HARDWAREID_LEN];
 
 	// set an invalid hwid - can be anything as long as it's not a valid hwid.
 	hwid = "lolz";
+
 	if(!ip_only)
 	{
 		// Only change the hardware id from invalid if the AC is loaded properly.
@@ -54,8 +62,10 @@ public OnPlayerConnect(playerid)
 	format(str, sizeof(str), "SELECT `Reason`, `Admin` FROM `bans` WHERE `hwid` = '%s' OR `IP` = '%s' LIMIT 1", escaped_hwid, IP);
 	new DBResult:query_result = db_query(bans_reference, str);
 
+	// If we got results...
 	if(db_num_rows(query_result))
 	{
+		// Ban evading
 		new name[MAX_PLAYER_NAME];
 		GetPlayerName(playerid, name, sizeof(name));
 		format(str, sizeof(str), "{FF0000}'%s'{FFFFFF} has been caught ban evading.", name);
@@ -72,7 +82,14 @@ public OnPlayerConnect(playerid)
 CMD:hardwareban(playerid, params[])
 {
 	if(!IsACPluginLoaded())
+	{
 		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}The ACv2 plugin is not loaded, Cannot ban players by hardware ID.");
+	}
+
+	if(!IsPlayerAdmin(playerid))
+	{
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not an admin on this server.");
+	}
 
 	new targetid, reason[90];
 	if(sscanf(params, "?<MATCH_NAME_PARTIAL=1>uS(No Reason Given)[90]", targetid, reason))
