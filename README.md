@@ -20,7 +20,7 @@ Updating Client
 
 Updating Server
 -----------
-* Obtain the following files from compiling: sampac.dll and sampac.so (AFTER VMPROTECT!)
+* Obtain the following files from compiling: sampac.dll and sampac.so
 * Place them in the Releases folder
 * Open samp-ac-server.zip
 * Replace the sampac.dll and sampac.so files in the plugin folder
