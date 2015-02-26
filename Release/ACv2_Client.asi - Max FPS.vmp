@@ -804,7 +804,7 @@
 				CompilationType="1"
 			/>
 			<Procedure
-				MapAddress="HookedRakClientInterface::`vector deleting destructor&apos;(unsigned int)"
+				MapAddress="HookedRakClientInterface::`scalar deleting destructor&apos;(unsigned int)"
 				CompilationType="1"
 			/>
 			<Procedure
@@ -1029,6 +1029,62 @@
 			/>
 			<Procedure
 				MapAddress="CHookManager::SlideFix(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook41(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXWriteHook12(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook42(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraXAccessHook43(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYWriteHook12(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYWriteHook13(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYWriteHook14(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYWriteHook15(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYWriteHook16(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYWriteHook17(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYAccessHook29(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYAccessHook30(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CHookManager::CameraYAccessHook31(void)"
+				CompilationType="1"
+			/>
+			<Procedure
+				MapAddress="CRakClientHandler::IsConnected(void)"
 				CompilationType="1"
 			/>
 		</Procedures>

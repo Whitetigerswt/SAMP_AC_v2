@@ -317,9 +317,6 @@ namespace Callback
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnGameModeInit()
 	{
-		// Check for an update to this plugin version.
-		CServerUpdater::CheckForUpdate();
-
 		// Check memory pretty frequently in a new timer.
 		SetTimer(60000, 1, CheckPlayersMemory, NULL);
 

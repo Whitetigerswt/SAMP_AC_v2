@@ -438,6 +438,9 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAmx)
 	static bool bFirst = false;
 	if (!bFirst)
 	{	
+		// Check for an update to this plugin version.
+		CServerUpdater::CheckForUpdate();
+
 		InstallHooks();
 		Network::Initialize(PluginData);
 
