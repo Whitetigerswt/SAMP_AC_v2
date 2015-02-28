@@ -78,6 +78,7 @@ int AMXAPI HOOK_amx_Register(AMX *amx, AMX_NATIVE_INFO *nativelist, int number)
 		i++;
 	}
 
+	// note: will not allow YSF redirected natives...
 	return amx_Register(amx, nativelist, number);
 }
 
