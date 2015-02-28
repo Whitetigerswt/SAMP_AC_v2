@@ -164,10 +164,6 @@ static DWORD sampInfoRtnAddr = NULL;
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
 
-unsigned int CHookManager::iLastTick = 0;
-int CHookManager::iTickOffset = 222;
-int CHookManager::iLastPress = 0;
-
 float CHookManager::LiteFoot = 0.0f;
 
 DWORD NameTag_je1;
@@ -835,7 +831,7 @@ HOOK CHookManager::Fatulous3()
 }
 
 DWORD KeyPressCall = 0x53EF80;
-DWORD iLastTick = 0;
+DWORD dwLastCrouch = 0;
 HOOK CHookManager::KeyPress()
 {
 	__asm
@@ -853,6 +849,11 @@ HOOK CHookManager::KeyPress()
 			lea ecx, [ebx + 78h]
 			jmp[KeyPressJmpBack]
 		}
+	}
+
+	if (dwLastCrouch > GetTickCount())
+	{
+		SPRINT_KEY = 0;
 	}
 
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.
@@ -911,6 +912,8 @@ HOOK CHookManager::KeyPress()
 		{
 			CROUCH_KEY = 0;
 		}
+
+		dwLastCrouch = GetTickCount() + 500;
 	}
 
 	// fix slide bug.
