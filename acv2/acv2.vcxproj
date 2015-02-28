@@ -20,13 +20,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -81,7 +81,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_55.lib;libboost_filesystem-vc120-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\VMProtectSDK32.lib;$(ProjectDir)libs\d3d9.lib;$(ProjectDir)libs\d3dx9.lib;$(ProjectDir)libs\CrashRpt1402.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_55.lib;libboost_filesystem-vc120-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\enigma_ide.lib;$(ProjectDir)libs\d3d9.lib;$(ProjectDir)libs\d3dx9.lib;$(ProjectDir)libs\CrashRpt1402.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -359,6 +359,8 @@
     <ClInclude Include="DirectX\XInput.h" />
     <ClInclude Include="DirectX\xma2defs.h" />
     <ClInclude Include="DirectX\xnamath.h" />
+    <ClInclude Include="Enigma\enigma_ide.h" />
+    <ClInclude Include="Enigma\enigma_keygen_ide.h" />
     <ClInclude Include="GTASA_CRC32.h" />
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="IMG.h" />
@@ -373,7 +375,6 @@
     <ClInclude Include="s0beit\samp.h" />
     <ClInclude Include="s0beit\stdtypes.h" />
     <ClInclude Include="VersionHelpers.h" />
-    <ClInclude Include="VMProtectSDK.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectX\D3DX10math.inl" />
@@ -383,6 +384,82 @@
     <None Include="DirectX\xnamathmatrix.inl" />
     <None Include="DirectX\xnamathmisc.inl" />
     <None Include="DirectX\xnamathvector.inl" />
+    <None Include="Enigma\check_protection_begin.inc" />
+    <None Include="Enigma\check_protection_end.inc" />
+    <None Include="Enigma\decrypt_on_execute_begin.inc" />
+    <None Include="Enigma\decrypt_on_execute_end.inc" />
+    <None Include="Enigma\reg_crypt_begin1.inc" />
+    <None Include="Enigma\reg_crypt_begin10.inc" />
+    <None Include="Enigma\reg_crypt_begin11.inc" />
+    <None Include="Enigma\reg_crypt_begin12.inc" />
+    <None Include="Enigma\reg_crypt_begin13.inc" />
+    <None Include="Enigma\reg_crypt_begin14.inc" />
+    <None Include="Enigma\reg_crypt_begin15.inc" />
+    <None Include="Enigma\reg_crypt_begin16.inc" />
+    <None Include="Enigma\reg_crypt_begin2.inc" />
+    <None Include="Enigma\reg_crypt_begin3.inc" />
+    <None Include="Enigma\reg_crypt_begin4.inc" />
+    <None Include="Enigma\reg_crypt_begin5.inc" />
+    <None Include="Enigma\reg_crypt_begin6.inc" />
+    <None Include="Enigma\reg_crypt_begin7.inc" />
+    <None Include="Enigma\reg_crypt_begin8.inc" />
+    <None Include="Enigma\reg_crypt_begin9.inc" />
+    <None Include="Enigma\reg_crypt_end1.inc" />
+    <None Include="Enigma\reg_crypt_end10.inc" />
+    <None Include="Enigma\reg_crypt_end11.inc" />
+    <None Include="Enigma\reg_crypt_end12.inc" />
+    <None Include="Enigma\reg_crypt_end13.inc" />
+    <None Include="Enigma\reg_crypt_end14.inc" />
+    <None Include="Enigma\reg_crypt_end15.inc" />
+    <None Include="Enigma\reg_crypt_end16.inc" />
+    <None Include="Enigma\reg_crypt_end2.inc" />
+    <None Include="Enigma\reg_crypt_end3.inc" />
+    <None Include="Enigma\reg_crypt_end4.inc" />
+    <None Include="Enigma\reg_crypt_end5.inc" />
+    <None Include="Enigma\reg_crypt_end6.inc" />
+    <None Include="Enigma\reg_crypt_end7.inc" />
+    <None Include="Enigma\reg_crypt_end8.inc" />
+    <None Include="Enigma\reg_crypt_end9.inc" />
+    <None Include="Enigma\run_once_begin.inc" />
+    <None Include="Enigma\run_once_end.inc" />
+    <None Include="Enigma\unprotected_begin.inc" />
+    <None Include="Enigma\unprotected_end.inc" />
+    <None Include="Enigma\unreg_crypt_begin1.inc" />
+    <None Include="Enigma\unreg_crypt_begin10.inc" />
+    <None Include="Enigma\unreg_crypt_begin11.inc" />
+    <None Include="Enigma\unreg_crypt_begin12.inc" />
+    <None Include="Enigma\unreg_crypt_begin13.inc" />
+    <None Include="Enigma\unreg_crypt_begin14.inc" />
+    <None Include="Enigma\unreg_crypt_begin15.inc" />
+    <None Include="Enigma\unreg_crypt_begin16.inc" />
+    <None Include="Enigma\unreg_crypt_begin2.inc" />
+    <None Include="Enigma\unreg_crypt_begin3.inc" />
+    <None Include="Enigma\unreg_crypt_begin4.inc" />
+    <None Include="Enigma\unreg_crypt_begin5.inc" />
+    <None Include="Enigma\unreg_crypt_begin6.inc" />
+    <None Include="Enigma\unreg_crypt_begin7.inc" />
+    <None Include="Enigma\unreg_crypt_begin8.inc" />
+    <None Include="Enigma\unreg_crypt_begin9.inc" />
+    <None Include="Enigma\unreg_crypt_end1.inc" />
+    <None Include="Enigma\unreg_crypt_end10.inc" />
+    <None Include="Enigma\unreg_crypt_end11.inc" />
+    <None Include="Enigma\unreg_crypt_end12.inc" />
+    <None Include="Enigma\unreg_crypt_end13.inc" />
+    <None Include="Enigma\unreg_crypt_end14.inc" />
+    <None Include="Enigma\unreg_crypt_end15.inc" />
+    <None Include="Enigma\unreg_crypt_end16.inc" />
+    <None Include="Enigma\unreg_crypt_end2.inc" />
+    <None Include="Enigma\unreg_crypt_end3.inc" />
+    <None Include="Enigma\unreg_crypt_end4.inc" />
+    <None Include="Enigma\unreg_crypt_end5.inc" />
+    <None Include="Enigma\unreg_crypt_end6.inc" />
+    <None Include="Enigma\unreg_crypt_end7.inc" />
+    <None Include="Enigma\unreg_crypt_end8.inc" />
+    <None Include="Enigma\unreg_crypt_end9.inc" />
+    <None Include="Enigma\vm_begin.inc" />
+    <None Include="Enigma\vm_end.inc" />
+    <None Include="Enigma\vm_risc_begin.inc" />
+    <None Include="Enigma\vm_risc_end.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -46,6 +46,9 @@
     <Filter Include="Source Files\s0beit">
       <UniqueIdentifier>{46b323ee-f600-4dc5-b493-d63879e64390}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Enigma">
+      <UniqueIdentifier>{2c29f211-032a-41c2-9445-7f1e4aaed63f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -809,9 +812,6 @@
     <ClInclude Include="CHookManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VMProtectSDK.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Hooks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -857,6 +857,12 @@
     <ClInclude Include="..\Shared\Network\BitStream.h">
       <Filter>Source Files\Shared\Network</Filter>
     </ClInclude>
+    <ClInclude Include="Enigma\enigma_ide.h">
+      <Filter>Header Files\Enigma</Filter>
+    </ClInclude>
+    <ClInclude Include="Enigma\enigma_keygen_ide.h">
+      <Filter>Header Files\Enigma</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectX\D3DX_DXGIFormatConvert.inl">
@@ -879,6 +885,234 @@
     </None>
     <None Include="DirectX\xnamathvector.inl">
       <Filter>Header Files\DirectX</Filter>
+    </None>
+    <None Include="Enigma\check_protection_begin.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\check_protection_end.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\decrypt_on_execute_begin.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\decrypt_on_execute_end.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin1.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin2.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin3.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin4.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin5.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin6.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin7.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin8.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin9.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin10.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin11.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin12.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin13.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin14.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin15.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_begin16.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end1.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end2.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end3.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end4.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end5.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end6.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end7.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end8.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end9.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end10.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end11.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end12.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end13.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end14.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end15.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\reg_crypt_end16.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\run_once_begin.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\run_once_end.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unprotected_begin.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unprotected_end.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin1.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin2.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin3.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin4.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin5.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin6.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin7.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin8.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin9.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin10.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin11.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin12.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin13.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin14.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin15.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_begin16.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end1.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end2.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end3.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end4.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end5.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end6.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end7.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end8.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end9.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end10.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end11.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end12.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end13.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end14.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end15.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\unreg_crypt_end16.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\vm_begin.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\vm_end.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\vm_risc_begin.inc">
+      <Filter>Header Files\Enigma</Filter>
+    </None>
+    <None Include="Enigma\vm_risc_end.inc">
+      <Filter>Header Files\Enigma</Filter>
     </None>
   </ItemGroup>
 </Project>

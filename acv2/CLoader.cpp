@@ -6,7 +6,7 @@
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "CHookManager.h"
-#include "VMProtectSDK.h"
+#include "Enigma/enigma_ide.h"
 #include "../Shared/Network/CRPC.h"
 #include "CCrashHandler.h"
 #include "Detours\detours.h"
@@ -27,53 +27,60 @@ HMODULE CLoader::ThishMod = NULL;
 
 void CLoader::Initialize(HMODULE hMod)
 {
-	// Install the crash handler.
-	new CCrashHandler();
+	#include "Enigma/run_once_begin.inc"
 
-	// Make sure samp.dll is loaded BEFORE we go ANY further!!
-	LoadLibrary("samp.dll");
-
-	// Hook LoadLibrary function.
-	CModuleSecurity::HookLoadLibrary();
-
-	// Record that we're loaded
-	isLoaded = true;
-
-	// Keep track of the hModule.
-	ThishMod = hMod;
-
-	// Hook the D3D9Device functions.
-	CDirectX::HookD3DFunctions();
-	
-	// Load the command line in a string (mostly the host, and port so we can connect later)
-	std::map < std::string, std::string > cmdline;
-	cmdline = CParseCommandLine::parseCmdLine(GetCommandLineA());
-	
-	// Wait until the game is loaded.
-	while (ADDRESS_LOADED < 6)
+	if (EP_CheckupIsEnigmaOk())
 	{
-		// Stop CLEO from loading, and other memory hooks.
+		// Install the crash handler.
+		new CCrashHandler();
+
+		// Make sure samp.dll is loaded BEFORE we go ANY further!!
+		LoadLibrary("samp.dll");
+
+		// Hook LoadLibrary function.
+		CModuleSecurity::HookLoadLibrary();
+
+		// Record that we're loaded
+		isLoaded = true;
+
+		// Keep track of the hModule.
+		ThishMod = hMod;
+
+		// Hook the D3D9Device functions.
+		CDirectX::HookD3DFunctions();
+
+		// Load the command line in a string (mostly the host, and port so we can connect later)
+		std::map < std::string, std::string > cmdline;
+		cmdline = CParseCommandLine::parseCmdLine(GetCommandLineA());
+
+		// Wait until the game is loaded.
+		while (ADDRESS_LOADED < 6)
+		{
+			// Stop CLEO from loading, and other memory hooks.
+			CHookManager::Load();
+
+			//CDirectX::LoadImages();
+
+			// Wait until the game is loaded in an infinite loop.
+			Sleep(5);
+		}
+
+		CModuleSecurity::AddAllowedModules();
+
+		// Make sure we're using the latest version of this mod.
+		CClientUpdater::CheckForUpdate(hMod);
+
+		// Force process elevation once the game has loaded. This will terminate the current process and run a new one.
+		if (IsWindowsVistaOrGreater())
+		{
+			CheckElevation();
+		}
+
+		// Setup memory one more time.
 		CHookManager::Load();
-
-		//CDirectX::LoadImages();
-
-		// Wait until the game is loaded in an infinite loop.
-		Sleep(5);
 	}
 
-	CModuleSecurity::AddAllowedModules();
-	
-	// Make sure we're using the latest version of this mod.
-	CClientUpdater::CheckForUpdate(hMod);
-
-	// Force process elevation once the game has loaded. This will terminate the current process and run a new one.
-	if (IsWindowsVistaOrGreater())
-	{
-		CheckElevation();
-	}
-
-	// Setup memory one more time.
-	CHookManager::Load();
+	#include "Enigma\run_once_end.inc"
 
 	while (true)
 	{
@@ -82,24 +89,6 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Scan for new injected modules.
 		Modules.Scan();
-
-		// Check for a tamper attempt.
-		if (VMProtectIsDebuggerPresent(true))
-		{
-			// Make sure the user is connected.
-			if (!CRakClientHandler::IsConnected())
-			{
-				// Close the process.
-				ExitProcess(0);
-			}
-
-			RakNet::BitStream bsData;
-
-			bsData.Write((unsigned char)PACKET_RPC);
-			bsData.Write(ON_TAMPER_ATTEMPT);
-			// Tell the server we've done some naughty stuff.
-			CRakClientHandler::CustomSend(&bsData);
-		}
 
 		// Sleep
 		Sleep(1000);

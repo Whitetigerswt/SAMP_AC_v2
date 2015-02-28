@@ -7,9 +7,12 @@
 #include "../../Shared/Network/Network.h"
 #include "CRakClientHandler.h"
 #include "../s0beit/samp.h"
-#include "../VMProtectSDK.h"
 #include "../CClientUpdater.h"
 #include "../CLog.h"
+#include "../md5.h"
+
+#include <Windows.h>
+#include "../Enigma/enigma_ide.h"
 
 bool hasSentInitInfo = false;
 
@@ -71,27 +74,26 @@ void HookedRakClientInterface::SendInitialInfo()
 	bsData.Write((unsigned char)PACKET_RPC);
 	bsData.Write(ON_INITIAL_INFO);
 
-	// Get the number of required bytes in the hardwareID.
-	INT nSize = VMProtectGetCurrentHWID(NULL, 0);
+	// Get the hardware ID
+	std::string hwid = EP_RegHardwareID();
+	BYTE digest[16];
 
-	// Allocate a buffer.
-	char *pBuf = new char[nSize];
+	MD5 md5 = MD5();
+	hwid = std::string(md5.digestString((char*)hwid.c_str()));
 
-	// Get the hardware ID.
-	VMProtectGetCurrentHWID(pBuf, nSize);
-
-	// Write the hardwareID to the packet
-	bsData.Write((unsigned short)nSize);
-	bsData.Write((const char*)pBuf, nSize);
+	// string to byte
+	for (int i = 0; i < 16; ++i)
+	{
+		std::string bt = hwid.substr(i * 2, 2);
+		digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+		bsData.Write(digest[i]);
+	}
 
 	// Write the user's AC version to the packet.
 	bsData.Write(CURRENT_MAJOR_VERSION);
 
 	// Send the info to the server.
 	Send(&bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
-
-	// Free memory.
-	delete[] pBuf;
 }
 
 bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority, int reliability, char orderingChannel )
