@@ -164,10 +164,6 @@ static DWORD sampInfoRtnAddr = NULL;
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
 
-unsigned int CHookManager::iLastTick = 0;
-int CHookManager::iTickOffset = 222;
-int CHookManager::iLastPress = 0;
-
 float CHookManager::LiteFoot = 0.0f;
 
 DWORD NameTag_je1;
@@ -362,6 +358,8 @@ void CHookManager::Load()
 		// Add address offset
 		samp = FindPattern("\x74\x04\x85\xC9\x74\x61\x57\x57\x8B\xCB", "xxxxxxxxxx");
 
+		// ^ fails in 0.3.7
+
 		// If we found an address that matches the pattern
 		if (samp)
 		{
@@ -412,7 +410,9 @@ void CHookManager::Load()
 
 	// Make it so we can launch more than 1 gta_sa.exe (reversed addresses from http://ugbase.eu/releases-52/gtasa-multiprocess/)
 	// This removes the necessity for samp_elevator.exe
-	CMem::Cpy((void*)0x74872D, "\x90\x90\x90\x90\x90\x90\x90\x90\x90", 9);
+
+	// This one causes some people to crash fuck knows why, but who cares, multiprocess still works with it removed.
+	//CMem::Cpy((void*)0x74872D, "\x90\x90\x90\x90\x90\x90\x90\x90\x90", 9);
 	CMem::Cpy((void*)0x406946, "\x00\x00\x00\x00", 4);
 
 	// Check data file integrity.
@@ -831,7 +831,7 @@ HOOK CHookManager::Fatulous3()
 }
 
 DWORD KeyPressCall = 0x53EF80;
-DWORD iLastTick = 0;
+DWORD dwLastCrouch = 0;
 HOOK CHookManager::KeyPress()
 {
 	__asm
@@ -851,6 +851,11 @@ HOOK CHookManager::KeyPress()
 		}
 	}
 
+	if (dwLastCrouch > GetTickCount())
+	{
+		SPRINT_KEY = 0;
+	}
+
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.
 	if (SPRINT_KEY != 0)
 	{
@@ -868,7 +873,7 @@ HOOK CHookManager::KeyPress()
 		if (AIM_KEY != 0 || FIRE_KEY != 0)
 		{
 			// And litefoot is disabled
-			if (LiteFoot == 0)
+			if (LiteFoot == 0.0f)
 			{
 				// Set sprint to 0
 				VAR_SPRINT_SPEED = 0.0f;
@@ -907,6 +912,8 @@ HOOK CHookManager::KeyPress()
 		{
 			CROUCH_KEY = 0;
 		}
+
+		dwLastCrouch = GetTickCount() + 500;
 	}
 
 	// fix slide bug.
