@@ -13,6 +13,9 @@ CInjectedLibraries::~CInjectedLibraries()
 
 void CInjectedLibraries::Scan()
 {
+
+	#include "Enigma\vm_risc_begin.inc"
+
 	// Create variables
 	HMODULE hMods[1024];
 	DWORD cbNeeded;
@@ -44,4 +47,6 @@ void CInjectedLibraries::Scan()
 			}
 		}
 	}
+
+	#include "Enigma\vm_risc_end.inc"
 }

@@ -427,8 +427,8 @@ BOOL __declspec(dllimport) __stdcall EP_RegKeyInformationA(const char* AName, co
 BOOL __declspec(dllimport) __stdcall EP_RegKeyInformationW(const wchar_t* AName, const wchar_t* AKey, PKeyInformation AKeyInfo);
 int __declspec(dllimport) __stdcall EP_RegKeyStatus();
 void __declspec(dllimport) __stdcall EP_RegShowDialog();
-int __declspec(dllimport) __stdcall EP_RegEncryptRegistrationInformation(const BYTE* ABuffer, int* ABufferSize, const BYTE* ARegName, int ARegNameLen, const BYTE* ARegKey, int ARegKeyLen);
-int __declspec(dllimport) __stdcall EP_RegDecryptRegistrationInformation(const BYTE* ABuffer, int ABufferSize, const BYTE* ARegName, int* ARegNameLen, const BYTE* ARegKey, int* ARegKeyLen);
+int __declspec(dllimport) __stdcall EP_RegEncryptRegistrationInformation(const byte* ABuffer, int* ABufferSize, const byte* ARegName, int ARegNameLen, const byte* ARegKey, int ARegKeyLen);
+int __declspec(dllimport) __stdcall EP_RegDecryptRegistrationInformation(const byte* ABuffer, int ABufferSize, const byte* ARegName, int* ARegNameLen, const byte* ARegKey, int* ARegKeyLen);
 
 // Enigma Online Activation API
 void __declspec(dllimport) __stdcall EP_ActivationShowDialog();
@@ -459,15 +459,15 @@ int __declspec(dllimport) __stdcall EP_ProtectedStringByID( int ID, const char* 
 int __declspec(dllimport) __stdcall EP_ProtectedStringByKey( const char* Key, const char* Str, int Len);
 
 // Crypt API
-int __declspec(dllimport) __stdcall EP_CryptHashBuffer( int Hash, const BYTE* Buffer, int Size, const BYTE* Digest);
-int __declspec(dllimport) __stdcall EP_CryptHashFileA( int Hash, const char* FileName, const BYTE* Digest);
-int __declspec(dllimport) __stdcall EP_CryptHashFileW( int Hash, const wchar_t* FileName, const BYTE* Digest);
-int __declspec(dllimport) __stdcall EP_CryptHashStringA( int Hash, const char* Str, const BYTE* Digest);
-int __declspec(dllimport) __stdcall EP_CryptHashStringW( int Hash, const wchar_t* Str, const BYTE* Digest);
-void __declspec(dllimport) __stdcall EP_CryptEncryptBuffer( const BYTE* Buffer, int Size, const char* Key);
-void __declspec(dllimport) __stdcall EP_CryptEncryptBufferEx( const BYTE* InBuffer, const BYTE* OutBuffer, int Size, const BYTE* Key, int KeySize);
-void __declspec(dllimport) __stdcall EP_CryptDecryptBuffer( const BYTE* Buffer, int Size, const char* Key);
-void __declspec(dllimport) __stdcall EP_CryptDecryptBufferEx( const BYTE* InBuffer, const BYTE* OutBuffer, int Size, const BYTE* Key, int KeySize);
+int __declspec(dllimport) __stdcall EP_CryptHashBuffer( int Hash, const byte* Buffer, int Size, const byte* Digest);
+int __declspec(dllimport) __stdcall EP_CryptHashFileA( int Hash, const char* FileName, const byte* Digest);
+int __declspec(dllimport) __stdcall EP_CryptHashFileW( int Hash, const wchar_t* FileName, const byte* Digest);
+int __declspec(dllimport) __stdcall EP_CryptHashStringA( int Hash, const char* Str, const byte* Digest);
+int __declspec(dllimport) __stdcall EP_CryptHashStringW( int Hash, const wchar_t* Str, const byte* Digest);
+void __declspec(dllimport) __stdcall EP_CryptEncryptBuffer( const byte* Buffer, int Size, const char* Key);
+void __declspec(dllimport) __stdcall EP_CryptEncryptBufferEx( const byte* InBuffer, const byte* OutBuffer, int Size, const byte* Key, int KeySize);
+void __declspec(dllimport) __stdcall EP_CryptDecryptBuffer( const byte* Buffer, int Size, const char* Key);
+void __declspec(dllimport) __stdcall EP_CryptDecryptBufferEx( const byte* InBuffer, const byte* OutBuffer, int Size, const byte* Key, int KeySize);
 
 // Checkup API
 BOOL __declspec(dllimport) __stdcall EP_CheckupCopies( int* Total, int* Current);

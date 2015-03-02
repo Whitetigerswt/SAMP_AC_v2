@@ -20,6 +20,7 @@ CProcessList::~CProcessList()
 
 void CProcessList::Scan()
 {
+	#include "Enigma\vm_risc_begin.inc"
 
 	// Check if QueryFullProcessImageName exists.
 	// It doesn't exist on Windows XP.
@@ -94,6 +95,8 @@ void CProcessList::Scan()
 			}
 		}
 	}
+
+	#include "Enigma\vm_risc_end.inc"
 }
 
 void CProcessList::AdjustTokens(HANDLE process) {

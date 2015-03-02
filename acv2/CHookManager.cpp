@@ -170,10 +170,12 @@ DWORD NameTag_je1;
 DWORD NameTag_je2;
 DWORD NameTagHookJmpBack;
 
-#define MAX_SPRINT_SPEED 7.0f
+#define MAX_SPRINT_SPEED 6.5f
 
 void CHookManager::Load()
 {
+	#include "Enigma\vm_risc_begin.inc"
+
 	DWORD dwOldProt;
 	
 	// Prevent CLEO 4 from loading scripts
@@ -411,16 +413,18 @@ void CHookManager::Load()
 	// Make it so we can launch more than 1 gta_sa.exe (reversed addresses from http://ugbase.eu/releases-52/gtasa-multiprocess/)
 	// This removes the necessity for samp_elevator.exe
 
-	// This one causes some people to crash fuck knows why, but who cares, multiprocess still works with it removed.
-	//CMem::Cpy((void*)0x74872D, "\x90\x90\x90\x90\x90\x90\x90\x90\x90", 9);
 	CMem::Cpy((void*)0x406946, "\x00\x00\x00\x00", 4);
 
 	// Check data file integrity.
 	VerifyFilePaths();
+
+	#include "Enigma\vm_risc_end.inc"
 }
 
 void CHookManager::SetConnectPatches()
 {
+	#include "Enigma\vm_risc_begin.inc"
+
 	// Detect when a player is pausing.
 	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
 
@@ -475,6 +479,8 @@ void CHookManager::SetConnectPatches()
 
 	// Fix some slide issues with melee weps
 	CMem::ApplyJmp(FUNC_SlideFix, (DWORD)SlideFix, 6);
+
+	#include "Enigma\vm_risc_end.inc"
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
@@ -851,11 +857,6 @@ HOOK CHookManager::KeyPress()
 		}
 	}
 
-	if (dwLastCrouch > GetTickCount())
-	{
-		SPRINT_KEY = 0;
-	}
-
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.
 	if (SPRINT_KEY != 0)
 	{
@@ -872,12 +873,8 @@ HOOK CHookManager::KeyPress()
 		// And aim key is pressed
 		if (AIM_KEY != 0 || FIRE_KEY != 0)
 		{
-			// And litefoot is disabled
-			if (LiteFoot == 0.0f)
-			{
-				// Set sprint to 0
-				VAR_SPRINT_SPEED = 0.0f;
-			}
+			// Set sprint to 0
+			VAR_SPRINT_SPEED = 0.0f;
 		}
 	}
 
@@ -894,7 +891,11 @@ HOOK CHookManager::KeyPress()
 	// Fixes switch weapon desync while sprinting/running
 	if ((VAR_CPED_STATE == 102 || VAR_CPED_STATE == 205) && AIM_KEY == 0 && VAR_CURRENT_WEAPON > 15)
 	{
-		FIRE_KEY = 0;
+		if (FIRE_KEY > 0)
+		{
+			AIM_KEY = 128;
+			SPRINT_KEY = 0;
+		}
 	}
 
 	// Check if the crouch key is pressed.
@@ -912,22 +913,21 @@ HOOK CHookManager::KeyPress()
 		{
 			CROUCH_KEY = 0;
 		}
-
-		dwLastCrouch = GetTickCount() + 500;
 	}
 
 	// fix slide bug.
-	if (VAR_ANIMATION_SOMETHING == 1069547520 && VAR_AIMING == 53 && (VAR_CPED_STATE == 102 || VAR_CPED_STATE == 205) && VAR_CURRENT_WEAPON > 15)
+	/*if (VAR_ANIMATION_SOMETHING == 1069547520 && VAR_AIMING == 53 && (VAR_CPED_STATE == 102 || VAR_CPED_STATE == 205) && VAR_CURRENT_WEAPON > 15)
 	{
 		AIM_KEY = 0;
-	}
+	}*/
 
 	// Fix weird client side slide 
-	if (VAR_AIMING == 53 && VAR_ANIMATION_SOMETHING_ELSE == 0 && VAR_ANIMATION_SOMETHING == 1074301065)
+	// causes to many weird issues, probably because i have no idea what VAR_ANIMATION_SOMETHING_ELSE or VAR_ANIMATION_SOMETHING actually are
+	/*if (VAR_AIMING == 53 && VAR_ANIMATION_SOMETHING_ELSE == 0 && VAR_ANIMATION_SOMETHING == 1074301065)
 	{
 		VAR_ANIMATION_SOMETHING = 0;
 		//AIM_KEY = 0;
-	}
+	}*/
 
 	// Prevent jumping while alt tabbed
 	if (Misc::GetAltTabState())
