@@ -26,7 +26,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -101,6 +101,7 @@
     <ClCompile Include="..\Shared\Network\CRPC.cpp" />
     <ClCompile Include="CCheats.cpp" />
     <ClCompile Include="CCrashHandler.cpp" />
+    <ClCompile Include="CFunctionHooks.cpp" />
     <ClCompile Include="CHookManager.cpp" />
     <ClCompile Include="CClientUpdater.cpp" />
     <ClCompile Include="CDirectoryScanner.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="Addresses.h" />
     <ClInclude Include="CCheats.h" />
     <ClInclude Include="CCrashHandler.h" />
+    <ClInclude Include="CFunctionHooks.h" />
     <ClInclude Include="CHookManager.h" />
     <ClInclude Include="CClientUpdater.h" />
     <ClInclude Include="CDirectoryScanner.h" />
