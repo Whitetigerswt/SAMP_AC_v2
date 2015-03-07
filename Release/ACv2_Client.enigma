@@ -265,7 +265,7 @@ Use the link below to visit our web site.</Text>
   <CheckUp>
     <AntiDebugger>
       <Enabled>True</Enabled>
-      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Debugger warning</Title>
         <Text>A debugger is detected on this computer.
@@ -293,7 +293,7 @@ This program will not execute while debuggers are running.</Text>
       <Enabled>True</Enabled>
       <FileIntegrityChecking>True</FileIntegrityChecking>
       <RTIntegrityChecking>True</RTIntegrityChecking>
-      <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+      <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Virus warning</Title>
         <Text>Program integrity check failed. 
@@ -1118,670 +1118,595 @@ try again!</Text>
     </Common>
     <Filter/>
     <CommandLine/>
-    <Functions Count="133">
+    <Functions Count="118">
       <Function ID="0">
-        <Name>CRPC::Process(unsigned short,class RakNet::BitStream &amp;,int)</Name>
-        <Address>268732608</Address>
+        <Name>CHookManager::VerifyFilePaths(void)</Name>
+        <Address>268751712</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="1">
-        <Name>CCheats::AddFile(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)</Name>
-        <Address>268738464</Address>
+        <Name>CHookManager::GetSampInfo(void)</Name>
+        <Address>268755744</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="2">
-        <Name>CCheats::OnFileExecuted(char const *,char const *)</Name>
-        <Address>268738736</Address>
+        <Name>CHookManager::Fatulous1(void)</Name>
+        <Address>268755968</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="3">
-        <Name>CCheats::ResendFiles(void)</Name>
-        <Address>268739888</Address>
+        <Name>CHookManager::Fatulous2(void)</Name>
+        <Address>268756000</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="4">
-        <Name>CHookManager::VerifyFilePaths(void)</Name>
-        <Address>268751920</Address>
+        <Name>CHookManager::Fatulous3(void)</Name>
+        <Address>268756016</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="5">
-        <Name>CHookManager::GetSampInfo(void)</Name>
-        <Address>268755952</Address>
+        <Name>CHookManager::LoadScriptsHook(void)</Name>
+        <Address>268756560</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="6">
-        <Name>CHookManager::MarkersHook(void)</Name>
-        <Address>268756080</Address>
+        <Name>CHookManager::CameraXWriteHook2(void)</Name>
+        <Address>268756624</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="7">
-        <Name>CHookManager::Fatulous1(void)</Name>
-        <Address>268756176</Address>
+        <Name>CHookManager::CameraXWriteHook3(void)</Name>
+        <Address>268756656</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="8">
-        <Name>CHookManager::Fatulous2(void)</Name>
-        <Address>268756208</Address>
+        <Name>CHookManager::CameraXWriteHook4(void)</Name>
+        <Address>268756688</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="9">
-        <Name>CHookManager::Fatulous3(void)</Name>
-        <Address>268756224</Address>
+        <Name>CHookManager::CameraXWriteHook5(void)</Name>
+        <Address>268756704</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="10">
-        <Name>CHookManager::LoadScriptsHook(void)</Name>
-        <Address>268756768</Address>
+        <Name>CHookManager::CameraXWriteHook6(void)</Name>
+        <Address>268756720</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="11">
-        <Name>CHookManager::LoadShotgunBullet(void)</Name>
-        <Address>268756784</Address>
+        <Name>CHookManager::CameraXWriteHook7(void)</Name>
+        <Address>268756752</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="12">
-        <Name>CHookManager::LoadBullet(void)</Name>
-        <Address>268756816</Address>
+        <Name>CHookManager::CameraXWriteHook8(void)</Name>
+        <Address>268756784</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="13">
-        <Name>CHookManager::CameraXWriteHook2(void)</Name>
-        <Address>268756832</Address>
+        <Name>CHookManager::CameraXWriteHook9(void)</Name>
+        <Address>268756800</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="14">
-        <Name>CHookManager::CameraXWriteHook3(void)</Name>
-        <Address>268756864</Address>
+        <Name>CHookManager::CameraXWriteHook10(void)</Name>
+        <Address>268756816</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="15">
-        <Name>CHookManager::CameraXWriteHook4(void)</Name>
-        <Address>268756896</Address>
+        <Name>CHookManager::CameraXWriteHook11(void)</Name>
+        <Address>268756832</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="16">
-        <Name>CHookManager::CameraXWriteHook5(void)</Name>
-        <Address>268756912</Address>
+        <Name>CHookManager::CameraXWriteHook12(void)</Name>
+        <Address>268756848</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="17">
-        <Name>CHookManager::CameraXWriteHook6(void)</Name>
-        <Address>268756928</Address>
+        <Name>CHookManager::CameraXAccessHook1(void)</Name>
+        <Address>268756896</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="18">
-        <Name>CHookManager::CameraXWriteHook7(void)</Name>
-        <Address>268756960</Address>
+        <Name>CHookManager::CameraXAccessHook2(void)</Name>
+        <Address>268756928</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="19">
-        <Name>CHookManager::CameraXWriteHook8(void)</Name>
-        <Address>268756992</Address>
+        <Name>CHookManager::CameraXAccessHook3(void)</Name>
+        <Address>268756960</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="20">
-        <Name>CHookManager::CameraXWriteHook9(void)</Name>
-        <Address>268757008</Address>
+        <Name>CHookManager::CameraXAccessHook4(void)</Name>
+        <Address>268756976</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="21">
-        <Name>CHookManager::CameraXWriteHook10(void)</Name>
-        <Address>268757024</Address>
+        <Name>CHookManager::CameraXAccessHook5(void)</Name>
+        <Address>268757008</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="22">
-        <Name>CHookManager::CameraXWriteHook11(void)</Name>
+        <Name>CHookManager::CameraXAccessHook6(void)</Name>
         <Address>268757040</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="23">
-        <Name>CHookManager::CameraXWriteHook12(void)</Name>
-        <Address>268757056</Address>
+        <Name>CHookManager::CameraXAccessHook7(void)</Name>
+        <Address>268757072</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="24">
-        <Name>CHookManager::CameraXAccessHook1(void)</Name>
-        <Address>268757104</Address>
+        <Name>CHookManager::CameraXAccessHook8(void)</Name>
+        <Address>268757088</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="25">
-        <Name>CHookManager::CameraXAccessHook2(void)</Name>
-        <Address>268757136</Address>
+        <Name>CHookManager::CameraXAccessHook9(void)</Name>
+        <Address>268757104</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="26">
-        <Name>CHookManager::CameraXAccessHook3(void)</Name>
-        <Address>268757168</Address>
+        <Name>CHookManager::CameraXAccessHook10(void)</Name>
+        <Address>268757120</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="27">
-        <Name>CHookManager::CameraXAccessHook4(void)</Name>
-        <Address>268757184</Address>
+        <Name>CHookManager::CameraXAccessHook11(void)</Name>
+        <Address>268757152</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="28">
-        <Name>CHookManager::CameraXAccessHook5(void)</Name>
-        <Address>268757216</Address>
+        <Name>CHookManager::CameraXAccessHook12(void)</Name>
+        <Address>268757184</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="29">
-        <Name>CHookManager::CameraXAccessHook6(void)</Name>
-        <Address>268757248</Address>
+        <Name>CHookManager::CameraXAccessHook13(void)</Name>
+        <Address>268757200</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="30">
-        <Name>CHookManager::CameraXAccessHook7(void)</Name>
-        <Address>268757280</Address>
+        <Name>CHookManager::CameraXAccessHook14(void)</Name>
+        <Address>268757216</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="31">
-        <Name>CHookManager::CameraXAccessHook8(void)</Name>
-        <Address>268757296</Address>
+        <Name>CHookManager::CameraXAccessHook15(void)</Name>
+        <Address>268757232</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="32">
-        <Name>CHookManager::CameraXAccessHook9(void)</Name>
-        <Address>268757312</Address>
+        <Name>CHookManager::CameraXAccessHook16(void)</Name>
+        <Address>268757248</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="33">
-        <Name>CHookManager::CameraXAccessHook10(void)</Name>
-        <Address>268757328</Address>
+        <Name>CHookManager::CameraXAccessHook17(void)</Name>
+        <Address>268757264</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="34">
-        <Name>CHookManager::CameraXAccessHook11(void)</Name>
-        <Address>268757360</Address>
+        <Name>CHookManager::CameraXAccessHook18(void)</Name>
+        <Address>268757280</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="35">
-        <Name>CHookManager::CameraXAccessHook12(void)</Name>
-        <Address>268757392</Address>
+        <Name>CHookManager::CameraXAccessHook19(void)</Name>
+        <Address>268757296</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="36">
-        <Name>CHookManager::CameraXAccessHook13(void)</Name>
-        <Address>268757408</Address>
+        <Name>CHookManager::CameraXAccessHook20(void)</Name>
+        <Address>268757328</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="37">
-        <Name>CHookManager::CameraXAccessHook14(void)</Name>
-        <Address>268757424</Address>
+        <Name>CHookManager::CameraXAccessHook21(void)</Name>
+        <Address>268757344</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="38">
-        <Name>CHookManager::CameraXAccessHook15(void)</Name>
-        <Address>268757440</Address>
+        <Name>CHookManager::CameraXAccessHook22(void)</Name>
+        <Address>268757360</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="39">
-        <Name>CHookManager::CameraXAccessHook16(void)</Name>
-        <Address>268757456</Address>
+        <Name>CHookManager::CameraXAccessHook23(void)</Name>
+        <Address>268757376</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="40">
-        <Name>CHookManager::CameraXAccessHook17(void)</Name>
-        <Address>268757472</Address>
+        <Name>CHookManager::CameraXAccessHook24(void)</Name>
+        <Address>268757392</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="41">
-        <Name>CHookManager::CameraXAccessHook18(void)</Name>
-        <Address>268757488</Address>
+        <Name>CHookManager::CameraXAccessHook25(void)</Name>
+        <Address>268757408</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="42">
-        <Name>CHookManager::CameraXAccessHook19(void)</Name>
-        <Address>268757504</Address>
+        <Name>CHookManager::CameraXAccessHook26(void)</Name>
+        <Address>268757424</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="43">
-        <Name>CHookManager::CameraXAccessHook20(void)</Name>
-        <Address>268757536</Address>
+        <Name>CHookManager::CameraXAccessHook27(void)</Name>
+        <Address>268757440</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="44">
-        <Name>CHookManager::CameraXAccessHook21(void)</Name>
-        <Address>268757552</Address>
+        <Name>CHookManager::CameraXAccessHook28(void)</Name>
+        <Address>268757456</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="45">
-        <Name>CHookManager::CameraXAccessHook22(void)</Name>
-        <Address>268757568</Address>
+        <Name>CHookManager::CameraXAccessHook29(void)</Name>
+        <Address>268757472</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="46">
-        <Name>CHookManager::CameraXAccessHook23(void)</Name>
-        <Address>268757584</Address>
+        <Name>CHookManager::CameraXAccessHook30(void)</Name>
+        <Address>268757504</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="47">
-        <Name>CHookManager::CameraXAccessHook24(void)</Name>
-        <Address>268757600</Address>
+        <Name>CHookManager::CameraXAccessHook31(void)</Name>
+        <Address>268757520</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="48">
-        <Name>CHookManager::CameraXAccessHook25(void)</Name>
-        <Address>268757616</Address>
+        <Name>CHookManager::CameraXAccessHook32(void)</Name>
+        <Address>268757536</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="49">
-        <Name>CHookManager::CameraXAccessHook26(void)</Name>
-        <Address>268757632</Address>
+        <Name>CHookManager::CameraXAccessHook33(void)</Name>
+        <Address>268757552</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="50">
-        <Name>CHookManager::CameraXAccessHook27(void)</Name>
-        <Address>268757648</Address>
+        <Name>CHookManager::CameraXAccessHook34(void)</Name>
+        <Address>268757568</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="51">
-        <Name>CHookManager::CameraXAccessHook28(void)</Name>
-        <Address>268757664</Address>
+        <Name>CHookManager::CameraXAccessHook35(void)</Name>
+        <Address>268757584</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="52">
-        <Name>CHookManager::CameraXAccessHook29(void)</Name>
-        <Address>268757680</Address>
+        <Name>CHookManager::CameraXAccessHook36(void)</Name>
+        <Address>268757600</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="53">
-        <Name>CHookManager::CameraXAccessHook30(void)</Name>
-        <Address>268757712</Address>
+        <Name>CHookManager::CameraXAccessHook37(void)</Name>
+        <Address>268757616</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="54">
-        <Name>CHookManager::CameraXAccessHook31(void)</Name>
-        <Address>268757728</Address>
+        <Name>CHookManager::CameraXAccessHook38(void)</Name>
+        <Address>268757632</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="55">
-        <Name>CHookManager::CameraXAccessHook32(void)</Name>
-        <Address>268757744</Address>
+        <Name>CHookManager::CameraXAccessHook39(void)</Name>
+        <Address>268757648</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="56">
-        <Name>CHookManager::CameraXAccessHook33(void)</Name>
-        <Address>268757760</Address>
+        <Name>CHookManager::CameraXAccessHook40(void)</Name>
+        <Address>268757664</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="57">
-        <Name>CHookManager::CameraXAccessHook34(void)</Name>
-        <Address>268757776</Address>
+        <Name>CHookManager::CameraXAccessHook41(void)</Name>
+        <Address>268757696</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="58">
-        <Name>CHookManager::CameraXAccessHook35(void)</Name>
-        <Address>268757792</Address>
+        <Name>CHookManager::CameraXAccessHook42(void)</Name>
+        <Address>268757712</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="59">
-        <Name>CHookManager::CameraXAccessHook36(void)</Name>
-        <Address>268757808</Address>
+        <Name>CHookManager::CameraXAccessHook43(void)</Name>
+        <Address>268757728</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="60">
-        <Name>CHookManager::CameraXAccessHook37(void)</Name>
-        <Address>268757824</Address>
+        <Name>CHookManager::CameraYWriteHook2(void)</Name>
+        <Address>268757744</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="61">
-        <Name>CHookManager::CameraXAccessHook38(void)</Name>
-        <Address>268757840</Address>
+        <Name>CHookManager::CameraYWriteHook3(void)</Name>
+        <Address>268757776</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="62">
-        <Name>CHookManager::CameraXAccessHook39(void)</Name>
-        <Address>268757856</Address>
+        <Name>CHookManager::CameraYWriteHook4(void)</Name>
+        <Address>268757808</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="63">
-        <Name>CHookManager::CameraXAccessHook40(void)</Name>
-        <Address>268757872</Address>
+        <Name>CHookManager::CameraYWriteHook5(void)</Name>
+        <Address>268757824</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="64">
-        <Name>CHookManager::CameraXAccessHook41(void)</Name>
-        <Address>268757904</Address>
+        <Name>CHookManager::CameraYWriteHook6(void)</Name>
+        <Address>268757856</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="65">
-        <Name>CHookManager::CameraXAccessHook42(void)</Name>
-        <Address>268757920</Address>
+        <Name>CHookManager::CameraYWriteHook7(void)</Name>
+        <Address>268757888</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="66">
-        <Name>CHookManager::CameraXAccessHook43(void)</Name>
-        <Address>268757936</Address>
+        <Name>CHookManager::CameraYWriteHook9(void)</Name>
+        <Address>268757904</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="67">
-        <Name>CHookManager::CameraYWriteHook2(void)</Name>
-        <Address>268757952</Address>
+        <Name>CHookManager::CameraYWriteHook10(void)</Name>
+        <Address>268757920</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="68">
-        <Name>CHookManager::CameraYWriteHook3(void)</Name>
-        <Address>268757984</Address>
+        <Name>CHookManager::CameraYWriteHook11(void)</Name>
+        <Address>268757936</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="69">
-        <Name>CHookManager::CameraYWriteHook4(void)</Name>
-        <Address>268758016</Address>
+        <Name>CHookManager::CameraYWriteHook12(void)</Name>
+        <Address>268757952</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="70">
-        <Name>CHookManager::CameraYWriteHook5(void)</Name>
-        <Address>268758032</Address>
+        <Name>CHookManager::CameraYWriteHook13(void)</Name>
+        <Address>268757968</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="71">
-        <Name>CHookManager::CameraYWriteHook6(void)</Name>
-        <Address>268758064</Address>
+        <Name>CHookManager::CameraYWriteHook14(void)</Name>
+        <Address>268757984</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="72">
-        <Name>CHookManager::CameraYWriteHook7(void)</Name>
-        <Address>268758096</Address>
+        <Name>CHookManager::CameraYWriteHook15(void)</Name>
+        <Address>268758000</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="73">
-        <Name>CHookManager::CameraYWriteHook9(void)</Name>
-        <Address>268758112</Address>
+        <Name>CHookManager::CameraYWriteHook16(void)</Name>
+        <Address>268758016</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="74">
-        <Name>CHookManager::CameraYWriteHook10(void)</Name>
-        <Address>268758128</Address>
+        <Name>CHookManager::CameraYWriteHook17(void)</Name>
+        <Address>268758032</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="75">
-        <Name>CHookManager::CameraYWriteHook11(void)</Name>
-        <Address>268758144</Address>
+        <Name>CHookManager::CameraYAccessHook1(void)</Name>
+        <Address>268758048</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="76">
-        <Name>CHookManager::CameraYWriteHook12(void)</Name>
-        <Address>268758160</Address>
+        <Name>CHookManager::CameraYAccessHook2(void)</Name>
+        <Address>268758064</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="77">
-        <Name>CHookManager::CameraYWriteHook13(void)</Name>
-        <Address>268758176</Address>
+        <Name>CHookManager::CameraYAccessHook3(void)</Name>
+        <Address>268758096</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="78">
-        <Name>CHookManager::CameraYWriteHook14(void)</Name>
-        <Address>268758192</Address>
+        <Name>CHookManager::CameraYAccessHook4(void)</Name>
+        <Address>268758112</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="79">
-        <Name>CHookManager::CameraYWriteHook15(void)</Name>
-        <Address>268758208</Address>
+        <Name>CHookManager::CameraYAccessHook5(void)</Name>
+        <Address>268758144</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="80">
-        <Name>CHookManager::CameraYWriteHook16(void)</Name>
-        <Address>268758224</Address>
+        <Name>CHookManager::CameraYAccessHook6(void)</Name>
+        <Address>268758176</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="81">
-        <Name>CHookManager::CameraYWriteHook17(void)</Name>
-        <Address>268758240</Address>
+        <Name>CHookManager::CameraYAccessHook7(void)</Name>
+        <Address>268758192</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="82">
-        <Name>CHookManager::CameraYAccessHook1(void)</Name>
-        <Address>268758256</Address>
+        <Name>CHookManager::CameraYAccessHook8(void)</Name>
+        <Address>268758208</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="83">
-        <Name>CHookManager::CameraYAccessHook2(void)</Name>
-        <Address>268758272</Address>
+        <Name>CHookManager::CameraYAccessHook9(void)</Name>
+        <Address>268758224</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="84">
-        <Name>CHookManager::CameraYAccessHook3(void)</Name>
-        <Address>268758304</Address>
+        <Name>CHookManager::CameraYAccessHook10(void)</Name>
+        <Address>268758240</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="85">
-        <Name>CHookManager::CameraYAccessHook4(void)</Name>
-        <Address>268758320</Address>
+        <Name>CHookManager::CameraYAccessHook11(void)</Name>
+        <Address>268758256</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="86">
-        <Name>CHookManager::CameraYAccessHook5(void)</Name>
-        <Address>268758352</Address>
+        <Name>CHookManager::CameraYAccessHook12(void)</Name>
+        <Address>268758272</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="87">
-        <Name>CHookManager::CameraYAccessHook6(void)</Name>
-        <Address>268758384</Address>
+        <Name>CHookManager::CameraYAccessHook13(void)</Name>
+        <Address>268758288</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="88">
-        <Name>CHookManager::CameraYAccessHook7(void)</Name>
-        <Address>268758400</Address>
+        <Name>CHookManager::CameraYAccessHook14(void)</Name>
+        <Address>268758304</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="89">
-        <Name>CHookManager::CameraYAccessHook8(void)</Name>
-        <Address>268758416</Address>
+        <Name>CHookManager::CameraYAccessHook15(void)</Name>
+        <Address>268758336</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="90">
-        <Name>CHookManager::CameraYAccessHook9(void)</Name>
-        <Address>268758432</Address>
+        <Name>CHookManager::CameraYAccessHook16(void)</Name>
+        <Address>268758352</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="91">
-        <Name>CHookManager::CameraYAccessHook10(void)</Name>
-        <Address>268758448</Address>
+        <Name>CHookManager::CameraYAccessHook17(void)</Name>
+        <Address>268758384</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="92">
-        <Name>CHookManager::CameraYAccessHook11(void)</Name>
-        <Address>268758464</Address>
+        <Name>CHookManager::CameraYAccessHook18(void)</Name>
+        <Address>268758400</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="93">
-        <Name>CHookManager::CameraYAccessHook12(void)</Name>
-        <Address>268758480</Address>
+        <Name>CHookManager::CameraYAccessHook19(void)</Name>
+        <Address>268758416</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="94">
-        <Name>CHookManager::CameraYAccessHook13(void)</Name>
-        <Address>268758496</Address>
+        <Name>CHookManager::CameraYAccessHook20(void)</Name>
+        <Address>268758432</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="95">
-        <Name>CHookManager::CameraYAccessHook14(void)</Name>
-        <Address>268758512</Address>
+        <Name>CHookManager::CameraYAccessHook21(void)</Name>
+        <Address>268758448</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="96">
-        <Name>CHookManager::CameraYAccessHook15(void)</Name>
-        <Address>268758544</Address>
+        <Name>CHookManager::CameraYAccessHook22(void)</Name>
+        <Address>268758464</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="97">
-        <Name>CHookManager::CameraYAccessHook16(void)</Name>
-        <Address>268758560</Address>
+        <Name>CHookManager::CameraYAccessHook23(void)</Name>
+        <Address>268758480</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="98">
-        <Name>CHookManager::CameraYAccessHook17(void)</Name>
-        <Address>268758592</Address>
+        <Name>CHookManager::CameraYAccessHook24(void)</Name>
+        <Address>268758496</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="99">
-        <Name>CHookManager::CameraYAccessHook18(void)</Name>
-        <Address>268758608</Address>
+        <Name>CHookManager::CameraYAccessHook25(void)</Name>
+        <Address>268758512</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="100">
-        <Name>CHookManager::CameraYAccessHook19(void)</Name>
-        <Address>268758624</Address>
+        <Name>CHookManager::CameraYAccessHook26(void)</Name>
+        <Address>268758528</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="101">
-        <Name>CHookManager::CameraYAccessHook20(void)</Name>
-        <Address>268758640</Address>
+        <Name>CHookManager::CameraYAccessHook27(void)</Name>
+        <Address>268758560</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="102">
-        <Name>CHookManager::CameraYAccessHook21(void)</Name>
-        <Address>268758656</Address>
+        <Name>CHookManager::CameraYAccessHook29(void)</Name>
+        <Address>268758592</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="103">
-        <Name>CHookManager::CameraYAccessHook22(void)</Name>
-        <Address>268758672</Address>
+        <Name>CHookManager::CameraYAccessHook30(void)</Name>
+        <Address>268758608</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="104">
-        <Name>CHookManager::CameraYAccessHook23(void)</Name>
-        <Address>268758688</Address>
+        <Name>CHookManager::CameraYAccessHook31(void)</Name>
+        <Address>268758624</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="105">
-        <Name>CHookManager::CameraYAccessHook24(void)</Name>
-        <Address>268758704</Address>
+        <Name>CMem::Cpy(void *,void const *,int)</Name>
+        <Address>268768192</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="106">
-        <Name>CHookManager::CameraYAccessHook25(void)</Name>
-        <Address>268758720</Address>
+        <Name>_DllMain@12</Name>
+        <Address>268776336</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="107">
-        <Name>CHookManager::CameraYAccessHook26(void)</Name>
-        <Address>268758736</Address>
+        <Name>CRakClientHandler::Load(void)</Name>
+        <Address>268785424</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="108">
-        <Name>CHookManager::CameraYAccessHook27(void)</Name>
-        <Address>268758768</Address>
+        <Name>CRakClientHandler::CustomSend(class RakNet::BitStream *,enum PacketPriority,enum PacketReliability,char)</Name>
+        <Address>268785584</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="109">
-        <Name>CHookManager::CameraYAccessHook29(void)</Name>
-        <Address>268758800</Address>
+        <Name>CRakClientHandler::IsConnected(void)</Name>
+        <Address>268785664</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="110">
-        <Name>CHookManager::CameraYAccessHook30(void)</Name>
-        <Address>268758816</Address>
+        <Name>CRPCCallback::OnConnect(void)</Name>
+        <Address>268786192</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="111">
-        <Name>CHookManager::CameraYAccessHook31(void)</Name>
-        <Address>268758832</Address>
+        <Name>CRPCCallback::ToggleSwitchReload(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788192</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="112">
-        <Name>CDirectoryScanner::Scan(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)</Name>
-        <Address>268760288</Address>
+        <Name>CRPCCallback::SetFrameLimit(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788368</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="113">
-        <Name>CDirectoryScanner::img_scan(class std::basic_string&lt;char,struct std::char_traits&lt;char&gt;,class std::allocator&lt;char&gt; &gt;)</Name>
-        <Address>268760832</Address>
+        <Name>CRPCCallback::ToggleCrouchBug(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788480</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="114">
-        <Name>Misc::MD5_Memory(int,int)</Name>
-        <Address>268784944</Address>
+        <Name>CRPCCallback::ExitThisProcess(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788544</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="115">
-        <Name>Misc::GetCrouchBug(void)</Name>
-        <Address>268785504</Address>
+        <Name>CRPCCallback::VersionNotCompatible(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788560</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="116">
-        <Name>Misc::GetMacroLocks(void)</Name>
-        <Address>268785520</Address>
+        <Name>CRPCCallback::ToggleLiteFoot(class RakNet::BitStream &amp;,int)</Name>
+        <Address>268788592</Address>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="117">
-        <Name>CRakClientHandler::Load(void)</Name>
-        <Address>268785568</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="118">
-        <Name>CRakClientHandler::CustomSend(class RakNet::BitStream *,enum PacketPriority,enum PacketReliability,char)</Name>
-        <Address>268785728</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="119">
-        <Name>CRakClientHandler::IsConnected(void)</Name>
-        <Address>268785808</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="120">
-        <Name>CRPCCallback::Initialize(void)</Name>
-        <Address>268785856</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="121">
-        <Name>CRPCCallback::OnConnect(void)</Name>
-        <Address>268786336</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="122">
-        <Name>CRPCCallback::MD5_Memory_Region(class RakNet::BitStream &amp;,int)</Name>
-        <Address>268786448</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="123">
-        <Name>CRPCCallback::MD5_File(class RakNet::BitStream &amp;,int)</Name>
-        <Address>268787136</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="124">
-        <Name>CRPCCallback::ToggleSwitchReload(class RakNet::BitStream &amp;,int)</Name>
-        <Address>268788336</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="125">
-        <Name>CRPCCallback::SetFrameLimit(class RakNet::BitStream &amp;,int)</Name>
-        <Address>268788512</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="126">
-        <Name>CRPCCallback::ToggleCrouchBug(class RakNet::BitStream &amp;,int)</Name>
-        <Address>268788624</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="127">
-        <Name>CRPCCallback::ExitThisProcess(class RakNet::BitStream &amp;,int)</Name>
-        <Address>268788688</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="128">
-        <Name>CRPCCallback::VersionNotCompatible(class RakNet::BitStream &amp;,int)</Name>
-        <Address>268788704</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="129">
-        <Name>CRPCCallback::ToggleLiteFoot(class RakNet::BitStream &amp;,int)</Name>
-        <Address>268788736</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="130">
         <Name>CRPCCallback::ToggleMacroLimits(class RakNet::BitStream &amp;,int)</Name>
-        <Address>268789040</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="131">
-        <Name>HookedRakClientInterface::Send(char const *,int,int,int,char)</Name>
-        <Address>268789744</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="132">
-        <Name>HookedRakClientInterface::Send(class RakNet::BitStream *,int,int,char)</Name>
-        <Address>268790640</Address>
+        <Address>268788896</Address>
         <Ticker>0</Ticker>
       </Function>
     </Functions>
@@ -2045,7 +1970,7 @@ try again!</Text>
       <TKM>True</TKM>
     </LockTrialToUserLanguage>
     <CountOfExecutionLimit>
-      <Enabled>True</Enabled>
+      <Enabled>False</Enabled>
       <MaximalCountOfExecutions>4</MaximalCountOfExecutions>
       <TerminateAfterDelay>True</TerminateAfterDelay>
       <Delay>0</Delay>
@@ -2104,7 +2029,7 @@ Please, register this software to remove trial limitations!</Text>
     </CountOfDaysLimit>
     <ExpirationDateLimit>
       <Enabled>True</Enabled>
-      <ExpirationDate>2015-03-06T23:59:30.629Z</ExpirationDate>
+      <ExpirationDate>2015-03-07T23:59:30.629Z</ExpirationDate>
       <TerminateAfterDelay>True</TerminateAfterDelay>
       <Delay>0</Delay>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
@@ -2162,19 +2087,18 @@ Please, register this software to remove trial limitations!</Text>
       </Message>
     </ExpirationFromDateTillDate>
     <ExecutionTimeLimit>
-      <Enabled>False</Enabled>
-      <NumberOfMinutes>0</NumberOfMinutes>
+      <Enabled>True</Enabled>
+      <NumberOfMinutes>10</NumberOfMinutes>
       <TerminateOnExpiration>True</TerminateOnExpiration>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
-        <Title>Trial has expired!</Title>
-        <Text>Sorry, but your trial execution time has expired! 
-Application works only %TrialExecMinsTotal% minutes since start.
-Please, register this software to remove trial limitations!</Text>
-        <UseHL>False</UseHL>
-        <HLSentence>Register it now!</HLSentence>
-        <HLURL>http://www.yourcompany.com/</HLURL>
-        <Icon>0</Icon>
+        <Title>Test version</Title>
+        <Text>Sorry, but test versions of SA:MP AC only run for %TrialExecMinsTotal% minutes since start.
+Download a normal version at the below link!</Text>
+        <UseHL>True</UseHL>
+        <HLSentence>Download latest version</HLSentence>
+        <HLURL>http://www.samp-ac.com</HLURL>
+        <Icon>3</Icon>
         <AutoClose>False</AutoClose>
         <CloseDelay>0</CloseDelay>
         <Disable>False</Disable>

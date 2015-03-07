@@ -845,7 +845,7 @@ HOOK CHookManager::KeyPress()
 		pushad
 	}
 
-	if (PLAYER_POINTER == 0)
+	if (PLAYER_POINTER == 0 || VAR_CPED_PLAYER_STATE == 0)
 	{
 		__asm
 		{

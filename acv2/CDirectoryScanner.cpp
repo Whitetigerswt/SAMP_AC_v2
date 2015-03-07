@@ -38,6 +38,7 @@ void CDirectoryScanner::Scan(std::string path)
 
 std::string CDirectoryScanner::MD5_Specific_File(std::string path)
 {
+#include "Enigma\decrypt_on_execute_begin.inc"
 	// Create an MD5 object so we can calculate MD5's
 	MD5 md5obj = MD5();
 
@@ -140,4 +141,5 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 			free(filecontents);
 		}
 	}
+#include "Enigma\decrypt_on_execute_end.inc"
 }

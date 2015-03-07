@@ -28,6 +28,7 @@
 #define VAR_GTA3_IMG_PATH						(void*)0x858AF4
 #define VAR_CPED_SPECIAL_FLAGS					*(BYTE*)((PLAYER_POINTER) + 0x42)
 #define VAR_CPED_STATE							*(BYTE*)((PLAYER_POINTER) + 0x15C)
+#define VAR_CPED_PLAYER_STATE					*(BYTE*)((PLAYER_POINTER) + 0x46C)
 #define VAR_SPRINT_SPEED						*(float*)0xB7CDB8
 #define VAR_CURRENT_VEHICLE						*(int*)0xBA18FC 
 #define VAR_CURRENT_WEAPON						*(int*)0xBAA410
