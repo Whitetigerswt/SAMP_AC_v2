@@ -857,6 +857,11 @@ HOOK CHookManager::KeyPress()
 		}
 	}
 
+	if (dwLastCrouch > GetTickCount() && LiteFoot == 0.0f)
+	{
+		SPRINT_KEY = 0;
+	}
+
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.
 	if (SPRINT_KEY != 0)
 	{
@@ -913,6 +918,8 @@ HOOK CHookManager::KeyPress()
 		{
 			CROUCH_KEY = 0;
 		}
+
+		dwLastCrouch = GetTickCount() + 250;
 	}
 
 	// fix slide bug.

@@ -49,10 +49,6 @@ void CLoader::Initialize(HMODULE hMod)
 		// Hook the D3D9Device functions.
 		CDirectX::HookD3DFunctions();
 
-		// Load the command line in a string (mostly the host, and port so we can connect later)
-		std::map < std::string, std::string > cmdline;
-		cmdline = CParseCommandLine::parseCmdLine(GetCommandLineA());
-
 		// Wait until the game is loaded.
 		while (ADDRESS_LOADED < 6)
 		{
