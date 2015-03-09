@@ -189,18 +189,12 @@ void CCheats::OnFileExecuted(const char* file, const char* md5)
 void CCheats::ResendFiles()
 {
 	// Loop through the file collection
-	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
+	for (unsigned int i = 0; i < m_FilePaths.size(); i++)
 	{
-		if (i->empty()) continue;
+		// re-send the packets to the server
+		OnFileExecuted(m_FilePaths.at(i).c_str(), GetFileMD5(m_FilePaths.at(i).c_str()).c_str());
 
-		// Don't deal with annoying pointers.
-		std::string file = "";
-		file = i->c_str();
-
-		// Re-send the info to the server that the file was just executed.
-		OnFileExecuted(file.c_str(), GetFileMD5(file).c_str());
-
-		// Sleep
+		// Give the cpu a break sometimes...
 		Sleep(150);
 	}
 }

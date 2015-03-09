@@ -74,8 +74,13 @@ void HookedRakClientInterface::SendInitialInfo()
 	bsData.Write((unsigned char)PACKET_RPC);
 	bsData.Write(ON_INITIAL_INFO);
 
+	std::string hwid = "";
+
 	// Get the hardware ID
-	std::string hwid = EP_RegHardwareID();
+	if (EP_CheckupIsProtected())
+	{
+		hwid = EP_RegHardwareID();
+	}
 	BYTE digest[16];
 
 	MD5 md5 = MD5();

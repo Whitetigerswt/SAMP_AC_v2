@@ -347,7 +347,8 @@ public:
 		unsigned char buffer[1024];
 
 		if ((file = fopen(filename, "rb")) == NULL)
-			printf("%s can't be opened\n", filename);
+		{
+		}
 		else
 		{
 			while (len = fread(buffer, 1, 1024, file))

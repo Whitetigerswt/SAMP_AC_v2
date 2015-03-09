@@ -25,8 +25,6 @@ CDirectoryScanner::~CDirectoryScanner()
 
 void CDirectoryScanner::Scan(std::string path)
 {
-	// todo change "models/gta3.img" to that address that litteraly reads models/gta3.img in gta_sa.exe memory
-
 	path.append("\\");
 	char* gta3img = new char[16];
 	memcpy(gta3img, VAR_GTA3_IMG_PATH, 15);
@@ -47,9 +45,15 @@ std::string CDirectoryScanner::MD5_Specific_File(std::string path)
 
 	// Replace the $(GtaDirectory) macro with the actual GTA directory.
 	boost::replace_first(path, "$(GtaDirectory)", gtadir);
+	
+	char* CStyleMD5 = "";
 
-	// Calculate the MD5 of the file and store it in a C-style char value.
-	char* CStyleMD5 = md5obj.digestFile((char*)path.c_str());
+	// Make sure the file exists to avoid a crash if it doesn't
+	if (boost::filesystem::exists(path))
+	{
+		// Calculate the MD5 of the file and store it in a C-style char value.
+		CStyleMD5 = md5obj.digestFile((char*)path.c_str());
+	}
 
 	// Convert the result to an std::string
 	std::string md5(CStyleMD5);

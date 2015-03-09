@@ -12,7 +12,6 @@
 #include "DirectX Hooks\CMessageProxy.h"
 #include "s0beit\samp.h"
 #include "Network\CRakClientHandler.h"
-#include "CLog.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -177,7 +176,49 @@ void CHookManager::Load()
 	#include "Enigma\vm_risc_begin.inc"
 
 	DWORD dwOldProt;
+
+	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
+
+	DWORD samp = (DWORD)GetModuleHandle("samp.dll");
+	if (samp)
+	{
+		// Add address offset
+		samp = FindPattern("\x74\x04\x85\xC9\x74\x61\x57\x57\x8B\xCB", "xxxxxxxxxx");
+
+		// ^ fails in 0.3.7
+
+		// If we found an address that matches the pattern
+		if (samp)
+		{
+			NameTag_je1 = samp + 0x6;
+			NameTag_je2 = samp + 0x67;
+			NameTagHookJmpBack = NameTag_je1;
+
+			// Unprotect memory.
+			VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+			// Install hook
+			CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 6);
+		}
+
+		samp = FindPattern("\x8B\x86\xD9\x03\x00\x00\x8B\x40\x14\x85\xC0\x74", "xxxxxxxxxxxx");
+
+		if (samp != 0 && g_SAMP == NULL)
+		{
+			// Save memory so we can remove hook later.
+			sampInfoAddr = samp;
+			sampInfoRtnAddr = samp + 0x6;
+
+			// Unprotect memory so we can apply a jmp
+			VirtualProtect((void*)samp, 8, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+			// Install hook
+			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 6);
+		}
+	}
+
 	
+
 	// Prevent CLEO 4 from loading scripts
 	VirtualProtect(FUNC_Init_SCM1, 5, PAGE_EXECUTE_READWRITE, &dwOldProt);
 	memcpy(FUNC_Init_SCM1, "\xE8\x74\xCF\xF2\xFF", 5);
@@ -351,63 +392,8 @@ void CHookManager::Load()
 		// je -> jmp
 		memcpy((void*)xfire, "\xEB", 1);
 	}
-
-	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
-
-	DWORD samp = (DWORD)GetModuleHandle("samp.dll");
-	if (samp)
-	{
-		// Add address offset
-		samp = FindPattern("\x74\x04\x85\xC9\x74\x61\x57\x57\x8B\xCB", "xxxxxxxxxx");
-
-		// ^ fails in 0.3.7
-
-		// If we found an address that matches the pattern
-		if (samp)
-		{
-			NameTag_je1 = samp + 0x6;
-			NameTag_je2 = samp + 0x67;
-			NameTagHookJmpBack = NameTag_je1;
-
-			// Unprotect memory.
-			VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
-
-			// Install hook
-			CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 6);
-		}
-
-		// Find address to stSAMP struct (So we can hook RakClient later)
-		//samp = FindPattern("\x8B\x80\xD9\x03\x00\x00\x8B\x48\x08\x85\xC9", "xxxxxxxxxxx");
-
-		// 0.3z
-		// samp = FindPattern("\x8B\x86\xD9\x03\x00\x00\x8B\x40\x14\x85\xC0\x74", "xxxxxxxxxxxx");
-
-#if SAMP_VERSION == 1
-		samp = FindPattern("\xBA\xF0\x47\x56\x00\xFF\xD2\x60\x8B\x35\x40\x5B\x9A\x03\x85\xF6", "xxxxxxxxx?????xx") + 0xE;
-#else if SAMP_VERSION == 0
-		samp = FindPattern("\x8B\x86\xD9\x03\x00\x00\x8B\x40\x14\x85\xC0\x74", "xxxxxxxxxxxx");
-#endif
-
-		if (samp != 0 && g_SAMP == NULL)
-		{
-			// Save memory so we can remove hook later.
-			sampInfoAddr = samp;
-			sampInfoRtnAddr = samp + 0x6;
-
-			// Unprotect memory so we can apply a jmp
-			VirtualProtect((void*)samp, 8, PAGE_EXECUTE_READWRITE, &dwOldProt);
-
-			// Install hook
-#if SAMP_VERSION == 0
-			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 6);
-#else if SAMP_VERSION == 1
-			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 8);
-#endif
-		}
-	}
 	
 	CMem::ApplyJmp(FUNC_LiteFoot, (DWORD)LiteFootHook, 6);
-
 	CMem::ApplyJmp(FUNC_Gravity, (DWORD)GravityHook, 6);
 
 	// Make it so we can launch more than 1 gta_sa.exe (reversed addresses from http://ugbase.eu/releases-52/gtasa-multiprocess/)
@@ -417,7 +403,7 @@ void CHookManager::Load()
 
 	// Check data file integrity.
 	VerifyFilePaths();
-
+	
 	#include "Enigma\vm_risc_end.inc"
 }
 
@@ -434,11 +420,15 @@ void CHookManager::SetConnectPatches()
 	// Hack to make the game run in the background when paused
 	CMem::PutSingle < BYTE >(0x561AF6, 0x00); // mov byte ptr [0xB7CB49],01 -> mov byte ptr [0xB7CB49],00
 
-	// Hack to make the game think we never alt tabbed when we have.
-	CMem::PutSingle <BYTE>(0x748054, 0x90);
-
-	// Hack to make the game not set cursor position while alt tabbed
-	CMem::ApplyJmp(FUNC_SetCursorPos, (DWORD)SetCursorPosHook, 8);
+	if (Misc::GetGameVersion() == 1)
+	{
+		// Hack to make the game think we never alt tabbed when we have.
+		CMem::Cpy((void*)0x748054, "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90", 10);
+	} 
+	else if (Misc::GetGameVersion() == 2)
+	{
+		CMem::Cpy((void*)0x7480A4, "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90", 10);
+	}
 
 	// Hack so SA-MP continues to send packets while alt tabbed.
 	CMem::Cpy((void*)0x53EA88, "\x90\x90\x90\x90\x90\x90", 6); // nop 
@@ -446,6 +436,9 @@ void CHookManager::SetConnectPatches()
 	// If you alt tab when you're in an interior, some weird graphics bugs happen
 	// So fix that:
 	CMem::Cpy((void*)0x53EA12, "\x90\x90\x90\x90\x90", 5);
+
+	// Hack to make the game not set cursor position while alt tabbed
+	CMem::ApplyJmp(FUNC_SetCursorPos, (DWORD)SetCursorPosHook, 8);
 
 	// Hook key presses, this is an all key presses hook.
 	CMem::ApplyJmp(FUNC_KeyPress, (DWORD)KeyPress, 8);
@@ -457,9 +450,6 @@ void CHookManager::SetConnectPatches()
 	// Change a jump early in the function to jump over our sprint hook
 	VirtualProtect((void*)0x60A72B, sizeof(BYTE), PAGE_EXECUTE_READWRITE, &dwOldProt);
 	CMem::PutSingle < BYTE >(0x60A72B, 0x34);
-
-	/*// NOP the fld instruction that loads the sprinting value - This is now done inside the SprintHook function. (at the top, the asm)
-	CMem::Cpy((void*)0x60A751, "\x90\x90\x90\x90\x90\x90", 5);*/
 
 	// Disable changing of FOV. 
 	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer

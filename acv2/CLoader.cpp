@@ -29,7 +29,7 @@ void CLoader::Initialize(HMODULE hMod)
 {
 	#include "Enigma/run_once_begin.inc"
 
-	if (EP_CheckupIsEnigmaOk())
+	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
 		// Install the crash handler.
 		new CCrashHandler();
