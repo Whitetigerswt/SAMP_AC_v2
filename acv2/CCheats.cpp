@@ -133,7 +133,6 @@ void CCheats::AddFile(std::string file, std::string md5)
 
 void CCheats::OnFileExecuted(const char* file, const char* md5)
 {
-#include "Enigma\decrypt_on_execute_begin.inc"
 	// Make sure the length is greater than 3 characters.
 	if (strlen(file) > 3) 
 	{
@@ -182,7 +181,6 @@ void CCheats::OnFileExecuted(const char* file, const char* md5)
 		// Send the RPC to the server.
 		CRakClientHandler::CustomSend(&bitStream, LOW_PRIORITY, RELIABLE);
 	}
-#include "Enigma\decrypt_on_execute_end.inc"
 	return;
 }
 

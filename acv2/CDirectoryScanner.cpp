@@ -64,8 +64,6 @@ std::string CDirectoryScanner::MD5_Specific_File(std::string path)
 
 void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 {
-
-#include "Enigma\decrypt_on_execute_begin.inc"
 	// Open IMG archive file.
 	IMG img = IMG();
 	img.OpenArchive(path_to_gta3_img.c_str());
@@ -147,5 +145,4 @@ void CDirectoryScanner::img_scan(std::string path_to_gta3_img)
 			free(filecontents);
 		}
 	}
-#include "Enigma\decrypt_on_execute_end.inc"
 }

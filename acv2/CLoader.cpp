@@ -27,8 +27,6 @@ HMODULE CLoader::ThishMod = NULL;
 
 void CLoader::Initialize(HMODULE hMod)
 {
-	#include "Enigma/run_once_begin.inc"
-
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
 		// Install the crash handler.
@@ -75,8 +73,6 @@ void CLoader::Initialize(HMODULE hMod)
 		// Setup memory one more time.
 		CHookManager::Load();
 	}
-
-	#include "Enigma\run_once_end.inc"
 
 	while (true)
 	{

@@ -173,7 +173,6 @@ DWORD NameTagHookJmpBack;
 
 void CHookManager::Load()
 {
-	#include "Enigma\vm_risc_begin.inc"
 
 	DWORD dwOldProt;
 
@@ -216,8 +215,6 @@ void CHookManager::Load()
 			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 6);
 		}
 	}
-
-	
 
 	// Prevent CLEO 4 from loading scripts
 	VirtualProtect(FUNC_Init_SCM1, 5, PAGE_EXECUTE_READWRITE, &dwOldProt);
@@ -403,14 +400,10 @@ void CHookManager::Load()
 
 	// Check data file integrity.
 	VerifyFilePaths();
-	
-	#include "Enigma\vm_risc_end.inc"
 }
 
 void CHookManager::SetConnectPatches()
 {
-	#include "Enigma\vm_risc_begin.inc"
-
 	// Detect when a player is pausing.
 	CMem::ApplyJmp(FUNC_GamePaused, (DWORD)OnPause, 6);
 
@@ -469,8 +462,6 @@ void CHookManager::SetConnectPatches()
 
 	// Fix some slide issues with melee weps
 	CMem::ApplyJmp(FUNC_SlideFix, (DWORD)SlideFix, 6);
-
-	#include "Enigma\vm_risc_end.inc"
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
