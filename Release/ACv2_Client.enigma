@@ -1118,7 +1118,7 @@ try again!</Text>
     </Common>
     <Filter/>
     <CommandLine/>
-    <Functions Count="143">
+    <Functions Count="142">
       <Function ID="0">
         <Name>CRPC::Process(unsigned short,class RakNet::BitStream &amp;,int)</Name>
         <Address>268733776</Address>
@@ -1710,126 +1710,121 @@ try again!</Text>
         <Ticker>0</Ticker>
       </Function>
       <Function ID="118">
-        <Name>CDirectX::HookD3DFunctions(void)</Name>
-        <Address>268765936</Address>
-        <Ticker>0</Ticker>
-      </Function>
-      <Function ID="119">
         <Name>CInjectedLibraries::Scan(void)</Name>
         <Address>268766432</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="120">
+      <Function ID="119">
         <Name>CLoader::Initialize(struct HINSTANCE__ *)</Name>
         <Address>268767072</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="121">
+      <Function ID="120">
         <Name>CMem::Cpy(void *,void const *,int)</Name>
         <Address>268769760</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="122">
+      <Function ID="121">
         <Name>CProcessList::Scan(void)</Name>
         <Address>268770704</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="123">
+      <Function ID="122">
         <Name>CMessageProxy::Process(struct HWND__ *,unsigned int,unsigned int,long)</Name>
         <Address>268775648</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="124">
+      <Function ID="123">
         <Name>_DllMain@12</Name>
         <Address>268776384</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="125">
+      <Function ID="124">
         <Name>Misc::MD5_Memory(int,int)</Name>
         <Address>268784848</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="126">
+      <Function ID="125">
         <Name>Misc::GetGTADirectory(void)</Name>
         <Address>268785040</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="127">
+      <Function ID="126">
         <Name>Misc::GetCrouchBug(void)</Name>
         <Address>268785408</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="128">
+      <Function ID="127">
         <Name>Misc::GetMacroLocks(void)</Name>
         <Address>268785424</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="129">
+      <Function ID="128">
         <Name>CRakClientHandler::Load(void)</Name>
         <Address>268785472</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="130">
+      <Function ID="129">
         <Name>CRakClientHandler::CustomSend(class RakNet::BitStream *,enum PacketPriority,enum PacketReliability,char)</Name>
         <Address>268785632</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="131">
+      <Function ID="130">
         <Name>CRakClientHandler::IsConnected(void)</Name>
         <Address>268785712</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="132">
+      <Function ID="131">
         <Name>CRPCCallback::OnConnect(void)</Name>
         <Address>268786240</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="133">
+      <Function ID="132">
         <Name>CRPCCallback::MD5_Memory_Region(class RakNet::BitStream &amp;,int)</Name>
         <Address>268786352</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="134">
+      <Function ID="133">
         <Name>CRPCCallback::MD5_File(class RakNet::BitStream &amp;,int)</Name>
         <Address>268787040</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="135">
+      <Function ID="134">
         <Name>CRPCCallback::ToggleSwitchReload(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788240</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="136">
+      <Function ID="135">
         <Name>CRPCCallback::SetFrameLimit(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788416</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="137">
+      <Function ID="136">
         <Name>CRPCCallback::ToggleCrouchBug(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788528</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="138">
+      <Function ID="137">
         <Name>CRPCCallback::ExitThisProcess(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788592</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="139">
+      <Function ID="138">
         <Name>CRPCCallback::VersionNotCompatible(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788608</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="140">
+      <Function ID="139">
         <Name>CRPCCallback::ToggleLiteFoot(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788640</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="141">
+      <Function ID="140">
         <Name>CRPCCallback::ToggleMacroLimits(class RakNet::BitStream &amp;,int)</Name>
         <Address>268788944</Address>
         <Ticker>0</Ticker>
       </Function>
-      <Function ID="142">
+      <Function ID="141">
         <Name>HookedRakClientInterface::SendInitialInfo(void)</Name>
         <Address>268789664</Address>
         <Ticker>0</Ticker>
@@ -2141,7 +2136,7 @@ Please, register this software to remove trial limitations!</Text>
     </CountOfDaysLimit>
     <ExpirationDateLimit>
       <Enabled>True</Enabled>
-      <ExpirationDate>2015-03-10T23:59:30.629Z</ExpirationDate>
+      <ExpirationDate>2015-03-12T23:59:30.629Z</ExpirationDate>
       <TerminateAfterDelay>True</TerminateAfterDelay>
       <Delay>0</Delay>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
@@ -2200,7 +2195,7 @@ Please, register this software to remove trial limitations!</Text>
     </ExpirationFromDateTillDate>
     <ExecutionTimeLimit>
       <Enabled>True</Enabled>
-      <NumberOfMinutes>10</NumberOfMinutes>
+      <NumberOfMinutes>5</NumberOfMinutes>
       <TerminateOnExpiration>True</TerminateOnExpiration>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
