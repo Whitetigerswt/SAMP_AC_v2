@@ -2135,7 +2135,7 @@ Please, register this software to remove trial limitations!</Text>
       </Message>
     </CountOfDaysLimit>
     <ExpirationDateLimit>
-      <Enabled>True</Enabled>
+      <Enabled>False</Enabled>
       <ExpirationDate>2015-03-12T23:59:30.629Z</ExpirationDate>
       <TerminateAfterDelay>True</TerminateAfterDelay>
       <Delay>0</Delay>
@@ -2194,7 +2194,7 @@ Please, register this software to remove trial limitations!</Text>
       </Message>
     </ExpirationFromDateTillDate>
     <ExecutionTimeLimit>
-      <Enabled>True</Enabled>
+      <Enabled>False</Enabled>
       <NumberOfMinutes>5</NumberOfMinutes>
       <TerminateOnExpiration>True</TerminateOnExpiration>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
@@ -2249,7 +2249,7 @@ Please register to remove this nag-screen!
       </Message>
     </Reminder>
     <TimeControl>
-      <TerminateOnClockReversing>True</TerminateOnClockReversing>
+      <TerminateOnClockReversing>False</TerminateOnClockReversing>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Clock reversing</Title>
