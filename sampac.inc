@@ -317,4 +317,4 @@ stock TogglePlayerCrouchBug(playerid, bool:toggle)
 	SetPlayerCrouchBug(playerid, toggle ? 9999 : 1);
 }
 
-#define HARDWAREID_LEN 128
+#define HARDWAREID_LEN 32
