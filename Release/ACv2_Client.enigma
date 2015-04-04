@@ -622,7 +622,7 @@ Please reinstall application!</Text>
       <Files Count="0"/>
     </ExternalFiles>
     <ExecutedProcesses>
-      <Enabled>True</Enabled>
+      <Enabled>False</Enabled>
       <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
       <Message>
         <Title>Warning</Title>
