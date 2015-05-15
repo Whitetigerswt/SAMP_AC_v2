@@ -393,7 +393,7 @@ PlayerIndex HookedRakClientInterface::GetPlayerIndex( void )
 	return client->GetRakClientInterface()->GetPlayerIndex();
 }
 
-void HookedRakClientInterface::Pad( void )
+bool HookedRakClientInterface::RPC_(int* uniqueID, RakNet::BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp, NetworkID networkID)
 {
-
+	return client->GetRakClientInterface()->RPC_(uniqueID, bitStream, priority, reliability, orderingChannel, shiftTimestamp, networkID);
 }

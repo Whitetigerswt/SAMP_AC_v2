@@ -30,7 +30,7 @@ public:
 	virtual void UnregisterAsRemoteProcedureCall( int* uniqueID );
 	virtual bool RPC( int* uniqueID, const char *data, unsigned int bitLength, int priority, int reliability, char orderingChannel, bool shiftTimestamp );
 	virtual bool RPC( int* uniqueID, RakNet::BitStream *bitStream, int priority, int reliability, char orderingChannel, bool shiftTimestamp );
-	virtual void Pad( void );
+	virtual bool RPC_(int* uniqueID, RakNet::BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp, NetworkID networkID);
 	virtual void SetTrackFrequencyTable( bool b );
 	virtual bool GetSendFrequencyTable( unsigned int outputFrequencyTable[ 256 ] );
 	virtual float GetCompressionRatio( void ) const;

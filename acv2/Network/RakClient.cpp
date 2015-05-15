@@ -74,7 +74,7 @@ void  RakClient::SendSCMEvent( int vehicleID, int eventId, int param1, int param
 	bsScmEvent.Write ( param2 );
 	bsScmEvent.Write ( eventId );
 
-	RPC( RPC_ScmEvent, &bsScmEvent );
+	RPC(RPC_SCMEvent, &bsScmEvent);
 }
 void RakClient::SendSpawn( void )
 {

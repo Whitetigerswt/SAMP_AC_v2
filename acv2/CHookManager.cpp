@@ -12,6 +12,7 @@
 #include "DirectX Hooks\CMessageProxy.h"
 #include "s0beit\samp.h"
 #include "Network\CRakClientHandler.h"
+#include "CLog.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -200,7 +201,10 @@ void CHookManager::Load()
 			CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 6);
 		}
 
-		samp = FindPattern("\x8B\x86\xD9\x03\x00\x00\x8B\x40\x14\x85\xC0\x74", "xxxxxxxxxxxx");
+		samp = FindPattern("\x0F\xBE\x08\x83\xF9\x53", "xxxxxx");
+
+		CLog log = CLog("test.txt");
+		log.Write("addr: 0x%x", samp);
 
 		if (samp != 0 && g_SAMP == NULL)
 		{
@@ -209,7 +213,7 @@ void CHookManager::Load()
 			sampInfoRtnAddr = samp + 0x6;
 
 			// Unprotect memory so we can apply a jmp
-			VirtualProtect((void*)samp, 8, PAGE_EXECUTE_READWRITE, &dwOldProt);
+			VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
 
 			// Install hook
 			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 6);
@@ -657,44 +661,25 @@ void LoadRakClient()
 	boost::thread thread(&CRakClientHandler::Load);
 }
 
-#if SAMP_VERSION == 1
 HOOK CHookManager::GetSampInfo()
 {
 	__asm
 	{
-		test esi,esi
-		je do_nothing
+		movsx ecx, byte ptr[eax]
+		cmp ecx, 53
 
-		mov g_SAMP,esi
-		pushad
-		call LoadRakClient
-
-		popad
-		jmp [sampInfoRtnAddr]
-
-		do_nothing:
-			popad
-			ret
-	}
-}
-#else if SAMP_VERSION == 0
-HOOK CHookManager::GetSampInfo()
-{
-	__asm
-	{
-		mov g_SAMP, esi
+		mov g_SAMP, eax
 		pushad
 		call LoadRakClient
 	}
 	// remove hook now that we got the address.
-	CMem::Cpy((void*)sampInfoAddr, "\x8B\x86\xD9\x03\x00\x00", 6); // mov eax,[esi+000003D9]
+	CMem::Cpy((void*)sampInfoAddr, "\x0F\xBE\x08\x83\xF9\x53", 6); // mov eax,[esi+000003D9]
 	__asm
 	{
 		popad
 		jmp[sampInfoAddr]
 	}
 }
-#endif
 
 HOOK CHookManager::GravityHook()
 {
