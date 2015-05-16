@@ -195,13 +195,13 @@ void CHookManager::Load()
 			NameTagHookJmpBack = NameTag_je1;
 
 			// Unprotect memory.
-			VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+			VirtualProtect((void*)samp, 12, PAGE_EXECUTE_READWRITE, &dwOldProt);
 
 			// Install hook
-			CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 6);
+			CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 12);
 		}
 
-		samp = FindPattern("\x0F\xBE\x08\x83\xF9\x53", "xxxxxx");
+		samp = FindPattern("\xC7\x45\xFC\x00\x00\x00\x00\x89\x45\xE4\x8B\xC8", "xxxxxxxxxxxx");
 
 		CLog log = CLog("test.txt");
 		log.Write("addr: 0x%x", samp);
@@ -665,15 +665,16 @@ HOOK CHookManager::GetSampInfo()
 {
 	__asm
 	{
-		movsx ecx, byte ptr[eax]
-		cmp ecx, 53
+		mov[ebp - 04h], 00000000h
+		mov[ebp - 1Ch], eax
+		mov ecx, eax
 
 		mov g_SAMP, eax
 		pushad
 		call LoadRakClient
 	}
 	// remove hook now that we got the address.
-	CMem::Cpy((void*)sampInfoAddr, "\x0F\xBE\x08\x83\xF9\x53", 6); // mov eax,[esi+000003D9]
+	CMem::Cpy((void*)sampInfoAddr, "\xC7\x45\xFC\x00\x00\x00\x00\x89\x45\xE4\x8B\xC8", 12);
 	__asm
 	{
 		popad
