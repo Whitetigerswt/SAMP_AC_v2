@@ -7,6 +7,7 @@
 #include "../s0beit/samp.h"
 #include "../../Shared/Network/Network.h"
 #include "../CLoader.h"
+#include "../CLog.h"
 
 #include "CRPCCallback.h"
 #include "CRakClientHandler.h"
@@ -19,14 +20,22 @@ bool CRakClientHandler::everConnected = false;
 
 void CRakClientHandler::Load()
 {
+
+	CLog log = CLog("loader.txt");
+	log.Write("Called load func");
+
 	// get samp struct
 	samp = stGetSampInfo();
+
+	log.Write("0x%x", samp);
 
 	// Make sure rak client interface is initialized
 	while (samp->pRakClientInterface == NULL)
 	{
 		Sleep(5);
 	}
+
+	log.Write("prakclient interface isn't null");
 
 	// Get the raknet interfaces.
 	client = new RakClient(samp->pRakClientInterface);

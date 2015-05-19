@@ -105,8 +105,8 @@ bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority
 {
 	BYTE packetId;
 	bitStream->Read(packetId);
-	/*CLog log = CLog("packets_sent.txt");
-	log.Write("< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed());*/
+	CLog log = CLog("packets_sent.txt");
+	log.Write("< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed());
 
 	if (packetId == ID_AUTH_KEY)
 	{

@@ -201,7 +201,7 @@ void CHookManager::Load()
 			CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 12);
 		}
 
-		samp = FindPattern("\xC7\x45\xFC\x00\x00\x00\x00\x89\x45\xE4\x8B\xC8", "xxxxxxxxxxxx");
+		samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx");
 
 		CLog log = CLog("test.txt");
 		log.Write("addr: 0x%x", samp);
@@ -210,13 +210,13 @@ void CHookManager::Load()
 		{
 			// Save memory so we can remove hook later.
 			sampInfoAddr = samp;
-			sampInfoRtnAddr = samp + 0x6;
+			sampInfoRtnAddr = samp + 0x11;
 
 			// Unprotect memory so we can apply a jmp
-			VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+			VirtualProtect((void*)samp, 11, PAGE_EXECUTE_READWRITE, &dwOldProt);
 
 			// Install hook
-			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 6);
+			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 11);
 		}
 	}
 
@@ -665,16 +665,17 @@ HOOK CHookManager::GetSampInfo()
 {
 	__asm
 	{
-		mov[ebp - 04h], 00000000h
-		mov[ebp - 1Ch], eax
-		mov ecx, eax
+		mov eax, [esi + 000003CDh]
+		mov eax, [eax + 18h]
+		test eax, eax
 
-		mov g_SAMP, eax
+
+		mov g_SAMP, esi
 		pushad
 		call LoadRakClient
 	}
 	// remove hook now that we got the address.
-	CMem::Cpy((void*)sampInfoAddr, "\xC7\x45\xFC\x00\x00\x00\x00\x89\x45\xE4\x8B\xC8", 12);
+	CMem::Cpy((void*)sampInfoAddr, "\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", 11);
 	__asm
 	{
 		popad

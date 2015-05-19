@@ -1,29 +1,27 @@
 /*
 
 PROJECT:		mod_sa
-			LICENSE : See LICENSE in the top level directory
-				  COPYRIGHT : Copyright we_sux, FYP
+LICENSE:		See LICENSE in the top level directory
+COPYRIGHT:		Copyright we_sux, BlastHack
 
-							  mod_sa is available from http ://code.google.com/p/m0d-s0beit-sa/
+mod_sa is available from https://github.com/BlastHackNet/mod_s0beit_sa/
 
-mod_sa is free software : you can redistribute it and / or modify
+mod_sa is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 mod_sa is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with mod_sa.If not, see <http://www.gnu.org/licenses/>.
+along with mod_sa.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include "stdtypes.h"
 #include <d3dx9.h>
-#include <Windows.h>
 
 #define SAMP_CHAT_INFO_OFFSET						0x21A0E4
 #define SAMP_CHAT_INPUT_INFO_OFFSET					0x21A0E8
@@ -208,7 +206,7 @@ struct stServerPresets
 	float	fGravity;
 	uint8_t byteDisableInteriorEnterExits;
 	uint32_t ulVehicleFriendlyFire;
-	uint8_t byteUnk2[3];
+	uint8_t byteUnk2[4];
 	int		iClassesAvailable;
 	float	fNameTagsDistance;
 	uint8_t byteUnk3;
@@ -492,6 +490,7 @@ struct stBulletData
 	float		fOrigin[3];
 	float		fTarget[3];
 	float		fCenter[3];
+	uint8_t		byteWeaponID;
 };
 
 struct stSpectatorData
@@ -605,14 +604,15 @@ struct stRemotePlayerData
 	short					sShowNameTag;
 	int						iHasJetPack;
 	uint8_t					byteSpecialAction;
-	struct stAimData		aimData;
-	struct stInCarData		inCarData;
+	uint32_t				ulUnk4[3];
 	struct stOnFootData		onFootData;
+	struct stInCarData		inCarData;
 	struct stTrailerData	trailerData;
 	struct stPassengerData	passengerData;
-	uint32_t				ulUnk4[4];
-	float					fActorHealth;
+	struct stAimData		aimData;
 	float					fActorArmor;
+	float					fActorHealth;
+	uint32_t				ulUnk10;
 	uint8_t					byteUnk9;
 	uint32_t				dwTick;
 	uint32_t				dwLastStreamedInTick;	// is 0 when currently streamed in
@@ -684,7 +684,7 @@ struct stVehiclePool
 	int						iInitiated;
 };
 
-struct stSAMPVehicle : public stSAMPEntity < vehicle_info >
+struct stSAMPVehicle
 {
 	uint32_t			bUnk0;
 	struct vehicle_info *pGTA_Vehicle;
@@ -780,7 +780,9 @@ struct stChatInfo
 	uint8_t				bTimestamps;
 	uint32_t			ulUnk0;
 	char				logFilePathChatLog[MAX_PATH + 1];
-	void				*pChatbox_unknown[3];	// probably classes that handle fonts/sprites
+	void				*pGameUI; // CDXUTDialog
+	void				*pEditBackground; // CDXUTEditBox
+	void				*pDXUTScrollBar;
 	D3DCOLOR			clTextColor;
 	D3DCOLOR			clInfoColor;
 	D3DCOLOR			clDebugColor;
@@ -912,6 +914,7 @@ struct stStreamedOutPlayerInfo
 	float	fPlayerPos[SAMP_MAX_PLAYERS][3];
 };
 #pragma pack(pop)
+
 
 //////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// SUPPORT VARIABLES //////////////////////////////////
