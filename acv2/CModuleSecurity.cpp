@@ -4,6 +4,7 @@
 #include <TlHelp32.h>
 #include <winternl.h>
 #include <Windows.h>
+#include "CLog.h"
 
 LoadLibrary_t CModuleSecurity::m_pLoadLibrary = NULL;
 std::vector<std::string> CModuleSecurity::m_AllowedModules;
@@ -32,6 +33,18 @@ void CModuleSecurity::HookLoadLibrary()
 HMODULE WINAPI CModuleSecurity::HOOK_LoadLibrary(LPCTSTR lpFileName)
 {
 	AddAllowedModule(lpFileName);
+
+	// Prevent customSAA2 (kind of a bad fix since they can just rename the file to d3d9.dll...)
+	if (!strcmp(lpFileName, "DSOUND.dll"))
+	{
+		// Get the windows folder.
+		TCHAR windir[MAX_PATH];
+		GetWindowsDirectory(windir, MAX_PATH);
+
+		// Get the original DSOUND.dll location.
+		sprintf_s(windir, sizeof(windir), "%s\\system32\\DSOUND.DLL", windir);
+		lpFileName = windir;
+	}
 
 	return m_pLoadLibrary(lpFileName);
 }
