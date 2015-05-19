@@ -98,6 +98,12 @@ private:
 
 	static void SlideFix();
 
+	// PURPOSE: Prevent modloader from loading.
+	static void WinMainHook();
+
+	// PURPOSE: Prevent moadloader from loading.
+	static void rIdleHook();
+
 	static float CameraXPos;
 	static float CameraYPos;
 

@@ -157,6 +157,9 @@ static DWORD SprintHookJmpBack = 0x60A760;
 static DWORD SetCursorPosHookJmpBack = 0x745433;
 static DWORD SlideFixJmpBack = 0x686C39;
 
+static DWORD WinMainHookJmpBack = 0x8246F1;
+static DWORD rIdleHookJmpBack = 0x53ECC2;
+
 static DWORD sampInfoAddr = NULL;
 static DWORD sampInfoRtnAddr = NULL;
 
@@ -397,6 +400,10 @@ void CHookManager::Load()
 	// This removes the necessity for samp_elevator.exe
 
 	CMem::Cpy((void*)0x406946, "\x00\x00\x00\x00", 4);
+
+	// Prevent modloader from working
+	CMem::ApplyJmp(FUNC_WinMain, (DWORD)WinMainHook, 5);
+	CMem::ApplyJmp(FUNC_rIdle, (DWORD)rIdleHook, 5);
 
 	// Check data file integrity.
 	VerifyFilePaths();
@@ -742,6 +749,33 @@ HOOK CHookManager::MarkersHook()
 	}
 }
 
+HOOK CHookManager::WinMainHook()
+{
+	__asm
+	{
+		push esi
+		push esi
+		call edi
+		push eax
+		mov eax,00748710h
+		call eax
+
+		jmp[WinMainHookJmpBack]
+	}
+}
+
+HOOK CHookManager::rIdleHook()
+{
+	__asm
+	{
+		mov edx, [esp + 08h]
+		push edx
+		mov eax, 0053E920h
+		call eax
+
+		jmp[rIdleHookJmpBack]
+	}
+}
 HOOK CHookManager::SetCursorPosHook()
 {
 
