@@ -18,7 +18,7 @@ static SubHook GetPacketID_hook;
 
 bool bHooksInstalled = false;
 
-AMX_NATIVE GetGravity = NULL;
+AMX_NATIVE GetGravityFunc = NULL;
 
 unsigned long FUNC_GetPacketID = NULL;
 
@@ -54,7 +54,7 @@ cell AMX_NATIVE_CALL SecretProc(AMX* pAmx, cell* pParams)
 	}
 
 	// If we couldn't find the function, or no parameters were sent, call GetGravity as usual.
-	return GetGravity(pAmx, pParams);
+	return GetGravityFunc(pAmx, pParams);
 }
 
 int AMXAPI HOOK_amx_Register(AMX *amx, AMX_NATIVE_INFO *nativelist, int number)
@@ -71,7 +71,7 @@ int AMXAPI HOOK_amx_Register(AMX *amx, AMX_NATIVE_INFO *nativelist, int number)
 		{
 			// Hook it
 			bHooksInstalled = true;
-			GetGravity = nativelist[i].func;
+			GetGravityFunc = nativelist[i].func;
 			nativelist[i].func = SecretProc;
 			break;
 		}

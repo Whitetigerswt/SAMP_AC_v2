@@ -12,7 +12,6 @@
 #include "DirectX Hooks\CMessageProxy.h"
 #include "s0beit\samp.h"
 #include "Network\CRakClientHandler.h"
-#include "CLog.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -202,9 +201,6 @@ void CHookManager::Load()
 		}
 
 		samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx");
-
-		CLog log = CLog("test.txt");
-		log.Write("addr: 0x%x", samp);
 
 		if (samp != 0 && g_SAMP == NULL)
 		{

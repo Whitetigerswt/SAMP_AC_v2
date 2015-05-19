@@ -196,6 +196,7 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("initial info called!");
 	CAntiCheatHandler::Init(iExtra);
 
 	// Create a big variable to hold hardware ID.

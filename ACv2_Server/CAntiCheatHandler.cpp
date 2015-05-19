@@ -21,5 +21,5 @@ void CAntiCheatHandler::Remove(unsigned int playerid)
 
 bool CAntiCheatHandler::IsConnected(unsigned int playerid)
 {
-	return players.count(playerid) > 0;
+	return players[playerid] != NULL;
 }
