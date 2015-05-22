@@ -81,7 +81,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_55.lib;libboost_filesystem-vc120-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\enigma_ide.lib;$(ProjectDir)libs\d3d9.lib;$(ProjectDir)libs\d3dx9.lib;$(ProjectDir)libs\CrashRpt1402.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_55.lib;libboost_filesystem-vc120-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\enigma_ide.lib;$(ProjectDir)libs\d3d9.lib;$(ProjectDir)libs\d3dx9.lib;$(SolutionDir)Shared\libs\cppnetlib-uri.lib;$(SolutionDir)Shared\libs\cppnetlib-client-connections.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -100,7 +100,6 @@
     <ClCompile Include="..\Shared\Network\BitStream.cpp" />
     <ClCompile Include="..\Shared\Network\CRPC.cpp" />
     <ClCompile Include="CCheats.cpp" />
-    <ClCompile Include="CCrashHandler.cpp" />
     <ClCompile Include="CFunctionHooks.cpp" />
     <ClCompile Include="CHookManager.cpp" />
     <ClCompile Include="CClientUpdater.cpp" />
@@ -266,7 +265,6 @@
     <ClInclude Include="..\Shared\Network\Network.h" />
     <ClInclude Include="Addresses.h" />
     <ClInclude Include="CCheats.h" />
-    <ClInclude Include="CCrashHandler.h" />
     <ClInclude Include="CFunctionHooks.h" />
     <ClInclude Include="CHookManager.h" />
     <ClInclude Include="CClientUpdater.h" />
@@ -280,8 +278,6 @@
     <ClInclude Include="CParseCommandLine.h" />
     <ClInclude Include="CPatch.h" />
     <ClInclude Include="CProcessList.h" />
-    <ClInclude Include="CrashRpt.h" />
-    <ClInclude Include="CrashRptProbe.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="Detours\detours.h" />
     <ClInclude Include="DirectX Hooks\CD3D9DeviceProxy.h" />

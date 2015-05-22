@@ -40,9 +40,6 @@
     <Filter Include="Source Files\Shared\MD5 Info">
       <UniqueIdentifier>{f79f29ea-7cad-4d8c-91eb-871af6b5a879}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\CrashRpt">
-      <UniqueIdentifier>{45930d95-395b-4ea5-878b-73067833ce6a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\s0beit">
       <UniqueIdentifier>{46b323ee-f600-4dc5-b493-d63879e64390}</UniqueIdentifier>
     </Filter>
@@ -109,9 +106,6 @@
       <Filter>Source Files\Shared\MD5 Info</Filter>
     </ClCompile>
     <ClCompile Include="CMem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CCrashHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CModuleSecurity.cpp">
@@ -820,15 +814,6 @@
     </ClInclude>
     <ClInclude Include="VersionHelpers.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CCrashHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CrashRpt.h">
-      <Filter>Header Files\CrashRpt</Filter>
-    </ClInclude>
-    <ClInclude Include="CrashRptProbe.h">
-      <Filter>Header Files\CrashRpt</Filter>
     </ClInclude>
     <ClInclude Include="CModuleSecurity.h">
       <Filter>Header Files</Filter>

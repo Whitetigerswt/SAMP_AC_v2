@@ -94,10 +94,6 @@ Section "Main Components" SecMain
   SetOutPath "$INSTDIR"
   
   File "ACv2_Client.asi"
-  File "crashrpt_lang.ini"
-  File "CrashRpt1402.dll"
-  File "dbghelp.dll"
-  File "CrashSender1402.exe"
   
   Delete "$INSTDIR\d3d9.dll"
   
@@ -147,10 +143,6 @@ SectionEnd
 Section "Uninstall"
 
   Delete "$INSTDIR\ACv2_Client.asi"
-  Delete "$INSTDIR\crashrpt_lang.ini"
-  Delete "$INSTDIR\CrashRpt1402.dll"
-  Delete "$INSTDIR\dbghelp.dll"
-  Delete "$INSTDIR\CrashSender1402.exe"
 
   Delete "$INSTDIR\Uninstall_ac.exe"
   

@@ -8,7 +8,6 @@
 #include "CHookManager.h"
 #include "Enigma/enigma_ide.h"
 #include "../Shared/Network/CRPC.h"
-#include "CCrashHandler.h"
 #include "Detours\detours.h"
 #include "CModuleSecurity.h"
 #include "Network\CRakClientHandler.h"
@@ -29,9 +28,6 @@ void CLoader::Initialize(HMODULE hMod)
 {
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
-		// Install the crash handler.
-		new CCrashHandler();
-
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
 		LoadLibrary("samp.dll");
 
