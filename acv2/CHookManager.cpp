@@ -176,7 +176,6 @@ DWORD NameTagHookJmpBack;
 
 void CHookManager::Load()
 {
-
 	DWORD dwOldProt;
 
 	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
@@ -185,23 +184,15 @@ void CHookManager::Load()
 	if (samp)
 	{
 		// Add address offset
-		samp = FindPattern("\x74\x04\x85\xC9\x74\x61\x57\x57\x8B\xCB", "xxxxxxxxxx");
+		samp += 0x6FCF9;
 
-		// ^ fails in 0.3.7
+		NameTagHookJmpBack = samp + 0x7;
 
-		// If we found an address that matches the pattern
-		if (samp)
-		{
-			NameTag_je1 = samp + 0x6;
-			NameTag_je2 = samp + 0x67;
-			NameTagHookJmpBack = NameTag_je1;
+		// Unprotect memory.
+		VirtualProtect((void*)samp, 7, PAGE_EXECUTE_READWRITE, &dwOldProt);
 
-			// Unprotect memory.
-			VirtualProtect((void*)samp, 12, PAGE_EXECUTE_READWRITE, &dwOldProt);
-
-			// Install hook
-			CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 12);
-		}
+		// Install hook
+		CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 7);
 
 		samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx");
 
@@ -627,17 +618,10 @@ HOOK CHookManager::NameTagHook()
 {
 	__asm
 	{
-		je jmp_if_equal
-		test ecx,ecx
-		je jmp_if_equal_2
-
-		jmp_if_equal:
-			jmp NameTag_je1
-
-		jmp_if_equal_2:
-			jmp NameTag_je2
-
-		jmp NameTagHookJmpBack
+		mov ecx, edi
+		mov eax, 03FBA7D0h
+		call eax
+		jmp[NameTagHookJmpBack]
 	}
 }
 #pragma warning(default:4731)
