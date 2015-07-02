@@ -176,6 +176,7 @@ DWORD NameTagHookJmpBack;
 
 void CHookManager::Load()
 {
+
 	DWORD dwOldProt;
 
 	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
@@ -184,9 +185,9 @@ void CHookManager::Load()
 	if (samp)
 	{
 		// Add address offset
-		samp += 0x6FCF9;
+		samp += 0x6FCF1;
 
-		NameTagHookJmpBack = samp + 0x7;
+		NameTagHookJmpBack = samp + 0x8;
 
 		// Unprotect memory.
 		VirtualProtect((void*)samp, 7, PAGE_EXECUTE_READWRITE, &dwOldProt);
@@ -618,9 +619,15 @@ HOOK CHookManager::NameTagHook()
 {
 	__asm
 	{
-		mov ecx, edi
-		mov eax, 03FBA7D0h
-		call eax
+		test eax, eax
+		mov eax, 03C0FE6Ah
+		je je_label
+		jmp jmp_label
+
+	je_label:
+			jmp eax
+
+	jmp_label:
 		jmp[NameTagHookJmpBack]
 	}
 }
