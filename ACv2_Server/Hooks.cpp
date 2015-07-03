@@ -104,6 +104,11 @@ static BYTE HOOK_GetPacketID(Packet *p)
 
 	BYTE packetId = GetPacketID(p);
 
+	// Check for invalid packets
+	if (packetId == 0xFF) {
+		return 0xFF;
+	}
+
 	// If packetId is our custom RPC sending function
 	if (packetId == PACKET_RPC)
 	{
