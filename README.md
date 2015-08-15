@@ -12,26 +12,22 @@ Compiling
 Windows
 ----------
 ```
-1) Download Visual Studio 2013 Community Edition - http://www.visualstudio.com/products/visual-studio-community-vs (or any edition of VS2013 works)
-2) Get all the updates for VS2013, through update 4 - http://support.microsoft.com/kb/2994375 (One of the updates should include the v120_xp platform toolset, which allows us to compile for windows XP on vs2013)
-3) Open acv2.sln with Visual Studio 2013
+1) Download Visual Studio 2015 Community Edition - https://www.visualstudio.com/en-us/visual-studio-homepage-vs.aspx
+3) Open acv2.sln with Visual Studio 2015 (Make sure you installed the VC++ 2015 tools with XP support)
+4) Switch to release mode
 4) Compile
 ```
 
 Client Specific
 ----------
-* ~~Pirate~~ Acquire VMProtect Ultimate v2.12.3.
-* Move ACv2_Client.map from "acv2" to "Release".
-* Open ACv2_Client.asi - Max FPS.vmp with VMProtect.
-* Press the green play button.
-* Rename ACv2_Client.vmp.asi to "ACv2_Client.asi"
+* Ask Whitetiger to run the Enigma protector on the compiled file (Or ask for the key for the enigma protector v5.00 - http://www.enigmaprotector.com/ - Yes I did purchase this. only v4.4 is avilable to the public, but I use v5.0 as it's better with anti-viruses.)
 * Download nullsoft scriptable install system v2.46. - http://nsis.sourceforge.net/Download
 * Run sampac.nsi
 
 Linux
 ----------
 ```
-1) Use 32-bit Ubuntu 14.04.1 LTS Through VMWare (http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-i386.iso) (Although any form of linux will work, you'll just have to accomodate the steps with yum or whatever package system)
+1) Use _32_-bit Ubuntu 14.04.3 LTS Through VMWare (Or whatever distro you want, Ubuntu is the easiest)
 2) sudo apt-get update
 3) sudo apt-get upgrade
 4) sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev cmake g++4.4 make git geomview
