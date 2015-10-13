@@ -61,3 +61,6 @@
 
 *.suo
 Release/sampac.lib
+ACv2_Server/Debug/vc120.pdb
+ACv2_Server/Release/vc120.pdb
+acv2/Release/vc120.pdb
