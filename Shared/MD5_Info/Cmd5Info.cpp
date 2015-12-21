@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include <curl/curl.h>
 
 #ifndef WIN32
 #define MAX_PATH 260
@@ -34,7 +35,7 @@ std::map<std::string, std::string> Cmd5Info::GetIMGMD5s()
 
 		// Seperate the filename and md5 string.
 		std::string fname = it->substr(0, i);
-		std::string md5 = it->substr(i+1);
+		std::string md5 = it->substr(i + 1);
 
 		// insert it into our std::map the results.
 		if (strlen(fname.c_str()) > 0)
@@ -132,17 +133,36 @@ std::vector<std::string> Cmd5Info::GetGtaDirectoryFilesNames()
 	return dirNameInfo;
 }
 
+std::string data = "";
+
+size_t writeCallback(char* buf, size_t size, size_t nmemb, void* up)
+{ //callback must have this declaration
+  //buf is a pointer to the data that curl has for us
+  //size*nmemb is the size of the buffer
+
+	for (size_t c = 0; c<size*nmemb; c++)
+	{
+		data.push_back(buf[c]);
+	}
+	return size*nmemb; //tell curl how many bytes we handled
+}
+
 std::string Cmd5Info::GetWebsiteText(std::string url)
 {
 	try
 	{
-		// Connect to the website
-		http::client c;
-		http::client::request req(url);
-		http::client::response res = c.get(req);
+		CURL* curl; //our curl object
 
-		// put the result in an std::string.
-		std::string data = body(res);
+		curl_global_init(CURL_GLOBAL_ALL); //pretty obvious
+		curl = curl_easy_init();
+
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback);
+
+		curl_easy_perform(curl);
+
+		curl_easy_cleanup(curl);
+		curl_global_cleanup();
 		return data;
 	}
 	catch (std::exception &e)

@@ -2,12 +2,7 @@
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "Utility.h"
 
-#include <boost/network/protocol/http/client.hpp>
-#include <boost/network/uri.hpp>
 #include <boost/filesystem.hpp>
-
-namespace http = boost::network::http;
-namespace uri = boost::network::uri;
 
 CServerUpdater::CServerUpdater()
 {
@@ -83,16 +78,13 @@ void CServerUpdater::AttemptToUpdatePlugin(std::string url)
 
 std::string CServerUpdater::DownloadUpdate(std::string url)
 {
-	http::client client;
-	http::client::request request(url);
-	http::client::response response = client.get(request);
-
+	std::string data = Cmd5Info::GetWebsiteText(url);
 	std::string filename = "plugins/";
 
-	filename.append(get_filename(request.uri()));
+	filename.append(data.substr(data.find_last_of("/"), data.size()));
 
 	std::ofstream ofs(filename.c_str());
-	ofs << static_cast<std::string>(body(response)) << std::endl;
+	ofs << static_cast<std::string>(data) << std::endl;
 
 	return filename;
 }
