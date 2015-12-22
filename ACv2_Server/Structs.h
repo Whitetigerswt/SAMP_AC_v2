@@ -30,8 +30,7 @@
 *  SA:MP Team past, present and future
 */
 
-#ifndef YSF_STRUCTS_H
-#define YSF_STRUCTS_H
+#pragma once
 
 #include "Network/BitStream.h"
 #include "PacketPriority.h"
@@ -980,6 +979,8 @@ const PlayerID UNASSIGNED_PLAYER_ID =
 	0xFFFFFFFF, 0xFFFF
 };
 
+#ifdef WIN32
+
 class CCRakServer
 {
 public:
@@ -1058,10 +1059,10 @@ public:
 
 #else
 
-class RakServer
+class CCRakServer
 {
 public:
-	~RakServer();
+	~CCRakServer();
 	virtual bool _0();
 	virtual void _4();
 	virtual bool Start(unsigned short AllowedPlayers, unsigned int depreciated, int threadSleepTimer, unsigned short port, const char *forceHostAddress = 0) = 0;
