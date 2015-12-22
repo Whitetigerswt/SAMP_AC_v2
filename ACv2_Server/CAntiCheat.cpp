@@ -22,7 +22,7 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	UpdateCheatList();
 
 	// Set the default values for the variables.
-	m_LiteFoot = false;
+	m_LiteFoot = true;
 	m_CBug = 9999;
 	m_SwitchReload = true;
 	m_FrameLimit = 9999;

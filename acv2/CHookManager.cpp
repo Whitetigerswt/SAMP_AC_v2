@@ -369,21 +369,6 @@ void CHookManager::Load()
 	// Patch widescreen_lite.asi mod
 	// Parts of it's source code are here: https://github.com/ThirteenAG/Widescreen_Fixes_Pack/tree/master/GTASA_widescreen_fix
 	CMem::ApplyJmp(FUNC_WidescreenPatch, (DWORD)WidescreenPatch, 6);
-
-	// Fix annoying Xfire ingame crash
-	DWORD xfire = (DWORD)GetModuleHandle("xfire_toucan_46139.dll");
-
-	if (xfire)
-	{
-		// Add address offset.
-		xfire += 0x65C22;
-
-		// Unprotect memory.
-		VirtualProtect((void*)xfire, 1, PAGE_EXECUTE_READWRITE, &dwOldProt);
-
-		// je -> jmp
-		memcpy((void*)xfire, "\xEB", 1);
-	}
 	
 	CMem::ApplyJmp(FUNC_LiteFoot, (DWORD)LiteFootHook, 6);
 	CMem::ApplyJmp(FUNC_Gravity, (DWORD)GravityHook, 6);
@@ -419,6 +404,7 @@ void CHookManager::SetConnectPatches()
 	} 
 	else if (Misc::GetGameVersion() == 2)
 	{
+		// Hack to make the game think we never alt tabbed when we have.
 		CMem::Cpy((void*)0x7480A4, "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90", 10);
 	}
 
