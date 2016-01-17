@@ -24,7 +24,7 @@ namespace Callback
 	{
 		return amxPointers;
 	}
-	bool ACToggle = true;
+	bool ACToggle = true; // initialization
 
 	cell Execute(const char* szFunction, const char* szFormat, ...)
 	{
