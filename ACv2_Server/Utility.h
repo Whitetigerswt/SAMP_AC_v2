@@ -1,5 +1,7 @@
 #pragma once
 
+#define AC_WEBSITE "http://samp-ac.com"
+
 #define SAFE_FREE(ptr) if(ptr) delete ptr;
 
 #include <string>

@@ -7,6 +7,7 @@
 #include "CServerUpdater.h"
 #include "CAntiCheatHandler.h"
 #include "PacketPriority.h"
+#include "BanHandler.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -158,6 +159,13 @@ namespace Callback
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
+		// Make sure the new connected user isn't an NPC.
+		if (IsPlayerNPC(playerid))
+		{
+			// Return
+			return true;
+		}
+
 		// if the AC is on, let the user know this server is protected.
 		if (ACToggle)
 		{
@@ -165,10 +173,25 @@ namespace Callback
 			SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
 		}
 
-		// Make sure the new connected user isn't an NPC.
-		if (IsPlayerNPC(playerid))
+		// Ban list checking
+		if (BanHandler::CheckCheater(playerid))
 		{
-			// Return
+			// This player is a cheater and has been banned before. 
+
+			char msg[144];
+
+			// Tell the player
+			snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. Know more: %s", AC_WEBSITE);
+			SendClientMessage(playerid, -1, msg);
+			char name[MAX_PLAYER_NAME];
+			GetPlayerName(playerid, name, sizeof name);
+
+			// Tell other players connected
+			snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked from the server for being banned on Anti-Cheat (v2).", name);
+			SendClientMessageToAll(-1, msg);
+
+			// Kick the player from the server
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 			return true;
 		}
 
@@ -246,7 +269,8 @@ namespace Callback
 			SendClientMessageToAll(-1, msg);
 
 			// Tell them where to get the AC and install it.
-			SendClientMessage(playerid, -1, "{FFFFFF}You can download the latest version of Whitetiger's Anti-Cheat at: {FF0000}http://samp-ac.com");
+			snprintf(msg, sizeof msg, "{FFFFFF}You can download the latest version of Whitetiger's Anti-Cheat at: {FF0000}%s", AC_WEBSITE);
+			SendClientMessage(playerid, -1, msg);
 
 			Utility::Printf("%s has been kicked from the server for not connecting with AC while AC is on.", name);
 

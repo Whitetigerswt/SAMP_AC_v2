@@ -7,6 +7,7 @@
 #include "../Shared/Network/CRPC.h"
 #include "CServerUpdater.h"
 #include "PacketPriority.h"
+#include "BanHandler.h"
 
 std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;
@@ -88,6 +89,10 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 
 			// Send the message to all the players on the server.
 			SendClientMessageToAll(-1, msg);
+
+			// Format a proper reason and add cheater to AC global ban list
+			snprintf(msg, sizeof msg, "illegal file: %s", processpath);
+			BanHandler::AddCheater(ID, msg);
 
 			// Print the result to the console so it can be logged.
 			Utility::Printf("%s has been kicked from the server for using illegal file: \"%s\"", name, processpath);

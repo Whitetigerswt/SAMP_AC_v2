@@ -87,6 +87,9 @@
     <ClCompile Include="..\Shared\Network\BitStream.cpp">
       <Filter>Source Files\Shared\Network</Filter>
     </ClCompile>
+    <ClCompile Include="BanHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SDK\samp-sdk\plugincommon.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="..\Shared\Network\BitStream.h">
       <Filter>Source Files\Shared\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="BanHandler.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
