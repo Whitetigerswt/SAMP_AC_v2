@@ -333,6 +333,12 @@ void CAntiCheat::OnTamperAttempt()
 	SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 }
 
+void CAntiCheat::OnBanChecked(bool status)
+{
+	// Set our instance variable to the player's ban status so we can store it for later use.
+	m_IsBanned = status;
+}
+
 void CAntiCheat::CheckVersionCompatible(float version)
 {
 	// Check if the version is incompatible with the server version.

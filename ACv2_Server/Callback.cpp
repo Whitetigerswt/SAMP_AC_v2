@@ -173,28 +173,6 @@ namespace Callback
 			SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
 		}
 
-		// Ban list checking
-		if (BanHandler::CheckCheater(playerid))
-		{
-			// This player is a cheater and has been banned before. 
-
-			char msg[144];
-
-			// Tell the player
-			snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. Know more: %s", AC_WEBSITE);
-			SendClientMessage(playerid, -1, msg);
-			char name[MAX_PLAYER_NAME];
-			GetPlayerName(playerid, name, sizeof name);
-
-			// Tell other players connected
-			snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked from the server for being banned on Anti-Cheat (v2).", name);
-			SendClientMessageToAll(-1, msg);
-
-			// Kick the player from the server
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
-			return true;
-		}
-
 		if (CAntiCheatHandler::IsConnected(playerid))
 		{
 			// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
@@ -204,6 +182,51 @@ namespace Callback
 
 			if (ac != NULL)
 			{
+				// Ban list checking
+				if (ac->AC_IsBanned())
+				{
+					// This player is a cheater and has been banned before. 
+					switch (ACToggle)
+					{
+						case  true:
+						{
+							// AC is enabled. Kick the banned player.
+							char msg[144];
+
+							// Tell the player
+							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. Know more: %s", AC_WEBSITE);
+							SendClientMessage(playerid, -1, msg);
+							char name[MAX_PLAYER_NAME];
+							GetPlayerName(playerid, name, sizeof name);
+
+							// Tell other players connected
+							snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked from the server for being banned on Anti-Cheat (v2).", name);
+							SendClientMessageToAll(-1, msg);
+
+							// Kick the player from the server
+							SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+							break;
+						}
+						case false:
+						{
+							// AC is not enabled. A quick informing should sufficie.
+							char msg[144];
+
+							// Tell the player
+							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. Know more: %s", AC_WEBSITE);
+							SendClientMessage(playerid, -1, msg);
+							char name[MAX_PLAYER_NAME];
+							GetPlayerName(playerid, name, sizeof name);
+
+							// Tell other players connected
+							snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned on Anti-Cheat (v2). Know more: %s", name, AC_WEBSITE);
+							SendClientMessageToAll(-1, msg);
+							break;
+						}
+					}
+					return true;
+				}
+
 				// Get the player's Hardware ID.
 				hwid = ac->GetPlayerHardwareID();
 
@@ -311,6 +334,12 @@ namespace Callback
 						ac->SetPlayerConnected(true);
 					}
 
+					// Fetch player's ban status
+					bool banStatus = BanHandler::CheckCheater(playerid);
+
+					// Send to our helper class so it can store it.
+					ac->OnBanChecked(banStatus);
+
 					// Send the client the files we need them to return md5's to.
 					ac->CheckGTAFiles(playerid);
 
@@ -415,14 +444,37 @@ namespace Callback
 			// If the AC was turned on
 			if (ACToggle)
 			{
+				// Delcare the pointer "ac" which will be used to check players connected to the AC in the following FOR loop
+				CAntiCheat* ac;
+
 				// Loop through the maximum amount of players that can be connected to the server.
 				for (int i = 0; i < MAX_PLAYERS; ++i)
 				{
-					// If they're connected to the server, and not connected to the AC
-					if (IsPlayerConnected(i) && !IsPlayerNPC(i) && !CAntiCheatHandler::IsConnected(i))
+					// If they're not connected to the server, we skip this index.
+					if (!IsPlayerConnected(i) || IsPlayerNPC(i))
+						continue;
+					
+					// If they are not connected to the AC
+					if (!CAntiCheatHandler::IsConnected(i))
 					{
 						// Kick them from the server!
 						SetTimer(1000, 0, Callback::KickPlayer, (void*)i);
+					}
+					else // they are connected to the AC
+					{
+						// Get AC pointer
+						ac = CAntiCheatHandler::GetAntiCheat(i);
+							
+						// Check if it is valid
+						if (ac != NULL)
+						{
+							// Check if the player is banned on AC
+							if (ac->AC_IsBanned())
+							{
+								// Kick the banned player from the server
+								Kick(i);
+							}
+						}
 					}
 				}
 			}
