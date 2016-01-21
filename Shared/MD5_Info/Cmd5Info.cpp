@@ -156,12 +156,19 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 		curl_global_init(CURL_GLOBAL_ALL); //pretty obvious
 		curl = curl_easy_init();
 
-		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback);
+		if (curl)
+		{
+			curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback);
 
-		curl_easy_perform(curl);
+			curl_easy_perform(curl);
 
-		curl_easy_cleanup(curl);
+			curl_easy_cleanup(curl);
+		}
+		else
+		{
+			printf("[SAMP_AC_V2]: GetWebsiteText: failure. cURL handle returned NULL\n");
+		}
 		curl_global_cleanup();
 		return data;
 	}
