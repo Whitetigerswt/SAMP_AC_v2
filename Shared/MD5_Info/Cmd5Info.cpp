@@ -159,6 +159,7 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 		if (curl)
 		{
 			curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+			data.clear(); // string must be cleared before adding new data
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback);
 
 			curl_easy_perform(curl);
