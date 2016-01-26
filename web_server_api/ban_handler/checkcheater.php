@@ -3,21 +3,12 @@
 	require_once 'connect.php';
     $uConnect = new mysqli(mysql_host, mysql_user, mysql_pw, mysql_db);
 	
-	if(isset($_GET['Hardware'])) 
+	$Hardware = $uConnect->real_escape_string($_REQUEST['Hardware']);
+	$IP = $uConnect->real_escape_string($_REQUEST['IP']);
+	if(empty($IP) || empty($Hardware))
 	{
-  		$Hardware = $uConnect->real_escape_string($_GET['Hardware']);
-	}
-	else 
-	{
-  		$Hardware = $uConnect->real_escape_string($_POST['Hardware']);
-	}
-	if(isset($_GET['IP'])) 
-	{
-  		$IP = $uConnect->real_escape_string($_GET['IP']);
-	}
-	else 
-	{
-  		$IP = $uConnect->real_escape_string($_POST['IP']);
+		mysqli_close($uConnect);
+		exit();
 	}
 	if($result = $uConnect->query("SELECT `SQLid` FROM `bans` WHERE `Hardware` = '". $Hardware ."' OR `CheaterIP` = '". $IP ."'"))
 	{
