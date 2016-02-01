@@ -48,20 +48,32 @@ namespace BanHandler
 			char str[340];
 			snprintf(str, sizeof str, "Cheater=%s&CheaterIP=%s&Hardware=%s&Reason=%s&ServerName=%s&Port=%d",
 				name, ip, hwid.c_str(), reason, server_name, server_port);
-			// Set POST data
-			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str);
-			// Send the request and store result into "res" variable
-			CURLcode res;
-			res = curl_easy_perform(curl);
-			// Handle possible errors
-			if (res != CURLE_OK)
+			// This function converts the given input string to a URL encoded string and returns that as a new allocated string
+			char * escaped_data = curl_easy_escape(curl, str, 0);
+			if (escaped_data)
 			{
-				Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
+				// Set POST data
+				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, escaped_data);
+				// Must free escaped data when we're done with it
+				curl_free(escaped_data);
+				// Send the request and store result into "res" variable
+				CURLcode res;
+				res = curl_easy_perform(curl);
+				// Handle possible errors
+				if (res != CURLE_OK)
+				{
+					Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
+				}
+				else
+				{
+					snprintf(str, sizeof str, "{FFFFFF}%s {FF0000}has successfully been added to AC global ban list. Know more: {FFFFFF}%s", name, AC_WEBSITE);
+				}
 			}
 			else
 			{
-				snprintf(str, sizeof str, "{FFFFFF}%s {FF0000}was successfully added to AC global ban list. Know more: {FFFFFF}%s", name, AC_WEBSITE);
+				Utility::Printf("curl_easy_escape() failed while trying to add player %d to ban list.", playerid);
 			}
+			
 			// Clean up
 			curl_easy_cleanup(curl);
 		}
@@ -106,23 +118,29 @@ namespace BanHandler
 			// Format POST data with player's hardware ID.
 			char str[64];
 			snprintf(str, sizeof str, "Hardware=%s&IP=%s", hwid.c_str(), ip);
-			// Set POST data
-			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str);
-			// Send the request and store result into "res" variable
-			CURLcode res;
-			res = curl_easy_perform(curl);
-			// Handle possible errors
-			if (res != CURLE_OK)
+			// This function converts the given input string to a URL encoded string and returns that as a new allocated string
+			char * escaped_data = curl_easy_escape(curl, str, 0);
+			if (escaped_data)
 			{
-				Utility::Printf("curl_easy_perform() failed: %s while checking if player %d is in ban list.", curl_easy_strerror(res), playerid);
-			}
-			else // success
-			{
-				// Now let's handle response codes
-				long response_code;
-				curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-				switch (response_code)
+				// Set POST data
+				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, escaped_data);
+				// Must free escaped data when we're done with it
+				curl_free(escaped_data);
+				// Send the request and store result into "res" variable
+				CURLcode res;
+				res = curl_easy_perform(curl);
+				// Handle possible errors
+				if (res != CURLE_OK)
 				{
+					Utility::Printf("curl_easy_perform() failed: %s while checking if player %d is in ban list.", curl_easy_strerror(res), playerid);
+				}
+				else // success
+				{
+					// Now let's handle response codes
+					long response_code;
+					curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+					switch (response_code)
+					{
 					case 508:
 					{
 						// Found in ban list.
@@ -134,6 +152,7 @@ namespace BanHandler
 						// Was not found in ban list.
 						ischeater = false;
 						break;
+					}
 					}
 				}
 			}
