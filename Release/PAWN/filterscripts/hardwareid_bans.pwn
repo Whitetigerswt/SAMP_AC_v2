@@ -108,7 +108,7 @@ CMD:hardwareban(playerid, params[])
 	}
 
 	new hwid[HARDWAREID_LEN];
-	GetPlayerHardwareID(playerid, hwid, sizeof(hwid));
+	GetPlayerHardwareID(targetid, hwid, sizeof(hwid));
 
 	new escaped_hwid[160];
 	escaped_hwid = DB_Escape(hwid);
