@@ -366,6 +366,17 @@ namespace Callback
 		{
 			CAntiCheatHandler::Remove(playerid);
 		}
+
+		// If this player is able to toggle AC. If he's an admin.
+		if (CAntiCheat::CanEnableAC(playerid))
+		{
+			/*
+				This fixes a bug that if this player leaves the server while having admin power
+				and another player joins afterwards and takes the same ID, they will get admin 
+				power too without rcon login.
+			*/
+			CAntiCheat::ToggleCanEnableAC(playerid, false);
+		}
 		return true;
 	}
 
