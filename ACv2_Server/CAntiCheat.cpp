@@ -190,7 +190,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 		}
 	}
 	// Execute PAWN callback.
-	Callback::Execute("AC_OnFileCalculated", "issi", found, md5, path, ID);
+	Callback::Execute("AC_OnFileCalculated", "issi", !found, md5, path, ID);
 }
 
 void CAntiCheat::OnImgFileModified(char* filename, char* md5)
