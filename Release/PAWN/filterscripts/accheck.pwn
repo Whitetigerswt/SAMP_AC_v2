@@ -140,15 +140,19 @@ COMMAND:accheck(playerid, params[])
 		return SendClientMessage(playerid, -1, "{FF0000}Syntax error: {FFFFFF}Correct syntax is /accheck [playerid].");
 	}
 	new targetid = strval(params);
-	if(!IsPlayerConnected(playerid))
+	if(!IsPlayerConnected(targetid))
 	{
 		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}Invalid player id.");
 	}
+	if(PlayerACCheck[targetid] == true)
+	{
+	    return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}This player has already got ac-check enabled on them.");
+	}
 	new str[144];
-	format(str, sizeof str, "{FFFFFF}%s {FF0000}has enabled AC-check on {FFFFFF}%s {FF0000}(forced them to connect with AC next time)!", ReturnPlayerName(playerid), ReturnPlayerName(targetid));
+	format(str, sizeof str, "{FFFFFF}%s {FF0000}has enabled AC-check on {FFFFFF}%s {FF0000}(forced them to re-connect with AC running)!", ReturnPlayerName(playerid), ReturnPlayerName(targetid));
 	SendClientMessageToAll(-1, str);
 
-	SendClientMessage(targetid, -1, "{FF0000}Warning: {FFFFFF}Download AC from samp-ac.com and make sure it's running next time you connect!");
+	SendClientMessage(targetid, -1, "{FF0000}Warning: {FFFFFF}Download AC from samp-ac.com if you don't have it and make sure it's running next time you connect!");
 
 	new IP[16];
 	GetPlayerIp(targetid, IP, sizeof(IP));
@@ -195,22 +199,20 @@ COMMAND:acchecklist(playerid, params[])
     if(!IsACPluginLoaded())
 	{
 		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC plugin is not loaded.");
-	}
-	new str[160];
-	format(str, sizeof(str), "SELECT `Name` FROM `accheck_list` WHERE `Name`='%s'", params);
-	new DBResult:query_result = db_query(accheck_db, str);
-
+ 	}
+	new DBResult:query_result = db_query(accheck_db, "SELECT `Name`, `IP` FROM `accheck_list`");
 	if(db_num_rows(query_result))
 	{
-	    new name[MAX_PLAYER_NAME];
-	    str[0] = EOS;
+	    new name[MAX_PLAYER_NAME], IP[16];
+	    new str[256] = "Name\tIP";
 		do
 		{
 			db_get_field_assoc(query_result, "Name", name, sizeof name);
-			format(str, sizeof str, "%s%s\n", str, name);
+			db_get_field_assoc(query_result, "IP", IP, sizeof IP);
+			format(str, sizeof str, "%s\n%s\t%s", str, name, IP);
 		}
 		while(db_next_row(query_result));
-		ShowPlayerDialog(playerid, 0, DIALOG_STYLE_LIST, "AC-check list", str, "Close", "");
+		ShowPlayerDialog(playerid, 0, DIALOG_STYLE_TABLIST_HEADERS, "AC-check list", str, "Close", "");
 	}
 	db_free_result(query_result);
 	return 1;
@@ -221,7 +223,7 @@ public AC_OnFileExecuted(playerid, module[], md5[], bool:isCheat)
 	if(isCheat && !IsACEnabled() && PlayerACCheck[playerid] == true)
 	{
 		new str[144];
-		format(str, sizeof str, "{FF0000}[AC] {FFFFFF}File execution report from {FF0000}%s {FFFFFF}/ module: {FF0000}%s {FFFFFF}/ blacklisted: {FF0000}Yes", ReturnPlayerName(playerid), module);
+		format(str, sizeof str, "{FF0000}[AC] {FFFFFF}File execution report from {FF0000}%s {FFFFFF}module: %s / blacklisted: Yes", ReturnPlayerName(playerid), module);
 		SendClientMessageToAll(-1, str);
 	}
 	return 1;
@@ -243,7 +245,7 @@ public AC_OnFileCalculated(playerid, filename[], md5[], bool:isCheat)
     if(isCheat && !IsACEnabled() && PlayerACCheck[playerid] == true)
 	{
 		new str[144];
-		format(str, sizeof str, "{FF0000}[AC] {FFFFFF}File calculation report from {FF0000}%s {FFFFFF}/ file: {FF0000}%s {FFFFFF}/ blacklisted: {FF0000}Yes", ReturnPlayerName(playerid), filename);
+		format(str, sizeof str, "{FF0000}[AC] {FFFFFF}File calculation report from {FF0000}%s {FFFFFF}file: %s / blacklisted: Yes", ReturnPlayerName(playerid), filename);
 		SendClientMessageToAll(-1, str);
 	}
 	return 1;
