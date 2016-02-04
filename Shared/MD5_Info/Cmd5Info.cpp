@@ -80,7 +80,7 @@ std::vector<std::string> Cmd5Info::GetGtaDirectoryFilesMd5()
 	// Create a vector to hold our results.
 	std::vector<std::string> dirMd5Info;
 
-	// Get website body holding our MD5 info for all bad md5's
+	// Get website body holding our MD5 info for all unmodifies/original gta files
 	// This will output something like "md5\nmd5\nmd5"
 	std::string html = GetWebsiteText(AC_DIR_MD5_INFO);
 
@@ -109,17 +109,17 @@ std::vector<std::string> Cmd5Info::GetGtaDirectoryFilesNames()
 	// Create a vector to hold our results.
 	std::vector<std::string> dirNameInfo;
 
-	// Get website body holding our MD5 info for all bad names
-	// This will output something like "md5\nmd5\nmd5"
+	// Get website body holding info for all gta file names
+	// This will output something like "filename\nfilename\nfilename" (including extension or sub files)
 	std::string html = GetWebsiteText(AC_DIR_NAME_INFO);
 
 	std::vector<std::string> split_html;
 
 	// split the string into an std::vector by every "\n" in the string
-	// one string becomes "md5"
+	// one string becomes "filename" (including extension or sub files)
 	boost::split(split_html, html, boost::is_any_of("\n"));
 
-	// Loop through every instance of "md5"
+	// Loop through every instance of "filename"
 	for (std::vector<std::string>::iterator it = split_html.begin(); it != split_html.end(); ++it)
 	{
 		// insert it into our std::vector the results.
@@ -129,7 +129,7 @@ std::vector<std::string> Cmd5Info::GetGtaDirectoryFilesNames()
 		}
 	}
 
-	// Return the vector of all md5's
+	// Return the vector of all gta file names
 	return dirNameInfo;
 }
 
@@ -156,12 +156,20 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 		curl_global_init(CURL_GLOBAL_ALL); //pretty obvious
 		curl = curl_easy_init();
 
-		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback);
+		if (curl)
+		{
+			curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+			data.clear(); // string must be cleared before adding new data
+			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback);
 
-		curl_easy_perform(curl);
+			curl_easy_perform(curl);
 
-		curl_easy_cleanup(curl);
+			curl_easy_cleanup(curl);
+		}
+		else
+		{
+			printf("[SAMP_AC_V2]: GetWebsiteText: failure. cURL handle returned NULL\n");
+		}
 		curl_global_cleanup();
 		return data;
 	}

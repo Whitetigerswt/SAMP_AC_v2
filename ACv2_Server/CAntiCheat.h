@@ -42,6 +42,10 @@ public:
 	// REQUIRES: The client is using AC.
 	void OnTamperAttempt();
 
+	// PURPOSE: Callback for when the player's AC ban status is checked.
+	// REQUIRES: The client is using AC.
+	void OnBanChecked(bool status);
+
 	// PURPOSE: Check if the player's client version of AC is compatible with the server's version.
 	// REQUIRES: The client is using AC.
 	void CheckVersionCompatible(float version);
@@ -122,6 +126,10 @@ public:
 	// REQUIRES: NULL
 	bool GetVehicleBlips() { return m_VehicleBlips; }
 
+	// PURPOSE: Get the player's AC ban status.
+	// REQUIRES: NULL
+	bool AC_IsBanned() { return m_IsBanned; }
+
 	// PURPOSE: Called when the player pauses or unpauses, or alt tabs from the game.
 	// REQUIRES: NULL
 	void TogglePause(int iType, bool bPause);
@@ -170,6 +178,9 @@ private:
 
 	// PURPOSE: Keep track of player's status of vehicle blips.
 	bool m_VehicleBlips;
+
+	// PURPOSE: Indicate whether the player is banned on Anti-Cheat or not.
+	bool m_IsBanned;
 
 	// Check if onplayerconnect has been called
 	bool m_IsConnected;

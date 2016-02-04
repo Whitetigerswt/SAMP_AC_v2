@@ -4,6 +4,7 @@
 #include "Network.h"
 #include "../CAntiCheatHandler.h"
 #include "../GDK/sampgdk.h"
+#include "../BanHandler.h"
 
 #include <stdio.h>
 #include <cstring>
