@@ -37,7 +37,22 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 
 CAntiCheat::~CAntiCheat()
 {
+	// Loop through the list of admins
+	for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); ++it)
+	{
+		// If that iteration is the playerid. If this player is able to toggle AC. If he's an admin.
+		if ((*it) == ID)
+		{
+			/*
+				Remove him from the admin list. 
 
+				This is important as it fixes a bug that if this player leaves the server while having
+				admin power and another player joins afterwards and takes the same ID, they will get
+				admin power too without rcon login.
+			*/
+			m_Admins.erase(it);
+		}
+	}
 }
 
 void CAntiCheat::UpdateCheatList()
