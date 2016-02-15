@@ -38,7 +38,7 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 CAntiCheat::~CAntiCheat()
 {
 	// Loop through the list of admins
-	for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); ++it)
+	for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); )
 	{
 		// If that iteration is the playerid. If this player is able to toggle AC. If he's an admin.
 		if ((*it) == ID)
@@ -50,7 +50,14 @@ CAntiCheat::~CAntiCheat()
 				admin power and another player joins afterwards and takes the same ID, they will get
 				admin power too without rcon login.
 			*/
-			m_Admins.erase(it);
+			it = m_Admins.erase(it);
+
+			if (it == m_Admins.end())
+				break;
+		}
+		else
+		{
+			it++;
 		}
 	}
 }
@@ -285,13 +292,20 @@ void CAntiCheat::ToggleCanEnableAC(int playerid, bool toggle)
 	{
 		// If toggle is false
 		// Loop through the list of admins
-		for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); ++it)
+		for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); )
 		{
 			// if that iteration is the playerid.
 			if ((*it) == playerid)
 			{
 				// Remove him from the admin list
-				m_Admins.erase(it);
+				it = m_Admins.erase(it);
+
+				if (it == m_Admins.end())
+					break;
+			}
+			else
+			{
+				it++;
 			}
 		}
 		return;
