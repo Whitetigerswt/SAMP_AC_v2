@@ -44,20 +44,25 @@ CAntiCheat::~CAntiCheat()
 		if ((*it) == ID)
 		{
 			/*
-				Remove him from the admin list. 
-
 				This is important as it fixes a bug that if this player leaves the server while having
 				admin power and another player joins afterwards and takes the same ID, they will get
 				admin power too without rcon login.
+
+				Remove him from the admin list. Get the next element and store it into 'it'.
 			*/
 			it = m_Admins.erase(it);
 
+			// Safety check to see if the next element is the container end
 			if (it == m_Admins.end())
+			{
+				// Break out the loop if it is the container end for safety. More info: http://www.cplusplus.com/reference/vector/vector/erase/
 				break;
+			}
 		}
 		else
 		{
-			it++;
+			// If it is not the player we're looking for, iterate!
+			++it;
 		}
 	}
 }
@@ -297,15 +302,20 @@ void CAntiCheat::ToggleCanEnableAC(int playerid, bool toggle)
 			// if that iteration is the playerid.
 			if ((*it) == playerid)
 			{
-				// Remove him from the admin list
+				// Remove him from the admin list. Get the next element and store it into 'it'.
 				it = m_Admins.erase(it);
 
+				// Safety check to see if the next element is the container end
 				if (it == m_Admins.end())
+				{
+					// Break out the loop if it is the container end for safety. More info: http://www.cplusplus.com/reference/vector/vector/erase/
 					break;
+				}
 			}
 			else
 			{
-				it++;
+				// If it is not the player we're looking for, iterate!
+				++it;
 			}
 		}
 		return;
