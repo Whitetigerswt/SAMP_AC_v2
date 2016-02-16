@@ -51,13 +51,6 @@ CAntiCheat::~CAntiCheat()
 				Remove him from the admin list. Get the next element and store it into 'it'.
 			*/
 			it = m_Admins.erase(it);
-
-			// Safety check to see if the next element is the container end
-			if (it == m_Admins.end())
-			{
-				// Break out the loop if it is the container end for safety. More info: http://www.cplusplus.com/reference/vector/vector/erase/
-				break;
-			}
 		}
 		else
 		{
@@ -304,13 +297,6 @@ void CAntiCheat::ToggleCanEnableAC(int playerid, bool toggle)
 			{
 				// Remove him from the admin list. Get the next element and store it into 'it'.
 				it = m_Admins.erase(it);
-
-				// Safety check to see if the next element is the container end
-				if (it == m_Admins.end())
-				{
-					// Break out the loop if it is the container end for safety. More info: http://www.cplusplus.com/reference/vector/vector/erase/
-					break;
-				}
 			}
 			else
 			{
