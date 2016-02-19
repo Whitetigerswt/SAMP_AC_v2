@@ -62,8 +62,8 @@ CAntiCheat::~CAntiCheat()
 
 void CAntiCheat::UpdateCheatList()
 {
-	// If the list hasn't been updated in 24 hours...
-	if (time(NULL) > m_LastCheatUpdate + 86400)
+	// If the list hasn't been updated in 6 hours...
+	if (time(NULL) > m_LastCheatUpdate + 21600)
 	{
 		// Update our cheat lists!
 		m_ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
