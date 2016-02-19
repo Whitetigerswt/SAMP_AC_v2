@@ -105,7 +105,7 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 			GetPlayerName(ID, name, sizeof(name));
 
 			// Format the string telling all the players on the server why we kicked this one.
-			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for using an illegal file: \"{FF0000}%s{FFFFFF}\"", name, processpath);
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for using an illegal file: \"{FF0000}%s{FFFFFF}\"", name, Utility::GetSafeFilePath(processpath));
 
 			// Send the message to all the players on the server.
 			SendClientMessageToAll(-1, msg);
@@ -198,7 +198,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 		{
 			// Create a new variable holding a string that will be formatted to let the player know he's been kicked.
 			char msg[160];
-			snprintf(msg, sizeof(msg), "{FF0000}Error: {FFFFFF}You've been kicked from this server for having ({FF0000}%s{FFFFFF}) modified.", path);
+			snprintf(msg, sizeof(msg), "{FF0000}Error: {FFFFFF}You've been kicked from this server for having ({FF0000}%s{FFFFFF}) modified.", Utility::GetSafeFilePath(path));
 
 			// Send the formatted message to the player.
 			SendClientMessage(ID, -1, msg);
@@ -250,7 +250,7 @@ void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 		GetPlayerName(ID, name, sizeof(name));
 
 		// Format the message to send to all players.
-		snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for having ({FF0000}%s{FFFFFF}) modified.", name, filename);
+		snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for having ({FF0000}%s{FFFFFF}) modified.", name, Utility::GetSafeFilePath(filename));
 
 		// Send the message to all players connected to the server.
 		SendClientMessageToAll(-1, msg);

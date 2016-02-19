@@ -50,6 +50,33 @@ namespace Utility
 		logprintf("[SAMP_AC_V2] %s", szBuffer);
 	}
 
+	char* GetSafeFilePath(char* orginalFilePath)
+	{
+		// If the given file path exceeds MAX_CHEAT_PATH.
+		if (strlen(orginalFilePath) > MAX_CHEAT_PATH)
+		{
+			// Create a string to hold the safe file path.
+			char shortFilePath[MAX_CHEAT_PATH];
+
+			// Copy the given file path to sized buffer (truncate to fight against overflow).
+			strncpy(shortFilePath, orginalFilePath, MAX_CHEAT_PATH - 1);
+
+			// Add dots at the end to indicate that the file path has been truncated.
+			shortFilePath[MAX_CHEAT_PATH - 3] = '.';
+			shortFilePath[MAX_CHEAT_PATH - 2] = '.';
+
+			// Add NULL character.
+			shortFilePath[MAX_CHEAT_PATH - 1] = '\0';
+			
+			char* ret = shortFilePath;
+			return ret;
+		}
+		else
+		{
+			return orginalFilePath;
+		}
+	}
+
 	unsigned getTickCount()
 	{
 #ifdef WIN32

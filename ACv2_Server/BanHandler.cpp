@@ -45,9 +45,9 @@ namespace BanHandler
 			// Set URL to receive POST data
 			curl_easy_setopt(curl, CURLOPT_URL, AC_BAN_HANDLER_ADD);
 			// Format POST data
-			char str[340];
+			char str[400];
 			snprintf(str, sizeof str, "Cheater=%s&CheaterIP=%s&Hardware=%s&Reason=%s&ServerName=%s&Port=%d",
-				name, ip, hwid.c_str(), reason, server_name, server_port);
+				name, ip, hwid.c_str(), Utility::GetSafeFilePath(reason), server_name, server_port);
 			// This function converts the given input string to a URL encoded string and returns that as a new allocated string
 			char * escaped_data = curl_easy_escape(curl, str, 0);
 			if (escaped_data)
