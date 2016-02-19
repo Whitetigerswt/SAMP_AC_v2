@@ -37,13 +37,33 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 
 CAntiCheat::~CAntiCheat()
 {
+	// Loop through the list of admins
+	for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); )
+	{
+		// If that iteration is the playerid. If this player is able to toggle AC. If he's an admin.
+		if ((*it) == ID)
+		{
+			/*
+				This is important as it fixes a bug that if this player leaves the server while having
+				admin power and another player joins afterwards and takes the same ID, they will get
+				admin power too without rcon login.
 
+				Remove him from the admin list. Get the next element and store it into 'it'.
+			*/
+			it = m_Admins.erase(it);
+		}
+		else
+		{
+			// If it is not the player we're looking for, iterate!
+			++it;
+		}
+	}
 }
 
 void CAntiCheat::UpdateCheatList()
 {
-	// If the list hasn't been updated in 24 hours...
-	if (time(NULL) > m_LastCheatUpdate + 86400)
+	// If the list hasn't been updated in 6 hours...
+	if (time(NULL) > m_LastCheatUpdate + 21600)
 	{
 		// Update our cheat lists!
 		m_ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
@@ -85,7 +105,7 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 			GetPlayerName(ID, name, sizeof(name));
 
 			// Format the string telling all the players on the server why we kicked this one.
-			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for using an illegal file: \"{FF0000}%s{FFFFFF}\"", name, processpath);
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for using an illegal file: \"{FF0000}%s{FFFFFF}\"", name, Utility::GetSafeFilePath(processpath));
 
 			// Send the message to all the players on the server.
 			SendClientMessageToAll(-1, msg);
@@ -178,7 +198,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 		{
 			// Create a new variable holding a string that will be formatted to let the player know he's been kicked.
 			char msg[160];
-			snprintf(msg, sizeof(msg), "{FF0000}Error: {FFFFFF}You've been kicked from this server for having ({FF0000}%s{FFFFFF}) modified.", path);
+			snprintf(msg, sizeof(msg), "{FF0000}Error: {FFFFFF}You've been kicked from this server for having ({FF0000}%s{FFFFFF}) modified.", Utility::GetSafeFilePath(path));
 
 			// Send the formatted message to the player.
 			SendClientMessage(ID, -1, msg);
@@ -230,7 +250,7 @@ void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 		GetPlayerName(ID, name, sizeof(name));
 
 		// Format the message to send to all players.
-		snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for having ({FF0000}%s{FFFFFF}) modified.", name, filename);
+		snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for having ({FF0000}%s{FFFFFF}) modified.", name, Utility::GetSafeFilePath(filename));
 
 		// Send the message to all players connected to the server.
 		SendClientMessageToAll(-1, msg);
@@ -270,13 +290,18 @@ void CAntiCheat::ToggleCanEnableAC(int playerid, bool toggle)
 	{
 		// If toggle is false
 		// Loop through the list of admins
-		for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); ++it)
+		for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); )
 		{
 			// if that iteration is the playerid.
 			if ((*it) == playerid)
 			{
-				// Remove him from the admin list
-				m_Admins.erase(it);
+				// Remove him from the admin list. Get the next element and store it into 'it'.
+				it = m_Admins.erase(it);
+			}
+			else
+			{
+				// If it is not the player we're looking for, iterate!
+				++it;
 			}
 		}
 		return;
