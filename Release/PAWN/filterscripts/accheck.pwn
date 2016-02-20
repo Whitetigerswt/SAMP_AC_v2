@@ -106,7 +106,7 @@ public OnPlayerConnect(playerid)
 
 	// See if this player's name or IP matches any of what is in our database of AC-checked players
 	new str[144];
-	format(str, sizeof(str), "SELECT `Name` FROM `accheck_list` WHERE `Name`='%s' OR `IP`='%s'", ReturnPlayerName(playerid), IP);
+	format(str, sizeof(str), "SELECT `Name` FROM `accheck_list` WHERE `Name`='%q' OR `IP`='%q'", ReturnPlayerName(playerid), IP);
 	new DBResult:query_result = db_query(accheck_db, str);
 
 	// See if there are any matches
@@ -185,7 +185,7 @@ COMMAND:accheck(playerid, params[])
 	GetPlayerIp(targetid, IP, sizeof(IP));
 
 	// Insert this player's name and IP into our table of ac-checked players
-	format(str, sizeof str, "INSERT INTO `accheck_list` (`Name`, `IP`) VALUES ('%s', '%s')", ReturnPlayerName(targetid), IP);
+	format(str, sizeof str, "INSERT INTO `accheck_list` (`Name`, `IP`) VALUES ('%q', '%q')", ReturnPlayerName(targetid), IP);
 	query(str);
 
 	// Kick the player
@@ -204,7 +204,7 @@ COMMAND:noaccheck(playerid, params[])
 		return SendClientMessage(playerid, -1, "{FF0000}Syntax error: {FFFFFF}Correct syntax is /noaccheck [player name].");
 	}
 	new str[144];
-	format(str, sizeof(str), "SELECT * FROM `accheck_list` WHERE `Name`='%s'", params);
+	format(str, sizeof(str), "SELECT * FROM `accheck_list` WHERE `Name`='%q'", params);
 	new DBResult:query_result = db_query(accheck_db, str);
 
 	if(db_num_rows(query_result))
@@ -219,7 +219,7 @@ COMMAND:noaccheck(playerid, params[])
 	SendClientMessageToAll(-1, str);
 
 	// Remove this player from acchecked players table
-	format(str, sizeof str, "DELETE FROM `accheck_list` WHERE `Name`='%s'", params);
+	format(str, sizeof str, "DELETE FROM `accheck_list` WHERE `Name`='%q'", params);
 	query(str);
 	return 1;
 }
