@@ -64,7 +64,7 @@ function ADDCHEAT_ShowError(error, inputid)
 		inputid.style.backgroundColor = "#E36868";
 	}
 	
-	setTimeout(ADDCHEAT_HideError, 30000, inputid, old_color);
+	setTimeout(ADDCHEAT_HideError, 30000);
 }
 
 
