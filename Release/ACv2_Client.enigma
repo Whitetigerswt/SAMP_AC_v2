@@ -16,15 +16,15 @@
     <EnableLogging>False</EnableLogging>
   </KeysGenerator>
   <Input>
-    <FileName>C:\Users\Whitetiger\Desktop\Coding projects\GitHub\SAMP_AC_v2\Release\ACv2_Client.asi</FileName>
+    <FileName>E:\SAMP_AC_v2\Release\ACv2_Client.asi</FileName>
     <ProductName/>
     <VersionInfo/>
     <ProductInfoFromResources>True</ProductInfoFromResources>
   </Input>
   <Output>
-    <SameAsInputFile>False</SameAsInputFile>
-    <FileName>C:\Users\Whitetiger\Desktop\Coding projects\GitHub\SAMP_AC_v2\Release\ACv2_Client_encrypted.asi</FileName>
-    <DoNotBackup>False</DoNotBackup>
+    <SameAsInputFile>True</SameAsInputFile>
+    <FileName>E:\SAMP_AC_v2\Release\ACv2_Client.asi</FileName>
+    <DoNotBackup>True</DoNotBackup>
   </Output>
   <AdvanceInput>
     <ProtectAfter>False</ProtectAfter>

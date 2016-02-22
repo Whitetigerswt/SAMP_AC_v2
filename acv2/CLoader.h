@@ -33,11 +33,6 @@ public:
 	static HMODULE ThishMod;
 
 private:
-	// PURPOSE: Check elevation of the program, and elevate if necessary.
-	// REQUIRES: NULL
-	// PROMISE: An elevated process after it returns.
-	static void CheckElevation();
-
 	static bool isLoaded;
 
 	static int isElevated;
