@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 06, 2016 at 07:58 PM
+-- Generation Time: Feb 25, 2016 at 05:47 PM
 -- Server version: 5.5.46-cll-lve
 -- PHP Version: 5.4.45
 
@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS `cheat_reports` (
   `SQLid` int(128) NOT NULL AUTO_INCREMENT,
   `CheatName` varchar(128) NOT NULL,
   `CheatDescription` varchar(128) NOT NULL,
-  `CheatMD5` varchar(128) NOT NULL,
   `CheatSource` varchar(128) NOT NULL,
   PRIMARY KEY (`SQLid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
