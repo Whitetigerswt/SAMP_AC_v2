@@ -35,6 +35,7 @@
    <link rel="stylesheet" href="css/media-queries.css">
    <link rel="stylesheet" href="css/animate.css">
    <link rel="stylesheet" href="css/prettyPhoto.css">
+   <link rel="stylesheet" href="css/addcheat.css">
 
    <!-- Script
    ================================================== -->
@@ -71,6 +72,7 @@
          <ul id="nav" class="nav">
             <li><a class="smoothscroll" href="#hero">Download</a></li>
             <li><a class="smoothscroll" href="#features">Features</a></li>
+			<li><a class="smoothscroll" href="#reportcheat">Report a new cheat<span style="font-size:60%; color:red;">&nbsp;&nbsp;NEW</span></a></li>
 			<li><a class="smoothscroll" href="#comments">Comments</a></li>
          </ul> <!-- end #nav -->
 
@@ -107,7 +109,6 @@
 
 	   </div>
    </section> <!-- Homepage Hero end -->
-
 
    <!-- Features Section
    ================================================== -->
@@ -148,8 +149,11 @@
          <div class="six columns right">
             <h3>More than just an Anti-Cheat</h3>
 
-            <p>Many long-awaited scripting natives have been added in the AC, and scripters are more than welcome to take advantage of our new natives and callbacks. Toggle C-Bug, LiteFoot, Switch reload--Or all of them! Limit a player's FPS, allow them to sprint unlimited or ban by Hardware ID. With Anti-Cheat Version 2.0 there is much greater control over the DM player experience. Dip your toe in with just small features, or continue AC development long after it's development is over. Server owners have the ability to add new cheats to the cheat database with only a few clicks, or just disallow programs they think are unfair!
-            </p><p><a class="button" href="sampac.inc">Learn More</a>
+            <p>Many long-awaited scripting natives have been added in the AC, and scripters are more than welcome to take advantage of our new natives and callbacks. Toggle C-Bug, LiteFoot, Switch reload--Or all of them! Limit a player's FPS, allow them to sprint unlimited or ban by Hardware ID. With Anti-Cheat Version 2.0 there is much greater control over the DM player experience. Dip your toe in with just small features, or continue AC development long after its development is over. Server owners have the ability to add new cheats to the cheat database with only a few clicks, or just disallow programs they think are unfair! <a>
+            </p>
+			<p><a class="button" href="#reportcheat" style="background-color:#E85858;">Report a new cheat</a>
+			</p>
+			<p><a class="button" href="sampac.inc">Learn more: scripting</a>
 			</p>
          </div>
 
@@ -174,6 +178,60 @@
 	<br>
       </div>
    </section> <!-- Homepage Hero end -->
+   
+   <section id="reportcheat">
+		<br><br>
+		<p class="addcheater_header">Keep our cheat database updated</p>
+		<div class="hero-text">
+			<p class="addcheat_help_paragraph">
+			Add to our cheat database! The more people reporting cheats, the more difficult the situation is for cheaters.
+			The main purpose of this process is to add definitions of new cheats to the cheat database which the anti-cheat mainly depends on. 
+			This is very important because new cheats emerge more frequently since cheat makers have no lives. This should keep their heads
+			ringing.
+			</p>
+		</div>
+		
+		<div id="addcheat_form_container">
+			<form class="addcheat_form" action="">
+				<span class="addcheat_form_input_name">Cheat name</span>
+				&nbsp;&nbsp;&nbsp;
+				<span class="addcheat_form_input_what" onmouseenter="ADDCHEAT_ShowHelp(0);" onmouseleave="ADDCHEAT_HideHelp(0);">What's this?</span><br>
+				<span class="addcheat_form_input_help" id="addcheat_help_0" style="display:none;">
+				This should be the exact name of the file you are reporting including its extension. Example: aimbot.exe or crashem.asi
+				</span>
+				<input id="addcheat_input_cheatname" class="addcheat_form_input_box" type="text" name="cheatname"><br>
+				
+				<span class="addcheat_form_input_name">Cheat description</span>
+				&nbsp;&nbsp;&nbsp;
+				<span class="addcheat_form_input_what" onmouseenter="ADDCHEAT_ShowHelp(1);" onmouseleave="ADDCHEAT_HideHelp(1);">What's this?</span><br>
+				<span class="addcheat_form_input_help" id="addcheat_help_1" style="display:none;">
+				Write breifly on what this cheat is about, how important it is to have it blacklisted or how dangerous it is and etc.
+				</span>
+				<input id="addcheat_input_cheatdescription" class="addcheat_form_input_box" type="text" name="cheatdescription"><br>
+				
+				<span class="addcheat_form_input_name">MD5 checksum</span>
+				&nbsp;&nbsp;&nbsp;
+				<span class="addcheat_form_input_what" onmouseenter="ADDCHEAT_ShowHelp(2);" onmouseleave="ADDCHEAT_HideHelp(2);">What's this?</span><br>
+				<span class="addcheat_form_input_help" id="addcheat_help_2" style="display:none;">
+				You have to give us the MD5 hash of the file you are reporting. MD5 hashes look like this: B3A4509B52FD564FAE418D512D2E6FF4. There are tons of tools to get the MD5 hash of a file. You can do that at <a target="_blank" href="http://onlinemd5.com/">http://onlinemd5.com/</a> for example!
+				</span>
+				<input id="addcheat_input_md5checksum" class="addcheat_form_input_box" type="text" name="md5checksum"><br>
+				
+				<span class="addcheat_form_input_name">Source and download</span>
+				&nbsp;&nbsp;&nbsp;
+				<span class="addcheat_form_input_what" onmouseenter="ADDCHEAT_ShowHelp(3);" onmouseleave="ADDCHEAT_HideHelp(3);">What's this?</span><br>
+				<span class="addcheat_form_input_help" id="addcheat_help_3" style="display:none;">
+				You must tell us where or whom you got this from. A link to download this cheat is required.
+				</span>
+				<input id="addcheat_input_cheatsource" class="addcheat_form_input_box" type="text" name="cheatsource">
+				
+				<br><span id="addcheat_form_error">n/a</span><br>
+				
+				<input type="submit" name="ADDCHEAT_submit" class="ADDCHEAT_submit_button" value="Send request">
+			</form>
+		</div>
+		<br><br>
+   </section>
    
    <section id="comments">
 	   <div class="row section-head">
@@ -262,6 +320,7 @@
    <script src="js/imagelightbox.js"></script>
    <script src="js/jquery.prettyPhoto.js"></script>   
    <script src="js/main.js"></script>
+   <script src="js/addcheat.js"></script>
 
 </body>
 
