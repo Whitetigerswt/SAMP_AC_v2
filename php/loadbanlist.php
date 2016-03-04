@@ -8,8 +8,6 @@
 		<table style="margin:auto; background-color:black; border-radius:5px;">
 			<tr>
 				<th>Name</th>
-				<th>IP</th>
-				<th>Hardware ID</th>
 				<th>Reason</th>
 				<th>Server Name</th>
 				<th>Server IP</th>
@@ -17,7 +15,7 @@
 			</tr>
 	';
 	$rowColor = 0;
-	if($result = $uConnect->query("SELECT * FROM `bans` ORDER BY `SQLid` DESC"))
+	if($result = $uConnect->query("SELECT `Cheater`, `Reason`, `ServerName`, `ServerIP`, `DateTime` FROM `bans` ORDER BY `SQLid` DESC"))
 	{
 		if($result->num_rows > 0)
 		{
@@ -32,8 +30,6 @@
 						'
 							<tr style="margin:auto; text-align:center; background-color:#333333;">
 								<td style="padding:1%;">'.$row['Cheater'].'</td>
-								<td style="padding:1%;">'.$row['CheaterIP'].'</td>
-								<td style="padding:1%;">'.$row['Hardware'].'</td>
 								<td style="padding:1%;">'.$row['Reason'].'</td>
 								<td style="padding:1%;">'.$row['ServerName'].'</td>
 								<td style="padding:1%;">'.$row['ServerIP'].'</td>
@@ -49,8 +45,6 @@
 						'
 							<tr style="margin:auto; text-align:center; background-color:#222222;">
 								<td style="padding:1%;">'.$row['Cheater'].'</td>
-								<td style="padding:1%;">'.$row['CheaterIP'].'</td>
-								<td style="padding:1%;">'.$row['Hardware'].'</td>
 								<td style="padding:1%;">'.$row['Reason'].'</td>
 								<td style="padding:1%;">'.$row['ServerName'].'</td>
 								<td style="padding:1%;">'.$row['ServerIP'].'</td>
