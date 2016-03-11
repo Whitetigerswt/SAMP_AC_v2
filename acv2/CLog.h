@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 
+#define AC_LOG_FILE_NAME	"acv2_log.txt"
+
 class CLog {
 public:
 

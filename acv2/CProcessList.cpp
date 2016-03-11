@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <TlHelp32.h>
 #include <Psapi.h>
+#include <CLog.h>
 
 typedef void (WINAPI *QFPIN)(HANDLE hProcess, DWORD dwFlags, LPSTR lpExeName, PDWORD lpdwSize);
 
@@ -89,6 +90,10 @@ void CProcessList::Scan()
 						// Kill the process
 						TerminateProcess(pHandle, 0);
 
+						// Print in AC log
+						CLog acLog(AC_LOG_FILE_NAME, true);
+						acLog.Write("Terminated process '%s' due to Windows error: ERROR_FILE_INVALID", processpath);
+				
 						// Make sure we close the handle to the open process.
 						CloseHandle(pHandle);
 
