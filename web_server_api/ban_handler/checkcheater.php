@@ -1,7 +1,7 @@
 <?php
 
 	require_once 'connect.php';
-    $uConnect = new mysqli(mysql_host, mysql_user, mysql_pw, mysql_db);
+    	$uConnect = new mysqli(mysql_host, mysql_user, mysql_pw, mysql_db);
 	
 	$Hardware = $uConnect->real_escape_string($_REQUEST['Hardware']);
 	$IP = $uConnect->real_escape_string($_REQUEST['IP']);
@@ -17,7 +17,6 @@
 			http_response_code(508);
 		}
 	}
-	var_dump(http_response_code());
 	mysqli_close($uConnect);
 
 ?>
