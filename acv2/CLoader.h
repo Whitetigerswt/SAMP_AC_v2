@@ -38,6 +38,9 @@ private:
 	// PROMISE: An elevated process after it returns.
 	static void CheckElevation();
 
+	// PURPOSE: Attempt to protect the process from use of outside process manipulation.
+	static DWORD ProtectProcess();
+
 	static bool isLoaded;
 
 	static int isElevated;
