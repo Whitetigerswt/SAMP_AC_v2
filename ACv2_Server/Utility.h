@@ -1,5 +1,9 @@
 #pragma once
 
+#define AC_WEBSITE "http://samp-ac.com"
+
+#define MAX_CHEAT_PATH	20
+
 #define SAFE_FREE(ptr) if(ptr) delete ptr;
 
 #include <string>
@@ -37,6 +41,12 @@ namespace Utility
 	// PURPOSE: Crossplatform GetTickCount.
 	// REQUIRES: NULL
 	unsigned getTickCount();
+
+	// PURPOSE: Truncate a given file path if it exeeds MAX_CHEAT_PATH.
+	// REQUIRES: Original file path.
+	// RETURNS: char* - a safe (truncated) file path or the original file path if it does not exceed MAX_CHEAT_PATH.
+	// NOTES: This function is mostly used with samp client messages since they have length limit.
+	char* GetSafeFilePath(char* orginalFilePath);
 }
 
 #ifndef CHECK_PARAMS

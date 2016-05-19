@@ -2,6 +2,7 @@
 
 #include <map>
 #include "BitStream.h"
+#include <cstddef>
 
 #define RPC_CALLBACK void
 #define RPC_ARGS RakNet::BitStream& bsData, int iExtra

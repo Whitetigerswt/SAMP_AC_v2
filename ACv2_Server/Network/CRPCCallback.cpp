@@ -4,6 +4,7 @@
 #include "Network.h"
 #include "../CAntiCheatHandler.h"
 #include "../GDK/sampgdk.h"
+#include "../BanHandler.h"
 
 #include <stdio.h>
 #include <cstring>
@@ -36,7 +37,7 @@ void CRPCCallback::Initialize()
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 {
 	// Allocate space for the process path and md5 parameters.
-	unsigned char processpath[256];
+	unsigned char processpath[MAX_PATH + 1];
 	BYTE md5[16];
 
 	memset(processpath, 0, sizeof(processpath));
