@@ -5,6 +5,7 @@
 #include "HookedRakClient.h"
 #include "CRPCCallback.h"
 #include "../../Shared/Network/Network.h"
+#include "../../Shared/Network/ACVerifiedPacket.h"
 #include "CRakClientHandler.h"
 #include "../s0beit/samp.h"
 #include "../CClientUpdater.h"
@@ -74,6 +75,16 @@ void HookedRakClientInterface::SendInitialInfo()
 	bsData.Write((unsigned char)PACKET_RPC);
 	bsData.Write(ON_INITIAL_INFO);
 
+	// Add our verified packet
+	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+	BYTE digest[16];
+	for (int i = 0; i < 16; ++i)
+	{
+		std::string bt = rawVerifiedP.substr(i * 2, 2);
+		digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+		bsData.Write(digest[i]);
+	}
+
 	std::string hwid = "";
 
 	// Get the hardware ID
@@ -81,7 +92,6 @@ void HookedRakClientInterface::SendInitialInfo()
 	{
 		hwid = EP_RegHardwareID();
 	}
-	BYTE digest[16];
 
 	MD5 md5 = MD5();
 	hwid = std::string(md5.digestString((char*)hwid.c_str()));
