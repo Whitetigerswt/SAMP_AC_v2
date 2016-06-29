@@ -5,6 +5,7 @@
 #include "../CAntiCheatHandler.h"
 #include "../GDK/sampgdk.h"
 #include "../BanHandler.h"
+#include "../../Shared/Network/ACVerifiedPacket.h"
 
 #include <stdio.h>
 #include <cstring>
@@ -200,11 +201,41 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	Utility::Printf("initial info called!");
 	CAntiCheatHandler::Init(iExtra);
 
+	// Calculate verified packet
+	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+
+	// Convert to byte
+	BYTE md5[16];
+	for (int i = 0; i < 16; ++i)
+	{
+		std::string bt = rawVerifiedP.substr(i * 2, 2);
+		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+
+		// Read what is sent from client in the same order
+		BYTE read;
+		bsData.Read(read);
+
+		// See if any of the bytes sent from client does not match
+		if (read != md5[i])
+		{
+			// Kick the client
+
+			char kickmsg[144], name[MAX_PLAYER_NAME];
+			GetPlayerName(iExtra, name, sizeof name);
+			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for using invalid anti-cheat client.", name, iExtra);
+
+			Utility::Printf(kickmsg);
+			SendClientMessageToAll(0xFF0000FF, kickmsg);
+
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
+			break;
+		}
+	}
+
 	// Create a big variable to hold hardware ID.
 	float version;
 
 	// Convert the md5 from bytes to char
-	BYTE md5[16];
 	char digestChars[33];
 	for (int i = 0; i < 16; ++i)
 	{

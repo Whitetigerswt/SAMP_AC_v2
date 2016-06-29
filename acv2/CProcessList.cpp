@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <TlHelp32.h>
 #include <Psapi.h>
+#include <CLog.h>
 
 typedef void (WINAPI *QFPIN)(HANDLE hProcess, DWORD dwFlags, LPSTR lpExeName, PDWORD lpdwSize);
 
@@ -20,7 +21,6 @@ CProcessList::~CProcessList()
 
 void CProcessList::Scan()
 {
-
 	// Check if QueryFullProcessImageName exists.
 	// It doesn't exist on Windows XP.
 	QFPIN pQueryFullProcessImageName = (QFPIN)GetProcAddress(GetModuleHandle("Kernel32.dll"), (LPCSTR)"QueryFullProcessImageNameA");
@@ -47,22 +47,21 @@ void CProcessList::Scan()
 				HANDLE process = OpenProcess(TOKEN_ADJUST_PRIVILEGES, FALSE, pe32.th32ProcessID);
 				AdjustTokens(process);
 				CloseHandle(process);
-				
 
 				// If we're on windows other than XP, we only need PROCESS_QUERY_INFORMATION priv.
 				if (pQueryFullProcessImageName != NULL)
 				{
-					pHandle = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pe32.th32ProcessID);
+					pHandle = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_TERMINATE, false, pe32.th32ProcessID);
 				} 
 				else
 				{
-					pHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, pe32.th32ProcessID);
+					pHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_TERMINATE, false, pe32.th32ProcessID);
 				}
 
 				if (pHandle != NULL)
 				{
 					// Create a char object to hold the path of the process later.
-					char processpath[256];
+					char processpath[MAX_PATH];
 
 					if (NULL != pQueryFullProcessImageName) 
 					{
@@ -77,6 +76,30 @@ void CProcessList::Scan()
 						// We're on Windows XP.
 						GetModuleFileNameEx(pHandle, NULL, processpath, sizeof(processpath));
 					}
+					// The follow code checks if this process really exists on a drive
+					// If you wonder why this is important, see https://github.com/Whitetigerswt/SAMP_AC_v2/issues/134
+
+					// Get last error code
+					DWORD err = GetLastError();
+
+					// Check if error code means, "The volume for a file has been externally altered so that the opened file is no longer valid"
+					if (err == ERROR_FILE_INVALID)
+					{
+						// It's an invalid file. It doesn't seem to exist on a drive anymore. So it probably was a bypass attempt..
+
+						// Kill the process
+						TerminateProcess(pHandle, 0);
+
+						// Print in AC log
+						CLog acLog(AC_LOG_FILE_NAME, true);
+						acLog.Write("Terminated process '%s' due to Windows error: ERROR_FILE_INVALID", processpath);
+				
+						// Make sure we close the handle to the open process.
+						CloseHandle(pHandle);
+
+						// Continue on to the next process.
+						continue;
+					}
 
 					if (processpath != NULL) 
 					{
@@ -87,6 +110,7 @@ void CProcessList::Scan()
 							AddFile(path);
 						}
 					}
+					
 					// Make sure we close the handle to the open process.
 					CloseHandle(pHandle);
 				}
