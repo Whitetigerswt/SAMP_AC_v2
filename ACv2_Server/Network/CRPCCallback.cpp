@@ -24,6 +24,7 @@ typedef unsigned char BYTE;
 void CRPCCallback::Initialize()
 {
 	// Add RPC Callback functions.
+	CRPC::Add(ON_CLIENT_VERIFIED, OnClientVerified);
 	CRPC::Add(ON_FILE_EXECUTED, OnFileExecuted);
 	CRPC::Add(ON_MD5_CALCULATED, OnMD5Calculated);
 	CRPC::Add(ON_FILE_CALCULATED, OnFileCalculated);
@@ -33,6 +34,48 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_TAMPER_ATTEMPT, OnTamperAttempt);
 	CRPC::Add(TOGGLE_PAUSE, OnPauseToggled);
 	CRPC::Add(TAKE_SCREENSHOT, OnTakeScreenshot);
+}
+
+RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
+{
+	// Calculate verified packet
+	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+
+	bool verified = true;
+
+	// Convert to byte
+	BYTE md5[16];
+	for (int i = 0; i < 16; ++i)
+	{
+		std::string bt = rawVerifiedP.substr(i * 2, 2);
+		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+
+		// Read what is sent from client in the same order
+		BYTE read;
+		bsData.Read(read);
+
+		// See if any of the bytes sent from client does not match
+		if (read != md5[i])
+		{
+			// Kick the client
+
+			char kickmsg[144], name[MAX_PLAYER_NAME];
+			GetPlayerName(iExtra, name, sizeof name);
+			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client.", name, iExtra);
+
+			Utility::Printf(kickmsg);
+			SendClientMessageToAll(0xFF0000FF, kickmsg);
+
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
+			verified = false;
+			break;
+		}
+	}
+
+	if (verified == true)
+	{
+		Callback::SetLastTimeVerifiedClient(iExtra);
+	}
 }
 
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
@@ -206,6 +249,7 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 
 	// Convert to byte
 	BYTE md5[16];
+	bool verified = true;
 	for (int i = 0; i < 16; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
@@ -228,8 +272,14 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 			SendClientMessageToAll(0xFF0000FF, kickmsg);
 
 			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
+			verified = false;
 			break;
 		}
+	}
+
+	if (verified == true)
+	{
+		Callback::SetLastTimeVerifiedClient(iExtra);
 	}
 
 	// Create a big variable to hold hardware ID.

@@ -16,14 +16,14 @@
     <EnableLogging>False</EnableLogging>
   </KeysGenerator>
   <Input>
-    <FileName>C:\Users\white\Documents\GitHub\SAMP_AC_v2\Release\ACv2_Client.asi</FileName>
+    <FileName>E:\SAMP_AC_v2\Release\ACv2_Client.asi</FileName>
     <ProductName/>
     <VersionInfo/>
     <ProductInfoFromResources>True</ProductInfoFromResources>
   </Input>
   <Output>
     <SameAsInputFile>True</SameAsInputFile>
-    <FileName>C:\Users\white\Documents\GitHub\SAMP_AC_v2\Release\ACv2_Client.asi</FileName>
+    <FileName>E:\SAMP_AC_v2\Release\ACv2_Client.asi</FileName>
     <DoNotBackup>True</DoNotBackup>
   </Output>
   <AdvanceInput>

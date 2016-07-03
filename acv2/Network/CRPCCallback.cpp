@@ -6,6 +6,7 @@
 #include "../CHookManager.h"
 #include "../CMem.h"
 #include "../../Shared/Network/Network.h"
+#include "../../Shared/Network/ACVerifiedPacket.h"
 #include "CRakClientHandler.h"
 
 #include <Boost\thread.hpp>
@@ -13,6 +14,7 @@
 
 void CRPCCallback::Initialize()
 {
+	CRPC::Add(VERIFY_CLIENT, VerifyClient);
 	CRPC::Add(MD5_MEMORY_REGION, MD5_Memory_Region);
 	CRPC::Add(MD5_FILE, MD5_File);
 	CRPC::Add(TOGGLE_SWITCH_RELOAD, ToggleSwitchReload);
@@ -47,6 +49,41 @@ void CRPCCallback::ResendFileInformation()
 	CLoader::Processes.ResendFiles();
 	CLoader::Modules.ResendFiles();
 	CLoader::GtaDirectory.Scan(Misc::GetGTADirectory());
+}
+
+void SendVerificationPacket()
+{
+	RakNet::BitStream bitStream;
+
+	// Add header info
+	bitStream.Write((unsigned char)PACKET_RPC);
+	bitStream.Write(ON_CLIENT_VERIFIED);
+
+	// Calculate verified packet
+	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+
+	// Convert verified packet from string to byte
+	BYTE digest[16];
+	for (int i = 0; i < 16; ++i)
+	{
+		std::string bt = rawVerifiedP.substr(i * 2, 2);
+		digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+
+		// Write this byte
+		bitStream.Write(digest[i]);
+	}
+
+	// Send the RPC to the server.
+	CRakClientHandler::CustomSend(&bitStream, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
+}
+
+void CRPCCallback::VerifyClient(RakNet::BitStream &bsData, int iExtra)
+{
+	// Create a separated thread for client verification procedure 
+	boost::thread VerifyClientThread(&SendVerificationPacket);
+
+	// Run it detached which means it does not affect the current caller thread (won't slow down or freeze game)
+	VerifyClientThread.detach();
 }
 
 void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)

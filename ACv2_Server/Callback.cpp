@@ -16,6 +16,10 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
+#define VERIFY_CLIENTS_INTERVAL 120000
+
+int LastTimeVerifiedClient[MAX_PLAYERS];
+
 namespace Callback
 {
 	static AMX* amx_allowed = NULL;
@@ -152,9 +156,51 @@ namespace Callback
 		}
 	}
 
+	void SAMPGDK_CALL VerifyClients(int timerid, void *params)
+	{
+		// Loop through all players.
+		for (int i = 0; i < MAX_PLAYERS; ++i)
+		{
+			// Make sure the player is connected to the AC and the server.
+			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
+			{
+				// See if they haven't verified their client in a while
+				if (GetTickCount() - LastTimeVerifiedClient[i] > VERIFY_CLIENTS_INTERVAL)
+				{
+					char msg[144], name[MAX_PLAYER_NAME];
+					GetPlayerName(i, name, sizeof name);
+					snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked for not verifying anti-cheat client.", name);
+					SendClientMessageToAll(-1, msg);
+
+					// Kick the player from the server
+					SetTimer(1000, 0, Callback::KickPlayer, (void*)i);
+				}
+				else
+				{
+					// Request verified packet from client
+
+					RakNet::BitStream bsData;
+
+					// Write header
+					bsData.Write((unsigned char)PACKET_RPC);
+					bsData.Write(VERIFY_CLIENT);
+
+					// Send RPC.
+					Network::PlayerSend(i, &bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
+				}
+			}
+			return;
+		}
+	}
+
 	bool GetACEnabled()
 	{
 		return ACToggle;
+	}
+
+	void SetLastTimeVerifiedClient(unsigned int playerid)
+	{
+		LastTimeVerifiedClient[playerid] = GetTickCount();
 	}
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
@@ -188,7 +234,7 @@ namespace Callback
 					// This player is a cheater and has been banned before. 
 					switch (ACToggle)
 					{
-						case  true:
+						case true:
 						{
 							// AC is enabled. Kick the banned player.
 							char msg[144];
@@ -369,10 +415,18 @@ namespace Callback
 		return true;
 	}
 
+	bool onGameModeInitCalled = false; // if OnGameModeInit has been called at least once
+
 	PLUGIN_EXPORT bool PLUGIN_CALL OnGameModeInit()
 	{
+		if (onGameModeInitCalled)
+			return true;
+
 		// Check memory pretty frequently in a new timer.
-		SetTimer(60000, 1, CheckPlayersMemory, NULL);
+		SetTimer(60000, true, CheckPlayersMemory, NULL);
+
+		// Request client verification in a repeated timer
+		SetTimer(VERIFY_CLIENTS_INTERVAL, true, VerifyClients, NULL);
 
 		if (!boost::filesystem::exists("ac_config.ini"))
 		{
@@ -406,6 +460,7 @@ namespace Callback
 			Default_VehicleBlips = pt.get<bool>("defaults.vehicle_blips");
 		}
 
+		onGameModeInitCalled = true;
 		return true;
 	}
 
