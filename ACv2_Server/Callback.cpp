@@ -169,8 +169,9 @@ namespace Callback
 				{
 					char msg[144], name[MAX_PLAYER_NAME];
 					GetPlayerName(i, name, sizeof name);
-					snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked for not verifying anti-cheat client.", name);
-					SendClientMessageToAll(-1, msg);
+					snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client properly.", name);
+					SendClientMessageToAll(0xFF0000FF, msg);
+					Utility::Printf(msg);
 
 					// Kick the player from the server
 					SetTimer(1000, 0, Callback::KickPlayer, (void*)i);
