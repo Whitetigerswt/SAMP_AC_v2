@@ -621,7 +621,7 @@ HOOK CHookManager::NameTagHook()
 
 void CHookManager::SetLiteFoot(bool toggle)
 {
-	if (!toggle)
+	if (toggle)
 		LiteFoot = 1.0f;
 	else
 		LiteFoot = 0.0f;
