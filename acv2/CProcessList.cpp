@@ -91,7 +91,7 @@ void CProcessList::Scan()
 						TerminateProcess(pHandle, 0);
 
 						// Print in AC log
-						CLog acLog(AC_LOG_FILE_NAME, true);
+						CLog acLog(AC_LOG_FILE_PATH, true);
 						acLog.Write("Terminated process '%s' due to Windows error: ERROR_FILE_INVALID", processpath);
 				
 						// Make sure we close the handle to the open process.
