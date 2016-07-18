@@ -18,6 +18,10 @@ private:
 	// REQUIRES: The player to have just been connected to the server.
 	static void OnConnect();
 
+	// PURPOSE: An RPC callback carries basic information from server to be printed in client's log file (when /acinfo is used).
+	// REQUIRES: The server sends the AC_SERVER_INFO RPC to the client.
+	static RPC_CALLBACK SendACServerInfo(RPC_ARGS);
+
 	// PURPOSE: An RPC callback to make client send verification packet to server.
 	// REQUIRES: The server sends the VERIFY_CLIENT RPC to the client.
 	static RPC_CALLBACK VerifyClient(RPC_ARGS);

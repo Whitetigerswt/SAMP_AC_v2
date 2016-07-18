@@ -473,11 +473,33 @@ namespace Callback
 		{
 			// This command is here so we can check for abuse, if main_ac_checks is 0 then it can't be proven that the scripter
 			// hasn't added some weird condition that allows him to cheat but not anyone else.
+			
 			if (ACToggle)
 			{
+				// Create bitstream
+				RakNet::BitStream bsData;
+
+				// Write header
+				bsData.Write((unsigned char)PACKET_RPC);
+				bsData.Write(AC_SERVER_INFO);
+
+				bsData.Write(ACToggle);
+
+				// Confirmation code
+				int code = rand() % 99999;
+				bsData.Write(code);
+
+
+				// Send RPC.
+				Network::PlayerSend(playerid, &bsData, LOW_PRIORITY, RELIABLE);
+
 				SendClientMessage(playerid, -1, "{d3d3d3}** main_ac_checks: {FFFFFF}1");
 				SendClientMessage(playerid, -1, "This means the anti-cheat checks connected players and deals with them automatically.");
-				SendClientMessage(playerid, -1, "To make sure this is not a fake server, always check acv2_log.txt in your GTA SA folder for confirmation messages");
+				SendClientMessage(playerid, -1, "To make sure this is not a fake server, check acv2_log.txt in your GTA SA folder for confirmation message");
+				
+				char str[144];
+				snprintf(str, "Your confirmation message must contain this code: %d, if you don't recieve such a message, report this server", code);
+				SendClientMessage(playerid, -1, str);
 			}
 			else
 			{
