@@ -5,7 +5,6 @@
 #include "../CAntiCheatHandler.h"
 #include "../GDK/sampgdk.h"
 #include "../BanHandler.h"
-#include "../../Shared/Network/ACVerifiedPacket.h"
 
 #include <stdio.h>
 #include <cstring>
@@ -263,6 +262,7 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	Utility::Printf("initial info called!");
 	CAntiCheatHandler::Init(iExtra);
 
+<<<<<<< HEAD
 	// Confirmation: check if it's not our verified packets
 	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 	BYTE md5[16];
@@ -302,10 +302,13 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 		}
 	}
 
+=======
+>>>>>>> parent of 2adce67... First attempt to temporarily fix #132
 	// Create a big variable to hold hardware ID.
 	float version;
 
 	// Convert the md5 from bytes to char
+	BYTE md5[16];
 	char digestChars[33];
 	for (int i = 0; i < 16; ++i)
 	{
