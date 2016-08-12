@@ -48,5 +48,4 @@ namespace Callback
 	static int Default_FrameLimit = 9999;
 
 	bool GetACEnabled();
-	void SetLastTimeVerifiedClient(unsigned int playerid);
 }

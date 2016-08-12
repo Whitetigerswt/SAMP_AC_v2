@@ -7,7 +7,6 @@
 #include "../CHookManager.h"
 #include "../CMem.h"
 #include "../../Shared/Network/Network.h"
-#include "../../Shared/Network/ACVerifiedPacket.h"
 #include "CRakClientHandler.h"
 
 #include <Boost\thread.hpp>
@@ -15,8 +14,11 @@
 
 void CRPCCallback::Initialize()
 {
+<<<<<<< HEAD
 	CRPC::Add(VERIFY_CLIENT, VerifyClient);
 	CRPC::Add(AC_SERVER_INFO, SendACServerInfo);
+=======
+>>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 	CRPC::Add(MD5_MEMORY_REGION, MD5_Memory_Region);
 	CRPC::Add(MD5_FILE, MD5_File);
 	CRPC::Add(TOGGLE_SWITCH_RELOAD, ToggleSwitchReload);
@@ -53,6 +55,7 @@ void CRPCCallback::ResendFileInformation()
 	CLoader::GtaDirectory.Scan(Misc::GetGTADirectory());
 }
 
+<<<<<<< HEAD
 void SendVerificationPacket()
 {
 	RakNet::BitStream bitStream;
@@ -102,6 +105,8 @@ void CRPCCallback::SendACServerInfo(RakNet::BitStream &bsData, int iExtra)
 	}
 }
 
+=======
+>>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)
 {
 	// Create variables to store the info the server sent.

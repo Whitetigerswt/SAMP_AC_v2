@@ -24,7 +24,6 @@ typedef unsigned char BYTE;
 void CRPCCallback::Initialize()
 {
 	// Add RPC Callback functions.
-	CRPC::Add(ON_CLIENT_VERIFIED, OnClientVerified);
 	CRPC::Add(ON_FILE_EXECUTED, OnFileExecuted);
 	CRPC::Add(ON_MD5_CALCULATED, OnMD5Calculated);
 	CRPC::Add(ON_FILE_CALCULATED, OnFileCalculated);
@@ -36,6 +35,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(TAKE_SCREENSHOT, OnTakeScreenshot);
 }
 
+<<<<<<< HEAD
 RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
 {
 	// Calculate verified packet
@@ -78,6 +78,8 @@ RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtr
 	}
 }
 
+=======
+>>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 {
 	// Allocate space for the process path and md5 parameters.
@@ -266,7 +268,6 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 
 	// Convert to byte
 	BYTE md5[16];
-	bool verified = true;
 	for (int i = 0; i < 16; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
@@ -280,16 +281,23 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 		if (read != md5[i])
 		{
 			// Kick the client
+<<<<<<< HEAD
 			// We delay the kick otherwise GetPlayerName returns incorrect data.
 			SetTimer(1000, 0, KickUnverifiedClient, (void*)iExtra);
 			verified = false;
+=======
+
+			char kickmsg[144], name[MAX_PLAYER_NAME];
+			GetPlayerName(iExtra, name, sizeof name);
+			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for using invalid anti-cheat client.", name, iExtra);
+
+			Utility::Printf(kickmsg);
+			SendClientMessageToAll(0xFF0000FF, kickmsg);
+
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
+>>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 			break;
 		}
-	}
-
-	if (verified == true)
-	{
-		Callback::SetLastTimeVerifiedClient(iExtra);
 	}
 
 	// Create a big variable to hold hardware ID.

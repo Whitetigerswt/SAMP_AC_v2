@@ -13,12 +13,15 @@ enum eRPC : unsigned short
 {
 	// -- CLIENT RPCs --
 
+<<<<<<< HEAD
 	// Called when the server asks the client to send verified packet.
 	VERIFY_CLIENT,
 
 	// Called when the server sends basic information to the client, that is when the client requests it via /acinfo command.
 	AC_SERVER_INFO,
 
+=======
+>>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 	// Called when the server requests a region of memory checksum to be calculated.
 	MD5_MEMORY_REGION,
 	
@@ -56,9 +59,6 @@ enum eRPC : unsigned short
 	TOGGLE_VEHICLE_BLIPS,
 
 	// -- SERVER RPCs --
-
-	// Called when the client sends verified packet to the server
-	ON_CLIENT_VERIFIED,
 
 	// Called when a new module (in the current process) or process has been run
 	ON_FILE_EXECUTED,

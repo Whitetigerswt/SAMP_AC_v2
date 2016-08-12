@@ -16,10 +16,6 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
-#define VERIFY_CLIENTS_INTERVAL 120000
-
-int LastTimeVerifiedClient[MAX_PLAYERS];
-
 namespace Callback
 {
 	static AMX* amx_allowed = NULL;
@@ -156,6 +152,7 @@ namespace Callback
 		}
 	}
 
+<<<<<<< HEAD
 	void SAMPGDK_CALL VerifyClients(int timerid, void *params)
 	{
 		// Loop through all players.
@@ -194,14 +191,11 @@ namespace Callback
 		}
 	}
 
+=======
+>>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 	bool GetACEnabled()
 	{
 		return ACToggle;
-	}
-
-	void SetLastTimeVerifiedClient(unsigned int playerid)
-	{
-		LastTimeVerifiedClient[playerid] = GetTickCount();
 	}
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
@@ -236,7 +230,7 @@ namespace Callback
 					// This player is a cheater and has been banned before. 
 					switch (ACToggle)
 					{
-						case true:
+						case  true:
 						{
 							// AC is enabled. Kick the banned player.
 							char msg[144];
@@ -417,18 +411,10 @@ namespace Callback
 		return true;
 	}
 
-	bool onGameModeInitCalled = false; // if OnGameModeInit has been called at least once
-
 	PLUGIN_EXPORT bool PLUGIN_CALL OnGameModeInit()
 	{
-		if (onGameModeInitCalled)
-			return true;
-
 		// Check memory pretty frequently in a new timer.
-		SetTimer(60000, true, CheckPlayersMemory, NULL);
-
-		// Request client verification in a repeated timer
-		SetTimer(VERIFY_CLIENTS_INTERVAL, true, VerifyClients, NULL);
+		SetTimer(60000, 1, CheckPlayersMemory, NULL);
 
 		if (!boost::filesystem::exists("ac_config.ini"))
 		{
@@ -462,7 +448,6 @@ namespace Callback
 			Default_VehicleBlips = pt.get<bool>("defaults.vehicle_blips");
 		}
 
-		onGameModeInitCalled = true;
 		return true;
 	}
 
