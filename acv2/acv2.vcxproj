@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,7 +21,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -98,6 +98,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp" />
+    <ClCompile Include="..\Shared\Network\ACVerifiedPacket.cpp" />
     <ClCompile Include="..\Shared\Network\BitStream.cpp" />
     <ClCompile Include="..\Shared\Network\CRPC.cpp" />
     <ClCompile Include="CCheats.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="..\Shared\Boost\wave.hpp" />
     <ClInclude Include="..\Shared\Boost\weak_ptr.hpp" />
     <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h" />
+    <ClInclude Include="..\Shared\Network\ACVerifiedPacket.h" />
     <ClInclude Include="..\Shared\Network\BitStream.h" />
     <ClInclude Include="..\Shared\Network\CRPC.h" />
     <ClInclude Include="..\Shared\Network\Network.h" />

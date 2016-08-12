@@ -172,7 +172,7 @@ DWORD NameTag_je1;
 DWORD NameTag_je2;
 DWORD NameTagHookJmpBack;
 
-#define MAX_SPRINT_SPEED 6.5f
+#define MAX_SPRINT_SPEED 8.5f
 
 void CHookManager::Load()
 {
@@ -621,7 +621,7 @@ HOOK CHookManager::NameTagHook()
 
 void CHookManager::SetLiteFoot(bool toggle)
 {
-	if (!toggle)
+	if (toggle)
 		LiteFoot = 1.0f;
 	else
 		LiteFoot = 0.0f;

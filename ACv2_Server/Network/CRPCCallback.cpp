@@ -5,6 +5,7 @@
 #include "../CAntiCheatHandler.h"
 #include "../GDK/sampgdk.h"
 #include "../BanHandler.h"
+#include "../../Shared/Network/ACVerifiedPacket.h"
 
 #include <stdio.h>
 #include <cstring>
@@ -23,6 +24,7 @@ typedef unsigned char BYTE;
 void CRPCCallback::Initialize()
 {
 	// Add RPC Callback functions.
+	CRPC::Add(ON_CLIENT_VERIFIED, OnClientVerified);
 	CRPC::Add(ON_FILE_EXECUTED, OnFileExecuted);
 	CRPC::Add(ON_MD5_CALCULATED, OnMD5Calculated);
 	CRPC::Add(ON_FILE_CALCULATED, OnFileCalculated);
@@ -32,6 +34,48 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_TAMPER_ATTEMPT, OnTamperAttempt);
 	CRPC::Add(TOGGLE_PAUSE, OnPauseToggled);
 	CRPC::Add(TAKE_SCREENSHOT, OnTakeScreenshot);
+}
+
+RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
+{
+	// Calculate verified packet
+	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+
+	bool verified = true;
+
+	// Convert to byte
+	BYTE md5[16];
+	for (int i = 0; i < 16; ++i)
+	{
+		std::string bt = rawVerifiedP.substr(i * 2, 2);
+		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+
+		// Read what is sent from client in the same order
+		BYTE read;
+		bsData.Read(read);
+
+		// See if any of the bytes sent from client does not match
+		if (read != md5[i])
+		{
+			// Kick the client
+
+			char kickmsg[144], name[MAX_PLAYER_NAME];
+			GetPlayerName(iExtra, name, sizeof name);
+			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client properly.", name, iExtra);
+
+			SendClientMessageToAll(0xFF0000FF, kickmsg);
+			Utility::Printf(kickmsg);
+
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
+			verified = false;
+			break;
+		}
+	}
+
+	if (verified == true)
+	{
+		Callback::SetLastTimeVerifiedClient(iExtra);
+	}
 }
 
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
@@ -195,16 +239,63 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 	}
 }
 
+void SAMPGDK_CALL KickUnverifiedClient(int timerid, void *params)
+{
+	// Make sure the player is connected.
+	int playerid = (int)params;
+	if (IsPlayerConnected(playerid))
+	{
+		char kickmsg[144], name[MAX_PLAYER_NAME];
+		GetPlayerName(playerid, name, sizeof name);
+		snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client properly.", name, playerid);
+
+		SendClientMessageToAll(0xFF0000FF, kickmsg);
+		Utility::Printf(kickmsg);
+
+		SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+	}
+}
+
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
 	Utility::Printf("initial info called!");
 	CAntiCheatHandler::Init(iExtra);
 
+	// Calculate verified packet
+	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+
+	// Convert to byte
+	BYTE md5[16];
+	bool verified = true;
+	for (int i = 0; i < 16; ++i)
+	{
+		std::string bt = rawVerifiedP.substr(i * 2, 2);
+		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+
+		// Read what is sent from client in the same order
+		BYTE read;
+		bsData.Read(read);
+
+		// See if any of the bytes sent from client does not match
+		if (read != md5[i])
+		{
+			// Kick the client
+			// We delay the kick otherwise GetPlayerName returns incorrect data.
+			SetTimer(1000, 0, KickUnverifiedClient, (void*)iExtra);
+			verified = false;
+			break;
+		}
+	}
+
+	if (verified == true)
+	{
+		Callback::SetLastTimeVerifiedClient(iExtra);
+	}
+
 	// Create a big variable to hold hardware ID.
 	float version;
 
 	// Convert the md5 from bytes to char
-	BYTE md5[16];
 	char digestChars[33];
 	for (int i = 0; i < 16; ++i)
 	{

@@ -29,6 +29,31 @@ void CLoader::Initialize(HMODULE hMod)
 {
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
+		/* 
+			Force process elevation check. This will terminate the current process and run a new one if it's 
+			not elevated (if it's not running as admin).
+
+			Check https://github.com/Whitetigerswt/SAMP_AC_v2/issues/133 if you wonder why this is necessary!
+		*/
+
+		// Check if Windows version is vista or greater...
+		if (IsWindowsVistaOrGreater())
+		{
+			// Check if process is not elevated (not running as admin)
+			if (!IsProcessElevated())
+			{
+				// It's not elevated. Wait for the game to be loaded, so we can do our work to elevate it afterwards
+				while (ADDRESS_LOADED < 6)
+				{
+					Sleep(5);
+				}
+
+				// The game is loaded now. Relaunch the game as admin (elevated)
+				RunElevated();
+				return;
+			}
+		}
+
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
 		LoadLibrary("samp.dll");
 
@@ -60,12 +85,6 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Make sure we're using the latest version of this mod.
 		CClientUpdater::CheckForUpdate(hMod);
-
-		// Force process elevation once the game has loaded. This will terminate the current process and run a new one.
-		if (IsWindowsVistaOrGreater())
-		{
-			CheckElevation();
-		}
 
 		// Setup memory one more time.
 		CHookManager::Load();
@@ -315,16 +334,17 @@ DWORD CLoader::ProtectProcess()
 
 void CLoader::RunElevated()
 {
-	// Set our info to run the samp_elevator.exe
+	// Set our info to run gta_sa.exe with admin permissions
 	SHELLEXECUTEINFO sei = { sizeof(sei) };
 	sei.lpVerb = "runas";
 	sei.lpFile = "gta_sa.exe";
 	sei.nShow = SW_NORMAL;
 	sei.lpParameters = GetCommandLineA();
 
+	// Execute (this literally relaunches gta_sa.exe as admin)
 	ShellExecuteEx(&sei);
 
-	// Exit process since we're not elevated, and the elevator.exe will create a new process with elevation permissions.
+	// Exit process since we're not elevated.
 	ExitProcess(0);
 }
 
