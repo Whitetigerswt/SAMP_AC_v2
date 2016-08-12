@@ -169,8 +169,9 @@ namespace Callback
 				{
 					char msg[144], name[MAX_PLAYER_NAME];
 					GetPlayerName(i, name, sizeof name);
-					snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked for not verifying anti-cheat client.", name);
-					SendClientMessageToAll(-1, msg);
+					snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client properly.", name);
+					SendClientMessageToAll(0xFF0000FF, msg);
+					Utility::Printf(msg);
 
 					// Kick the player from the server
 					SetTimer(1000, 0, Callback::KickPlayer, (void*)i);
@@ -217,6 +218,7 @@ namespace Callback
 		{
 			// Tell the player we're using the AC on this server.
 			SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
+			SendClientMessage(playerid, -1, "{FFFF00}Info: {FFFFFF}always check /acinfo and acv2_log.txt in your GTA SA folder.");
 		}
 
 		if (CAntiCheatHandler::IsConnected(playerid))
@@ -471,9 +473,40 @@ namespace Callback
 		{
 			// This command is here so we can check for abuse, if main_ac_checks is 0 then it can't be proven that the scripter
 			// hasn't added some weird condition that allows him to cheat but not anyone else.
-			char output[128];
-			snprintf(output, sizeof(output), "{d3d3d3}** main_ac_checks: {FFFFFF}%d", ACToggle);
-			SendClientMessage(playerid, -1, output);
+			
+			if (ACToggle)
+			{
+				// Create bitstream
+				RakNet::BitStream bsData;
+
+				// Write header
+				bsData.Write((unsigned char)PACKET_RPC);
+				bsData.Write(AC_SERVER_INFO);
+
+				bsData.Write(ACToggle);
+
+				// Confirmation code
+				int code = rand() % 99999;
+				bsData.Write(code);
+
+
+				// Send RPC.
+				Network::PlayerSend(playerid, &bsData, LOW_PRIORITY, RELIABLE);
+
+				SendClientMessage(playerid, -1, "{d3d3d3}** main_ac_checks: {FFFFFF}1");
+				SendClientMessage(playerid, -1, "This means the anti-cheat checks connected players and deals with them automatically.");
+				SendClientMessage(playerid, -1, "To make sure this is not a fake server, check acv2_log.txt in your GTA SA folder for confirmation message");
+				
+				char str[144];
+				snprintf(str, "Your confirmation message must contain this code: %d, if you don't recieve such a message, report this server", code);
+				SendClientMessage(playerid, -1, str);
+			}
+			else
+			{
+				SendClientMessage(playerid, -1, "{d3d3d3}** main_ac_checks: {FFFFFF}0");
+				SendClientMessage(playerid, -1, "This means the anti-cheat checks connected players but won't deal with them automatically, it needs mode scripter.");
+				SendClientMessage(playerid, -1, "Beware of who the scripter is. If you want to be in a more secure situation, request main_ac_checks to be enabled via /actoggle");
+			}
 			return 1;
 		}
 

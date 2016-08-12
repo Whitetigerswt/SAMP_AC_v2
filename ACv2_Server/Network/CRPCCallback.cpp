@@ -61,10 +61,10 @@ RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtr
 
 			char kickmsg[144], name[MAX_PLAYER_NAME];
 			GetPlayerName(iExtra, name, sizeof name);
-			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client.", name, iExtra);
+			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client properly.", name, iExtra);
 
-			Utility::Printf(kickmsg);
 			SendClientMessageToAll(0xFF0000FF, kickmsg);
+			Utility::Printf(kickmsg);
 
 			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
 			verified = false;
@@ -239,6 +239,23 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 	}
 }
 
+void SAMPGDK_CALL KickUnverifiedClient(int timerid, void *params)
+{
+	// Make sure the player is connected.
+	int playerid = (int)params;
+	if (IsPlayerConnected(playerid))
+	{
+		char kickmsg[144], name[MAX_PLAYER_NAME];
+		GetPlayerName(playerid, name, sizeof name);
+		snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client properly.", name, playerid);
+
+		SendClientMessageToAll(0xFF0000FF, kickmsg);
+		Utility::Printf(kickmsg);
+
+		SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+	}
+}
+
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
 	Utility::Printf("initial info called!");
@@ -263,15 +280,8 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 		if (read != md5[i])
 		{
 			// Kick the client
-
-			char kickmsg[144], name[MAX_PLAYER_NAME];
-			GetPlayerName(iExtra, name, sizeof name);
-			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for using invalid anti-cheat client.", name, iExtra);
-
-			Utility::Printf(kickmsg);
-			SendClientMessageToAll(0xFF0000FF, kickmsg);
-
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
+			// We delay the kick otherwise GetPlayerName returns incorrect data.
+			SetTimer(1000, 0, KickUnverifiedClient, (void*)iExtra);
 			verified = false;
 			break;
 		}

@@ -43,7 +43,7 @@ namespace Callback
 	static bool Default_MacroLimits = false;
 	static bool Default_SwitchReload = false;
 	static bool Default_VehicleBlips = true;
-	static bool Default_LiteFoot = false;
+	static bool Default_LiteFoot = true;
 	static int Default_CrouchBug = 9999;
 	static int Default_FrameLimit = 9999;
 

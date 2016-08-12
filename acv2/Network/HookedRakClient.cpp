@@ -113,6 +113,10 @@ void HookedRakClientInterface::SendInitialInfo()
 
 	// Send the info to the server.
 	Send(&bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
+
+	// Print in AC log
+	CLog acLog(AC_LOG_FILE_PATH, true);
+	acLog.Write("Sent initial info!");
 }
 
 bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority, int reliability, char orderingChannel )
