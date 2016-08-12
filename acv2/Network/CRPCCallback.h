@@ -18,6 +18,7 @@ private:
 	// REQUIRES: The player to have just been connected to the server.
 	static void OnConnect();
 
+<<<<<<< HEAD
 	// PURPOSE: An RPC callback carries basic information from server to be printed in client's log file (when /acinfo is used).
 	// REQUIRES: The server sends the AC_SERVER_INFO RPC to the client.
 	static RPC_CALLBACK SendACServerInfo(RPC_ARGS);
@@ -26,6 +27,8 @@ private:
 	// REQUIRES: The server sends the VERIFY_CLIENT RPC to the client.
 	static RPC_CALLBACK VerifyClient(RPC_ARGS);
 
+=======
+>>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 	// PURPOSE: An RPC callback to get an md5 checksum of a specific memory region.
 	// REQUIRES: The server sends the MD5_MEMORY_REGION RPC to the client.
 	static RPC_CALLBACK MD5_Memory_Region(RPC_ARGS);

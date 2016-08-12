@@ -12,10 +12,6 @@ public:
 	static void Initialize();
 
 private:
-	// PURPOSE: RPC Callback for eRPC::ON_CLIENT_VERIFIED
-	// REQUIRES: NULL
-	static RPC_CALLBACK OnClientVerified(RPC_ARGS);
-
 	// PURPOSE: RPC Callback for eRPC::ON_FILE_EXECUTED
 	// REQUIRES: NULL
 	static RPC_CALLBACK OnFileExecuted(RPC_ARGS);
