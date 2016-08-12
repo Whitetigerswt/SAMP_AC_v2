@@ -14,11 +14,6 @@
 
 void CRPCCallback::Initialize()
 {
-<<<<<<< HEAD
-	CRPC::Add(VERIFY_CLIENT, VerifyClient);
-	CRPC::Add(AC_SERVER_INFO, SendACServerInfo);
-=======
->>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 	CRPC::Add(MD5_MEMORY_REGION, MD5_Memory_Region);
 	CRPC::Add(MD5_FILE, MD5_File);
 	CRPC::Add(TOGGLE_SWITCH_RELOAD, ToggleSwitchReload);
@@ -55,58 +50,6 @@ void CRPCCallback::ResendFileInformation()
 	CLoader::GtaDirectory.Scan(Misc::GetGTADirectory());
 }
 
-<<<<<<< HEAD
-void SendVerificationPacket()
-{
-	RakNet::BitStream bitStream;
-
-	// Add header info
-	bitStream.Write((unsigned char)PACKET_RPC);
-	bitStream.Write(ON_CLIENT_VERIFIED);
-
-	// Calculate verified packet
-	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
-
-	// Convert verified packet from string to byte
-	BYTE digest[16];
-	for (int i = 0; i < 16; ++i)
-	{
-		std::string bt = rawVerifiedP.substr(i * 2, 2);
-		digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
-
-		// Write this byte
-		bitStream.Write(digest[i]);
-	}
-
-	// Send the RPC to the server.
-	CRakClientHandler::CustomSend(&bitStream, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
-}
-
-void CRPCCallback::VerifyClient(RakNet::BitStream &bsData, int iExtra)
-{
-	// Create a separated thread for client verification procedure 
-	boost::thread VerifyClientThread(&SendVerificationPacket);
-
-	// Run it detached which means it does not affect the current caller thread (won't slow down or freeze game)
-	VerifyClientThread.detach();
-}
-
-void CRPCCallback::SendACServerInfo(RakNet::BitStream &bsData, int iExtra)
-{
-	// Create variables to store the info the server sent.
-	bool actoggle;
-	int code;
-
-	if (bsData.Read(actoggle) && bsData.Read(code))
-	{
-		// Print info in AC log
-		CLog acLog(AC_LOG_FILE_PATH, true);
-		acLog.Write("You're safe. ac_main_checks is actually enabled. Confirmation code: %d", code);
-	}
-}
-
-=======
->>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)
 {
 	// Create variables to store the info the server sent.

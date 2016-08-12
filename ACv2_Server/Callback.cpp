@@ -152,47 +152,6 @@ namespace Callback
 		}
 	}
 
-<<<<<<< HEAD
-	void SAMPGDK_CALL VerifyClients(int timerid, void *params)
-	{
-		// Loop through all players.
-		for (int i = 0; i < MAX_PLAYERS; ++i)
-		{
-			// Make sure the player is connected to the AC and the server.
-			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
-			{
-				// See if they haven't verified their client in a while
-				if (GetTickCount() - LastTimeVerifiedClient[i] > VERIFY_CLIENTS_INTERVAL)
-				{
-					char msg[144], name[MAX_PLAYER_NAME];
-					GetPlayerName(i, name, sizeof name);
-					snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client properly.", name);
-					SendClientMessageToAll(0xFF0000FF, msg);
-					Utility::Printf(msg);
-
-					// Kick the player from the server
-					SetTimer(1000, 0, Callback::KickPlayer, (void*)i);
-				}
-				else
-				{
-					// Request verified packet from client
-
-					RakNet::BitStream bsData;
-
-					// Write header
-					bsData.Write((unsigned char)PACKET_RPC);
-					bsData.Write(VERIFY_CLIENT);
-
-					// Send RPC.
-					Network::PlayerSend(i, &bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
-				}
-			}
-			return;
-		}
-	}
-
-=======
->>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 	bool GetACEnabled()
 	{
 		return ACToggle;

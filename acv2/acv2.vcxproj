@@ -126,6 +126,7 @@
     </ClCompile>
     <ClCompile Include="GTASA_CRC32.cpp" />
     <ClCompile Include="IMG.cpp" />
+    <ClCompile Include="ManualInjection.cpp" />
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="Network\CRakClientHandler.cpp" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
@@ -363,6 +364,7 @@
     <ClInclude Include="GTASA_CRC32.h" />
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="IMG.h" />
+    <ClInclude Include="ManualInjection.h" />
     <ClInclude Include="md5.h" />
     <ClInclude Include="Misc.h" />
     <ClInclude Include="Network\CRakClientHandler.h" />

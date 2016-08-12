@@ -34,51 +34,6 @@ void CRPCCallback::Initialize()
 	CRPC::Add(TAKE_SCREENSHOT, OnTakeScreenshot);
 }
 
-<<<<<<< HEAD
-RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
-{
-	// Calculate verified packet
-	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
-
-	bool verified = true;
-
-	// Convert to byte
-	BYTE md5[16];
-	for (int i = 0; i < 16; ++i)
-	{
-		std::string bt = rawVerifiedP.substr(i * 2, 2);
-		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
-
-		// Read what is sent from client in the same order
-		BYTE read;
-		bsData.Read(read);
-
-		// See if any of the bytes sent from client does not match
-		if (read != md5[i])
-		{
-			// Kick the client
-
-			char kickmsg[144], name[MAX_PLAYER_NAME];
-			GetPlayerName(iExtra, name, sizeof name);
-			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client properly.", name, iExtra);
-
-			SendClientMessageToAll(0xFF0000FF, kickmsg);
-			Utility::Printf(kickmsg);
-
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
-			verified = false;
-			break;
-		}
-	}
-
-	if (verified == true)
-	{
-		Callback::SetLastTimeVerifiedClient(iExtra);
-	}
-}
-
-=======
->>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 {
 	// Allocate space for the process path and md5 parameters.
@@ -259,51 +214,8 @@ void SAMPGDK_CALL KickUnverifiedClient(int timerid, void *params)
 
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("initial info called!");
 	CAntiCheatHandler::Init(iExtra);
 
-<<<<<<< HEAD
-	// Confirmation: check if it's not our verified packets
-	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
-	BYTE md5[16];
-	for (int i = 0; i < 16; ++i)
-	{
-		std::string bt = rawVerifiedP.substr(i * 2, 2);
-		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
-		BYTE read;
-		bsData.Read(read);
-		if (read != md5[i])
-		{
-			// Kick the client
-<<<<<<< HEAD
-<<<<<<< HEAD
-			// We delay the kick otherwise GetPlayerName returns incorrect data.
-			SetTimer(1000, 0, KickUnverifiedClient, (void*)iExtra);
-			verified = false;
-=======
-
-			char kickmsg[144], name[MAX_PLAYER_NAME];
-			GetPlayerName(iExtra, name, sizeof name);
-			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for using invalid anti-cheat client.", name, iExtra);
-
-			Utility::Printf(kickmsg);
-			SendClientMessageToAll(0xFF0000FF, kickmsg);
-
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
->>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
-=======
-			char str[128];
-			snprintf(str, sizeof(str), "Kicking ID (%d) for using invalid anti-cheat client.", iExtra);
-			Utility::Printf(str);
-			SendClientMessageToAll(0xFF0000FF, str);
-			Kick(iExtra);
->>>>>>> parent of 8630001... Add comments to code and adds more info to invalid ac client kick message
-			break;
-		}
-	}
-
-=======
->>>>>>> parent of 2adce67... First attempt to temporarily fix #132
 	// Create a big variable to hold hardware ID.
 	float version;
 

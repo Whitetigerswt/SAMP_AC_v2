@@ -8,7 +8,6 @@
 #include "CRakClientHandler.h"
 #include "../s0beit/samp.h"
 #include "../CClientUpdater.h"
-#include "../CLog.h"
 #include "../md5.h"
 
 #include <Windows.h>
@@ -100,9 +99,6 @@ void HookedRakClientInterface::SendInitialInfo()
 	// Send the info to the server.
 	Send(&bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
 
-	// Print in AC log
-	CLog acLog(AC_LOG_FILE_PATH, true);
-	acLog.Write("Sent initial info!");
 }
 
 bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority, int reliability, char orderingChannel )

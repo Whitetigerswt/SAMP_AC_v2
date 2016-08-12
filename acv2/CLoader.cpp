@@ -12,6 +12,7 @@
 #include "CModuleSecurity.h"
 #include "Network\CRakClientHandler.h"
 #include "VersionHelpers.h"
+#include "ManualInjection.h"
 
 #include <map>
 #include <Aclapi.h>
@@ -56,6 +57,11 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
 		LoadLibrary("samp.dll");
+		PELPEB peb = EL_GetPeb();
+		EL_HideModule(peb, L"samp.dll");
+		wchar_t path[MAX_PATH];
+		GetModuleFileNameW(hMod, path, sizeof(path));
+		EL_HideModule(peb, path);
 
 		// Hook LoadLibrary function.
 		CModuleSecurity::HookLoadLibrary();

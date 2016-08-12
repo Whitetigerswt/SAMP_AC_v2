@@ -89,13 +89,6 @@ void CProcessList::Scan()
 						// Kill the process
 						TerminateProcess(pHandle, 0);
 
-<<<<<<< HEAD
-						// Print in AC log
-						CLog acLog(AC_LOG_FILE_PATH, true);
-						acLog.Write("Terminated process '%s' due to Windows error: ERROR_FILE_INVALID", processpath);
-				
-=======
->>>>>>> parent of b0562b3... Addendum to c1349c6bfb18535d30f6869b351d7a7f6cd03b11
 						// Make sure we close the handle to the open process.
 						CloseHandle(pHandle);
 

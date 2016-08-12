@@ -138,6 +138,9 @@
     <ClCompile Include="CFunctionHooks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ManualInjection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\Network\CRPC.h">
@@ -852,6 +855,9 @@
       <Filter>Header Files\Enigma</Filter>
     </ClInclude>
     <ClInclude Include="CFunctionHooks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ManualInjection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
