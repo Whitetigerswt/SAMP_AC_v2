@@ -263,24 +263,19 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	Utility::Printf("initial info called!");
 	CAntiCheatHandler::Init(iExtra);
 
-	// Calculate verified packet
+	// Confirmation: check if it's not our verified packets
 	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
-
-	// Convert to byte
 	BYTE md5[16];
 	for (int i = 0; i < 16; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
 		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
-
-		// Read what is sent from client in the same order
 		BYTE read;
 		bsData.Read(read);
-
-		// See if any of the bytes sent from client does not match
 		if (read != md5[i])
 		{
 			// Kick the client
+<<<<<<< HEAD
 <<<<<<< HEAD
 			// We delay the kick otherwise GetPlayerName returns incorrect data.
 			SetTimer(1000, 0, KickUnverifiedClient, (void*)iExtra);
@@ -296,6 +291,13 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 
 			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
 >>>>>>> parent of 8371698... Prevent hackers from unloading AC module after sending initial packet
+=======
+			char str[128];
+			snprintf(str, sizeof(str), "Kicking ID (%d) for using invalid anti-cheat client.", iExtra);
+			Utility::Printf(str);
+			SendClientMessageToAll(0xFF0000FF, str);
+			Kick(iExtra);
+>>>>>>> parent of 8630001... Add comments to code and adds more info to invalid ac client kick message
 			break;
 		}
 	}

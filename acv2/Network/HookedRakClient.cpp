@@ -75,17 +75,13 @@ void HookedRakClientInterface::SendInitialInfo()
 	bsData.Write((unsigned char)PACKET_RPC);
 	bsData.Write(ON_INITIAL_INFO);
 
-	// Calculate verified packet
+	// Add our verified packet
 	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
-
-	// Convert verified packet from string to byte
 	BYTE digest[16];
 	for (int i = 0; i < 16; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
 		digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
-
-		// Write this byte
 		bsData.Write(digest[i]);
 	}
 
