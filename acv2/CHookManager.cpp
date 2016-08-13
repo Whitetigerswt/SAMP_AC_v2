@@ -160,6 +160,8 @@ static DWORD SlideFixJmpBack = 0x686C39;
 static DWORD WinMainHookJmpBack = 0x8246F1;
 static DWORD rIdleHookJmpBack = 0x53ECC2;
 
+static DWORD CLEO_Func_JmpBack = 0x46A222;
+
 static DWORD sampInfoAddr = NULL;
 static DWORD sampInfoRtnAddr = NULL;
 
@@ -381,6 +383,10 @@ void CHookManager::Load()
 	// Prevent modloader from working
 	CMem::ApplyJmp(FUNC_WinMain, (DWORD)WinMainHook, 5);
 	CMem::ApplyJmp(FUNC_rIdle, (DWORD)rIdleHook, 5);
+
+	// Lets just make CLEO crash so extensions of it don't work.
+	CMem::Cpy((void*)FUNC_CleoHook, "\x90\x90", 2);
+	CMem::ApplyJmp(FUNC_CleoHook+2, (DWORD)CleoHook, 5);
 
 	// Check data file integrity.
 	VerifyFilePaths();
@@ -751,6 +757,19 @@ HOOK CHookManager::rIdleHook()
 		call eax
 
 		jmp[rIdleHookJmpBack]
+	}
+}
+
+HOOK CHookManager::CleoHook()
+{
+	__asm
+	{
+		push eax
+		mov eax,00469F00h
+		call eax
+		pop eax
+		cmp edi,ebx
+		jmp[CLEO_Func_JmpBack]
 	}
 }
 HOOK CHookManager::SetCursorPosHook()
