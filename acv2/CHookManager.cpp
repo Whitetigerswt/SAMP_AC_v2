@@ -388,6 +388,18 @@ void CHookManager::Load()
 	CMem::Cpy((void*)FUNC_CleoHook, "\x90\x90", 2);
 	CMem::ApplyJmp(FUNC_CleoHook+2, (DWORD)CleoHook, 5);
 
+	BYTE dest[5];
+	CMem::Cpy(dest, (void*)FUNC_CRunningScript_AddScriptToList, 5);
+
+	BYTE Default[] = { 0xE9, 0x8B, 0xCD, 0x0F, 0x01 };
+	for (int i = 0; i < sizeof(Default); ++i)
+	{
+		if (dest[i] != Default[i])
+		{
+			CMem::Cpy((void*)FUNC_CRunningScript_AddScriptToList, "\x90\x90\x90\x90\x90", 5);
+		}
+	}
+
 	// Check data file integrity.
 	VerifyFilePaths();
 }
