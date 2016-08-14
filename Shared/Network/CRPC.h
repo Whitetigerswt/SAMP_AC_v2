@@ -13,9 +13,6 @@ enum eRPC : unsigned short
 {
 	// -- CLIENT RPCs --
 
-	// Called when the server asks the client to send verified packet.
-	VERIFY_CLIENT,
-
 	// Called when the server sends basic information to the client, that is when the client requests it via /acinfo command.
 	AC_SERVER_INFO,
 

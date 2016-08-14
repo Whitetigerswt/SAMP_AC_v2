@@ -166,14 +166,6 @@ namespace Callback
 			return true;
 		}
 
-		// if the AC is on, let the user know this server is protected.
-		if (ACToggle)
-		{
-			// Tell the player we're using the AC on this server.
-			SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
-			SendClientMessage(playerid, -1, "{FFFF00}Info: {FFFFFF}always check /acinfo and acv2_log.txt in your GTA SA folder.");
-		}
-
 		if (CAntiCheatHandler::IsConnected(playerid))
 		{
 			// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
@@ -195,7 +187,7 @@ namespace Callback
 							char msg[144];
 
 							// Tell the player
-							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. Know more: %s", AC_WEBSITE);
+							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. No more: %s", AC_WEBSITE);
 							SendClientMessage(playerid, -1, msg);
 							char name[MAX_PLAYER_NAME];
 							GetPlayerName(playerid, name, sizeof name);
@@ -214,7 +206,7 @@ namespace Callback
 							char msg[144];
 
 							// Tell the player
-							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. Know more: %s", AC_WEBSITE);
+							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. No more: %s", AC_WEBSITE);
 							SendClientMessage(playerid, -1, msg);
 							char name[MAX_PLAYER_NAME];
 							GetPlayerName(playerid, name, sizeof name);
@@ -240,7 +232,12 @@ namespace Callback
 					ac->SetPlayerConnected(true);
 				}
 
-				// We should NEVER get here
+				// if the AC is on, let the user know this server is protected.
+				if (ACToggle)
+				{
+					// Tell the player we're using the AC on this server.
+					SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
+				}
 
 				// Send the client the files we need them to return md5's to.
 				ac->CheckGTAFiles(playerid);
@@ -413,7 +410,7 @@ namespace Callback
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid, const char* params)
 	{
 
-		if (!strcmp(params, "/acinfo"))
+		/*if (!strcmp(params, "/acinfo"))
 		{
 			// This command is here so we can check for abuse, if main_ac_checks is 0 then it can't be proven that the scripter
 			// hasn't added some weird condition that allows him to cheat but not anyone else.
@@ -452,10 +449,10 @@ namespace Callback
 				SendClientMessage(playerid, -1, "Beware of who the scripter is. If you want to be in a more secure situation, request main_ac_checks to be enabled via /actoggle");
 			}
 			return 1;
-		}
+		}*/
 
 		// If the user typed /actoggle and they're allowed to run that command.
-		else if (!strcmp(params, "/actoggle") && CAntiCheat::CanEnableAC(playerid))
+		if (!strcmp(params, "/actoggle") && CAntiCheat::CanEnableAC(playerid))
 		{ 
 			// Set ACToggle to whatever it wasn't previously.
 			ACToggle = !ACToggle;

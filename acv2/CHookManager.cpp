@@ -406,7 +406,7 @@ void CHookManager::Load()
 	{
 		if (dest[i] != Default[i])
 		{
-			//CMem::Cpy((void*)FUNC_CRunningScript_AddScriptToList, "\x90\x90\x90\x90\x90", 5);
+			CMem::Cpy((void*)FUNC_CRunningScript_AddScriptToList, "\x90\x90\x90\x90\x90", 5);
 		}
 	}
 
@@ -476,7 +476,6 @@ void CHookManager::SetConnectPatches()
 	// Fix some slide issues with melee weps
 	CMem::ApplyJmp(FUNC_SlideFix, (DWORD)SlideFix, 6);
 }
-
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
 {
 	DWORD dwOldProt;
