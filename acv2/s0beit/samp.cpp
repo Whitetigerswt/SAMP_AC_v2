@@ -25,6 +25,8 @@ along with mod_sa.  If not, see <http://www.gnu.org/licenses/>.
 #include "samp.h"
 
 stSAMP							*g_SAMP = NULL;
+DWORD sampBaseAddress = NULL;
+DWORD sampSize = NULL;
 
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -34,4 +36,24 @@ stSAMP							*g_SAMP = NULL;
 struct stSAMP *stGetSampInfo(void)
 {
 	return g_SAMP;
+}
+
+void setSampBaseAddress(DWORD mod)
+{
+	sampBaseAddress = mod;
+}
+
+DWORD getSampBaseAddress()
+{
+	return sampBaseAddress;
+}
+
+void setSampSize(DWORD s)
+{
+	sampSize = s;
+}
+
+DWORD getSampSize()
+{
+	return sampSize;
 }

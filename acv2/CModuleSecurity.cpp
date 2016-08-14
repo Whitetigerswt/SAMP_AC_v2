@@ -4,7 +4,7 @@
 #include <TlHelp32.h>
 #include <winternl.h>
 #include <Windows.h>
-#include "CLog.h"
+
 
 LoadLibrary_t CModuleSecurity::m_pLoadLibrary = NULL;
 std::vector<std::string> CModuleSecurity::m_AllowedModules;

@@ -61,6 +61,13 @@ namespace Misc
 	// REQUIRES: A mask.
 	DWORD FindPattern(char *pattern, char *mask);
 
+	// PURPOSE: Get an address from a pattern inside an module.
+	// REQUIRES: A pattern.
+	// REQUIRES: A mask.
+	// REQUIRES: A base address of the module you want to search.
+	// REQUIRES: The total size of the module.
+	DWORD FindPattern(char *pattern, char *mask, DWORD base, DWORD size);
+
 	// PURPOSE: Set the games state as alt tabbed
 	// REQUIRES: a state to set
 	void SetAltTabState(bool toggle);

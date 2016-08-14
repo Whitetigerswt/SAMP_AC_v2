@@ -12,6 +12,8 @@
 #include "DirectX Hooks\CMessageProxy.h"
 #include "s0beit\samp.h"
 #include "Network\CRakClientHandler.h"
+#include "ManualInjection.h"
+#include "CLog.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -186,6 +188,19 @@ void CHookManager::Load()
 	DWORD samp = (DWORD)GetModuleHandle("samp.dll");
 	if (samp)
 	{
+		setSampBaseAddress(samp);
+	}
+	else if(getSampBaseAddress() != NULL)
+	{
+		samp = getSampBaseAddress();
+	}
+
+	CLog log = CLog("samp.txt");
+	log.Write("0x%x samp", samp);
+	log.Write("0x%x getsampbaseaddr", getSampBaseAddress());
+
+	if (samp)
+	{
 		// Add address offset
 		samp += 0x6FCF1;
 
@@ -197,7 +212,7 @@ void CHookManager::Load()
 		// Install hook
 		CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 7);
 
-		samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx");
+		samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx", getSampBaseAddress(), getSampSize());
 
 		if (samp != 0 && g_SAMP == NULL)
 		{
@@ -212,7 +227,7 @@ void CHookManager::Load()
 			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 11);
 		}
 	}
-
+	
 	// Prevent CLEO 4 from loading scripts
 	VirtualProtect(FUNC_Init_SCM1, 5, PAGE_EXECUTE_READWRITE, &dwOldProt);
 	memcpy(FUNC_Init_SCM1, "\xE8\x74\xCF\xF2\xFF", 5);
@@ -396,7 +411,7 @@ void CHookManager::Load()
 	{
 		if (dest[i] != Default[i])
 		{
-			CMem::Cpy((void*)FUNC_CRunningScript_AddScriptToList, "\x90\x90\x90\x90\x90", 5);
+			//CMem::Cpy((void*)FUNC_CRunningScript_AddScriptToList, "\x90\x90\x90\x90\x90", 5);
 		}
 	}
 

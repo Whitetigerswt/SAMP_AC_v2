@@ -13,11 +13,13 @@
 #include "Network\CRakClientHandler.h"
 #include "VersionHelpers.h"
 #include "ManualInjection.h"
+#include "s0beit\samp.h"
 
 #include <map>
 #include <Aclapi.h>
 #include <Shellapi.h>
 #include <Boost\thread.hpp>
+#include <Psapi.h>
 
 CInjectedLibraries CLoader::Modules = CInjectedLibraries();
 CProcessList CLoader::Processes = CProcessList();
@@ -56,7 +58,14 @@ void CLoader::Initialize(HMODULE hMod)
 		}
 
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
-		LoadLibrary("samp.dll");
+		HMODULE L = LoadLibrary("samp.dll");
+		MODULEINFO mInfo = { 0 };
+
+		GetModuleInformation(GetCurrentProcess(), L, &mInfo, sizeof(MODULEINFO));
+
+		setSampBaseAddress((DWORD)mInfo.lpBaseOfDll);
+		setSampSize((DWORD)mInfo.SizeOfImage);
+
 		PELPEB peb = EL_GetPeb();
 		EL_HideModule(peb, L"samp.dll");
 		wchar_t path[MAX_PATH];

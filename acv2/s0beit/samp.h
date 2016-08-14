@@ -940,6 +940,10 @@ struct stTranslateGTASAMP_pedPool
 ///////////////////////////////////// FUNCTIONS //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 struct stSAMP									*stGetSampInfo(void);
+void setSampBaseAddress(DWORD mod);
+DWORD getSampBaseAddress();
+void setSampSize(DWORD dllSize);
+DWORD getSampSize();
 
 // global pointer externals
 extern struct stSAMP							*g_SAMP;
