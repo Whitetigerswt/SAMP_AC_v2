@@ -13,7 +13,6 @@
 #include "s0beit\samp.h"
 #include "Network\CRakClientHandler.h"
 #include "ManualInjection.h"
-#include "CLog.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -194,10 +193,6 @@ void CHookManager::Load()
 	{
 		samp = getSampBaseAddress();
 	}
-
-	CLog log = CLog("samp.txt");
-	log.Write("0x%x samp", samp);
-	log.Write("0x%x getsampbaseaddr", getSampBaseAddress());
 
 	if (samp)
 	{
