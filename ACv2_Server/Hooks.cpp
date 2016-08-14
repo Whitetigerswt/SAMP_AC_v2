@@ -6,9 +6,14 @@
 
 #include "../Shared/Network/Network.h"
 #include "../Shared/Network/CRPC.h"
+#include "../acv2/RSA.h"
 
 #ifdef _WIN32
 	#include <Psapi.h>
+#endif
+
+#ifdef WIN32
+#define snprintf sprintf_s
 #endif
 
 extern void *pAMXFunctions;
@@ -102,6 +107,9 @@ static BYTE HOOK_GetPacketID(Packet *p)
 {
 	SubHook::ScopedRemove remove(&GetPacketID_hook);
 
+	Utility::Printf((const char*)p->data);
+	//std::string s = Decrypt(p->data);
+	//snprintf((char*)p->data, p->length, "%s", s.c_str());
 	BYTE packetId = GetPacketID(p);
 
 	// Check for invalid packets

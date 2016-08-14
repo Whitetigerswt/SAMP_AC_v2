@@ -82,7 +82,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;psapi.lib;wldap32.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_55.lib;libboost_filesystem-vc120-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\enigma_ide.lib;$(ProjectDir)libs\d3d9.lib;$(ProjectDir)libs\d3dx9.lib;$(SolutionDir)\Shared\libs\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;wldap32.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc120-mt-s-1_55.lib;libboost_filesystem-vc120-mt-s-1_55.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\enigma_ide.lib;$(ProjectDir)libs\d3d9.lib;$(ProjectDir)libs\d3dx9.lib;$(SolutionDir)\Shared\libs\libcurl.lib;$(SolutionDir)\Shared\crypto++\Win32\Output\Release\cryptlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -134,6 +134,7 @@
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="Network\RakClient.cpp" />
     <ClCompile Include="PatternScan.cpp" />
+    <ClCompile Include="RSA.cpp" />
     <ClCompile Include="s0beit\samp.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -373,6 +374,7 @@
     <ClInclude Include="Network\RakClient.h" />
     <ClInclude Include="PatternScan.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RSA.h" />
     <ClInclude Include="s0beit\samp.h" />
     <ClInclude Include="s0beit\stdtypes.h" />
     <ClInclude Include="VersionHelpers.h" />

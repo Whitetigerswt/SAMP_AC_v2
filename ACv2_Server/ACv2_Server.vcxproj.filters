@@ -90,6 +90,9 @@
     <ClCompile Include="BanHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\acv2\RSA.cpp">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SDK\samp-sdk\plugincommon.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="BanHandler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\acv2\RSA.h">
+      <Filter>Source Files\Shared</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
