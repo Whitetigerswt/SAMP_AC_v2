@@ -108,8 +108,7 @@ static BYTE HOOK_GetPacketID(Packet *p)
 	SubHook::ScopedRemove remove(&GetPacketID_hook);
 
 	Utility::Printf((const char*)p->data);
-	//std::string s = Decrypt(p->data);
-	//snprintf((char*)p->data, p->length, "%s", s.c_str());
+	
 	BYTE packetId = GetPacketID(p);
 
 	// Check for invalid packets
@@ -122,6 +121,10 @@ static BYTE HOOK_GetPacketID(Packet *p)
 	{
 		// Read the data sent
 		RakNet::BitStream bsData(&p->data[1], p->length - 1, false);
+
+		std::string s = Decrypt((unsigned char*)p->data[1]);
+		bsData.SetData((unsigned char*)s.c_str());
+
 		unsigned short usRpcId;
 
 		if (bsData.Read(usRpcId))
