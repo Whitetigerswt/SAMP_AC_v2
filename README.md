@@ -29,8 +29,8 @@ Linux
 ```
 1) Use _32_-bit Ubuntu 14.04.3 LTS Through VMWare (Or whatever distro you want, Ubuntu is the easiest)
 2) sudo apt-get update
-3) sudo apt-get upgrade
-4) sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev cmake g++4.4 make git geomview
+3) sudo apt-get upgrade 
+4) sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev cmake g++4.4 make git geomview libcurl4-openssl-dev
 5) Follow steps here to generate an ssh key and add to github: https://help.github.com/articles/generating-ssh-keys/
 6) git clone git@github.com:Whitetigerswt/SAMP_AC_v2.git
 7) cd to "ACv2_Server"
