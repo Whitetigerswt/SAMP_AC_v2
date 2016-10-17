@@ -127,8 +127,6 @@ Packet* HookedRakClientInterface::Receive( void )
 			return p;
 		}
 
-		CLog log = CLog("connections.txt");
-
 		switch (p->data[0])
 		{
 			case PACKET_RPC:
@@ -145,14 +143,12 @@ Packet* HookedRakClientInterface::Receive( void )
 
 				if (bsData.Read(usRpcId))
 				{
-					log.Write("RPC: %d", usRpcId);
 					// Process the RPC
 					CRPC::Process(usRpcId, bsData);
 				}
 			}
 			case ID_CONNECTION_REQUEST_ACCEPTED:
 			{
-				log.Write("Connection accepted, sending initial info");
 				SendInitialInfo();
 			}
 		}
