@@ -119,12 +119,9 @@ bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority
 	}
 
 	unsigned char* data = new unsigned char[bitStream->GetNumberOfBytesUsed()];
-	if (packetId == PACKET_RPC)
-	{
-		bitStream->CopyData(&data);
+	bitStream->CopyData(&data);
 
-		bitStream->SetData((unsigned char*)Encrypt(data).c_str());
-	}
+	bitStream->SetData((unsigned char*)Encrypt(data).c_str());
 
 	bool returnval = client->GetRakClientInterface()->Send( bitStream, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel );
 	delete[] data;

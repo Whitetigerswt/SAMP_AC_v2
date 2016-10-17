@@ -31,9 +31,7 @@ std::string Decrypt(unsigned char* s)
 
 	AutoSeededRandomPool prng;
 
-	CryptoPP::Integer i((const char*)s);
-
-	Integer r = privKey.CalculateInverse(prng, i);
+	Integer r = privKey.CalculateInverse(prng, boost::lexical_cast<CryptoPP::Integer>(s));
 
 	std::string recovered;
 	recovered.resize(r.MinEncodedSize());
