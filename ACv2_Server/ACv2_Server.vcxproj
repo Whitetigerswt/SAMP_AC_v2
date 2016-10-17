@@ -82,14 +82,13 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;psapi.lib;wldap32.lib;$(SolutionDir)Shared\libs\libcurl.lib;$(SolutionDir)Shared\crypto++\Win32\Output\Release\cryptlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;psapi.lib;wldap32.lib;$(SolutionDir)Shared\libs\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>plugin.def</ModuleDefinitionFile>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\acv2\RSA.cpp" />
     <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp" />
     <ClCompile Include="..\Shared\Network\BitStream.cpp" />
     <ClCompile Include="..\Shared\Network\CRPC.cpp" />
@@ -108,7 +107,6 @@
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\acv2\RSA.h" />
     <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h" />
     <ClInclude Include="..\Shared\Network\BitStream.h" />
     <ClInclude Include="..\Shared\Network\CRPC.h" />

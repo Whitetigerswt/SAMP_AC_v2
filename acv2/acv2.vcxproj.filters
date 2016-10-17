@@ -141,9 +141,6 @@
     <ClCompile Include="ManualInjection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RSA.cpp">
-      <Filter>Source Files\Shared</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\Network\CRPC.h">
@@ -862,9 +859,6 @@
     </ClInclude>
     <ClInclude Include="ManualInjection.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RSA.h">
-      <Filter>Source Files\Shared</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

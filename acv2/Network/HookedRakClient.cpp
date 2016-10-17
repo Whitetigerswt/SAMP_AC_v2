@@ -14,10 +14,6 @@
 #include <Windows.h>
 #include "../Enigma/enigma_ide.h"
 
-#include "../RSA.h"
-
-#include <boost\lexical_cast.hpp>
-
 bool hasSentInitInfo = false;
 
 HookedRakClientInterface::HookedRakClientInterface(RakClient * rakclient) : client(rakclient)
@@ -118,15 +114,7 @@ bool HookedRakClientInterface::Send( RakNet::BitStream * bitStream, int priority
 		CRPCCallback::Initialize();
 	}
 
-	unsigned char* data = new unsigned char[bitStream->GetNumberOfBytesUsed()];
-	bitStream->CopyData(&data);
-
-	bitStream->SetData((unsigned char*)Encrypt(data).c_str());
-
-	bool returnval = client->GetRakClientInterface()->Send( bitStream, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel );
-	delete[] data;
-
-	return returnval;
+	return client->GetRakClientInterface()->Send( bitStream, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel );
 }
 
 Packet* HookedRakClientInterface::Receive( void )
