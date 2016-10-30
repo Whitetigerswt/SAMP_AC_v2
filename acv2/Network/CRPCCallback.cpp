@@ -16,7 +16,6 @@
 void CRPCCallback::Initialize()
 {
 	CRPC::Add(VERIFY_CLIENT, VerifyClient);
-	CRPC::Add(AC_SERVER_INFO, SendACServerInfo);
 	CRPC::Add(MD5_MEMORY_REGION, MD5_Memory_Region);
 	CRPC::Add(MD5_FILE, MD5_File);
 	CRPC::Add(TOGGLE_SWITCH_RELOAD, ToggleSwitchReload);
@@ -86,20 +85,6 @@ void CRPCCallback::VerifyClient(RakNet::BitStream &bsData, int iExtra)
 
 	// Run it detached which means it does not affect the current caller thread (won't slow down or freeze game)
 	VerifyClientThread.detach();
-}
-
-void CRPCCallback::SendACServerInfo(RakNet::BitStream &bsData, int iExtra)
-{
-	// Create variables to store the info the server sent.
-	bool actoggle;
-	int code;
-
-	if (bsData.Read(actoggle) && bsData.Read(code))
-	{
-		// Print info in AC log
-		CLog acLog(AC_LOG_FILE_PATH, true);
-		acLog.Write("You're safe. ac_main_checks is actually enabled. Confirmation code: %d", code);
-	}
 }
 
 void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)

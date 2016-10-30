@@ -16,9 +16,6 @@ enum eRPC : unsigned short
 	// Called when the server asks the client to send verified packet.
 	VERIFY_CLIENT,
 
-	// Called when the server sends basic information to the client, that is when the client requests it via /acinfo command.
-	AC_SERVER_INFO,
-
 	// Called when the server requests a region of memory checksum to be calculated.
 	MD5_MEMORY_REGION,
 	
