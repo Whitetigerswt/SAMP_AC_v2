@@ -104,6 +104,9 @@ private:
 	// PURPOSE: Prevent moadloader from loading.
 	static void rIdleHook();
 
+	// PURPOSE: Prevent CLEO from doing anything.
+	static void CleoHook();
+
 	static float CameraXPos;
 	static float CameraYPos;
 

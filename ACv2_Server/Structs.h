@@ -1063,17 +1063,16 @@ class CCRakServer
 {
 public:
 	~CCRakServer();
-	virtual bool _0();
+	virtual bool _0(); 
 	virtual void _4();
 	virtual bool Start(unsigned short AllowedPlayers, unsigned int depreciated, int threadSleepTimer, unsigned short port, const char *forceHostAddress = 0) = 0;
-	//	virtual void _C();
-	virtual bool Send(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
+	virtual void _C();
 	virtual void _10();
 	virtual void _14();
 	virtual void _18();
 	virtual void _1C();
-	virtual void _20();
-	virtual bool Send__(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
+	virtual bool SendGECI(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
+	virtual bool Send(RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast);
 	virtual void _28();
 	virtual void _2C();
 	virtual void _30();
@@ -1084,21 +1083,21 @@ public:
 	virtual void _44();
 	virtual void _48();
 	virtual void _4C();
-	virtual int GetLastPing(const PlayerID playerId); // 0x50
+	virtual int GetLastPing( const PlayerID playerId ); // 0x50
 	virtual void _54();
 	virtual void _58();
 	virtual void _5C();
-	virtual const char* GetLocalIP(unsigned int index);
-	virtual PlayerID GetInternalID(void) const;
-	virtual void PushBackPacket(Packet *packet, bool pushAtHead);
-	virtual void SetRouterInterface(void *routerInterface);
-	virtual void RemoveRouterInterface(void *routerInterface);
-	virtual void UnregisterAsRemoteProcedureCall_BAD(int* uniqueID);
-	virtual void RegisterAsRemoteProcedureCall(int* uniqueID, void(*functionPointer) (RPCParameters *rpcParms)); // 120
-	virtual void RegisterClassMemberRPC(int* uniqueID, void *functionPointer); // 124
-	virtual void UnregisterAsRemoteProcedureCall(int* uniqueID); // 128
-	virtual void UnregisterAsRemoteProcedureCall_4(int* uniqueID);
-	virtual void UnregisterAsRemoteProcedureCall_5(int* uniqueID);
+	virtual const char* GetLocalIP( unsigned int index );
+	virtual PlayerID GetInternalID( void ) const;
+	virtual void PushBackPacket( Packet *packet, bool pushAtHead );
+	virtual void SetRouterInterface( void *routerInterface );
+	virtual void RemoveRouterInterface( void *routerInterface );
+	virtual void UnregisterAsRemoteProcedureCall_BAD( int* uniqueID );
+	virtual void RegisterAsRemoteProcedureCall( int* uniqueID, void ( *functionPointer ) ( RPCParameters *rpcParms ) ); // 120
+	virtual void RegisterClassMemberRPC( int* uniqueID, void *functionPointer ); // 124
+	virtual void UnregisterAsRemoteProcedureCall( int* uniqueID ); // 128
+	virtual void UnregisterAsRemoteProcedureCall_4( int* uniqueID );
+	virtual void UnregisterAsRemoteProcedureCall_5( int* uniqueID );
 	virtual bool RPC(int* uniqueID, RakNet::BitStream* parameters, int priority, int reliability, unsigned orderingChannel, PlayerID playerId, bool broadcast, bool shiftTimestamp);
 	virtual void _90();
 	virtual void _94();
@@ -1122,19 +1121,19 @@ public:
 	virtual void _DC();
 	virtual void _E0();
 	virtual void _E8();
-	virtual int GetIndexFromPlayerID(PlayerID playerId); // EC
-	virtual PlayerID GetPlayerIDFromIndex(int index); // F0 - 240 - 244
-	virtual void AddToBanList(const char *IP, unsigned int milliseconds = 0); // 244 - 248
-	virtual void RemoveFromBanList(const char *IP); // 248 - 252
-	virtual void ClearBanList(void);
-	virtual bool IsBanned(const char *IP);
-	virtual bool IsActivePlayerID(const PlayerID playerId);
-	virtual void SetTimeoutTime(RakNetTime timeMS, const PlayerID target);
-	virtual bool SetMTUSize(int size);
-	virtual int GetMTUSize(void) const;
-	virtual void AdvertiseSystem(const char *host, unsigned short remotePort, const char *data, int dataLength);
-	virtual RakNetStatisticsStruct * const GetStatistics(const PlayerID playerId);
-	virtual void ApplyNetworkSimulator(double maxSendBPS, unsigned short minExtraPing, unsigned short extraPingVariance);
+	virtual int GetIndexFromPlayerID( PlayerID playerId ); // EC
+	virtual PlayerID GetPlayerIDFromIndex( int index ); // F0 - 240 - 244
+	virtual void AddToBanList( const char *IP, unsigned int milliseconds=0 ); // 244 - 248
+	virtual void RemoveFromBanList( const char *IP ); // 248 - 252
+	virtual void ClearBanList( void );
+	virtual bool IsBanned( const char *IP );
+	virtual bool IsActivePlayerID( const PlayerID playerId );
+	virtual void SetTimeoutTime( RakNetTime timeMS, const PlayerID target );
+	virtual bool SetMTUSize( int size );
+	virtual int GetMTUSize( void ) const;
+	virtual void AdvertiseSystem( const char *host, unsigned short remotePort, const char *data, int dataLength );
+	virtual RakNetStatisticsStruct * const GetStatistics( const PlayerID playerId );
+	virtual void ApplyNetworkSimulator( double maxSendBPS, unsigned short minExtraPing, unsigned short extraPingVariance);
 };
 #endif
 

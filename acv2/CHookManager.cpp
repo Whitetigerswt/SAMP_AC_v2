@@ -12,6 +12,7 @@
 #include "DirectX Hooks\CMessageProxy.h"
 #include "s0beit\samp.h"
 #include "Network\CRakClientHandler.h"
+#include "ManualInjection.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -160,6 +161,8 @@ static DWORD SlideFixJmpBack = 0x686C39;
 static DWORD WinMainHookJmpBack = 0x8246F1;
 static DWORD rIdleHookJmpBack = 0x53ECC2;
 
+static DWORD CLEO_Func_JmpBack = 0x46A222;
+
 static DWORD sampInfoAddr = NULL;
 static DWORD sampInfoRtnAddr = NULL;
 
@@ -184,6 +187,15 @@ void CHookManager::Load()
 	DWORD samp = (DWORD)GetModuleHandle("samp.dll");
 	if (samp)
 	{
+		setSampBaseAddress(samp);
+	}
+	else if(getSampBaseAddress() != NULL)
+	{
+		samp = getSampBaseAddress();
+	}
+
+	if (samp)
+	{
 		// Add address offset
 		samp += 0x6FCF1;
 
@@ -195,7 +207,7 @@ void CHookManager::Load()
 		// Install hook
 		CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 7);
 
-		samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx");
+		samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx", getSampBaseAddress(), getSampSize());
 
 		if (samp != 0 && g_SAMP == NULL)
 		{
@@ -210,7 +222,7 @@ void CHookManager::Load()
 			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 11);
 		}
 	}
-
+	
 	// Prevent CLEO 4 from loading scripts
 	VirtualProtect(FUNC_Init_SCM1, 5, PAGE_EXECUTE_READWRITE, &dwOldProt);
 	memcpy(FUNC_Init_SCM1, "\xE8\x74\xCF\xF2\xFF", 5);
@@ -382,6 +394,22 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_WinMain, (DWORD)WinMainHook, 5);
 	CMem::ApplyJmp(FUNC_rIdle, (DWORD)rIdleHook, 5);
 
+	// Lets just make CLEO crash so extensions of it don't work.
+	CMem::Cpy((void*)FUNC_CleoHook, "\x90\x90", 2);
+	CMem::ApplyJmp(FUNC_CleoHook+2, (DWORD)CleoHook, 5);
+
+	BYTE dest[5];
+	CMem::Cpy(dest, (void*)FUNC_CRunningScript_AddScriptToList, 5);
+
+	BYTE Default[] = { 0xE9, 0x8B, 0xCD, 0x0F, 0x01 };
+	for (int i = 0; i < sizeof(Default); ++i)
+	{
+		if (dest[i] != Default[i])
+		{
+			CMem::Cpy((void*)FUNC_CRunningScript_AddScriptToList, "\x90\x90\x90\x90\x90", 5);
+		}
+	}
+
 	// Check data file integrity.
 	VerifyFilePaths();
 }
@@ -448,7 +476,6 @@ void CHookManager::SetConnectPatches()
 	// Fix some slide issues with melee weps
 	CMem::ApplyJmp(FUNC_SlideFix, (DWORD)SlideFix, 6);
 }
-
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
 {
 	DWORD dwOldProt;
@@ -751,6 +778,19 @@ HOOK CHookManager::rIdleHook()
 		call eax
 
 		jmp[rIdleHookJmpBack]
+	}
+}
+
+HOOK CHookManager::CleoHook()
+{
+	__asm
+	{
+		push eax
+		mov eax,00469F00h
+		call eax
+		pop eax
+		cmp edi,ebx
+		jmp[CLEO_Func_JmpBack]
 	}
 }
 HOOK CHookManager::SetCursorPosHook()

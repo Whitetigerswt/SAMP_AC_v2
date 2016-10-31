@@ -5,6 +5,7 @@
 #include "CLoader.h"
 #include "Addresses.h"
 #include "CModuleSecurity.h"
+#include "ManualInjection.h"
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,

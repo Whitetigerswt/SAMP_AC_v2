@@ -140,6 +140,8 @@
     </ClCompile>
     <ClCompile Include="..\Shared\Network\ACVerifiedPacket.cpp">
       <Filter>Source Files\Shared\Network</Filter>
+    <ClCompile Include="ManualInjection.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -859,6 +861,8 @@
     </ClInclude>
     <ClInclude Include="..\Shared\Network\ACVerifiedPacket.h">
       <Filter>Source Files\Shared\Network</Filter>
+    <ClInclude Include="ManualInjection.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

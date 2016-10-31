@@ -54,6 +54,9 @@
 #define FUNC_rIdle							(BYTE*)0x53ECB8
 #define FUNC_rfIdle							(BYTE*)0x53ECCB
 
+// More CLEO patches
+#define FUNC_CleoHook						(BYTE*)0x46A21B
+
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91
