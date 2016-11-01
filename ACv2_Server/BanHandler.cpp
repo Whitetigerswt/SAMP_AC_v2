@@ -66,7 +66,7 @@ namespace BanHandler
 				}
 				else
 				{
-					snprintf(str, sizeof str, "{FFFFFF}%s {FF0000}has successfully been added to AC global ban list. Know more: {FFFFFF}%s", name, AC_WEBSITE);
+					snprintf(str, sizeof str, "{FFFFFF}%s {FF0000}has been banned from AC servers. Know more: {FFFFFF}%s", name, AC_WEBSITE);
 				}
 			}
 			else

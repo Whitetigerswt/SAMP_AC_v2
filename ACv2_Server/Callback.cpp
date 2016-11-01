@@ -241,13 +241,13 @@ namespace Callback
 							char msg[144];
 
 							// Tell the player
-							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. Know more: %s", AC_WEBSITE);
+							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
 							SendClientMessage(playerid, -1, msg);
 							char name[MAX_PLAYER_NAME];
 							GetPlayerName(playerid, name, sizeof name);
 
 							// Tell other players connected
-							snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked from the server for being banned on Anti-Cheat (v2).", name);
+							snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked for being banned from AC servers.", name);
 							SendClientMessageToAll(-1, msg);
 
 							// Kick the player from the server
@@ -260,13 +260,13 @@ namespace Callback
 							char msg[144];
 
 							// Tell the player
-							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. Know more: %s", AC_WEBSITE);
+							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
 							SendClientMessage(playerid, -1, msg);
 							char name[MAX_PLAYER_NAME];
 							GetPlayerName(playerid, name, sizeof name);
 
 							// Tell other players connected
-							snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned on Anti-Cheat (v2). Know more: %s", name, AC_WEBSITE);
+							snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned from AC servers. Know more: %s", name, AC_WEBSITE);
 							SendClientMessageToAll(-1, msg);
 							break;
 						}
