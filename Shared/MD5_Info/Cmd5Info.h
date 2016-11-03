@@ -2,10 +2,10 @@
 #include <vector>
 #include <string>
 
-#define AC_IMG_MD5_INFO "http://whitetigerswt.github.io/SAMP_AC_v2/API/gta3img.html"
-#define AC_EXECUTABLE_MD5_INFO "http://whitetigerswt.github.io/SAMP_AC_v2/API/badexecutablefiles.html"
-#define AC_DIR_MD5_INFO "http://whitetigerswt.github.io/SAMP_AC_v2/API/gtamd5dir.html"
-#define AC_DIR_NAME_INFO "http://whitetigerswt.github.io/SAMP_AC_v2/API/gtanamedir.html"
+#define AC_IMG_MD5_INFO "http://samp-ac.com/API/gta3img.html"
+#define AC_EXECUTABLE_MD5_INFO "http://samp-ac.com/API/badexecutablefiles.html"
+#define AC_DIR_MD5_INFO "http://samp-ac.com/API/gtamd5dir.html"
+#define AC_DIR_NAME_INFO "http://samp-ac.com/API/gtanamedir.html"
 
 class Cmd5Info
 {

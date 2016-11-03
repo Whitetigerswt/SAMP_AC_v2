@@ -1,9 +1,9 @@
 #pragma once
 
 #ifdef WIN32
-#define AC_UPDATE_URL "http://whitetigerswt.github.io/SAMP_AC_v2/API/Server_Windows_Updater.html"
+#define AC_UPDATE_URL "http://samp-ac.com/API/Server_Windows_Updater.html"
 #else
-#define AC_UPDATE_URL "http://whitetigerswt.github.io/SAMP_AC_v2/API/Server_Linux_Updater.html"
+#define AC_UPDATE_URL "http://samp-ac.com/API/Server_Linux_Updater.html"
 #endif
 
 #define CURRENT_VERSION 2.78f
