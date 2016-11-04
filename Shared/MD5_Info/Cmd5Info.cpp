@@ -159,6 +159,31 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 		if (curl)
 		{
 			curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+			// If destination is secured
+			if (url.find("https") != std::string::npos)
+			{
+				/*
+				* If you want to connect to a site who isn't using a certificate that is
+				* signed by one of the certs in the CA bundle you have, you can skip the
+				* verification of the server's certificate. This makes the connection
+				* A LOT LESS SECURE.
+				*
+				* If you have a CA cert for the server stored someplace else than in the
+				* default bundle, then the CURLOPT_CAPATH option might come handy for
+				* you.
+				*/
+				curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+
+				/*
+				* If the site you're connecting to uses a different host name that what
+				* they have mentioned in their server certificate's commonName (or
+				* subjectAltName) fields, libcurl will refuse to connect. You can skip
+				* this check, but this will make the connection less secure.
+				*/
+				curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+			}
+
 			data.clear(); // string must be cleared before adding new data
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback);
 			curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);

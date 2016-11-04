@@ -35,43 +35,57 @@ namespace BanHandler
 		int server_port;
 		server_port = GetServerVarAsInt("port");
 
-		// Completely prepared now. Let's send data to the web server (database)!
+		// Completely prepared now. Let's send data to the web server (which takes it to database)!
 		CURL *curl;
 		curl_global_init(CURL_GLOBAL_ALL);
+
 		// curl handle
 		curl = curl_easy_init();
 		if (curl) 
 		{
 			// Set URL to receive POST data
 			curl_easy_setopt(curl, CURLOPT_URL, AC_BAN_HANDLER_ADD);
+
+			/*
+			* If you want to connect to a site who isn't using a certificate that is
+			* signed by one of the certs in the CA bundle you have, you can skip the
+			* verification of the server's certificate. This makes the connection
+			* A LOT LESS SECURE.
+			*
+			* If you have a CA cert for the server stored someplace else than in the
+			* default bundle, then the CURLOPT_CAPATH option might come handy for
+			* you.
+			*/
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+
+			/*
+			* If the site you're connecting to uses a different host name that what
+			* they have mentioned in their server certificate's commonName (or
+			* subjectAltName) fields, libcurl will refuse to connect. You can skip
+			* this check, but this will make the connection less secure.
+			*/
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+
 			// Format POST data
 			char str[400];
 			snprintf(str, sizeof str, "Cheater=%s&CheaterIP=%s&Hardware=%s&Reason=%s&ServerName=%s&Port=%d",
-				name, ip, hwid.c_str(), Utility::GetSafeFilePath(reason), server_name, server_port);
-			// This function converts the given input string to a URL encoded string and returns that as a new allocated string
-			char * escaped_data = curl_easy_escape(curl, str, 0);
-			if (escaped_data)
+				curl_easy_escape(curl, name, 0), ip, hwid.c_str(), curl_easy_escape(curl, Utility::GetSafeFilePath(reason), 0), curl_easy_escape(curl, server_name, 0), server_port);
+
+			// Set POST data
+			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str);
+
+			// Send the request and store result into "res" variable
+			CURLcode res;
+			res = curl_easy_perform(curl);
+
+			// Handle possible errors
+			if (res != CURLE_OK)
 			{
-				// Set POST data
-				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, escaped_data);
-				// Must free escaped data when we're done with it
-				curl_free(escaped_data);
-				// Send the request and store result into "res" variable
-				CURLcode res;
-				res = curl_easy_perform(curl);
-				// Handle possible errors
-				if (res != CURLE_OK)
-				{
-					Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
-				}
-				else
-				{
-					snprintf(str, sizeof str, "{FFFFFF}%s {FF0000}has been banned from AC servers. Know more: {FFFFFF}%s", name, AC_WEBSITE);
-				}
+				Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
 			}
 			else
 			{
-				Utility::Printf("curl_easy_escape() failed while trying to add player %d to ban list.", playerid);
+				snprintf(str, sizeof str, "{FFFFFF}%s {FF0000}has been banned from AC servers. Know more: {FFFFFF}%s", name, AC_WEBSITE);
 			}
 			
 			// Clean up
@@ -115,32 +129,51 @@ namespace BanHandler
 		{
 			// Set URL to receive POST data
 			curl_easy_setopt(curl, CURLOPT_URL, AC_BAN_HANDLER_CHECK);
+
+			/*
+			* If you want to connect to a site who isn't using a certificate that is
+			* signed by one of the certs in the CA bundle you have, you can skip the
+			* verification of the server's certificate. This makes the connection
+			* A LOT LESS SECURE.
+			*
+			* If you have a CA cert for the server stored someplace else than in the
+			* default bundle, then the CURLOPT_CAPATH option might come handy for
+			* you.
+			*/
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+
+			/*
+			* If the site you're connecting to uses a different host name that what
+			* they have mentioned in their server certificate's commonName (or
+			* subjectAltName) fields, libcurl will refuse to connect. You can skip
+			* this check, but this will make the connection less secure.
+			*/
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+
 			// Format POST data with player's hardware ID.
 			char str[64];
 			snprintf(str, sizeof str, "Hardware=%s&IP=%s", hwid.c_str(), ip);
-			// This function converts the given input string to a URL encoded string and returns that as a new allocated string
-			char * escaped_data = curl_easy_escape(curl, str, 0);
-			if (escaped_data)
+
+			// Set POST data
+			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str);
+
+			// Send the request and store result into "res" variable
+			CURLcode res;
+			res = curl_easy_perform(curl);
+
+			// Handle possible errors
+			if (res != CURLE_OK)
 			{
-				// Set POST data
-				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, escaped_data);
-				// Must free escaped data when we're done with it
-				curl_free(escaped_data);
-				// Send the request and store result into "res" variable
-				CURLcode res;
-				res = curl_easy_perform(curl);
-				// Handle possible errors
-				if (res != CURLE_OK)
+				Utility::Printf("curl_easy_perform() failed: %s while checking if player %d is in ban list.", curl_easy_strerror(res), playerid);
+			}
+			else // success
+			{
+				// Now let's handle response codes
+				long response_code;
+				curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+
+				switch (response_code)
 				{
-					Utility::Printf("curl_easy_perform() failed: %s while checking if player %d is in ban list.", curl_easy_strerror(res), playerid);
-				}
-				else // success
-				{
-					// Now let's handle response codes
-					long response_code;
-					curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-					switch (response_code)
-					{
 					case 508:
 					{
 						// Found in ban list.
@@ -152,7 +185,6 @@ namespace BanHandler
 						// Was not found in ban list.
 						ischeater = false;
 						break;
-					}
 					}
 				}
 			}
