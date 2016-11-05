@@ -24,8 +24,10 @@ namespace BanHandler
 
 		// Delcare 2 variables for player's name and IP
 		char name[MAX_PLAYER_NAME], ip[16];
+
 		// Get the player's name
 		GetPlayerName(playerid, name, sizeof(name));
+
 		// Get the player's IP
 		GetPlayerIp(playerid, ip, sizeof ip);
 
@@ -66,35 +68,53 @@ namespace BanHandler
 			*/
 			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-			// Format POST data
-			char str[400];
-			snprintf(str, sizeof str, "Cheater=%s&CheaterIP=%s&Hardware=%s&Reason=%s&ServerName=%s&Port=%d",
-				curl_easy_escape(curl, name, 0), ip, hwid.c_str(), curl_easy_escape(curl, Utility::GetSafeFilePath(reason), 0), curl_easy_escape(curl, server_name, 0), server_port);
+			// Escape some parameters
+			char 
+				*escaped_name = curl_easy_escape(curl, name, 0), 
+				*escaped_server_name = curl_easy_escape(curl, server_name, 0),
+				*escaped_ban_reason = curl_easy_escape(curl, Utility::GetSafeFilePath(reason), 0);
 
-			// Set POST data
-			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str);
-
-			// Send the request and store result into "res" variable
-			CURLcode res;
-			res = curl_easy_perform(curl);
-
-			// Handle possible errors
-			if (res != CURLE_OK)
+			if (escaped_name && escaped_server_name && escaped_ban_reason)
 			{
-				Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
+				// Format POST data
+				char str[400];
+				snprintf(str, sizeof str, "Cheater=%s&CheaterIP=%s&Hardware=%s&Reason=%s&ServerName=%s&Port=%d",
+					escaped_name, ip, hwid.c_str(), escaped_ban_reason, escaped_server_name, server_port);
+
+				// Set POST data
+				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str);
+
+				// Send the request and store result into "res" variable
+				CURLcode res;
+				res = curl_easy_perform(curl);
+
+				// Handle possible errors
+				if (res != CURLE_OK)
+				{
+					Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
+				}
+				else
+				{
+					snprintf(str, sizeof str, "{FFFFFF}%s {FF0000}has been banned from AC servers. Know more: {FFFFFF}%s", name, AC_WEBSITE);
+				}
 			}
 			else
 			{
-				snprintf(str, sizeof str, "{FFFFFF}%s {FF0000}has been banned from AC servers. Know more: {FFFFFF}%s", name, AC_WEBSITE);
+				Utility::Printf("curl_easy_escape() failed while trying to add player %d to ban list.", playerid);
 			}
 			
+			
 			// Clean up
+			curl_free(escaped_name);
+			curl_free(escaped_server_name);
+			curl_free(escaped_ban_reason);
 			curl_easy_cleanup(curl);
 		}
 		else
 		{
 			Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
 		}
+
 		// Clean up
 		curl_global_cleanup();
 	}
@@ -195,8 +215,10 @@ namespace BanHandler
 		{
 			Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
 		}
+
 		// Clean up
 		curl_global_cleanup();
+
 		// Return whether this is a cheater or not
 		return ischeater;
 	}
