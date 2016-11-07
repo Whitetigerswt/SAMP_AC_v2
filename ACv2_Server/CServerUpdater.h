@@ -6,7 +6,7 @@
 #define AC_UPDATE_URL "http://samp-ac.com/API/Server_Linux_Updater.html"
 #endif
 
-#define CURRENT_VERSION 2.78f
+#define CURRENT_VERSION 2.8f
 #define CURRENT_MAJOR_VERSION 2.3f
 
 #include <string>
