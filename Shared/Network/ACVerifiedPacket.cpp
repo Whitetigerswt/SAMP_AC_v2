@@ -2,6 +2,8 @@
 #include "../MD5_Info/Cmd5Info.h"
 #include "../../acv2/md5.h"
 
+#include <stdlib.h>
+
 namespace ACVerifiedPacket
 {
 	std::string RawVerifiedPacket()
