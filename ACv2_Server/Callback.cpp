@@ -279,13 +279,6 @@ namespace Callback
 					ac->SetPlayerConnected(true);
 				}
 
-				// if the AC is on, let the user know this server is protected.
-				if (ACToggle)
-				{
-					// Tell the player we're using the AC on this server.
-					SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
-				}
-
 				// Send the client the files we need them to return md5's to.
 				ac->CheckGTAFiles(playerid);
 
@@ -377,6 +370,14 @@ namespace Callback
 					else
 					{
 						ac->SetPlayerConnected(true);
+
+						// if the AC is on, let the user know this server is protected.
+						if (ACToggle)
+						{
+							Utility::Printf("called");
+							// Tell the player we're using the AC on this server.
+							SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
+						}
 					}
 
 					// Fetch player's ban status
