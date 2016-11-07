@@ -374,7 +374,6 @@ namespace Callback
 						// if the AC is on, let the user know this server is protected.
 						if (ACToggle)
 						{
-							Utility::Printf("called");
 							// Tell the player we're using the AC on this server.
 							SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
 						}
