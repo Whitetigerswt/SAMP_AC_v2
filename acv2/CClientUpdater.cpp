@@ -27,6 +27,8 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 	// Check the internet.
 	if (hNet == NULL)
 	{
+		MessageBox( NULL, "Connection failed! Error Code: 1", "", MB_OK | MB_ICONERROR );
+		ExitProcess(0);
 		return;
 	}
 
@@ -36,6 +38,8 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 	// Make sure it was a successful connection
 	if (hNetFile == NULL)
 	{
+		MessageBox( NULL, "Connection failed! Error Code: 2", "", MB_OK | MB_ICONERROR );
+		ExitProcess(0);
 		return;
 	}
 
@@ -47,7 +51,12 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 	do
 	{
 		// Get the text on the URL.
-		InternetReadFile(hNetFile, (LPVOID)szLatestVersion, sizeof(szLatestVersion), &dwBytesRead);
+		if(InternetReadFile(hNetFile, (LPVOID)szLatestVersion, sizeof(szLatestVersion), &dwBytesRead) == FALSE)
+		{
+			MessageBox( NULL, "Connection failed! Error Code: 3", "", MB_OK | MB_ICONERROR );
+			ExitProcess(0);
+			return;
+		}
 	} while (dwBytesRead > 0);
 
 	// Make sure szLatestVersion isn't empty.
@@ -59,7 +68,13 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 		// We need to format our variables so we have the version by itself, and the download link by itself.
 		float version = 0.0f;
 		char* downloadLink = new char[256];
-		sscanf_s(szLatestVersion, "%f %s", &version, downloadLink);
+		
+		if(sscanf_s(szLatestVersion, "%f %s", &version, downloadLink) != 2)
+		{
+			MessageBox( NULL, "Connection failed! Error Code: 4", "", MB_OK | MB_ICONERROR );
+			ExitProcess(0);
+			return;
+		}
 
 		// Convert the download link to an std::string, cause they're easier to deal with...
 		std::string szDownloadLink(downloadLink);
