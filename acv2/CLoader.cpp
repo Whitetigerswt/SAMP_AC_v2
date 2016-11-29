@@ -58,7 +58,11 @@ void CLoader::Initialize(HMODULE hMod)
 				}
 
 				// The game is loaded now. Relaunch the game as admin (elevated)
-				RunElevated();
+				
+				//RunElevated(); // Bug: Relaunched game sometimes starts in a single player mode.
+				
+				MessageBox( NULL, "You must run GTA:SA with admin privileges!", "", MB_OK | MB_ICONERROR );
+				ExitProcess(0);
 				return;
 			}
 		}
