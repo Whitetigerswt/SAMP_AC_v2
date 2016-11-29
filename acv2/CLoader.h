@@ -18,6 +18,15 @@ public:
 	// REQUIRES: NULL
 	// PROMISE: The program will be relaunched as an elevated process, and then the current process will exit.
 	static void RunElevated();
+	
+	// PURPOSE: Get process file name by ID.
+	// REQUIRES: Process ID.
+	// PROMISE: A returned file name.
+	static std::string GetProcessFileName(DWORD processID);
+	
+	// PURPOSE: Terminates other GTA:SA processes.
+	// REQUIRES: NULL
+	static void TerminateOtherProcesses();
 
 	// PURPOSE: Check if we've already loaded
 	// REQUIRES: NULL
