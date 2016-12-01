@@ -913,7 +913,7 @@ HOOK CHookManager::KeyPress()
 	{
 		if (FIRE_KEY > 0)
 		{
-			AIM_KEY = 128;
+			//AIM_KEY = 128; // With this people can see a crosshair while holding LMB. This is a bad thing as people have to change their play style.
 			SPRINT_KEY = 0;
 		}
 	}
