@@ -32,12 +32,6 @@ void CLoader::Initialize(HMODULE hMod)
 {
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
-		/*
- 		    Make sure other GTA:SA processes are not running.
-			This prevents crashing while game is starting.
-		*/
-		TerminateOtherProcesses();
-		
 		/* 
 			Force process elevation check. This will terminate the current process and run a new one if it's 
 			not elevated (if it's not running as admin).
@@ -58,11 +52,7 @@ void CLoader::Initialize(HMODULE hMod)
 				}
 
 				// The game is loaded now. Relaunch the game as admin (elevated)
-				
-				//RunElevated(); // Bug: Relaunched game sometimes starts in a single player mode.
-				
-				MessageBox( NULL, "You must run GTA:SA with admin privileges!", "", MB_OK | MB_ICONERROR );
-				ExitProcess(0);
+				RunElevated();
 				return;
 			}
 		}
@@ -141,60 +131,6 @@ void CLoader::CheckElevation()
 
 	// Set this processes security descriptor, so other processes cannot interfere with this process.
 	ProtectProcess();
-}
-
-std::string CLoader::GetProcessFileName(DWORD processID)
-{
-	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
-    PROCESSENTRY32 pEntry;
-    pEntry.dwSize = sizeof (pEntry);
-    BOOL hRes = Process32First(hSnapShot, &pEntry);
-	
-    while (hRes)
-    {
-		if(processID == pEntry.th32ProcessID)
-		{
-			// Process ID matches. Let's return it's file name.
-			std::string pFileName(pEntry.szExeFile);
-		    return pFileName;
-		}
-        hRes = Process32Next(hSnapShot, &pEntry);
-    }
-    CloseHandle(hSnapShot);	
-	return "NULL";
-}
-
-void CLoader::TerminateOtherProcesses()
-{
-    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
-    PROCESSENTRY32 pEntry;
-    pEntry.dwSize = sizeof (pEntry);
-    BOOL hRes = Process32First(hSnapShot, &pEntry);
-	
-	// Get current process ID.
-	DWORD currentProcessID = GetCurrentProcessId();
-	
-	// Get current process file name. (GetModuleFileName doesn't work with mklink, so we need to do a snapshot.)
-	std::string currentProcessName = GetProcessFileName(currentProcessID);
-	
-	if(currentProcessName == "NULL")
-		return;
-	
-    while (hRes)
-    {
-        if (currentProcessID != pEntry.th32ProcessID && strcmp(pEntry.szExeFile, currentProcessName.c_str()) == 0)
-        {
-			  // Other GTA:SA process has been found. Terminate it!
-              HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD) pEntry.th32ProcessID);
-              if (hProcess != NULL)
-              {
-                  TerminateProcess(hProcess, 9);
-                  CloseHandle(hProcess);
-              }
-        }
-        hRes = Process32Next(hSnapShot, &pEntry);
-    }
-    CloseHandle(hSnapShot);
 }
 
 DWORD CLoader::ProtectProcess()
