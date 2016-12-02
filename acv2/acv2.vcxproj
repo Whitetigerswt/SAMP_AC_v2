@@ -101,7 +101,7 @@
     <ClCompile Include="..\Shared\Network\ACVerifiedPacket.cpp" />
     <ClCompile Include="..\Shared\Network\BitStream.cpp" />
     <ClCompile Include="..\Shared\Network\CRPC.cpp" />
-    <ClCompile Include="CCheats.cpp" />
+    <ClCompile Include="CFileCheck.cpp" />
     <ClCompile Include="CFunctionHooks.cpp" />
     <ClCompile Include="CHookManager.cpp" />
     <ClCompile Include="CClientUpdater.cpp" />
@@ -268,7 +268,7 @@
     <ClInclude Include="..\Shared\Network\CRPC.h" />
     <ClInclude Include="..\Shared\Network\Network.h" />
     <ClInclude Include="Addresses.h" />
-    <ClInclude Include="CCheats.h" />
+    <ClInclude Include="CFileCheck.h" />
     <ClInclude Include="CFunctionHooks.h" />
     <ClInclude Include="CHookManager.h" />
     <ClInclude Include="CClientUpdater.h" />

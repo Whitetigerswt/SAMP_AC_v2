@@ -1,7 +1,7 @@
 #pragma once
-#include "CCheats.h"
+#include "CFileCheck.h"
 class CInjectedLibraries :
-	public CCheats
+	public CFileCheck
 {
 public:
 	CInjectedLibraries();
