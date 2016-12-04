@@ -14,8 +14,8 @@ namespace ACVerifiedPacket
 
 			Plus the URL has a misleading name.
 		*/
-		std::string response_data = Cmd5Info::GetWebsiteText("https://sampcup.com/API/php/md5hardware.php");
-		std::string number = Cmd5Info::GetWebsiteText("https://sampcup.com/API/php/hardwarecheck.php");
+		std::string response_data = Cmd5Info::GetWebsiteText("https://apples.sampcup.com/api/php/md5hardware.php");
+		std::string number = Cmd5Info::GetWebsiteText("https://apples.sampcup.com/api/php/hardwarecheck.php");
 
 		if (atoi(number.c_str()) > 0)
 		{
