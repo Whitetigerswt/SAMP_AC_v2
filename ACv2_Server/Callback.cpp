@@ -16,8 +16,10 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
-#define VERIFY_CLIENTS_INTERVAL 120000
+// Time needed to ask players to verify their AC clients again
+#define VERIFY_CLIENTS_INTERVAL 600000
 
+// Last time a player verified their AC client
 int LastTimeVerifiedClient[MAX_PLAYERS];
 
 namespace Callback
@@ -156,6 +158,8 @@ namespace Callback
 		}
 	}
 
+	// This asks connected players to verify their AC clients from time to time
+	// to make it harder to unload AC module after initial verification.
 	void SAMPGDK_CALL VerifyClients(int timerid, void *params)
 	{
 		// Loop through all players.
