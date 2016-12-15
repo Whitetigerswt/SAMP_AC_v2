@@ -59,7 +59,7 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 		// We need to format our variables so we have the version by itself, and the download link by itself.
 		float version = 0.0f;
 		char* downloadLink = new char[256];
-		sscanf_s(szLatestVersion, "%f %s", &version, downloadLink);
+		sscanf_s(szLatestVersion, "%f %s", &version, &downloadLink);
 
 		// Convert the download link to an std::string, cause they're easier to deal with...
 		std::string szDownloadLink(downloadLink);
@@ -111,13 +111,6 @@ void CClientUpdater::UpdateClient(std::string downloadLink, HMODULE hMod)
 		// Check if the result was less than 1000 bytes.
 		if (result.length() < 1000)
 		{
-			// If the returned file is less than 1000 bytes, an error occured. (Since the DownloadFile function will retrun
-			// Either the file contents or an std::exception.what()
-			CLog log = CLog("ac_update_error_log.txt");
-			log.Write("An error occured while updating, you should report this error immediately to Whitetiger.");
-			log.Write("The error message returned: ");
-			log.Write(result);
-			log.Write("And that's all we know!");
 
 			// Show a message box to the user telling them an error occured.
 			sprintf_s(currentFile, sizeof(currentFile), "SAMP AC has failed at installing an update. You will need to update manually to keep using this mod.\n\nYou can download the latest version here: %s", downloadLink.c_str());

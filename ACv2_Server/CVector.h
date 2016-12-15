@@ -1,9 +1,9 @@
 /*****************************************************************************
 *
-*  PROJECT:		Multi Theft Auto v1.0
-*  LICENSE:		See LICENSE in the top level directory
-*  FILE:		sdk/CVector.h
-*  PURPOSE:		3D vector math implementation
+*  PROJECT:     Multi Theft Auto v1.0
+*  LICENSE:     See LICENSE in the top level directory
+*  FILE:        sdk/CVector.h
+*  PURPOSE:     3D vector math implementation
 *
 *  Multi Theft Auto is available from http://www.multitheftauto.com/
 *
@@ -12,23 +12,22 @@
 #ifndef __CVector_H
 #define __CVector_H
 
-#include <math.h>
+#ifdef WIN32
+#include <windows.h>
+#endif
+
+#include <cmath>
 
 #define FLOAT_EPSILON 0.0001f
+#include "CVector4D.h"
+
+#define PI 3.14159265358979323846f
 
 /**
 * CVector Structure used to store a 3D vertex.
 */
 class CVector
 {
-private:
-	bool IsNearZeroFloat(const float param)
-	{
-		//if(!_finite(param))
-		//	return 1;
-		return (fabs(param) < FLOAT_EPSILON);
-	}
-
 public:
 	float fX, fY, fZ;
 
@@ -48,24 +47,27 @@ public:
 
 	float Normalize(void)
 	{
-		double t = sqrt(fX*fX + fY*fY + fZ*fZ);
+		float t = sqrt(fX*fX + fY*fY + fZ*fZ);
 		if (t > FLOAT_EPSILON)
 		{
-			double fX2 = fX / t;
-			double fY2 = fY / t;
-			double fZ2 = fZ / t;
-			fX = (float)fX2;
-			fY = (float)fY2;
-			fZ = (float)fZ2;
+			float fRcpt = 1 / t;
+			fX *= fRcpt;
+			fY *= fRcpt;
+			fZ *= fRcpt;
 		}
 		else
 			t = 0;
-		return static_cast < float > (t);
+		return t;
 	}
 
 	float Length(void) const
 	{
 		return sqrt((fX*fX) + (fY*fY) + (fZ*fZ));
+	}
+
+	float LengthSquared(void) const
+	{
+		return (fX*fX) + (fY*fY) + (fZ*fZ);
 	}
 
 	float DotProduct(const CVector * param) const
@@ -81,41 +83,27 @@ public:
 		fZ = _fX * param->fY - param->fX * _fY;
 	}
 
-	bool IsNearZero(void)
+	// Convert (direction) to rotation
+	CVector ToRotation(void) const
 	{
-		//if(!isfinite(fX) || !isfinite(fY) || !isfinite(fZ))
-		//	return 1;
-		return (IsNearZeroFloat(fX) && IsNearZeroFloat(fY) && IsNearZeroFloat(fZ));
+		CVector vecRotation;
+		vecRotation.fZ = atan2(fY, fX);
+		CVector vecTemp(sqrt(fX * fX + fY * fY), fZ, 0);
+		vecTemp.Normalize();
+		vecRotation.fY = atan2(vecTemp.fX, vecTemp.fY) - PI / 2;
+		return vecRotation;
 	}
 
-	void Zero(void)
+	// Return a perpendicular direction
+	CVector GetOtherAxis(void) const
 	{
-		fX = 0.0f;
-		fY = 0.0f;
-		fZ = 0.0f;
-	}
-
-	void ZeroNearZero(void)
-	{
-		if (IsNearZeroFloat(fX))
-			fX = 0.0f;
-		if (IsNearZeroFloat(fY))
-			fY = 0.0f;
-		if (IsNearZeroFloat(fZ))
-			fZ = 0.0f;
-	}
-
-	float GetAngleRadians(void)
-	{
-		return -atan2(fY, -fX);
-	}
-
-	float GetAngleDegrees(void)
-	{
-		static float radtodeg = 57.324840764331210191082802547771f; // 180/pi
-		float ret = (atan2(fY, -fX) * radtodeg) + 270.0f;
-		if (ret >= 360.0f) ret -= 360.0f;
-		return ret;
+		CVector vecResult;
+		if (std::abs(fX) > std::abs(fY))
+			vecResult = CVector(fZ, 0, -fX);
+		else
+			vecResult = CVector(0, -fZ, fY);
+		vecResult.Normalize();
+		return vecResult;
 	}
 
 	CVector operator + (const CVector& vecRight) const
@@ -145,7 +133,8 @@ public:
 
 	CVector operator / (float fRight) const
 	{
-		return CVector(fX / fRight, fY / fRight, fZ / fRight);
+		float fRcpValue = 1 / fRight;
+		return CVector(fX * fRcpValue, fY * fRcpValue, fZ * fRcpValue);
 	}
 
 	CVector operator - () const
@@ -197,9 +186,10 @@ public:
 
 	void operator /= (float fRight)
 	{
-		fX /= fRight;
-		fY /= fRight;
-		fZ /= fRight;
+		float fRcpValue = 1 / fRight;
+		fX *= fRcpValue;
+		fY *= fRcpValue;
+		fZ *= fRcpValue;
 	}
 
 	void operator /= (const CVector& vecRight)
@@ -222,11 +212,14 @@ public:
 			(fabs(fY - param.fY) >= FLOAT_EPSILON) ||
 			(fabs(fZ - param.fZ) >= FLOAT_EPSILON));
 	}
-};
 
-// global vector normals
-CVector const g_vecFrontNormal(1.0f, 0.0f, 0.0f);
-CVector const g_vecRightNormal(0.0f, 1.0f, 0.0f);
-CVector const g_vecUpNormal(0.0f, 0.0f, 1.0f);
+	CVector& operator = (const CVector4D& vec)
+	{
+		fX = vec.fX;
+		fY = vec.fY;
+		fZ = vec.fZ;
+		return *this;
+	}
+};
 
 #endif

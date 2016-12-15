@@ -161,6 +161,9 @@
     <ClInclude Include="BanHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CVector4D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="plugin.def">
