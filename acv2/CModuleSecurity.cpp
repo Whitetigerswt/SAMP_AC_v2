@@ -4,10 +4,11 @@
 #include <TlHelp32.h>
 #include <winternl.h>
 #include <Windows.h>
+#include <tchar.h>
 
 
 LoadLibrary_t CModuleSecurity::m_pLoadLibrary = NULL;
-std::vector<std::string> CModuleSecurity::m_AllowedModules;
+std::vector<std::wstring> CModuleSecurity::m_AllowedModules;
 
 typedef NTSTATUS(WINAPI *pNtQIT)(HANDLE ThreadHandle, THREADINFOCLASS ThreadInformationClass, PVOID ThreadInformation, ULONG ThreadInformationLength, PULONG ReturnLength);
 
@@ -22,7 +23,7 @@ CModuleSecurity::~CModuleSecurity()
 
 void CModuleSecurity::HookLoadLibrary()
 {
-	PBYTE addr = DetourFindFunction("kernel32.dll", "LoadLibraryA");
+	PBYTE addr = DetourFindFunction("kernel32.dll", "LoadLibraryW");
 
 	if (addr != NULL)
 	{
@@ -30,26 +31,26 @@ void CModuleSecurity::HookLoadLibrary()
 	}
 }
 
-HMODULE WINAPI CModuleSecurity::HOOK_LoadLibrary(LPCTSTR lpFileName)
+HMODULE WINAPI CModuleSecurity::HOOK_LoadLibrary(const wchar_t* lpFileName)
 {
 	AddAllowedModule(lpFileName);
 
 	// Prevent customSAA2 (kind of a bad fix since they can just rename the file to d3d9.dll...)
-	if (!strcmp(lpFileName, "DSOUND.dll"))
+	if (!_tcscmp(lpFileName, L"DSOUND.dll"))
 	{
 		// Get the windows folder.
-		TCHAR windir[MAX_PATH];
+		wchar_t windir[MAX_PATH];
 		GetWindowsDirectory(windir, MAX_PATH);
 
 		// Get the original DSOUND.dll location.
-		sprintf_s(windir, sizeof(windir), "%s\\system32\\DSOUND.DLL", windir);
+		_stprintf_s(windir, sizeof(windir), L"%s\\system32\\DSOUND.DLL", windir);
 		lpFileName = windir;
 	}
 
 	return m_pLoadLibrary(lpFileName);
 }
 
-void CModuleSecurity::AddAllowedModule(LPCTSTR lpFileName)
+void CModuleSecurity::AddAllowedModule(const wchar_t * lpFileName)
 {
 	m_AllowedModules.push_back(lpFileName);
 }
@@ -74,9 +75,9 @@ void CModuleSecurity::AddAllowedModules()
 }
 
 
-bool CModuleSecurity::IsAllowedModule(std::string szModule)
+bool CModuleSecurity::IsAllowedModule(std::wstring szModule)
 {
-	for (std::vector<std::string>::iterator it = m_AllowedModules.begin(); it != m_AllowedModules.end(); ++it)
+	for (std::vector<std::wstring>::iterator it = m_AllowedModules.begin(); it != m_AllowedModules.end(); ++it)
 	{
 		if (it->compare(szModule) == 0)
 		{
@@ -126,7 +127,7 @@ DWORD WINAPI CModuleSecurity::GetThreadStartAddress(DWORD tid)
 	hTread = OpenThread(THREAD_QUERY_INFORMATION, FALSE, tid);
 
 	pNtQIT NtQueryInformationThread;
-	NtQueryInformationThread = (pNtQIT)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtQueryInformationThread");
+	NtQueryInformationThread = (pNtQIT)GetProcAddress(GetModuleHandle(L"ntdll.dll"), "NtQueryInformationThread");
 
 	if (NtQueryInformationThread == NULL)
 		return 0;

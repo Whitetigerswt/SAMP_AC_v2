@@ -7,7 +7,7 @@ DWORD FindPattern(char *pattern, char *mask)
 #ifdef WIN32
 	MODULEINFO mInfo = { 0 };
 
-	GetModuleInformation(GetCurrentProcess(), GetModuleHandle("samp.dll"), &mInfo, sizeof(MODULEINFO));
+	GetModuleInformation(GetCurrentProcess(), GetModuleHandle(TEXT("samp.dll")), &mInfo, sizeof(MODULEINFO));
 
 	DWORD base = (DWORD)mInfo.lpBaseOfDll;
 	DWORD size = (DWORD)mInfo.SizeOfImage;

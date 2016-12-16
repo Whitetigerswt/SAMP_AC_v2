@@ -10,7 +10,7 @@
 #include "CRakClientHandler.h"
 
 #include <Boost\thread.hpp>
-
+#include <tchar.h>
 
 void CRPCCallback::Initialize()
 {
@@ -58,7 +58,7 @@ void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)
 	if (bsData.Read(address) && bsData.Read(size))
 	{
 		// Calculate the result of the MD5 hash at the address and put it in an std::string
-		std::string md5 = Misc::MD5_Memory(address, size);
+		std::wstring md5 = Misc::MD5_Memory(address, size);
 
 		// Send the result of the hash back to the server.
 		RakNet::BitStream bitStream;
@@ -72,15 +72,15 @@ void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)
 
 		// convert md5 string to bytes
 		BYTE digest[16];
-		std::string md5_string(md5);
+		std::wstring md5_string(md5);
 
 		// if string isn't null
-		if (strcmp(md5.c_str(), "NULL"))
+		if (_tcscmp(md5.c_str(), TEXT("NULL")))
 		{
 			for (int i = 0; i < 16; ++i)
 			{
-				std::string bt = md5_string.substr(i * 2, 2);
-				digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+				std::wstring bt = md5_string.substr(i * 2, 2);
+				digest[i] = static_cast<BYTE>(_tcstoul(bt.c_str(), NULL, 16));
 				bitStream.Write(digest[i]);
 			}
 		}
@@ -107,13 +107,13 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 	if (bsData.ReadString(file))
 	{
 		// MD5 that file and store the result.
-		std::string result = CLoader::GtaDirectory.MD5_Specific_File((char*)file);
+		std::wstring result = CLoader::GtaDirectory.MD5_Specific_File(Misc::utf8_decode(reinterpret_cast<const char*>(file)));
 
 		// Convert the file into a std::string, so we can remove any macros that were sent in the file name.
-		std::string szFile(reinterpret_cast<char*>(file));
+		std::wstring szFile(reinterpret_cast<wchar_t*>(file));
 		
 		// Find the occurance of $(GtaDirectory) macro.
-		int i = szFile.find("$(GtaDirectory)/");
+		int i = szFile.find(TEXT("$(GtaDirectory)/"));
 
 		RakNet::BitStream bsData;
 
@@ -122,7 +122,7 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 		bsData.Write(ON_FILE_CALCULATED);
 		
 		// Cut out the $(GtaDirectory) macro when we send it back to the server.
-		std::string szFileInGTADirectory = std::string(szFile.substr(i + 16));
+		std::wstring szFileInGTADirectory = std::wstring(szFile.substr(i + 16));
 
 		bsData.Write((unsigned short)szFileInGTADirectory.length());
 		bsData.Write((const char*)szFileInGTADirectory.c_str(), szFileInGTADirectory.length());
@@ -131,12 +131,12 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 		BYTE digest[16];
 
 		// if string isn't null
-		if (strcmp(result.c_str(), "NULL"))
+		if (_tcscmp(result.c_str(), TEXT("NULL")))
 		{
 			for (int i = 0; i < 16; ++i)
 			{
-				std::string bt = result.substr(i * 2, 2);
-				digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+				std::wstring bt = result.substr(i * 2, 2);
+				digest[i] = static_cast<BYTE>(_tcstoul(bt.c_str(), NULL, 16));
 				bsData.Write(digest[i]);
 			}
 		}

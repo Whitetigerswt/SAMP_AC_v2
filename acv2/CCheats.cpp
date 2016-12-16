@@ -21,16 +21,16 @@ CCheats::~CCheats()
 	ClearFileList();
 }
 
-void CCheats::Add(std::string md5)
+void CCheats::Add(std::wstring md5)
 {
 	// Add the new file to the vector.
 	m_CheatList.push_back(md5);
 }
 
-void CCheats::Remove(std::string md5)
+void CCheats::Remove(std::wstring md5)
 {
 	// Loop through the list of bad md5's
-	for (std::vector<std::string>::iterator i = m_CheatList.begin(); i != m_CheatList.end(); ++i)
+	for (std::vector<std::wstring>::iterator i = m_CheatList.begin(); i != m_CheatList.end(); ++i)
 	{
 		// Compare the loop index to the md5 passed in the parameter.
 		if ((*i).compare(md5) == 0)
@@ -50,7 +50,7 @@ void CCheats::Remove(int idx)
 	m_CheatList.erase(m_CheatList.begin() + idx);
 }
 
-bool CCheats::IsCheat(std::string path)
+bool CCheats::IsCheat(std::wstring path)
 {
 	// Create an MD5 object to calculate the MD5 of the file path
 	if (FileExists(path))
@@ -58,10 +58,10 @@ bool CCheats::IsCheat(std::string path)
 		MD5 objmd5 = MD5();
 
 		// Calculate the file path.
-		std::string md5 = objmd5.digestFile((char*)path.c_str());
+		std::wstring md5 = objmd5.digestFile((wchar_t*)path.c_str());
 
 		// Search the cheat list to check if this file is a cheat.
-		for (std::vector<std::string>::iterator i = m_CheatList.begin(); i != m_CheatList.end(); ++i)
+		for (std::vector<std::wstring>::iterator i = m_CheatList.begin(); i != m_CheatList.end(); ++i)
 		{
 			// Compare the MD5 of the file we calculated, to an index in our cheat list of MD5s.
 			if ((*i).compare(md5) == 0)
@@ -73,7 +73,7 @@ bool CCheats::IsCheat(std::string path)
 	return false;
 }
 
-std::string CCheats::GetFileMD5(std::string file)
+std::wstring CCheats::GetFileMD5(std::wstring file)
 {
 	// Create an MD5 object to calculate the MD5 of the file path
 	if (FileExists(file))
@@ -82,17 +82,17 @@ std::string CCheats::GetFileMD5(std::string file)
 		MD5 objmd5 = MD5();
 
 		// Calculate the file path.
-		std::string md5 = objmd5.digestFile((char*)file.c_str());
+		std::wstring md5 = objmd5.digestFile((wchar_t *)file.c_str());
 
 		return md5;
 	}
-	return "NULL";
+	return TEXT("NULL");
 }
 
-bool CCheats::FileExists(std::string name)
+bool CCheats::FileExists(std::wstring name)
 {
 	// Open the file
-	if (FILE *file = fopen(name.c_str(), "r")) 
+	if (FILE *file = _tfopen(name.c_str(), TEXT("r")))
 	{
 		// It was successful at opening the file, now close it.
 		fclose(file);
@@ -107,7 +107,7 @@ bool CCheats::FileExists(std::string name)
 	}
 }
 
-void CCheats::AddFile(std::string file)
+void CCheats::AddFile(std::wstring file)
 {
 	if (!file.empty())
 	{
@@ -119,7 +119,7 @@ void CCheats::AddFile(std::string file)
 	}
 }
 
-void CCheats::AddFile(std::string file, std::string md5)
+void CCheats::AddFile(std::wstring file, std::wstring md5)
 {
 	if (!file.empty() && !md5.empty())
 	{
@@ -131,16 +131,16 @@ void CCheats::AddFile(std::string file, std::string md5)
 	}
 }
 
-void CCheats::OnFileExecuted(const char* file, const char* md5)
+void CCheats::OnFileExecuted(const wchar_t* file, const wchar_t* md5)
 {
 	// Make sure the length is greater than 3 characters.
-	if (strlen(file) > 3) 
+	if (_tcslen(file) > 3)
 	{
 		// Convert it to an std::string.
-		std::string szFile(file);
+		std::wstring szFile(file);
 
 		// Find the last instance of a \, cause we only want the file name and not the complete path.
-		int i = szFile.rfind("\\");
+		int i = szFile.rfind(TEXT("\\"));
 
 		// Change the string to only the files name and not it's complete path.
 		szFile = szFile.substr(i + 1);
@@ -157,15 +157,15 @@ void CCheats::OnFileExecuted(const char* file, const char* md5)
 
 		// convert md5 string to bytes
 		BYTE digest[16];
-		std::string md5_string(md5);
+		std::wstring md5_string(md5);
 
 		// if string isn't null
-		if (strcmp(md5, "NULL"))
+		if (_tcscmp(md5, TEXT("NULL")))
 		{
 			for (int i = 0; i < 16; ++i) 
 			{
-				std::string bt = md5_string.substr(i * 2, 2);
-				digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+				std::wstring bt = md5_string.substr(i * 2, 2);
+				digest[i] = static_cast<BYTE>(_tcstoul(bt.c_str(), NULL, 16));
 				bitStream.Write(digest[i]);
 			}
 		}
@@ -197,10 +197,10 @@ void CCheats::ResendFiles()
 	}
 }
 
-void CCheats::RemoveFile(std::string file)
+void CCheats::RemoveFile(std::wstring file)
 {
 	// Loop through the list of files.
-	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
+	for (std::vector<std::wstring>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
 	{
 		// Check if the file name matches the file passed in as a string.
 		if ((*i).compare(file) == 0)
@@ -227,15 +227,15 @@ void CCheats::ClearFileList()
 	m_FilePaths.clear();
 }
 
-std::map<std::string, std::string> CCheats::GetCheatList()
+std::map<std::wstring, std::wstring> CCheats::GetCheatList()
 {
 	// Create std::map as the result.
-	std::map<std::string, std::string> result;
+	std::map<std::wstring, std::wstring> result;
 
-	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
+	for (std::vector<std::wstring>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
 	{
 		// Get the file's MD5
-		std::string md5 = GetFileMD5((*i));
+		std::wstring md5 = GetFileMD5((*i));
 
 		// make sure the MD5 returned isn't empty.
 		if (!md5.empty())
@@ -245,7 +245,7 @@ std::map<std::string, std::string> CCheats::GetCheatList()
 			{
 				// Add the md5 as the key.
 				// Add the process path as the value.
-				result.insert(std::pair<std::string, std::string>(md5, (*i)));
+				result.insert(std::pair<std::wstring, std::wstring>(md5, (*i)));
 			}
 		}
 	}
@@ -253,10 +253,10 @@ std::map<std::string, std::string> CCheats::GetCheatList()
 	return result;
 }
 
-bool CCheats::DoesFileExist(std::string file)
+bool CCheats::DoesFileExist(std::wstring file)
 {
 	// Loop through the list of files.
-	for (std::vector<std::string>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
+	for (std::vector<std::wstring>::iterator i = m_FilePaths.begin(); i != m_FilePaths.end(); ++i)
 	{
 		// Check if the file in the loop matches the one sent in as a parameter.
 		if ((*i).compare(file) == 0)

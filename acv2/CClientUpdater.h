@@ -11,7 +11,7 @@
 #define CURRENT_MAJOR_VERSION 2.3f
 
 // The current update URL
-#define UPDATE_URL "http://samp-ac.com/API/SAMP_AC_v2_Client_Updater.html"
+#define UPDATE_URL TEXT("http://samp-ac.com/API/SAMP_AC_v2_Client_Updater.html")
 
 class CClientUpdater
 {
@@ -29,6 +29,6 @@ private:
 	// PURPOSE: Update the client
 	// REQUIRED: The update URL, the current hModule
 	// PROMISE: After the function returns, the client will be updated.
-	static void UpdateClient(std::string url, HMODULE hMod);
+	static void UpdateClient(std::wstring url, HMODULE hMod);
 
 };

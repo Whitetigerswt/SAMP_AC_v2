@@ -1,0 +1,17 @@
+﻿  Utility.cpp
+c:\users\seaver\documents\github\samp_ac_v2\acv2_server\utility.cpp(48): error C4996: 'vsnprintf': This function or variable may be unsafe. Consider using vsnprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          e:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(337) : see declaration of 'vsnprintf'
+  BanHandler.cpp
+c:\users\seaver\documents\github\samp_ac_v2\acv2_server\banhandler.cpp(5): fatal error C1083: Cannot open include file: 'curl/curl.h': No such file or directory
+  Hooks.cpp
+c:\users\seaver\documents\github\samp_ac_v2\acv2_server\structs.h(35): fatal error C1083: Cannot open include file: 'Network/BitStream.h': No such file or directory
+  amxplugin.cpp
+  plugin.cpp
+c:\users\seaver\documents\github\samp_ac_v2\acv2_server\plugin.cpp(3): fatal error C1083: Cannot open include file: 'Network/BitStream.h': No such file or directory
+  Network.cpp
+c:\users\seaver\documents\github\samp_ac_v2\acv2_server\structs.h(35): fatal error C1083: Cannot open include file: 'Network/BitStream.h': No such file or directory
+  CRPCCallback.cpp
+c:\users\seaver\documents\github\samp_ac_v2\acv2_server\network\crpccallback.cpp(12): fatal error C1083: Cannot open include file: 'boost/algorithm/string.hpp': No such file or directory
+  CServerUpdater.cpp
+c:\users\seaver\documents\github\samp_ac_v2\acv2_server\cserverupdater.h(14): fatal error C1083: Cannot open include file: 'boost/network/protocol/http/client.hpp': No such file or directory
+  CAntiCheatHandler.cpp

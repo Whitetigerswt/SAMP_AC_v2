@@ -74,7 +74,7 @@ void HookedRakClientInterface::SendInitialInfo()
 	bsData.Write((unsigned char)PACKET_RPC);
 	bsData.Write(ON_INITIAL_INFO);
 
-	std::string hwid = "";
+	std::wstring hwid = TEXT("");
 
 	// Get the hardware ID
 	if (EP_CheckupIsProtected())
@@ -84,13 +84,13 @@ void HookedRakClientInterface::SendInitialInfo()
 	BYTE digest[16];
 
 	MD5 md5 = MD5();
-	hwid = std::string(md5.digestString((char*)hwid.c_str()));
+	hwid = std::wstring(md5.digestString((wchar_t*)hwid.c_str()));
 
 	// string to byte
 	for (int i = 0; i < 16; ++i)
 	{
-		std::string bt = hwid.substr(i * 2, 2);
-		digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+		std::wstring bt = hwid.substr(i * 2, 2);
+		digest[i] = static_cast<BYTE>(_tcstoul(bt.c_str(), NULL, 16));
 		bsData.Write(digest[i]);
 	}
 

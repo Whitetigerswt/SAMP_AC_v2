@@ -17,14 +17,14 @@ void CServerUpdater::CheckForUpdate()
 {
 	// Get the website's response
 	Utility::Printf("checking for an update...");
-	std::string updatestring = Cmd5Info::GetWebsiteText(AC_UPDATE_URL);
+	std::wstring updatestring = Cmd5Info::GetWebsiteText(AC_UPDATE_URL);
 
 	// Create new variables to split up the version and the update URL.
 	float version = 0.0f;
-	char* site = new char[256];
+	wchar_t* site = new wchar_t[256];
 
 	// Split up the version and update URL.
-	if (sscanf(updatestring.c_str(), "%f %s", &version, site) != EOF)
+	if (swscanf_s(updatestring.c_str(), L"%f %s", &version, site) != EOF)
 	{
 		// If the version returned from the website is greater than the current version
 		if (version > CURRENT_VERSION)
@@ -56,35 +56,35 @@ void CServerUpdater::CheckForUpdate()
 	delete[] site;
 }
 
-void CServerUpdater::AttemptToUpdatePlugin(std::string url)
+void CServerUpdater::AttemptToUpdatePlugin(std::wstring url)
 {
-	std::string randompath = "plugins/sampac_old_version_";
-	randompath.append(boost::filesystem::unique_path().generic_string());
+	std::wstring randompath = L"plugins/sampac_old_version_";
+	randompath.append(boost::filesystem::unique_path().generic_wstring());
 
 #ifdef WIN32
-	rename("plugins/sampac.dll", randompath.c_str());
+	_wrename(L"plugins/sampac.dll", randompath.c_str());
 #else
-	rename("plugins/sampac.so", randompath.c_str());
+	_wrename(L"plugins/sampac.so", randompath.c_str());
 #endif
 
-	std::string filepath = DownloadUpdate(url);
+	std::wstring filepath = DownloadUpdate(url);
 
 #ifdef WIN32
-	rename(filepath.c_str(), "plugins/sampac.dll");
+	_wrename(filepath.c_str(), L"plugins/sampac.dll");
 #else
-	rename(filepath.c_str(), "plugins/sampac.so");
+	_wrename(filepath.c_str(), L"plugins/sampac.so");
 #endif
 }
 
-std::string CServerUpdater::DownloadUpdate(std::string url)
+std::wstring CServerUpdater::DownloadUpdate(std::wstring url)
 {
-	std::string data = Cmd5Info::GetWebsiteText(url);
-	std::string filename = "plugins/";
+	std::wstring data = Cmd5Info::GetWebsiteText(url);
+	std::wstring filename = L"plugins/";
 
-	filename.append(data.substr(data.find_last_of("/"), data.size()));
+	filename.append(data.substr(data.find_last_of(L"/"), data.size()));
 
-	std::ofstream ofs(filename.c_str());
-	ofs << static_cast<std::string>(data) << std::endl;
+	std::wofstream ofs(filename.c_str());
+	ofs << static_cast<std::wstring>(data) << std::endl;
 
 	return filename;
 }

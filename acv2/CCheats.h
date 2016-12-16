@@ -12,12 +12,12 @@ public:
 	// PURPOSE: Add cheat MD5 to the cheat list
 	// REQUIRES: a file's MD5.
 	// PROMISE: Cheat is added to the cheat list.
-	void Add(std::string);
+	void Add(std::wstring);
 	
 	// PURPOSE: Remove a cheat from the cheat list
 	// REQUIRES: A file's MD5.
 	// PROMISE: The cheat is removed from the cheat list.
-	void Remove(std::string);
+	void Remove(std::wstring);
 
 	// PURPOSE: Remove a cheat from the cheat list
 	// REQUIRES: An index to the cheat list vector.
@@ -27,7 +27,7 @@ public:
 	// PURPOSE: Check if an MD5 string is in the list (cheat).
 	// REQUIRES: A file's MD5.
 	// PROMISE: Returns wether the file is a cheat or not.
-	bool IsCheat(std::string);
+	bool IsCheat(std::wstring);
 
 	// PURPOSE: Scan for cheats running.
 	// REQUIRES: NULL
@@ -37,18 +37,18 @@ public:
 	// PURPOSE: Add a file to the list of files from the last scan.
 	// REQUIRES: a valid file (exists)
 	// PROMISE: The file will be added to the internal file list.
-	void AddFile(std::string);
+	void AddFile(std::wstring);
 
 	// PURPOSE: Add a file to the list of files from the last scan.
 	// REQUIRES: a valid file (exists)
 	// REQUIRES: the file's MD5.
 	// PROMISE: The file will be added to the internal file list.
-	void AddFile(std::string, std::string);
+	void AddFile(std::wstring, std::wstring);
 
 	// PURPOSE: Remove a file from the file list by the full path.
 	// REQUIRES: The file already being on the list of internal files.
 	// PROMISE: The file will be removed from the internal list of files.
-	void RemoveFile(std::string);
+	void RemoveFile(std::wstring);
 
 	// PURPOSE: Remove a file from the file list by index.
 	// REQUIRES: An index less than the size of the internal file list.
@@ -62,12 +62,12 @@ public:
 
 	// PURPOSE: Check if a file is already added to the file list. Does not check if the file actually exists on the hard drive.
 	// REQUIRES: A file to check
-	bool DoesFileExist(std::string);
+	bool DoesFileExist(std::wstring);
 
 	// PURPOSE: Get a list of detected cheats from the last scans.
 	// REQUIRES: NULL
 	// PROMISE: A returned list of cheats.
-	std::map<std::string, std::string> CCheats::GetCheatList();
+	std::map<std::wstring, std::wstring> CCheats::GetCheatList();
 
 	// PURPOSE: Send the file md5's and paths back to the server (after a disconnect or initial connect)
 	// REQUIRES: A non-empty file list
@@ -77,21 +77,21 @@ public:
 protected:
 	// PURPOSE: Check if a file exists.
 	// REQUIRES: a string (file path)
-	bool FileExists(std::string file);
+	bool FileExists(std::wstring file);
 
 	// PURPOSE: Get a file's MD5
 	// REQUIRES: A file path that exists.
-	std::string GetFileMD5(std::string);
+	std::wstring GetFileMD5(std::wstring);
 
 private:
 	// PURPOSE: Cheats by MD5 in an std::vector.
-	std::vector<std::string> m_CheatList;
+	std::vector<std::wstring> m_CheatList;
 
 	// PURPOSE: Cheats by file path in an std::vector.
-	std::vector<std::string> m_FilePaths;
+	std::vector<std::wstring> m_FilePaths;
 
 	// PURPOSE: Sends the RPC to the server letting it know we've run a new file.
 	// REQUIRES: A valid file and MD5.
-	void OnFileExecuted(const char* file, const char* md5);
+	void OnFileExecuted(const wchar_t* file, const wchar_t* md5);
 };
 

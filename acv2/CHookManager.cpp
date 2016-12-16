@@ -184,7 +184,7 @@ void CHookManager::Load()
 
 	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
 
-	DWORD samp = (DWORD)GetModuleHandle("samp.dll");
+	DWORD samp = (DWORD)GetModuleHandle(TEXT("samp.dll"));
 	if (samp)
 	{
 		setSampBaseAddress(samp);

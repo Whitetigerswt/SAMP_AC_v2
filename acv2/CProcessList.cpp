@@ -4,7 +4,7 @@
 #include <TlHelp32.h>
 #include <Psapi.h>
 
-typedef void (WINAPI *QFPIN)(HANDLE hProcess, DWORD dwFlags, LPSTR lpExeName, PDWORD lpdwSize);
+typedef void (WINAPI *QFPIN)(HANDLE hProcess, DWORD dwFlags, LPWSTR lpExeName, PDWORD lpdwSize);
 
 
 CProcessList::CProcessList()
@@ -22,7 +22,7 @@ void CProcessList::Scan()
 {
 	// Check if QueryFullProcessImageName exists.
 	// It doesn't exist on Windows XP.
-	QFPIN pQueryFullProcessImageName = (QFPIN)GetProcAddress(GetModuleHandle("Kernel32.dll"), (LPCSTR)"QueryFullProcessImageNameA");
+	QFPIN pQueryFullProcessImageName = (QFPIN)GetProcAddress(GetModuleHandle((LPCWSTR)"Kernel32.dll"), "QueryFullProcessImageNameW");
 
 	HANDLE hProcessSnap = INVALID_HANDLE_VALUE;
 	PROCESSENTRY32 pe32;
@@ -60,7 +60,7 @@ void CProcessList::Scan()
 				if (pHandle != NULL)
 				{
 					// Create a char object to hold the path of the process later.
-					char processpath[MAX_PATH];
+					wchar_t processpath[MAX_PATH];
 
 					if (NULL != pQueryFullProcessImageName) 
 					{
@@ -98,7 +98,7 @@ void CProcessList::Scan()
 
 					if (processpath != NULL) 
 					{
-						std::string path(processpath);
+						std::wstring path(processpath);
 						if (!DoesFileExist(path) && !path.empty())
 						{
 							// Add process to the process list.
