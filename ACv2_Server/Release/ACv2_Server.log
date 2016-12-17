@@ -1,9 +1,4 @@
-﻿  Cmd5Info.cpp
-  CAntiCheat.cpp
-  CServerUpdater.cpp
-  Utility.cpp
-  sampgdk.c
-  subhook.c
+﻿  CServerUpdater.cpp
      Creating library C:\Users\Seaver\Documents\GitHub\SAMP_AC_v2\Release\sampac.lib and object C:\Users\Seaver\Documents\GitHub\SAMP_AC_v2\Release\sampac.exp
   Generating code
   Finished generating code

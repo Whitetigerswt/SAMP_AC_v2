@@ -1,4 +1,5 @@
 #include "Cmd5Info.h"
+
 #include <boost/network/protocol/http/client.hpp>
 #include <string>
 #include <sstream>
@@ -6,40 +7,41 @@
 #include <fstream>
 #include <curl/curl.h>
 
+
 #ifndef WIN32
 #define MAX_PATH 260
 #endif
 
 using namespace boost::network;
 
-std::map<std::wstring, std::wstring> Cmd5Info::GetIMGMD5s()
+std::map<std::string, std::string> Cmd5Info::GetIMGMD5s()
 {
 	// Crate a map to hold our results.
-	std::map<std::wstring, std::wstring> gta3ImgDefaults;
+	std::map<std::string, std::string> gta3ImgDefaults;
 
 	// Get website body holding our MD5 info for gta3.img
 	// This will output something like "filename,md5\nfilename,md5\nfilename,md5"
-	std::wstring html = GetWebsiteText(AC_IMG_MD5_INFO);
+	std::string html = GetWebsiteText(AC_IMG_MD5_INFO);
 
-	std::vector<std::wstring> split_html;
+	std::vector<std::string> split_html;
 
 	// split the string into an std::vector by every "\n" in the string
 	// one string becomes "filename,md5"
 	boost::split(split_html, html, boost::is_any_of("\n"));
 
 	// Loop through every instance of "filename,md5"
-	for (std::vector<std::wstring>::iterator it = split_html.begin(); it != split_html.end(); ++it)
+	for (std::vector<std::string>::iterator it = split_html.begin(); it != split_html.end(); ++it)
 	{
 		// Find the comma, so we can seperate the filename, and m5.
-		std::size_t i = it->find(L",");
+		std::size_t i = it->find(",");
 
 		// Seperate the filename and md5 string.
-		std::wstring fname = it->substr(0, i);
-		std::wstring md5 = it->substr(i + 1);
+		std::string fname = it->substr(0, i);
+		std::string md5 = it->substr(i + 1);
 
 		// insert it into our std::map the results.
-		if (wcslen(fname.c_str()) > 0)
-			gta3ImgDefaults.insert(std::pair<std::wstring, std::wstring>(fname, md5));
+		if (strlen(fname.c_str()) > 0)
+			gta3ImgDefaults.insert(std::pair<std::string, std::string>(fname, md5));
 	}
 
 	// Return the map of all the fname's and md5's
@@ -53,7 +55,7 @@ std::vector<std::string> Cmd5Info::GetBadExecutableFiles()
 
 	// Get website body holding our MD5 info for all bad executable files.
 	// This will output something like "md5\nmd5\nmd5"
-	std::wstring html = GetWebsiteText(AC_EXECUTABLE_MD5_INFO);
+	std::string html = GetWebsiteText(AC_EXECUTABLE_MD5_INFO);
 
 	std::vector<std::string> split_html;
 
@@ -82,7 +84,7 @@ std::vector<std::string> Cmd5Info::GetGtaDirectoryFilesMd5()
 
 	// Get website body holding our MD5 info for all unmodifies/original gta files
 	// This will output something like "md5\nmd5\nmd5"
-	std::wstring html = GetWebsiteText(AC_DIR_MD5_INFO);
+	std::string html = GetWebsiteText(AC_DIR_MD5_INFO);
 
 	std::vector<std::string> split_html;
 
@@ -111,7 +113,7 @@ std::vector<std::string> Cmd5Info::GetGtaDirectoryFilesNames()
 
 	// Get website body holding info for all gta file names
 	// This will output something like "filename\nfilename\nfilename" (including extension or sub files)
-	std::wstring html = GetWebsiteText(AC_DIR_NAME_INFO);
+	std::string html = GetWebsiteText(AC_DIR_NAME_INFO);
 
 	std::vector<std::string> split_html;
 
@@ -133,9 +135,9 @@ std::vector<std::string> Cmd5Info::GetGtaDirectoryFilesNames()
 	return dirNameInfo;
 }
 
-std::wstring data = L"";
+std::string data = "";
 
-size_t writeCallback(wchar_t* buf, size_t size, size_t nmemb, void* up)
+size_t writeCallback(char* buf, size_t size, size_t nmemb, void* up)
 { //callback must have this declaration
   //buf is a pointer to the data that curl has for us
   //size*nmemb is the size of the buffer
@@ -147,7 +149,7 @@ size_t writeCallback(wchar_t* buf, size_t size, size_t nmemb, void* up)
 	return size*nmemb; //tell curl how many bytes we handled
 }
 
-std::wstring Cmd5Info::GetWebsiteText(std::wstring url)
+std::string Cmd5Info::GetWebsiteText(std::string url)
 {
 	CURL* curl; //our curl object
 
@@ -173,16 +175,17 @@ std::wstring Cmd5Info::GetWebsiteText(std::wstring url)
 	return data;
 }
 
-std::wstring Cmd5Info::DownloadFile(std::wstring url, std::wstring fname)
+std::string Cmd5Info::DownloadFile(std::string url, std::wstring fname)
 {
 	// Create an output stream to paste the URL contents.
 	std::wofstream ofs(fname.c_str());
 
 	// Save the URL contents so we can return it later.
-	std::wstring result = GetWebsiteText(url);
+	std::string result = GetWebsiteText(url);
 
+	std::wstring wresult(result.begin(), result.end());
 	// Paste the URL contents.
-	ofs << static_cast<std::wstring>(result) << std::endl;
+	ofs << wresult << std::endl;
 
 	return result;
 }

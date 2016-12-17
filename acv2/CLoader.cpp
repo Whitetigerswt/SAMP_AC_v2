@@ -66,12 +66,6 @@ void CLoader::Initialize(HMODULE hMod)
 		setSampBaseAddress((DWORD)mInfo.lpBaseOfDll);
 		setSampSize((DWORD)mInfo.SizeOfImage);
 
-		PELPEB peb = EL_GetPeb();
-		EL_HideModule(peb, TEXT("samp.dll"));
-		wchar_t path[MAX_PATH];
-		GetModuleFileName(hMod, path, sizeof(path));
-		EL_HideModule(peb, path);
-
 		// Hook LoadLibrary function.
 		CModuleSecurity::HookLoadLibrary();
 
@@ -90,8 +84,6 @@ void CLoader::Initialize(HMODULE hMod)
 			// Stop CLEO from loading, and other memory hooks.
 			CHookManager::Load();
 
-			//CDirectX::LoadImages();
-
 			// Wait until the game is loaded in an infinite loop.
 			Sleep(5);
 		}
@@ -103,6 +95,13 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Setup memory one more time.
 		CHookManager::Load();
+
+		// Hide samp.dll and this .asi from the loaded module list.
+		PELPEB peb = EL_GetPeb();
+		EL_HideModule(peb, TEXT("samp.dll"));
+		wchar_t path[MAX_PATH];
+		GetModuleFileName(hMod, path, sizeof(path));
+		EL_HideModule(peb, path);
 	}
 
 	while (true)

@@ -110,7 +110,8 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 		std::wstring result = CLoader::GtaDirectory.MD5_Specific_File(Misc::utf8_decode(reinterpret_cast<const char*>(file)));
 
 		// Convert the file into a std::string, so we can remove any macros that were sent in the file name.
-		std::wstring szFile(reinterpret_cast<wchar_t*>(file));
+
+		std::wstring szFile(Misc::utf8_decode(reinterpret_cast<const char*>(file)));
 		
 		// Find the occurance of $(GtaDirectory) macro.
 		int i = szFile.find(TEXT("$(GtaDirectory)/"));

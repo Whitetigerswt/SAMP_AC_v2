@@ -74,7 +74,7 @@ void CDirectoryScanner::img_scan(std::wstring path_to_gta3_img)
 		// Create vars to hold data about each IMG entry.
 		wchar_t* filecontents = NULL;
 
-		std::map<std::wstring, std::wstring> Gta3ImgDefaults = Cmd5Info::GetIMGMD5s();
+		std::map<std::string, std::string> Gta3ImgDefaults = Cmd5Info::GetIMGMD5s();
 
 		// Create a new MD5 object.
 		MD5 md5obj = MD5();
@@ -86,7 +86,7 @@ void CDirectoryScanner::img_scan(std::wstring path_to_gta3_img)
 			const wchar_t* filename = (*entry).GetFilename();
 
 			// Make sure the filename has an entry in the files we're checking
-			if (Gta3ImgDefaults[filename].empty())
+			if (Gta3ImgDefaults[Misc::utf8_encode(filename).c_str()].empty())
 			{
 				continue;
 			}
@@ -101,7 +101,7 @@ void CDirectoryScanner::img_scan(std::wstring path_to_gta3_img)
 			std::wstring md5 = md5obj.digestMemory((BYTE*)filecontents, (*entry).GetFilesize());
 
 			// Compare the md5 calculated to the list of files we got from the "Internet"
-			if (md5.compare(Gta3ImgDefaults[filename]) != 0)
+			if (md5.compare(Misc::utf8_decode(Gta3ImgDefaults[Misc::utf8_encode(filename).c_str()])) != 0)
 			{
 
 				// Tell the server that the MD5 doesn't match on this file.

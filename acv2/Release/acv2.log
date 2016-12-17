@@ -1,7 +1,4 @@
-﻿  Cmd5Info.cpp
-  CClientUpdater.cpp
-  CDirectoryScanner.cpp
-  CLoader.cpp
+﻿  CLoader.cpp
   Generating code
   Finished generating code
   acv2.vcxproj -> C:\Users\Seaver\Documents\GitHub\SAMP_AC_v2\Release\ACv2_Client.asi

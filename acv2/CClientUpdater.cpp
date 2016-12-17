@@ -1,7 +1,7 @@
 #include "CClientUpdater.h"
 #include "CLoader.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
-#include "CLog.h"
+#include "Misc.h"
 
 #include <Wininet.h>
 #include <Urlmon.h>
@@ -59,11 +59,11 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 
 		// We need to format our variables so we have the version by itself, and the download link by itself.
 		float version = 0.0f;
-		wchar_t* downloadLink = new wchar_t[256];
-		_stscanf_s(szLatestVersion, TEXT("%f %s"), &version, &downloadLink);
+		char* downloadLink = new char[256];
+		sscanf(Misc::utf8_encode(szLatestVersion).c_str(), "%f %s", &version, &downloadLink);
 
 		// Convert the download link to an std::string, cause they're easier to deal with...
-		std::wstring szDownloadLink(downloadLink);
+		std::string szDownloadLink(downloadLink);
 
 		// No memory leaks!
 		delete[] downloadLink;
@@ -77,7 +77,7 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 	}
 }
 
-void CClientUpdater::UpdateClient(std::wstring downloadLink, HMODULE hMod)
+void CClientUpdater::UpdateClient(std::string downloadLink, HMODULE hMod)
 {
 	// Get the temporary folder, this is where our old .asi version will go.
 	wchar_t tempDir[MAX_PATH + 1];
@@ -96,7 +96,7 @@ void CClientUpdater::UpdateClient(std::wstring downloadLink, HMODULE hMod)
 	MoveFile(currentFile, tempFile);
 
 	// Download the new .asi version from the new technology known as "the internet"
-	HRESULT hr = URLDownloadToFile(NULL, downloadLink.c_str(), currentFile, 0, NULL);
+	HRESULT hr = URLDownloadToFile(NULL, Misc::utf8_decode(downloadLink).c_str(), currentFile, 0, NULL);
 
 
 	if (SUCCEEDED(hr))
@@ -107,7 +107,7 @@ void CClientUpdater::UpdateClient(std::wstring downloadLink, HMODULE hMod)
 	else
 	{
 		// Some error occured, try to update in an alternative way.
-		std::wstring result = Cmd5Info::DownloadFile(downloadLink, currentFile);
+		std::string result = Cmd5Info::DownloadFile(downloadLink, currentFile);
 
 		// Check if the result was less than 1000 bytes.
 		if (result.length() < 1000)

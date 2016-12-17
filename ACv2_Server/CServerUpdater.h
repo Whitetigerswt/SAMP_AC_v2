@@ -1,9 +1,9 @@
 #pragma once
 
 #ifdef WIN32
-#define AC_UPDATE_URL L"http://samp-ac.com/API/Server_Windows_Updater.html"
+#define AC_UPDATE_URL "http://samp-ac.com/API/Server_Windows_Updater.html"
 #else
-#define AC_UPDATE_URL L"http://samp-ac.com/API/Server_Linux_Updater.html"
+#define AC_UPDATE_URL "http://samp-ac.com/API/Server_Linux_Updater.html"
 #endif
 
 #define CURRENT_VERSION 2.78f
@@ -45,10 +45,10 @@ private:
 	
 	// PURPOSE: Attempt to download an update.
 	// REQUIRES: A url to the latest update .so or .dll.
-	static void AttemptToUpdatePlugin(std::wstring url);
+	static void AttemptToUpdatePlugin(std::string url);
 
 	// PURPOSE: Download update from the specified URL. (.so or .dll)
 	// REQUIRES: A URL to a .so or a .dll.
-	static std::wstring DownloadUpdate(std::wstring url);
+	static std::wstring DownloadUpdate(std::string url);
 };
 

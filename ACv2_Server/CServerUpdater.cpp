@@ -17,14 +17,14 @@ void CServerUpdater::CheckForUpdate()
 {
 	// Get the website's response
 	Utility::Printf("checking for an update...");
-	std::wstring updatestring = Cmd5Info::GetWebsiteText(AC_UPDATE_URL);
+	std::string updatestring = Cmd5Info::GetWebsiteText(AC_UPDATE_URL);
 
 	// Create new variables to split up the version and the update URL.
 	float version = 0.0f;
-	wchar_t* site = new wchar_t[256];
+	char* site = new char[256];
 
 	// Split up the version and update URL.
-	if (swscanf_s(updatestring.c_str(), L"%f %s", &version, site) != EOF)
+	if (sscanf(updatestring.c_str(), "%f %s", &version, site) != EOF)
 	{
 		// If the version returned from the website is greater than the current version
 		if (version > CURRENT_VERSION)
@@ -53,10 +53,11 @@ void CServerUpdater::CheckForUpdate()
 			Utility::Printf("_____________________________________________________________");
 		}
 	}
+
 	delete[] site;
 }
 
-void CServerUpdater::AttemptToUpdatePlugin(std::wstring url)
+void CServerUpdater::AttemptToUpdatePlugin(std::string url)
 {
 	std::wstring randompath = L"plugins/sampac_old_version_";
 	randompath.append(boost::filesystem::unique_path().generic_wstring());
@@ -76,15 +77,16 @@ void CServerUpdater::AttemptToUpdatePlugin(std::wstring url)
 #endif
 }
 
-std::wstring CServerUpdater::DownloadUpdate(std::wstring url)
+std::wstring CServerUpdater::DownloadUpdate(std::string url)
 {
-	std::wstring data = Cmd5Info::GetWebsiteText(url);
+	std::string data = Cmd5Info::GetWebsiteText(url);
+	std::wstring wdata(data.begin(), data.end());
 	std::wstring filename = L"plugins/";
 
-	filename.append(data.substr(data.find_last_of(L"/"), data.size()));
+	filename.append(wdata.substr(wdata.find_last_of(L"/"), wdata.size()));
 
 	std::wofstream ofs(filename.c_str());
-	ofs << static_cast<std::wstring>(data) << std::endl;
+	ofs << static_cast<std::wstring>(wdata) << std::endl;
 
 	return filename;
 }
