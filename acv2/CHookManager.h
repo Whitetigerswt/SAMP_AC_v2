@@ -108,6 +108,7 @@ private:
 	static void CleoHook();
 
 	static void Wallhack();
+	static void Wallhack2();
 
 	static float CameraXPos;
 	static float CameraYPos;

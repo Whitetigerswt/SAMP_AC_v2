@@ -50,6 +50,7 @@
 #define FUNC_SlideFix						(BYTE*)0x686C2F
 
 #define FUNC_WallHack						(BYTE*)0x61A5B0
+#define FUNC_WallHack2						(BYTE*)0x520190
 
 // ModLoader patches
 #define FUNC_WinMain						(BYTE*)0x8246E7

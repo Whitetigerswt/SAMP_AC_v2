@@ -163,6 +163,7 @@ static DWORD rIdleHookJmpBack = 0x53ECC2;
 
 static DWORD CLEO_Func_JmpBack = 0x46A222;
 static DWORD WallHackJmpBack = 0x61A5BB;
+static DWORD WallHack2JmpBack = 0x520199;
 
 static DWORD sampInfoAddr = NULL;
 static DWORD sampInfoRtnAddr = NULL;
@@ -399,16 +400,23 @@ void CHookManager::Load()
 	CMem::Cpy((void*)FUNC_CleoHook, "\x90\x90", 2);
 	CMem::ApplyJmp(FUNC_CleoHook+2, (DWORD)CleoHook, 5);
 
-	CMem::Cpy((void*)FUNC_WallHack, "\x90\x90", 2);
-	CMem::ApplyJmp(FUNC_WallHack+2, (DWORD)Wallhack, 9);
-
 	BYTE dest[5];
+	CMem::Cpy(dest, (void*)FUNC_WallHack, 6);
+	BYTE WallDefault[] = { 0x8B, 0x0D, 0xA8, 0x44, 0xB7, 0x00 };
+	for (int i = 0; i < sizeof(WallDefault); ++i)
+	{
+		if (dest[i] != WallDefault[i])
+		{
+			CMem::Cpy((void*)FUNC_WallHack, "\x90\x90\x90\x90\x90", 5);
+		}
+	}
+
 	CMem::Cpy(dest, (void*)FUNC_CRunningScript_AddScriptToList, 5);
 
-	BYTE Default[] = { 0xE9, 0x8B, 0xCD, 0x0F, 0x01 };
-	for (int i = 0; i < sizeof(Default); ++i)
+	BYTE CleoDefault[] = { 0xE9, 0x8B, 0xCD, 0x0F, 0x01 };
+	for (int i = 0; i < sizeof(CleoDefault); ++i)
 	{
-		if (dest[i] != Default[i])
+		if (dest[i] != CleoDefault[i])
 		{
 			CMem::Cpy((void*)FUNC_CRunningScript_AddScriptToList, "\x90\x90\x90\x90\x90", 5);
 		}
@@ -573,14 +581,28 @@ void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
 
 HOOK CHookManager::Wallhack()
 {
+
 	__asm
 	{
-		mov eax, 061a5b0h
+		mov eax, 00B744A8h
 		mov ecx, [eax]
 		mov eax, [esp + 04h]
 		push ebx
 
 		jmp[WallHackJmpBack]
+	}
+}
+
+HOOK CHookManager::Wallhack2()
+{
+	__asm
+	{
+		sub esp, 24h
+		push ebx
+		push ebp
+		mov ebp, [esp + 30h]
+
+		jmp[WallHack2JmpBack]
 	}
 }
 
