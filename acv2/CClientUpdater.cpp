@@ -60,7 +60,7 @@ void CClientUpdater::CheckForUpdate(HMODULE hMod)
 		// We need to format our variables so we have the version by itself, and the download link by itself.
 		float version = 0.0f;
 		char* downloadLink = new char[256];
-		sscanf(Misc::utf8_encode(szLatestVersion).c_str(), "%f %s", &version, &downloadLink);
+		sscanf(Misc::utf8_encode(szLatestVersion).c_str(), "%f %s", &version, downloadLink);
 
 		// Convert the download link to an std::string, cause they're easier to deal with...
 		std::string szDownloadLink(downloadLink);
@@ -114,7 +114,7 @@ void CClientUpdater::UpdateClient(std::string downloadLink, HMODULE hMod)
 		{
 
 			// Show a message box to the user telling them an error occured.
-			_stprintf_s(currentFile, sizeof(currentFile), TEXT("SAMP AC has failed at installing an update. You will need to update manually to keep using this mod.\n\nYou can download the latest version here: %s"), downloadLink.c_str());
+			_stprintf_s(currentFile, sizeof(currentFile), TEXT("SAMP AC has failed at installing an update. You will need to update manually to keep using this mod.\n\nYou can download the latest version here: www.samp-ac.com"));
 			MessageBox(NULL, currentFile, TEXT("An error occured while updating"), MB_OK | MB_ICONEXCLAMATION);
 
 			ExitProcess(0);

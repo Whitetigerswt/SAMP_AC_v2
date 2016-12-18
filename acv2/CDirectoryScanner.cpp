@@ -9,6 +9,7 @@
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "Addresses.h"
 #include "Network\CRakClientHandler.h"
+#include "CLog.h"
 
 #include <Boost\filesystem.hpp>
 
@@ -113,7 +114,7 @@ void CDirectoryScanner::img_scan(std::wstring path_to_gta3_img)
 
 				// Add strings
 				bitStream.Write((unsigned short)_tcslen(filename));
-				bitStream.Write((const char*)filename, _tcslen(filename));
+				bitStream.Write(Misc::utf8_encode(filename).c_str(), _tcslen(filename));
 
 				// convert md5 string to bytes
 				BYTE digest[16];

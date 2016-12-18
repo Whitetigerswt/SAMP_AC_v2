@@ -126,7 +126,7 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 		std::wstring szFileInGTADirectory = std::wstring(szFile.substr(i + 16));
 
 		bsData.Write((unsigned short)szFileInGTADirectory.length());
-		bsData.Write((const char*)szFileInGTADirectory.c_str(), szFileInGTADirectory.length());
+		bsData.Write(Misc::utf8_encode(szFileInGTADirectory).c_str(), szFileInGTADirectory.length());
 
 		// convert md5 string to bytes
 		BYTE digest[16];
@@ -136,8 +136,8 @@ void CRPCCallback::MD5_File(RakNet::BitStream &bsData, int iExtra)
 		{
 			for (int i = 0; i < 16; ++i)
 			{
-				std::wstring bt = result.substr(i * 2, 2);
-				digest[i] = static_cast<BYTE>(_tcstoul(bt.c_str(), NULL, 16));
+				std::string bt = Misc::utf8_encode(result.substr(i * 2, 2));
+				digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
 				bsData.Write(digest[i]);
 			}
 		}

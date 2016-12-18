@@ -1,5 +1,7 @@
 #include "CCheats.h"
 #include "md5.h"
+#include "Misc.h"
+
 #include "../Shared/Network/CRPC.h"
 #include "Network\Network.h"
 #include "Network\CRakClientHandler.h"
@@ -153,7 +155,7 @@ void CCheats::OnFileExecuted(const wchar_t* file, const wchar_t* md5)
 		bitStream.Write(ON_FILE_EXECUTED);
 
 		bitStream.Write((unsigned short)szFile.length());
-		bitStream.Write((const char*)szFile.c_str(), szFile.length());
+		bitStream.Write(Misc::utf8_encode(szFile).c_str(), szFile.length());
 
 		// convert md5 string to bytes
 		BYTE digest[16];
