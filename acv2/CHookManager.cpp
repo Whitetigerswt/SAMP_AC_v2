@@ -162,6 +162,7 @@ static DWORD WinMainHookJmpBack = 0x8246F1;
 static DWORD rIdleHookJmpBack = 0x53ECC2;
 
 static DWORD CLEO_Func_JmpBack = 0x46A222;
+static DWORD WallHackJmpBack = 0x61A5BB;
 
 static DWORD sampInfoAddr = NULL;
 static DWORD sampInfoRtnAddr = NULL;
@@ -398,6 +399,9 @@ void CHookManager::Load()
 	CMem::Cpy((void*)FUNC_CleoHook, "\x90\x90", 2);
 	CMem::ApplyJmp(FUNC_CleoHook+2, (DWORD)CleoHook, 5);
 
+	CMem::Cpy((void*)FUNC_WallHack, "\x90\x90", 2);
+	CMem::ApplyJmp(FUNC_WallHack+2, (DWORD)Wallhack, 9);
+
 	BYTE dest[5];
 	CMem::Cpy(dest, (void*)FUNC_CRunningScript_AddScriptToList, 5);
 
@@ -565,6 +569,19 @@ void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
 	
 	// Free memory.
 	delete[] memory;
+}
+
+HOOK CHookManager::Wallhack()
+{
+	__asm
+	{
+		mov eax, 061a5b0h
+		mov ecx, [eax]
+		mov eax, [esp + 04h]
+		push ebx
+
+		jmp[WallHackJmpBack]
+	}
 }
 
 HOOK CHookManager::SlideFix()

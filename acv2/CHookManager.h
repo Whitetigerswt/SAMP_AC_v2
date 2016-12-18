@@ -107,6 +107,8 @@ private:
 	// PURPOSE: Prevent CLEO from doing anything.
 	static void CleoHook();
 
+	static void Wallhack();
+
 	static float CameraXPos;
 	static float CameraYPos;
 
