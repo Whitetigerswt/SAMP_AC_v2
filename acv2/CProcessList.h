@@ -1,10 +1,10 @@
 #pragma once
-#include "CCheats.h"
+#include "CFileCheck.h"
 #include <string>
 #include <Windows.h>
 
 class CProcessList :
-	public CCheats
+	public CFileCheck
 {
 public:
 	// PROMISE: Adjusts token privileges on the current process.
