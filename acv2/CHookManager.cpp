@@ -162,11 +162,9 @@ static DWORD WinMainHookJmpBack = 0x8246F1;
 static DWORD rIdleHookJmpBack = 0x53ECC2;
 
 static DWORD CLEO_Func_JmpBack = 0x46A222;
-static DWORD WallHackJmpBack = 0x61A5BB;
-static DWORD WallHack2JmpBack = 0x520199;
+static DWORD MainLoadingJmpBack = 0x7F9B12;
 
 static DWORD sampInfoAddr = NULL;
-static DWORD sampInfoRtnAddr = NULL;
 
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
@@ -215,7 +213,6 @@ void CHookManager::Load()
 		{
 			// Save memory so we can remove hook later.
 			sampInfoAddr = samp;
-			sampInfoRtnAddr = samp + 0x11;
 
 			// Unprotect memory so we can apply a jmp
 			VirtualProtect((void*)samp, 11, PAGE_EXECUTE_READWRITE, &dwOldProt);
@@ -254,6 +251,9 @@ void CHookManager::Load()
 	// Disable Werner patch
 	CMem::ApplyJmp(FUNC_ShotgunBullet, (DWORD)LoadShotgunBullet, 11);
 	CMem::ApplyJmp(FUNC_DeagleBullet, (DWORD)LoadBullet, 7);
+
+	// Hook a main loading function of SAMP and GTA. 
+	CMem::ApplyJmp(FUNC_MainLoad, (DWORD)MainLoading, 5);
 
 	// -------------------------------------------------------------------------
 	// Hook camera position patches below, so aimbots cannot edit the camera position.
@@ -487,7 +487,10 @@ void CHookManager::SetConnectPatches()
 
 	// Fix some slide issues with melee weps
 	CMem::ApplyJmp(FUNC_SlideFix, (DWORD)SlideFix, 6);
+
+	Load();
 }
+
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
 {
 	DWORD dwOldProt;
@@ -578,31 +581,34 @@ void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
 	// Free memory.
 	delete[] memory;
 }
-
-HOOK CHookManager::Wallhack()
+DWORD MainLoadingAddress = NULL;
+HOOK CHookManager::MainLoading()
 {
 
 	__asm
 	{
-		mov eax, 00B744A8h
-		mov ecx, [eax]
-		mov eax, [esp + 04h]
-		push ebx
 
-		jmp[WallHackJmpBack]
+		mov edx, [eax]
+		pushad
+		add edx,44h
+		mov eax,[edx]
+		mov MainLoadingAddress, eax
 	}
-}
 
-HOOK CHookManager::Wallhack2()
-{
+	if (*(BYTE*)(MainLoadingAddress) != 0xE9)
+	{
+		__asm
+		{
+			popad
+			call dword ptr[edx + 44h]
+			jmp[MainLoadingJmpBack]
+		}
+	}
+
+	// cause a crash
 	__asm
 	{
-		sub esp, 24h
-		push ebx
-		push ebp
-		mov ebp, [esp + 30h]
-
-		jmp[WallHack2JmpBack]
+		ret
 	}
 }
 

@@ -50,7 +50,6 @@
 #define FUNC_SlideFix						(BYTE*)0x686C2F
 
 #define FUNC_WallHack						(BYTE*)0x61A5B0
-#define FUNC_WallHack2						(BYTE*)0x520190
 
 // ModLoader patches
 #define FUNC_WinMain						(BYTE*)0x8246E7
@@ -59,6 +58,9 @@
 
 // More CLEO patches
 #define FUNC_CleoHook						(BYTE*)0x46A21B
+
+// Main loading patch
+#define FUNC_MainLoad						(BYTE*)0x7F9B0D
 
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2

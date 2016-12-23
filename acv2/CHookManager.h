@@ -94,6 +94,8 @@ private:
 
 	static void AltTabHook();
 
+	static void MainLoading();
+
 	static void SetCursorPosHook();
 
 	static void SlideFix();
@@ -106,9 +108,6 @@ private:
 
 	// PURPOSE: Prevent CLEO from doing anything.
 	static void CleoHook();
-
-	static void Wallhack();
-	static void Wallhack2();
 
 	static float CameraXPos;
 	static float CameraYPos;
