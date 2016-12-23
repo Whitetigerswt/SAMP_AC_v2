@@ -41,7 +41,11 @@ std::string CFileCheck::GetFileMD5(std::string file)
 bool CFileCheck::FileExists(std::string name)
 {
 	// Open the file
+<<<<<<< HEAD
+	if (FILE *file = fopen(name.c_str(), "r")) 
+=======
 	if (FILE *file = fopen(name.c_str(), "r"))
+>>>>>>> refs/remotes/origin/master
 	{
 		// It was successful at opening the file, now close it.
 		fclose(file);
@@ -49,7 +53,11 @@ bool CFileCheck::FileExists(std::string name)
 		// And return true
 		return true;
 	}
+<<<<<<< HEAD
+	else 
+=======
 	else
+>>>>>>> refs/remotes/origin/master
 	{
 		// We were not successful at opening the file, it must not exist.
 		return false;
@@ -79,7 +87,11 @@ void CFileCheck::AddFile(std::string file, std::string md5)
 void CFileCheck::OnFileExecuted(const char* file, const char* md5)
 {
 	// Make sure the length is greater than 3 characters.
+<<<<<<< HEAD
+	if (strlen(file) > 3) 
+=======
 	if (strlen(file) > 3)
+>>>>>>> refs/remotes/origin/master
 	{
 		// Convert it to an std::string.
 		std::string szFile(file);
@@ -107,7 +119,11 @@ void CFileCheck::OnFileExecuted(const char* file, const char* md5)
 		// if string isn't null
 		if (strcmp(md5, "NULL"))
 		{
+<<<<<<< HEAD
+			for (int i = 0; i < 16; ++i) 
+=======
 			for (int i = 0; i < 16; ++i)
+>>>>>>> refs/remotes/origin/master
 			{
 				std::string bt = md5_string.substr(i * 2, 2);
 				digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
@@ -159,3 +175,7 @@ bool CFileCheck::DoesFileExist(std::string file)
 
 	return false;
 }
+<<<<<<< HEAD
+
+=======
+>>>>>>> refs/remotes/origin/master

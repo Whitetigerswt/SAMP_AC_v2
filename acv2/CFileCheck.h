@@ -54,3 +54,7 @@ private:
 	// REQUIRES: A valid file and MD5.
 	void OnFileExecuted(const char* file, const char* md5);
 };
+<<<<<<< HEAD
+
+=======
+>>>>>>> refs/remotes/origin/master

@@ -16,6 +16,12 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
+// Time needed to ask players to verify their AC clients again
+#define VERIFY_CLIENTS_INTERVAL 600000
+
+// Last time a player verified their AC client
+int LastTimeVerifiedClient[MAX_PLAYERS];
+
 namespace Callback
 {
 	static AMX* amx_allowed = NULL;
@@ -152,9 +158,54 @@ namespace Callback
 		}
 	}
 
+	// This asks connected players to verify their AC clients from time to time
+	// to make it harder to unload AC module after initial verification.
+	void SAMPGDK_CALL VerifyClients(int timerid, void *params)
+	{
+		// Loop through all players.
+		for (int i = 0; i < MAX_PLAYERS; ++i)
+		{
+			// Make sure the player is connected to the AC and the server.
+			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
+			{
+				// See if they haven't verified their client in a while
+				if (GetTickCount() - LastTimeVerifiedClient[i] > VERIFY_CLIENTS_INTERVAL)
+				{
+					char msg[144], name[MAX_PLAYER_NAME];
+					GetPlayerName(i, name, sizeof name);
+					snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client properly.", name);
+					SendClientMessageToAll(0xFF0000FF, msg);
+					Utility::Printf(msg);
+
+					// Kick the player from the server
+					SetTimer(1000, 0, Callback::KickPlayer, (void*)i);
+				}
+				else
+				{
+					// Request verified packet from client
+
+					RakNet::BitStream bsData;
+
+					// Write header
+					bsData.Write((unsigned char)PACKET_RPC);
+					bsData.Write(VERIFY_CLIENT);
+
+					// Send RPC.
+					Network::PlayerSend(i, &bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
+				}
+			}
+			return;
+		}
+	}
+
 	bool GetACEnabled()
 	{
 		return ACToggle;
+	}
+
+	void SetLastTimeVerifiedClient(unsigned int playerid)
+	{
+		LastTimeVerifiedClient[playerid] = GetTickCount();
 	}
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
@@ -181,19 +232,19 @@ namespace Callback
 					// This player is a cheater and has been banned before. 
 					switch (ACToggle)
 					{
-						case  true:
+						case true:
 						{
 							// AC is enabled. Kick the banned player.
 							char msg[144];
 
 							// Tell the player
-							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. No more: %s", AC_WEBSITE);
+							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
 							SendClientMessage(playerid, -1, msg);
 							char name[MAX_PLAYER_NAME];
 							GetPlayerName(playerid, name, sizeof name);
 
 							// Tell other players connected
-							snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked from the server for being banned on Anti-Cheat (v2).", name);
+							snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked for being banned from AC servers.", name);
 							SendClientMessageToAll(-1, msg);
 
 							// Kick the player from the server
@@ -206,13 +257,13 @@ namespace Callback
 							char msg[144];
 
 							// Tell the player
-							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You are banned. No more: %s", AC_WEBSITE);
+							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
 							SendClientMessage(playerid, -1, msg);
 							char name[MAX_PLAYER_NAME];
 							GetPlayerName(playerid, name, sizeof name);
 
 							// Tell other players connected
-							snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned on Anti-Cheat (v2). Know more: %s", name, AC_WEBSITE);
+							snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned from AC servers. Know more: %s", name, AC_WEBSITE);
 							SendClientMessageToAll(-1, msg);
 							break;
 						}
@@ -230,13 +281,6 @@ namespace Callback
 				else
 				{
 					ac->SetPlayerConnected(true);
-				}
-
-				// if the AC is on, let the user know this server is protected.
-				if (ACToggle)
-				{
-					// Tell the player we're using the AC on this server.
-					SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
 				}
 
 				// Send the client the files we need them to return md5's to.
@@ -330,6 +374,13 @@ namespace Callback
 					else
 					{
 						ac->SetPlayerConnected(true);
+
+						// if the AC is on, let the user know this server is protected.
+						if (ACToggle)
+						{
+							// Tell the player we're using the AC on this server.
+							SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
+						}
 					}
 
 					// Fetch player's ban status
@@ -367,10 +418,18 @@ namespace Callback
 		return true;
 	}
 
+	bool onGameModeInitCalled = false; // if OnGameModeInit has been called at least once
+
 	PLUGIN_EXPORT bool PLUGIN_CALL OnGameModeInit()
 	{
+		if (onGameModeInitCalled)
+			return true;
+
 		// Check memory pretty frequently in a new timer.
-		SetTimer(60000, 1, CheckPlayersMemory, NULL);
+		SetTimer(60000, true, CheckPlayersMemory, NULL);
+
+		// Request client verification in a repeated timer
+		SetTimer(VERIFY_CLIENTS_INTERVAL, true, VerifyClients, NULL);
 
 		if (!boost::filesystem::exists("ac_config.ini"))
 		{
@@ -404,53 +463,12 @@ namespace Callback
 			Default_VehicleBlips = pt.get<bool>("defaults.vehicle_blips");
 		}
 
+		onGameModeInitCalled = true;
 		return true;
 	}
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid, const char* params)
 	{
-
-		/*if (!strcmp(params, "/acinfo"))
-		{
-			// This command is here so we can check for abuse, if main_ac_checks is 0 then it can't be proven that the scripter
-			// hasn't added some weird condition that allows him to cheat but not anyone else.
-			
-			if (ACToggle)
-			{
-				// Create bitstream
-				RakNet::BitStream bsData;
-
-				// Write header
-				bsData.Write((unsigned char)PACKET_RPC);
-				bsData.Write(AC_SERVER_INFO);
-
-				bsData.Write(ACToggle);
-
-				// Confirmation code
-				int code = rand() % 99999;
-				bsData.Write(code);
-
-
-				// Send RPC.
-				Network::PlayerSend(playerid, &bsData, LOW_PRIORITY, RELIABLE);
-
-				SendClientMessage(playerid, -1, "{d3d3d3}** main_ac_checks: {FFFFFF}1");
-				SendClientMessage(playerid, -1, "This means the anti-cheat checks connected players and deals with them automatically.");
-				SendClientMessage(playerid, -1, "To make sure this is not a fake server, check acv2_log.txt in your GTA SA folder for confirmation message");
-				
-				char str[144];
-				snprintf(str, "Your confirmation message must contain this code: %d, if you don't recieve such a message, report this server", code);
-				SendClientMessage(playerid, -1, str);
-			}
-			else
-			{
-				SendClientMessage(playerid, -1, "{d3d3d3}** main_ac_checks: {FFFFFF}0");
-				SendClientMessage(playerid, -1, "This means the anti-cheat checks connected players but won't deal with them automatically, it needs mode scripter.");
-				SendClientMessage(playerid, -1, "Beware of who the scripter is. If you want to be in a more secure situation, request main_ac_checks to be enabled via /actoggle");
-			}
-			return 1;
-		}*/
-
 		// If the user typed /actoggle and they're allowed to run that command.
 		if (!strcmp(params, "/actoggle") && CAntiCheat::CanEnableAC(playerid))
 		{ 

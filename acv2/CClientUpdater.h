@@ -3,7 +3,7 @@
 #include <Windows.h>
 
 // Changing CURRENT_VERSION will force the client to update when they run it next.
-#define CURRENT_VERSION 2.78f
+#define CURRENT_VERSION 2.8f
 
 // Changing CURRENT_MAJOR_VERSION DOES NOT FORCE THE USER TO UPDATE IF IT'S CHANGED!
 // Only changing CURRENT_VERSION will force the user to update.
