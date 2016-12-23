@@ -14,7 +14,7 @@ PELPEB EL_GetPeb()
 
 	DWORD tSize;
 
-	HMODULE tNtDll = LoadLibrary("ntdll.dll");
+	HMODULE tNtDll = LoadLibrary(TEXT("ntdll.dll"));
 
 	if (tNtDll == NULL)
 		return NULL;

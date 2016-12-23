@@ -108,9 +108,6 @@
     <ClCompile Include="CModuleSecurity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CSprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PatternScan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -819,9 +816,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CModuleSecurity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">

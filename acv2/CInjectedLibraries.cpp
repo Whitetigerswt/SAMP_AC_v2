@@ -25,7 +25,7 @@ void CInjectedLibraries::Scan()
 		for (i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
 		{
 			// Create a variable to hold the path name on each module
-			char szModName[MAX_PATH];
+			wchar_t szModName[MAX_PATH];
 			
 			// Get the module file name for the variable we just created.
 			if (GetModuleFileNameEx(GetCurrentProcess(), hMods[i], szModName,
@@ -33,7 +33,7 @@ void CInjectedLibraries::Scan()
 			{
 
 				// Convert the path to an std::string
-				std::string file(szModName);
+				std::wstring file(szModName);
 
 				// Make sure the module isn't already on the file list.
 				if (!DoesFileExist(file))

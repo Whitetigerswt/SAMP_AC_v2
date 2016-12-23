@@ -94,6 +94,8 @@ private:
 
 	static void AltTabHook();
 
+	static void MainLoading();
+
 	static void SetCursorPosHook();
 
 	static void SlideFix();

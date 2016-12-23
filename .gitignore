@@ -38,12 +38,12 @@
 !*.sln
 !*.vcxproj
 !*.dll
-!*.asi
+*.asi
 !*.hpp
 !*.lib
 !*.def
 !*.txt
-!*.filters
+*.filters
 !*.so
 !*.a
 !*.vmp
@@ -53,7 +53,7 @@
 !*.ipp
 !*.pwn
 !*.inl
-!*.pdb
+*.pdb
 !*.ini
 !*.exe
 !*.nsh

@@ -91,7 +91,7 @@ class IMG_Entry
 	friend class IMG;
 
 private:
-	char Name[256];				// NULL terminated
+	wchar_t Name[256];				// NULL terminated
 	DWORD NameHash;
 
 	// In IMG archive
@@ -125,10 +125,10 @@ public:
 	IMG_Entry::IMG_Entry(IMG * IMG_Instance);
 
 	// Returns pointer to file name.
-	const char* IMG_Entry::GetFilename();
+	const wchar_t* IMG_Entry::GetFilename();
 
 	// Writes a filename without extension to sufficiently long buffer
-	void IMG_Entry::GetFilenameWithoutExtension(char* filenameWithoutExtension, int size);
+	void IMG_Entry::GetFilenameWithoutExtension(wchar_t* filenameWithoutExtension, int size);
 
 	// Returns file order ID
 	eIMG_FileOrder IMG_Entry::GetFileOrderIDbyExtension();
@@ -165,8 +165,8 @@ public:
 
 struct tIMG_FileOrder {
 	eIMG_FileOrder orderID;
-	const char* orderExtension;
-	const char* orderName;
+	const wchar_t* orderExtension;
+	const wchar_t* orderName;
 };
 
 class IMG
@@ -209,8 +209,8 @@ private:
 	FILE* IMG_Handle;
 	FILE* DIR_Handle;
 
-	char IMG_fullPath[MAX_PATH];
-	char* IMG_filename;
+	wchar_t IMG_fullPath[MAX_PATH];
+	wchar_t* IMG_filename;
 
 	// Size of all filenames, only usable, when IMG version 3
 	DWORD FilenamesSize;
@@ -219,10 +219,10 @@ private:
 	DWORD IMG::GetEndOfHeaderDataPastTheListOfFiles();
 
 	// Gets IPL filename and num, returns true on success and false on failure.
-	static bool IMG::GetIPLfilenameAndNum(const char* fullFilename, char* IPL_name, DWORD* IPL_num);
+	static bool IMG::GetIPLfilenameAndNum(const wchar_t* fullFilename, wchar_t* IPL_name, DWORD* IPL_num);
 
 	// Gets ID of this file OR IDs of all .ipl files with this name
-	void IMG::GetIteratorsOfAssociatedFiles(const char* SearchedName, tRelatedFilesContainer& list);
+	void IMG::GetIteratorsOfAssociatedFiles(const wchar_t* SearchedName, tRelatedFilesContainer& list);
 
 	// Loads files identified by DWORD indexes into continous aligned memory
 	// Returned is size of all files loaded from list
@@ -234,7 +234,7 @@ private:
 	void IMG::MoveFilesLocatedBeforeListOfFilesToSuitablePosition(FILE* imgHandle);
 
 	// Returns pattern of IMG validity
-	void IMG::GetPatternToCheckIfPositionIsValid(char* str);
+	void IMG::GetPatternToCheckIfPositionIsValid(wchar_t* str);
 
 	// Tests if file position is valid
 	void IMG::TestIfPositionIsValid(FILE* imgHandle);
@@ -274,7 +274,7 @@ public:
 	const static unsigned int MAX_FILESIZE = 0xFFFF * IMG_BLOCK_SIZE;		// 128 MB - IMG_BLOCK_SIZE bytes
 	const static unsigned int GTAIV_MAGIC_ID = 0xA94E2A52;
 
-	char* GTAIV_encryption_key;
+	wchar_t* GTAIV_encryption_key;
 
 #pragma pack(push, 1)
 	struct IMG_version2_tableItem		// size: 32 bytes
@@ -341,15 +341,15 @@ public:
 
 	// Opens IMG archive, assumes IMG archive to exist.
 	// Detects archive type automatically
-	bool IMG::OpenArchive(const char* path);
+	bool IMG::OpenArchive(const wchar_t* path);
 
 	// Creates .img archive
 	// Example: object.CreateArchive("new.img", IMG::IMG_version::VERSION_1);
-	bool IMG::CreateArchive(const char* path, eIMG_version version);
+	bool IMG::CreateArchive(const wchar_t* path, eIMG_version version);
 
 	// Opens .img archive if exists or creates if not exists
 	// Example: object.OpenOrCreateArchive("new.img", IMG::IMG_version::VERSION_1);
-	bool IMG::OpenOrCreateArchive(const char* path, eIMG_version version);
+	bool IMG::OpenOrCreateArchive(const wchar_t* path, eIMG_version version);
 
 	// Checks if archive is currently opened.
 	bool IMG::IsArchiveOpened();
@@ -379,10 +379,10 @@ public:
 	DWORD IMG::GetFileCount();
 
 	// Adds or replaces file if exists
-	IMG::tIMGEntryIterator IMG::AddOrReplaceFile(const char* name, const void* ptr, size_t size);
+	IMG::tIMGEntryIterator IMG::AddOrReplaceFile(const wchar_t* name, const void* ptr, size_t size);
 
 	// Adds file
-	IMG::tIMGEntryIterator IMG::AddFile(const char* name, const void* ptr, size_t size);
+	IMG::tIMGEntryIterator IMG::AddFile(const wchar_t* name, const void* ptr, size_t size);
 
 	// Replaces file depending on iterator
 	void IMG::ReplaceSingleFile(tIMGEntryIterator IMGentryIt, const void* ptr, size_t size);
@@ -397,7 +397,7 @@ private:
 public:
 
 	// Renames a file
-	bool IMG::RenameFile(tIMGEntryIterator fileInfo, const char* NewName);
+	bool IMG::RenameFile(tIMGEntryIterator fileInfo, const wchar_t* NewName);
 
 	// Remove a file
 	IMG::tIMGEntryConstIterator IMG::RemoveFile(tIMGEntryConstIterator _Where);
@@ -409,20 +409,20 @@ public:
 		);
 
 	// Gets iterator of file pointing to ListOfFiles
-	IMG::tIMGEntryIterator IMG::GetFileIteratorByName(const char* name);
+	IMG::tIMGEntryIterator IMG::GetFileIteratorByName(const wchar_t* name);
 
 	// Checks if file with specified name exists and returns TRUE/FALSE
-	bool IMG::FileExists(const char* name);
+	bool IMG::FileExists(const wchar_t* name);
 
 	// Checks if filename's length is appropriate for IMG entry as well as name characters.
-	bool IMG::IsFileNameValid(const char* name);
+	bool IMG::IsFileNameValid(const wchar_t* name);
 
 	// Gets filename for imported file, filename may be truncated if archive version is 1 or 2.
-	errno_t IMG::GetFilenameForImportedFile(const char* lpFileName, char* lpFilePart, DWORD nBufferLength);
+	errno_t IMG::GetFilenameForImportedFile(const wchar_t* lpFileName, wchar_t* lpFilePart, DWORD nBufferLength);
 
 	// Access file by name
 	// Returns a reference to the last element in the vector container.
-	IMG::tIMGEntryReference IMG::GetFileRefByName(const char* name);
+	IMG::tIMGEntryReference IMG::GetFileRefByName(const wchar_t* name);
 
 	// Return iterator to beginning
 	IMG::tIMGEntryIterator IMG::begin();

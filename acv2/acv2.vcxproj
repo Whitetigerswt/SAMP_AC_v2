@@ -29,7 +29,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -132,7 +132,6 @@
     <ClCompile Include="Network\CRakClientHandler.cpp" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
     <ClCompile Include="Network\HookedRakClient.cpp" />
-    <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="Network\RakClient.cpp" />
     <ClCompile Include="PatternScan.cpp" />
     <ClCompile Include="s0beit\samp.cpp" />
@@ -282,7 +281,6 @@
     <ClInclude Include="CParseCommandLine.h" />
     <ClInclude Include="CPatch.h" />
     <ClInclude Include="CProcessList.h" />
-    <ClInclude Include="CSprite.h" />
     <ClInclude Include="Detours\detours.h" />
     <ClInclude Include="DirectX Hooks\CD3D9DeviceProxy.h" />
     <ClInclude Include="DirectX Hooks\CD3D9Proxy.h" />

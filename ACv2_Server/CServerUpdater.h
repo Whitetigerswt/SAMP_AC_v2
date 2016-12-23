@@ -49,6 +49,6 @@ private:
 
 	// PURPOSE: Download update from the specified URL. (.so or .dll)
 	// REQUIRES: A URL to a .so or a .dll.
-	static std::string DownloadUpdate(std::string url);
+	static std::wstring DownloadUpdate(std::string url);
 };
 

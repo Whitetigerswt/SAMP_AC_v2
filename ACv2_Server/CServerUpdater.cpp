@@ -53,38 +53,40 @@ void CServerUpdater::CheckForUpdate()
 			Utility::Printf("_____________________________________________________________");
 		}
 	}
+
 	delete[] site;
 }
 
 void CServerUpdater::AttemptToUpdatePlugin(std::string url)
 {
-	std::string randompath = "plugins/sampac_old_version_";
-	randompath.append(boost::filesystem::unique_path().generic_string());
+	std::wstring randompath = L"plugins/sampac_old_version_";
+	randompath.append(boost::filesystem::unique_path().generic_wstring());
 
 #ifdef WIN32
-	rename("plugins/sampac.dll", randompath.c_str());
+	_wrename(L"plugins/sampac.dll", randompath.c_str());
 #else
-	rename("plugins/sampac.so", randompath.c_str());
+	_wrename(L"plugins/sampac.so", randompath.c_str());
 #endif
 
-	std::string filepath = DownloadUpdate(url);
+	std::wstring filepath = DownloadUpdate(url);
 
 #ifdef WIN32
-	rename(filepath.c_str(), "plugins/sampac.dll");
+	_wrename(filepath.c_str(), L"plugins/sampac.dll");
 #else
-	rename(filepath.c_str(), "plugins/sampac.so");
+	_wrename(filepath.c_str(), L"plugins/sampac.so");
 #endif
 }
 
-std::string CServerUpdater::DownloadUpdate(std::string url)
+std::wstring CServerUpdater::DownloadUpdate(std::string url)
 {
 	std::string data = Cmd5Info::GetWebsiteText(url);
-	std::string filename = "plugins/";
+	std::wstring wdata(data.begin(), data.end());
+	std::wstring filename = L"plugins/";
 
-	filename.append(data.substr(data.find_last_of("/"), data.size()));
+	filename.append(wdata.substr(wdata.find_last_of(L"/"), wdata.size()));
 
-	std::ofstream ofs(filename.c_str());
-	ofs << static_cast<std::string>(data) << std::endl;
+	std::wofstream ofs(filename.c_str());
+	ofs << static_cast<std::wstring>(wdata) << std::endl;
 
 	return filename;
 }
