@@ -2,8 +2,8 @@
 
 #include <string>
 
-#define AC_BAN_HANDLER_ADD				"/web_server_api/ban_handler/addcheater.php"
-#define AC_BAN_HANDLER_CHECK			"/web_server_api/ban_handler/checkcheater.php"
+#define AC_BAN_HANDLER_ADD				"https://sampcup.com/API/php/addcheater.php"
+#define AC_BAN_HANDLER_CHECK			"https://sampcup.com/API/php/checkcheater.php"
 
 namespace BanHandler
 {

@@ -3,6 +3,7 @@
 #include "../Shared/Network/CRPC.h"
 #include "Network\Network.h"
 #include "Network\CRakClientHandler.h"
+#include "Misc.h"
 
 #include <Windows.h>
 #include <string>
@@ -98,7 +99,7 @@ void CFileCheck::OnFileExecuted(const wchar_t* file, const wchar_t* md5)
 		bitStream.Write(ON_FILE_EXECUTED);
 
 		bitStream.Write((unsigned short)szFile.length());
-		bitStream.Write((const char*)szFile.c_str(), szFile.length());
+		bitStream.Write((const char*)Misc::utf8_encode(szFile).c_str(), szFile.length());
 
 		// convert md5 string to bytes
 		BYTE digest[16];
@@ -107,7 +108,7 @@ void CFileCheck::OnFileExecuted(const wchar_t* file, const wchar_t* md5)
 		// if string isn't null
 		if (_tcscmp(md5, TEXT("NULL")))
 		{
-			for (int i = 0; i < 16; ++i)
+			for (int i = 0; i < 16; ++i) 
 			{
 				std::wstring bt = md5_string.substr(i * 2, 2);
 				digest[i] = static_cast<BYTE>(_tcstoul(bt.c_str(), NULL, 16));

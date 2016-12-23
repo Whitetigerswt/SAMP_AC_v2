@@ -36,7 +36,7 @@ void CInjectedLibraries::Scan()
 				std::wstring file(szModName);
 
 				// Make sure the module isn't already on the file list.
-				if (!DoesFileExist(file) && !file.empty())
+				if (!DoesFileExist(file))
 				{
 					// Add the file to the file list.
 					AddFile(file);

@@ -90,6 +90,9 @@
     <ClCompile Include="BanHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shared\Network\ACVerifiedPacket.cpp">
+      <Filter>Source Files\Shared\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SDK\samp-sdk\plugincommon.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="BanHandler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Network\ACVerifiedPacket.h">
+      <Filter>Source Files\Shared\Network</Filter>
     </ClInclude>
     <ClInclude Include="CVector4D.h">
       <Filter>Header Files</Filter>

@@ -132,6 +132,9 @@
     <ClCompile Include="CFunctionHooks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shared\Network\ACVerifiedPacket.cpp">
+      <Filter>Source Files\Shared\Network</Filter>
+    </ClCompile>
     <ClCompile Include="ManualInjection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -850,6 +853,9 @@
     </ClInclude>
     <ClInclude Include="CFunctionHooks.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Network\ACVerifiedPacket.h">
+      <Filter>Source Files\Shared\Network</Filter>
     </ClInclude>
     <ClInclude Include="ManualInjection.h">
       <Filter>Header Files</Filter>
