@@ -1,0 +1,73 @@
+.addcheater_header
+{
+	color:white; 
+	font-size:170%;
+	font-weight:bold;
+	text-align:center;
+	
+}
+
+.addcheat_help_paragraph
+{
+	text-align:center;
+}
+
+.addcheat_form
+{
+	width:70%;
+    margin: 0 auto; 
+}
+
+.addcheat_form_input_box
+{
+	width:100%;
+}
+
+.addcheat_form_input_name
+{
+	font-weight:bold;
+}
+
+.addcheat_form_input_what
+{
+	font-weight:bold;
+	color:#34A2C7;
+	background-color:#333333;
+	cursor:help;
+	padding:5px;
+	border-radius:3px;
+}
+
+.addcheat_form_input_help
+{
+	color:#34A2C7;
+	background-color:#333333;
+	cursor:help;
+	padding:5px;
+	border-radius:10px;
+	font-size:80%;
+}
+
+#addcheat_form_error
+{
+	display:none;
+	
+	font-weight:bold;
+	color:#DE0000;
+	background-color:#E36868;
+	padding:5px;
+	border-radius:10px;
+}
+
+.addcheat_form_success
+{
+	text-align:center;
+	width:70%;
+	font-size:130%;
+	font-weight:bold;
+	color:#007031;
+	background-color:#A2F2A2;
+	padding:5px;
+	border-radius:10px;
+	margin: 0 auto;
+}
