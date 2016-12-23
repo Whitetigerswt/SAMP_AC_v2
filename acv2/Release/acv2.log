@@ -1,5 +1,5 @@
-﻿  CFileCheck.cpp
-  dllmain.cpp
+﻿  Cmd5Info.cpp
   Generating code
   Finished generating code
+dllmain.obj : warning LNK4204: 'C:\Users\white\GitHub\SAMP_AC_v2\Release\vc120.pdb' is missing debugging information for referencing module; linking object as if no debug info
   acv2.vcxproj -> C:\Users\white\GitHub\SAMP_AC_v2\Release\ACv2_Client.asi

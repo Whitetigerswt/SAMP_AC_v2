@@ -206,7 +206,7 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 	return "";
 }
 
-std::string Cmd5Info::DownloadFile(std::string url, std::string fname)
+std::string Cmd5Info::DownloadFile(std::string url, std::wstring fname)
 {
 	// Create an output stream to paste the URL contents.
 	std::ofstream ofs(fname.c_str());
