@@ -28,7 +28,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -119,6 +119,7 @@
     <ClInclude Include="CAntiCheatHandler.h" />
     <ClInclude Include="CServerUpdater.h" />
     <ClInclude Include="CVector.h" />
+    <ClInclude Include="CVector4D.h" />
     <ClInclude Include="GDK\sampgdk.h" />
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="Network\CRPCCallback.h" />

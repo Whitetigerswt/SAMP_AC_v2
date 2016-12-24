@@ -3,7 +3,7 @@
 #include "DirectX Hooks\CD3D9DeviceProxy.h"
 #include "DirectX Hooks\CD3D9Proxy.h"
 #include "DirectX Hooks\CMessageProxy.h"
-#include "CSprite.h"
+
 
 #include <Detours\detours.h>
 
@@ -23,12 +23,6 @@ public:
 	// PURPOSE: Save a copy of our Direct X interface and direct3D pointer object.
 	// REQUIRES: The directX objects to have been created.
 	static void Initialize(IDirect3DDevice9* device, IDirect3D9* direct3D, HWND hwnd);
-
-	// PURPOSE: A hook for directX::present func called every frame update to update AC logo on player's screen.
-	// REQUIRES: LoadImages() called first
-	static void Present();
-
-	static Sprite* logo;
 
 private:
 	static Direct3DCreate9_t  m_pDirect3DCreate9;

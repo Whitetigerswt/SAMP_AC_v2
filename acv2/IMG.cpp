@@ -15,7 +15,9 @@
 ** Site: fastman92-site.tk
 ** -------------------------------------------------------------------------*/
 
+#include <tchar.h>
 #include "IMG.h"
+#include "Misc.h"
 
 using namespace std;
 
@@ -36,13 +38,13 @@ int fileChangeSize(FILE *fp, __int64 size)
 tIMG_FileOrder IMG::fileOrderByExtension[] =
 {
 	// eFileOrder ID  Extension Name
-	{ eIMG_FileOrder::DFF, "dff", "model" },
-	{ eIMG_FileOrder::TXD, "txd", "TXD library" },
-	{ eIMG_FileOrder::COL, "col", "Collision archive" },
-	{ eIMG_FileOrder::IPL, "ipl", "Item placement" },
-	{ eIMG_FileOrder::IFP, "ifp", "Item frame projection" },
-	{ eIMG_FileOrder::CUT, "cut", "Cutscene" },
-	{ eIMG_FileOrder::DAT, "dat", "DAT" },
+	{ eIMG_FileOrder::DFF, TEXT("dff"), TEXT("model") },
+	{ eIMG_FileOrder::TXD, TEXT("txd"), TEXT("TXD library") },
+	{ eIMG_FileOrder::COL, TEXT("col"), TEXT("Collision archive") },
+	{ eIMG_FileOrder::IPL, TEXT("ipl"), TEXT("Item placement") },
+	{ eIMG_FileOrder::IFP, TEXT("ifp"), TEXT("Item frame projection") },
+	{ eIMG_FileOrder::CUT, TEXT("cut"), TEXT("Cutscene") },
+	{ eIMG_FileOrder::DAT, TEXT("dat"), TEXT("DAT") },
 };
 
 // Default constructor
@@ -62,8 +64,8 @@ IMG::IMG()
 	this->DIR_Handle = NULL;
 	this->archiveVersion = IMG_VERSION_UNDEFINED;
 
-	this->GTAIV_encryption_key = "\x1a\xb5\x6f\xed\x7e\xc3\xff\x1\x22\x7b\x69\x15\x33\x97\x5d\xce"
-		"\x47\xd7\x69\x65\x3f\xf7\x75\x42\x6a\x96\xcd\x6d\x53\x7\x56\x5d";
+	this->GTAIV_encryption_key = TEXT("\x1a\xb5\x6f\xed\x7e\xc3\xff\x1\x22\x7b\x69\x15\x33\x97\x5d\xce")
+		TEXT("\x47\xd7\x69\x65\x3f\xf7\x75\x42\x6a\x96\xcd\x6d\x53\x7\x56\x5d");
 
 	this->FilenamesSize = 0;
 }
@@ -80,13 +82,13 @@ IMG::~IMG()
 
 // Opens IMG archive, assumes IMG archive to exist.
 // Detects archive type automatically
-bool IMG::OpenArchive(const char* path)
+bool IMG::OpenArchive(const wchar_t* path)
 {
 	this->CloseArchive();
 
-	if (this->IMG_Handle = fopen(path, "rb"))
+	if (this->IMG_Handle = _tfopen(path, TEXT("rb")))
 	{
-		GetFullPathNameA(path, _countof(this->IMG_fullPath), this->IMG_fullPath, &this->IMG_filename);
+		GetFullPathName(path, _countof(this->IMG_fullPath), this->IMG_fullPath, &this->IMG_filename);
 
 		unsigned long int version;
 
@@ -117,11 +119,11 @@ bool IMG::OpenArchive(const char* path)
 		}
 		else
 		{
-			const char* extension = strrchr(path, '.');
+			const wchar_t* extension = _tcsrchr(path, '.');
 
 			bool hasExtension = false;
 
-			char dirPath[_MAX_PATH];
+			wchar_t dirPath[_MAX_PATH];
 
 			if (extension)
 			{
@@ -129,10 +131,10 @@ bool IMG::OpenArchive(const char* path)
 				hasExtension = true;
 
 				memcpy(dirPath, path, extension - path);
-				strcpy(&dirPath[extension - path], "dir");
+				_tcscpy(&dirPath[extension - path], TEXT("dir"));
 			}
 
-			if (hasExtension && (this->DIR_Handle = fopen(dirPath, "rb+")))
+			if (hasExtension && (this->DIR_Handle = _tfopen(dirPath, TEXT("rb+"))))
 			{
 				fseek(this->DIR_Handle, 0, SEEK_END);
 
@@ -225,11 +227,11 @@ bool IMG::OpenArchive(const char* path)
 
 // Creates .img archive
 // Example: object.CreateArchive("new.img", IMG::IMG_version::VERSION_1);
-bool IMG::CreateArchive(const char* path, eIMG_version version)
+bool IMG::CreateArchive(const wchar_t* path, eIMG_version version)
 {
 	this->CloseArchive();
 
-	GetFullPathNameA(path, _countof(this->IMG_fullPath), this->IMG_fullPath, &this->IMG_filename);
+	GetFullPathName(path, _countof(this->IMG_fullPath), this->IMG_fullPath, &this->IMG_filename);
 
 	this->SetArchiveFormat(version);
 
@@ -237,15 +239,15 @@ bool IMG::CreateArchive(const char* path, eIMG_version version)
 	{
 	case IMG_VERSION_1:
 	{
-		const char* extension;
+		const wchar_t* extension;
 
-		if ((extension = strrchr(path, '.'))++)
+		if ((extension = _tcsrchr(path, '.'))++)
 		{
-			char dirPath[_MAX_PATH];
+			wchar_t dirPath[_MAX_PATH];
 			memcpy(dirPath, path, extension - path);
-			strcpy(&dirPath[extension - path], "dir");
+			_tcscpy(&dirPath[extension - path], TEXT("dir"));
 
-			if ((this->DIR_Handle = fopen(dirPath, "wb+")) && (this->IMG_Handle = fopen(path, "wb+")))
+			if ((this->DIR_Handle = _tfopen(dirPath, TEXT("wb+"))) && (this->IMG_Handle = _tfopen(path, TEXT("wb+"))))
 			{
 				this->DoModifiedListOfEntriesActions();
 				return true;
@@ -257,7 +259,7 @@ bool IMG::CreateArchive(const char* path, eIMG_version version)
 	}
 	case IMG_VERSION_2:
 	{
-		if (this->IMG_Handle = fopen(path, "wb+"))
+		if (this->IMG_Handle = _tfopen(path, TEXT("wb+")))
 		{
 			fwrite("VER2\x0\x0\x0\x0", 1, 8, this->IMG_Handle);
 
@@ -269,7 +271,7 @@ bool IMG::CreateArchive(const char* path, eIMG_version version)
 	case IMG_VERSION_3_UNENCRYPTED:
 	case IMG_VERSION_3_ENCRYPTED:
 	{
-		if (this->IMG_Handle = fopen(path, "wb+"))
+		if (this->IMG_Handle = _tfopen(path, TEXT("wb+")))
 		{
 			this->DoModifiedListOfEntriesActions();
 			return true;
@@ -286,9 +288,9 @@ bool IMG::CreateArchive(const char* path, eIMG_version version)
 
 // Opens .img archive if exists or creates if not exists
 // Example: object.OpenOrCreateArchive("new.img", IMG::IMG_version::VERSION_1);
-bool IMG::OpenOrCreateArchive(const char* path, eIMG_version version)
+bool IMG::OpenOrCreateArchive(const wchar_t* path, eIMG_version version)
 {
-	if (PathFileExistsA(path))
+	if (PathFileExists(path))
 		return this->OpenArchive(path);
 	else
 		return this->CreateArchive(path, version);
@@ -339,13 +341,13 @@ void IMG::CloseArchive()
 // Rebuilds archive
 bool IMG::RebuildArchive()
 {
-	char temporaryImgFilepath[_countof(this->IMG_fullPath) + 16];
-	strcpy(temporaryImgFilepath, this->IMG_fullPath);
-	strcat(temporaryImgFilepath, ".IMGclassTmpFile");
+	wchar_t temporaryImgFilepath[_countof(this->IMG_fullPath) + 16];
+	_tcscpy(temporaryImgFilepath, this->IMG_fullPath);
+	_tcscpy(temporaryImgFilepath, TEXT(".IMGclassTmpFile"));
 
 	FILE* newIMGhandle;
 
-	if (newIMGhandle = fopen(temporaryImgFilepath, "wb+"))
+	if (newIMGhandle = _tfopen(temporaryImgFilepath, TEXT("wb+")))
 	{
 		if (this->archiveVersion == IMG_VERSION_2)
 			fprintf(newIMGhandle, "VER2");
@@ -356,7 +358,7 @@ bool IMG::RebuildArchive()
 		for (auto entry = ListOfEntries.begin(); entry != ListOfEntries.end(); entry++)
 		{
 			size_t size = entry->GetFilesizeAllignedToBlocks();
-			char* loadedFile = new char[size];
+			wchar_t* loadedFile = new wchar_t[size];
 
 			_fseeki64(this->IMG_Handle, (unsigned __int64)entry->Position * IMG_BLOCK_SIZE, SEEK_SET);
 			fread(loadedFile, 1, size, this->IMG_Handle);
@@ -372,12 +374,12 @@ bool IMG::RebuildArchive()
 		fclose(newIMGhandle);
 		fclose(this->IMG_Handle);
 
-		remove(this->IMG_fullPath);
-		if (rename(temporaryImgFilepath, this->IMG_fullPath))
+		_wremove(this->IMG_fullPath);
+		if (_wrename(temporaryImgFilepath, this->IMG_fullPath))
 		{
 			this->bHasArchiveBeenModifiedAndNotRebuiltYet = false;
 
-			return (this->IMG_Handle = this->IMG_Handle = fopen(this->IMG_fullPath, "rb+")) != 0;
+			return (this->IMG_Handle = this->IMG_Handle = _tfopen(this->IMG_fullPath, TEXT("rb+"))) != 0;
 		}
 	}
 
@@ -457,7 +459,7 @@ DWORD IMG::GetFileCount()
 }
 
 // Adds or replaces file if exists
-IMG::tIMGEntryIterator IMG::AddOrReplaceFile(const char* name, const void* ptr, size_t size)
+IMG::tIMGEntryIterator IMG::AddOrReplaceFile(const wchar_t* name, const void* ptr, size_t size)
 {
 	tIMGEntryIterator it = this->GetFileIteratorByName(name);
 
@@ -472,7 +474,7 @@ IMG::tIMGEntryIterator IMG::AddOrReplaceFile(const char* name, const void* ptr, 
 
 
 // Adds file
-IMG::tIMGEntryIterator IMG::AddFile(const char* name, const void* ptr, size_t size)
+IMG::tIMGEntryIterator IMG::AddFile(const wchar_t* name, const void* ptr, size_t size)
 {
 	if (!this->IsFileNameValid(name))
 		return this->ListOfEntries.end();
@@ -488,13 +490,13 @@ IMG::tIMGEntryIterator IMG::AddFile(const char* name, const void* ptr, size_t si
 		sort(RelatedFiles.begin(), RelatedFiles.end(),
 			[](const tIMGEntryIterator& a, const tIMGEntryIterator& b)
 		{
-			return strcmp(a->Name, b->Name) < 0;
+			return _tcscmp(a->Name, b->Name) < 0;
 		}
 		);
 
 		for (tRelatedFilesContainer::iterator i = RelatedFiles.end() - 1; i >= RelatedFiles.begin(); i--)
 		{
-			if (strcmp(name, (*i)->Name) > 0)
+			if (_tcscmp(name, (*i)->Name) > 0)
 			{
 				currentEntry = *i;
 
@@ -523,7 +525,7 @@ IMG::tIMGEntryIterator IMG::AddFile(const char* name, const void* ptr, size_t si
 	}
 
 InsertNewFile:
-	strcpy(currentEntry->Name, name);
+	_tcscpy(currentEntry->Name, name);
 
 	currentEntry->UpdateFileNameHash();
 
@@ -623,20 +625,20 @@ void IMG::SetArchiveFormat(eIMG_version version)
 }
 
 // Renames a file
-bool IMG::RenameFile(tIMGEntryIterator fileInfo, const char* NewName)
+bool IMG::RenameFile(tIMGEntryIterator fileInfo, const wchar_t* NewName)
 {
 	if (!this->IsFileNameValid(NewName))
 		return false;
 
 	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED)
-		this->FilenamesSize -= strlen(fileInfo->Name) + 1;
+		this->FilenamesSize -= _tcslen(fileInfo->Name) + 1;
 
-	strcpy(fileInfo->Name, NewName);
+	_tcscpy(fileInfo->Name, NewName);
 
 	fileInfo->UpdateFileNameHash();
 
 	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED)
-		this->FilenamesSize += strlen(fileInfo->Name) + 1;
+		this->FilenamesSize += _tcslen(fileInfo->Name) + 1;
 
 	this->DoModifiedArchiveActions();
 
@@ -647,7 +649,7 @@ bool IMG::RenameFile(tIMGEntryIterator fileInfo, const char* NewName)
 IMG::tIMGEntryConstIterator IMG::RemoveFile(tIMGEntryConstIterator _Where)
 {
 	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED)
-		FilenamesSize -= strlen(_Where->Name) + 1;
+		FilenamesSize -= _tcslen(_Where->Name) + 1;
 
 	tIMGEntryConstIterator result = this->ListOfEntries.erase(_Where);
 
@@ -665,7 +667,7 @@ IMG::tIMGEntryConstIterator IMG::RemoveFiles(
 	if (archiveVersion == IMG_VERSION_3_UNENCRYPTED)
 	{
 		for (tIMGEntryConstIterator it = _First_arg; it != _Last_arg; it++)
-			FilenamesSize -= strlen(it->Name) + 1;
+			FilenamesSize -= _tcslen(it->Name) + 1;
 	}
 
 	tIMGEntryConstIterator result = this->ListOfEntries.erase(_First_arg, _Last_arg);
@@ -676,20 +678,20 @@ IMG::tIMGEntryConstIterator IMG::RemoveFiles(
 }
 
 // Gets iterator of file pointing to ListOfFiles
-IMG::tIMGEntryIterator IMG::GetFileIteratorByName(const char* name)
+IMG::tIMGEntryIterator IMG::GetFileIteratorByName(const wchar_t* name)
 {
 	if (ListOfEntries.size())
 	{
 		if (!this->IsFileNameValid(name))
 			return this->ListOfEntries.end();
 
-		unsigned long hash = GTASA_CRC32_fromUpCaseString(name);
+		unsigned long hash = GTASA_CRC32_fromUpCaseString(Misc::utf8_encode(name).c_str());
 
 		auto& entry = ListOfEntries.begin();
 
 		do
 		{
-			if (entry->NameHash == hash && !_stricmp(entry->Name, name))
+			if (entry->NameHash == hash && !_tcsicmp(entry->Name, name))
 				return entry;
 
 			entry++;
@@ -700,36 +702,36 @@ IMG::tIMGEntryIterator IMG::GetFileIteratorByName(const char* name)
 }
 
 // Checks if file with specified name exists and returns TRUE/FALSE
-bool IMG::FileExists(const char* name)
+bool IMG::FileExists(const wchar_t* name)
 {
 	return this->GetFileIteratorByName(name) != this->ListOfEntries.end();
 }
 
 // Checks if filename's length is appropriate for IMG entry as well as name characters.
-bool IMG::IsFileNameValid(const char* name)
+bool IMG::IsFileNameValid(const wchar_t* name)
 {
-	return strlen(name) <= IMG_ENTRY_MAX_FILE_NAME_LENGTH;
+	return _tcslen(name) <= IMG_ENTRY_MAX_FILE_NAME_LENGTH;
 }
 
 // Gets filename for imported file, filename may be truncated if archive version is 1 or 2.
 // Returns true if name is truncated
-errno_t IMG::GetFilenameForImportedFile(const char* lpFileName, char* lpFilePart, DWORD nBufferLength)
+errno_t IMG::GetFilenameForImportedFile(const wchar_t* lpFileName, wchar_t* lpFilePart, DWORD nBufferLength)
 {
-	char FullPath[_MAX_PATH];
-	char* FileName = "";
+	wchar_t FullPath[_MAX_PATH];
+	wchar_t* FileName = TEXT("");
 
-	int len = GetFullPathNameA(lpFileName, _countof(FullPath), FullPath, &FileName);
+	int len = GetFullPathName(lpFileName, _countof(FullPath), FullPath, &FileName);
 
 	if (len != 0 && len != _countof(FullPath))
 	{
 		size_t ThisSize = nBufferLength > IMG_ENTRY_MAX_FILE_NAME_LENGTH + 1 ? IMG_ENTRY_MAX_FILE_NAME_LENGTH + 1 : nBufferLength;
-		return strncpy_s(lpFilePart, ThisSize, FileName, _TRUNCATE);
+		return _tcsncpy_s(lpFilePart, ThisSize, FileName, _TRUNCATE);
 	}
 }
 
 // Access file by name
 // Returns a reference to the last element in the vector container.
-IMG::tIMGEntryReference IMG::GetFileRefByName(const char* name)
+IMG::tIMGEntryReference IMG::GetFileRefByName(const wchar_t* name)
 {
 	return *this->GetFileIteratorByName(name);
 }
@@ -836,15 +838,15 @@ DWORD IMG::GetEndOfHeaderDataPastTheListOfFiles()
 }
 
 // Gets IPL filename and num, returns true on success and false on failure.
-bool IMG::GetIPLfilenameAndNum(const char* fullFilename, char* IPL_name, DWORD* IPL_num)
+bool IMG::GetIPLfilenameAndNum(const wchar_t* fullFilename, wchar_t* IPL_name, DWORD* IPL_num)
 {
-	size_t nameLen = strlen(fullFilename);
+	size_t nameLen = _tcslen(fullFilename);
 
-	const char* DotAndExtension = fullFilename + nameLen - 4;
+	const wchar_t* DotAndExtension = fullFilename + nameLen - 4;
 
-	if (nameLen >= 5 && !_stricmp(DotAndExtension, ".ipl"))
+	if (nameLen >= 5 && !_tcsicmp(DotAndExtension, TEXT(".ipl")))
 	{
-		const char* StartOfNum = DotAndExtension - 1;
+		const wchar_t* StartOfNum = DotAndExtension - 1;
 
 		while (isdigit(*StartOfNum))
 			StartOfNum--;
@@ -854,7 +856,7 @@ bool IMG::GetIPLfilenameAndNum(const char* fullFilename, char* IPL_name, DWORD* 
 		if (StartOfNum < DotAndExtension)
 		{
 			if (IPL_num)
-				*IPL_num = atoi(StartOfNum);
+				*IPL_num = _tstoi(StartOfNum);
 
 			if (IPL_name)
 			{
@@ -873,11 +875,11 @@ bool IMG::GetIPLfilenameAndNum(const char* fullFilename, char* IPL_name, DWORD* 
 }
 
 // Gets ID of this file OR IDs of all .ipl files with this name
-void IMG::GetIteratorsOfAssociatedFiles(const char* SearchedName, tRelatedFilesContainer& list)
+void IMG::GetIteratorsOfAssociatedFiles(const wchar_t* SearchedName, tRelatedFilesContainer& list)
 {
 	list.clear();
 
-	char Cur_IPL_Name[256];
+	wchar_t Cur_IPL_Name[256];
 	DWORD Cur_IPL_Num;
 
 	if (GetIPLfilenameAndNum(SearchedName, Cur_IPL_Name, &Cur_IPL_Num))
@@ -886,7 +888,7 @@ void IMG::GetIteratorsOfAssociatedFiles(const char* SearchedName, tRelatedFilesC
 
 		for (auto entry = this->ListOfEntries.begin(); entry != listEnd; entry++)
 		{
-			char tested_IPL_Name[256];
+			wchar_t tested_IPL_Name[256];
 			DWORD tested_IPL_Num;
 
 			if (GetIPLfilenameAndNum(entry->Name, tested_IPL_Name, &tested_IPL_Num))
@@ -977,17 +979,17 @@ void IMG::MoveFilesLocatedBeforeListOfFilesToSuitablePosition(FILE* imgHandle)
 }
 
 // Returns pattern of IMG validity
-void IMG::GetPatternToCheckIfPositionIsValid(char* str)
+void IMG::GetPatternToCheckIfPositionIsValid(wchar_t* str)
 {
-	const char a[] = "\x5f\x5b\x6e\x70\x6a\x5f\x6d\x39\x33\x22\x4c\x51\x4c\x26\x4a\x33\x34\x2a\x6e\x78\x6e\x81\x82\x30\x42\x40\x4c\x14\x15\x16\x17\x18";
+	const wchar_t a[] = TEXT("\x5f\x5b\x6e\x70\x6a\x5f\x6d\x39\x33\x22\x4c\x51\x4c\x26\x4a\x33\x34\x2a\x6e\x78\x6e\x81\x82\x30\x42\x40\x4c\x14\x15\x16\x17\x18");
 
-	char c;
+	wchar_t c;
 
 	DWORD d = 0;
 
 	do
 	{
-		c = a[d] - (char)d + 7;
+		c = a[d] - (wchar_t)d + 7;
 		str[d] = c;
 
 		d++;
@@ -997,7 +999,7 @@ void IMG::GetPatternToCheckIfPositionIsValid(char* str)
 // Tests if file position is valid
 void IMG::TestIfPositionIsValid(FILE* imgHandle)
 {
-	char b[32];
+	wchar_t b[32];
 	GetPatternToCheckIfPositionIsValid(b);
 
 	fwrite(b, 1, 32, imgHandle);
@@ -1027,7 +1029,7 @@ void IMG::WriteListOfEntriesVersion1And2(FILE* file)
 		iBuffer->SizeSecondPriority = entry.SizeSecondPriority;
 		iBuffer->SizeFirstPriority = entry.SizeFirstPriority;
 
-		strncpy_s(iBuffer->Name, entry.Name, _countof(((IMG_version2_tableItem*)0)->Name) - 1);
+		strncpy_s(iBuffer->Name, Misc::utf8_encode(entry.Name).c_str(), _countof(((IMG_version2_tableItem*)0)->Name) - 1);
 		iBuffer++;
 	}
 	);
@@ -1097,9 +1099,9 @@ void IMG::WriteListOfEntries(FILE* imgHandle)
 		fseek(imgHandle, 0, SEEK_SET);
 
 		size_t BeginningSizeAlligned = GET_ALIGNED_SIZE(GetEndOfHeaderDataPastTheListOfFiles(), IMG_BLOCK_SIZE);
-		char* pBeginning = new char[BeginningSizeAlligned];
+		wchar_t* pBeginning = new wchar_t[BeginningSizeAlligned];
 
-		char* iBeginning = pBeginning;
+		wchar_t* iBeginning = pBeginning;
 		this->WriteVersion3HeaderToMemory((IMG_version3_header*)iBeginning);
 
 		iBeginning += sizeof(IMG_version3_header);
@@ -1115,7 +1117,7 @@ void IMG::WriteListOfEntries(FILE* imgHandle)
 			ItemDescription->Unknown = NULL;
 		}
 
-		char* Filenames = (char*)ItemDescription;
+		wchar_t* Filenames = (wchar_t*)ItemDescription;
 		for (auto& entry = this->ListOfEntries.begin(); entry != this->ListOfEntries.end(); entry++)
 		{
 			unsigned int i;
@@ -1313,31 +1315,31 @@ IMG_Entry::IMG_Entry(IMG * IMG_Instance)
 
 void IMG_Entry::UpdateFileNameHash()
 {
-	this->NameHash = GTASA_CRC32_fromUpCaseString(this->Name);
+	this->NameHash = GTASA_CRC32_fromUpCaseString(Misc::utf8_encode(this->Name).c_str());
 }
 
 // Returns pointer to file name.
-const char* IMG_Entry::GetFilename()
+const wchar_t* IMG_Entry::GetFilename()
 {
 	return this->Name;
 }
 
 // Writes a filename without extension to sufficiently long buffer
-void IMG_Entry::GetFilenameWithoutExtension(char* filenameWithoutExtension, int size)
+void IMG_Entry::GetFilenameWithoutExtension(wchar_t* filenameWithoutExtension, int size)
 {
-	if (const char* extension = strrchr(this->Name, '.'))
+	if (const wchar_t* extension = _tcsrchr(this->Name, '.'))
 	{
 		memcpy(filenameWithoutExtension, this->Name, extension - this->Name);
 		filenameWithoutExtension[extension - this->Name] = NULL;
 	}
 	else
-		strcpy_s(filenameWithoutExtension, size, this->Name);
+		_tcscpy_s(filenameWithoutExtension, size, this->Name);
 }
 
 // Returns file order ID
 eIMG_FileOrder IMG_Entry::GetFileOrderIDbyExtension()
 {
-	if (const char* extension = strrchr(this->Name, '.'))
+	if (const wchar_t* extension = _tcsrchr(this->Name, '.'))
 	{
 		extension++;
 
@@ -1346,7 +1348,7 @@ eIMG_FileOrder IMG_Entry::GetFileOrderIDbyExtension()
 			IMG::fileOrderByExtension + _countof(IMG::fileOrderByExtension),
 			[extension](tIMG_FileOrder& fileOrder)
 		{
-			return !_stricmp(fileOrder.orderExtension, extension);
+			return !_tcsicmp(fileOrder.orderExtension, extension);
 		});
 
 		if (fileOrderInfo != IMG::fileOrderByExtension + _countof(IMG::fileOrderByExtension))

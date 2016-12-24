@@ -3,7 +3,7 @@
 #include "CInjectedLibraries.h"
 #include "CDirectoryScanner.h"
 
-typedef HMODULE(WINAPI* LoadLibrary_t)(LPCSTR);
+typedef HMODULE(WINAPI* LoadLibrary_t)(const wchar_t *);
 
 class CLoader 
 {

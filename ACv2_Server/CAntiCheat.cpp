@@ -23,7 +23,6 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	UpdateCheatList();
 
 	// Set the default values for the variables.
-	m_LiteFoot = true;
 	m_CBug = 9999;
 	m_SwitchReload = true;
 	m_FrameLimit = 9999;
@@ -418,25 +417,6 @@ void CAntiCheat::SetFPSLimit(int newlimit)
 {
 	// Update the frame limit the server keeps.
 	m_FrameLimit = newlimit;
-}
-
-void CAntiCheat::ToggleLiteFoot(bool toggle)
-{
-	// Prepare to send RPC to client.
-	RakNet::BitStream bsData;
-
-	// Write header
-	bsData.Write((unsigned char)PACKET_RPC);
-	bsData.Write(TOGGLE_LITE_FOOT);
-
-	// meat n potatoes
-	bsData.Write(toggle);
-
-	// Send RPC to player.
-	Network::PlayerSend(ID, &bsData, LOW_PRIORITY, RELIABLE_ORDERED);
-
-	// Set the lite foot variable to true.
-	m_LiteFoot = toggle;
 }
 
 void CAntiCheat::ToggleCrouchBug(unsigned short toggle)

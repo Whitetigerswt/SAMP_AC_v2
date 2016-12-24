@@ -6,7 +6,7 @@
 // NOT WORKING AT THE MOMENT
 // TODO
 
-typedef HMODULE(WINAPI* LoadLibrary_t)(LPCSTR);
+typedef HMODULE(WINAPI* LoadLibrary_t)(const wchar_t*);
 
 class CModuleSecurity
 {
@@ -21,7 +21,7 @@ public:
 
 	static void AddAllowedModule(LPCTSTR lpFileName);
 
-	static bool IsAllowedModule(std::string szModule);
+	static bool IsAllowedModule(std::wstring szModule);
 
 	static bool IsAddressInAllowedModule(DWORD address);
 
@@ -32,9 +32,9 @@ public:
 private:
 	static LoadLibrary_t m_pLoadLibrary;
 
-	static HMODULE WINAPI HOOK_LoadLibrary(LPCTSTR lpFileName);
+	static HMODULE WINAPI HOOK_LoadLibrary(const wchar_t * lpFileName);
 
-	static std::vector<std::string> m_AllowedModules;
+	static std::vector<std::wstring> m_AllowedModules;
 
 	
 };

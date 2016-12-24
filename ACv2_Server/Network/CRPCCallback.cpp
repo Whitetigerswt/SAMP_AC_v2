@@ -258,7 +258,6 @@ void SAMPGDK_CALL KickUnverifiedClient(int timerid, void *params)
 
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("initial info called!");
 	CAntiCheatHandler::Init(iExtra);
 
 	// Calculate verified packet

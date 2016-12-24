@@ -30,6 +30,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <tchar.h>
+
 #pragma region MD5 defines
 // Constants for MD5Transform routine.
 #define S11 7
@@ -323,7 +325,7 @@ public:
 		int pos;
 
 		for (pos = 0; pos < 16; pos++)
-			sprintf(digestChars + (pos * 2), "%02x", digestRaw[pos]);
+			_stprintf_s(digestChars + (pos * 2), sizeof(digestChars), L"%02x", digestRaw[pos]);
 	}
 
 
@@ -333,11 +335,11 @@ public:
 
 	// This version of the digest is actually
 	// a "printf'd" version of the digest.
-	char digestChars[33];
+	wchar_t digestChars[33];
 
 	/// Load a file from disk and digest it
 	// Digests a file and returns the result.
-	char* digestFile(char *filename)
+	wchar_t* digestFile(wchar_t *filename)
 	{
 		Init();
 
@@ -346,7 +348,7 @@ public:
 		int len;
 		unsigned char buffer[1024];
 
-		if ((file = fopen(filename, "rb")) == NULL)
+		if ((file = _tfopen(filename, L"rb")) == NULL)
 		{
 		}
 		else
@@ -362,7 +364,7 @@ public:
 	}
 
 	/// Digests a byte-array already in memory
-	char* digestMemory(BYTE *memchunk, int len)
+	wchar_t* digestMemory(BYTE *memchunk, int len)
 	{
 		Init();
 		Update(memchunk, len);
@@ -372,10 +374,10 @@ public:
 	}
 
 	// Digests a string and prints the result.
-	char* digestString(char *string)
+	wchar_t* digestString(wchar_t *string)
 	{
 		Init();
-		Update((unsigned char*)string, strlen(string));
+		Update((unsigned char*)string, _tcslen(string));
 		Final();
 
 		return digestChars;

@@ -1,5 +1,6 @@
 SAMP_AC_v2
 ==========
+[![Linux Build Status](https://travis-ci.com/Whitetigerswt/SAMP_AC_v2.svg?token=ENM294yxGXvxxZbK9fRC&branch=master)](https://travis-ci.com/Whitetigerswt/SAMP_AC_v2)
 Version 2.0 of SAMP Anti-Cheat. This is a full re-code from the ground up.
 
 Documentation

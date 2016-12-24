@@ -16,8 +16,10 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
-#define VERIFY_CLIENTS_INTERVAL 120000
+// Time needed to ask players to verify their AC clients again
+#define VERIFY_CLIENTS_INTERVAL 600000
 
+// Last time a player verified their AC client
 int LastTimeVerifiedClient[MAX_PLAYERS];
 
 namespace Callback
@@ -156,6 +158,8 @@ namespace Callback
 		}
 	}
 
+	// This asks connected players to verify their AC clients from time to time
+	// to make it harder to unload AC module after initial verification.
 	void SAMPGDK_CALL VerifyClients(int timerid, void *params)
 	{
 		// Loop through all players.
@@ -288,7 +292,6 @@ namespace Callback
 				ac->ToggleMacroLimitations(Callback::Default_MacroLimits);
 				ac->ToggleSwitchReload(Callback::Default_SwitchReload);
 				ac->ToggleCrouchBug(Callback::Default_CrouchBug);
-				ac->ToggleLiteFoot(Callback::Default_LiteFoot);
 				ac->ToggleVehicleBlips(Callback::Default_VehicleBlips);
 			}
 
@@ -394,7 +397,6 @@ namespace Callback
 					ac->ToggleMacroLimitations(Callback::Default_MacroLimits);
 					ac->ToggleSwitchReload(Callback::Default_SwitchReload);
 					ac->ToggleCrouchBug(Callback::Default_CrouchBug);
-					ac->ToggleLiteFoot(Callback::Default_LiteFoot);
 					ac->ToggleVehicleBlips(Callback::Default_VehicleBlips);
 				}
 			}
@@ -435,7 +437,6 @@ namespace Callback
 			Default_InfSprint = true;
 			Default_SprintOnAllSurfaces = true;
 			Default_MacroLimits = true;
-			Default_LiteFoot = true;
 			Default_VehicleBlips = true;
 
 			Default_CrouchBug = 9999;
@@ -454,7 +455,6 @@ namespace Callback
 			Default_MacroLimits = pt.get<bool>("defaults.macro_limits");
 			Default_SwitchReload = pt.get<bool>("defaults.switch_reload");
 			Default_CrouchBug = pt.get<int>("defaults.crouch_bug");
-			Default_LiteFoot = pt.get<bool>("defaults.lite_foot");
 			Default_FrameLimit = pt.get<int>("defaults.frame_limit");
 			Default_VehicleBlips = pt.get<bool>("defaults.vehicle_blips");
 		}

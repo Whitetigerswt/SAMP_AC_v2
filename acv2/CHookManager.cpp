@@ -147,8 +147,6 @@ static DWORD FOVPatchJmpBack = 0x522F68;
 
 static DWORD KeyPressJmpBack = 0x541C9D;
 
-static DWORD LiteFootHookJmpBack = 0x60A746;
-
 static DWORD GravityHookJmpBack1 = 0x543081;
 static DWORD GravityHookJmpBack2 = 0x543093;
 
@@ -162,14 +160,12 @@ static DWORD WinMainHookJmpBack = 0x8246F1;
 static DWORD rIdleHookJmpBack = 0x53ECC2;
 
 static DWORD CLEO_Func_JmpBack = 0x46A222;
+static DWORD MainLoadingJmpBack = 0x7F9B12;
 
 static DWORD sampInfoAddr = NULL;
-static DWORD sampInfoRtnAddr = NULL;
 
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
-
-float CHookManager::LiteFoot = 0.0f;
 
 DWORD NameTag_je1;
 DWORD NameTag_je2;
@@ -184,7 +180,7 @@ void CHookManager::Load()
 
 	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
 
-	DWORD samp = (DWORD)GetModuleHandle("samp.dll");
+	DWORD samp = (DWORD)GetModuleHandle(TEXT("samp.dll"));
 	if (samp)
 	{
 		setSampBaseAddress(samp);
@@ -213,7 +209,6 @@ void CHookManager::Load()
 		{
 			// Save memory so we can remove hook later.
 			sampInfoAddr = samp;
-			sampInfoRtnAddr = samp + 0x11;
 
 			// Unprotect memory so we can apply a jmp
 			VirtualProtect((void*)samp, 11, PAGE_EXECUTE_READWRITE, &dwOldProt);
@@ -252,6 +247,9 @@ void CHookManager::Load()
 	// Disable Werner patch
 	CMem::ApplyJmp(FUNC_ShotgunBullet, (DWORD)LoadShotgunBullet, 11);
 	CMem::ApplyJmp(FUNC_DeagleBullet, (DWORD)LoadBullet, 7);
+
+	// Hook a main loading function of SAMP and GTA. 
+	CMem::ApplyJmp(FUNC_MainLoad, (DWORD)MainLoading, 5);
 
 	// -------------------------------------------------------------------------
 	// Hook camera position patches below, so aimbots cannot edit the camera position.
@@ -381,8 +379,7 @@ void CHookManager::Load()
 	// Patch widescreen_lite.asi mod
 	// Parts of it's source code are here: https://github.com/ThirteenAG/Widescreen_Fixes_Pack/tree/master/GTASA_widescreen_fix
 	CMem::ApplyJmp(FUNC_WidescreenPatch, (DWORD)WidescreenPatch, 6);
-	
-	CMem::ApplyJmp(FUNC_LiteFoot, (DWORD)LiteFootHook, 6);
+
 	CMem::ApplyJmp(FUNC_Gravity, (DWORD)GravityHook, 6);
 
 	// Make it so we can launch more than 1 gta_sa.exe (reversed addresses from http://ugbase.eu/releases-52/gtasa-multiprocess/)
@@ -399,12 +396,22 @@ void CHookManager::Load()
 	CMem::ApplyJmp(FUNC_CleoHook+2, (DWORD)CleoHook, 5);
 
 	BYTE dest[5];
+	CMem::Cpy(dest, (void*)FUNC_WallHack, 6);
+	BYTE WallDefault[] = { 0x8B, 0x0D, 0xA8, 0x44, 0xB7, 0x00 };
+	for (int i = 0; i < sizeof(WallDefault); ++i)
+	{
+		if (dest[i] != WallDefault[i])
+		{
+			CMem::Cpy((void*)FUNC_WallHack, "\x90\x90\x90\x90\x90", 5);
+		}
+	}
+
 	CMem::Cpy(dest, (void*)FUNC_CRunningScript_AddScriptToList, 5);
 
-	BYTE Default[] = { 0xE9, 0x8B, 0xCD, 0x0F, 0x01 };
-	for (int i = 0; i < sizeof(Default); ++i)
+	BYTE CleoDefault[] = { 0xE9, 0x8B, 0xCD, 0x0F, 0x01 };
+	for (int i = 0; i < sizeof(CleoDefault); ++i)
 	{
-		if (dest[i] != Default[i])
+		if (dest[i] != CleoDefault[i])
 		{
 			CMem::Cpy((void*)FUNC_CRunningScript_AddScriptToList, "\x90\x90\x90\x90\x90", 5);
 		}
@@ -475,7 +482,10 @@ void CHookManager::SetConnectPatches()
 
 	// Fix some slide issues with melee weps
 	CMem::ApplyJmp(FUNC_SlideFix, (DWORD)SlideFix, 6);
+
+	Load();
 }
+
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
 {
 	DWORD dwOldProt;
@@ -566,6 +576,36 @@ void CHookManager::CheckMemoryAddr(void* address, int size, char* tomatch)
 	// Free memory.
 	delete[] memory;
 }
+DWORD MainLoadingAddress = NULL;
+HOOK CHookManager::MainLoading()
+{
+
+	__asm
+	{
+
+		mov edx, [eax]
+		pushad
+		add edx,44h
+		mov eax,[edx]
+		mov MainLoadingAddress, eax
+	}
+
+	if (*(BYTE*)(MainLoadingAddress) != 0xE9)
+	{
+		__asm
+		{
+			popad
+			call dword ptr[edx + 44h]
+			jmp[MainLoadingJmpBack]
+		}
+	}
+
+	// cause a crash
+	__asm
+	{
+		ret
+	}
+}
 
 HOOK CHookManager::SlideFix()
 {
@@ -642,24 +682,6 @@ HOOK CHookManager::NameTagHook()
 
 	jmp_label:
 		jmp[NameTagHookJmpBack]
-	}
-}
-#pragma warning(default:4731)
-
-void CHookManager::SetLiteFoot(bool toggle)
-{
-	if (toggle)
-		LiteFoot = 1.0f;
-	else
-		LiteFoot = 0.0f;
-}
-
-HOOK CHookManager::LiteFootHook()
-{
-	__asm
-	{
-		fld dword ptr [LiteFoot]
-		jmp[LiteFootHookJmpBack]
 	}
 }
 
@@ -870,11 +892,6 @@ HOOK CHookManager::KeyPress()
 			lea ecx, [ebx + 78h]
 			jmp[KeyPressJmpBack]
 		}
-	}
-
-	if (dwLastCrouch > GetTickCount() && LiteFoot == 0.0f)
-	{
-		SPRINT_KEY = 0;
 	}
 
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.

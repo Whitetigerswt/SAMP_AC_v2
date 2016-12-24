@@ -58,19 +58,13 @@ void CLoader::Initialize(HMODULE hMod)
 		}
 
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
-		HMODULE L = LoadLibrary("samp.dll");
+		HMODULE L = LoadLibrary(TEXT("samp.dll"));
 		MODULEINFO mInfo = { 0 };
 
 		GetModuleInformation(GetCurrentProcess(), L, &mInfo, sizeof(MODULEINFO));
 
 		setSampBaseAddress((DWORD)mInfo.lpBaseOfDll);
 		setSampSize((DWORD)mInfo.SizeOfImage);
-
-		PELPEB peb = EL_GetPeb();
-		EL_HideModule(peb, L"samp.dll");
-		wchar_t path[MAX_PATH];
-		GetModuleFileNameW(hMod, path, sizeof(path));
-		EL_HideModule(peb, path);
 
 		// Hook LoadLibrary function.
 		CModuleSecurity::HookLoadLibrary();
@@ -90,8 +84,6 @@ void CLoader::Initialize(HMODULE hMod)
 			// Stop CLEO from loading, and other memory hooks.
 			CHookManager::Load();
 
-			//CDirectX::LoadImages();
-
 			// Wait until the game is loaded in an infinite loop.
 			Sleep(5);
 		}
@@ -103,6 +95,13 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Setup memory one more time.
 		CHookManager::Load();
+
+		// Hide samp.dll and this .asi from the loaded module list.
+		PELPEB peb = EL_GetPeb();
+		EL_HideModule(peb, TEXT("samp.dll"));
+		wchar_t path[MAX_PATH];
+		GetModuleFileName(hMod, path, sizeof(path));
+		EL_HideModule(peb, path);
 	}
 
 	while (true)
@@ -351,10 +350,10 @@ void CLoader::RunElevated()
 {
 	// Set our info to run gta_sa.exe with admin permissions
 	SHELLEXECUTEINFO sei = { sizeof(sei) };
-	sei.lpVerb = "runas";
-	sei.lpFile = "gta_sa.exe";
+	sei.lpVerb = TEXT("runas");
+	sei.lpFile = TEXT("gta_sa.exe");
 	sei.nShow = SW_NORMAL;
-	sei.lpParameters = GetCommandLineA();
+	sei.lpParameters = GetCommandLine();
 
 	// Execute (this literally relaunches gta_sa.exe as admin)
 	ShellExecuteEx(&sei);

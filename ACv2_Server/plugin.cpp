@@ -178,33 +178,14 @@ cell AMX_NATIVE_CALL SetPlayerCrouchBugProc(AMX* pAmx, cell* pParams)
 
 cell AMX_NATIVE_CALL TogglePlayerLiteFootProc(AMX* pAmx, cell* pParams)
 {
-	// Make sure the parameter count is correct.
-	CHECK_PARAMS(2, "TogglePlayerLiteFoot");
-
-	// Get CAntiCheat pointer
-	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
-
-	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
-
-	// Toggle lite foot.
-	ac->ToggleLiteFoot(!!pParams[2]);
-
-	return 1;
+	Utility::Printf("Error: TogglePlayerLiteFoot has been deprecated and may be removed in future versions.");
+	return 0;
 }
 
 cell AMX_NATIVE_CALL GetPlayerLiteFootProc(AMX* pAmx, cell* pParams)
 {
-	// Make sure the parameter count is correct.
-	CHECK_PARAMS(1, "GetPlayerLiteFoot");
-
-	// Get CAntiCheat pointer
-	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
-
-	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
-
-	return ac->GetLiteFoot();
+	Utility::Printf("Error: GetPlayerLiteFoot has been deprecated and may be removed in future versions.");
+	return 0;
 }
 
 

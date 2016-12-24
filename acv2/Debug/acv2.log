@@ -1,0 +1,10 @@
+﻿  samp.cpp
+c:\users\white\github\samp_ac_v2\acv2\s0beit\samp.h(24): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  PatternScan.cpp
+  RakClient.cpp
+  HookedRakClient.cpp
+c:\users\white\github\samp_ac_v2\acv2\s0beit\samp.h(24): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  CRPCCallback.cpp
+c:\users\white\github\samp_ac_v2\acv2\directx hooks\cd3d9deviceproxy.h(3): fatal error C1083: Cannot open include file: 'DirectX/d3d9.h': No such file or directory
+  CRakClientHandler.cpp
+c:\users\white\github\samp_ac_v2\acv2\s0beit\samp.h(24): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory

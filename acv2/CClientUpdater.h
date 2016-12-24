@@ -11,7 +11,7 @@
 #define CURRENT_MAJOR_VERSION 2.3f
 
 // The current update URL
-#define UPDATE_URL "http://samp-ac.com/API/SAMP_AC_v2_Client_Updater.html"
+#define UPDATE_URL L"http://samp-ac.com/API/SAMP_AC_v2_Client_Updater.html"
 
 class CClientUpdater
 {

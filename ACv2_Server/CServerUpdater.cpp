@@ -53,26 +53,27 @@ void CServerUpdater::CheckForUpdate()
 			Utility::Printf("_____________________________________________________________");
 		}
 	}
+
 	delete[] site;
 }
 
 void CServerUpdater::AttemptToUpdatePlugin(std::string url)
 {
-	std::string randompath = "plugins/sampac_old_version_";
-	randompath.append(boost::filesystem::unique_path().generic_string());
+	std::wstring randompath = L"plugins/sampac_old_version_";
+	randompath.append(boost::filesystem::unique_path().generic_wstring());
 
 #ifdef WIN32
-	rename("plugins/sampac.dll", randompath.c_str());
+	boost::filesystem::rename(L"plugins/sampac.dll", randompath.c_str());
 #else
-	rename("plugins/sampac.so", randompath.c_str());
+	boost::filesystem::rename(L"plugins/sampac.so", randompath.c_str());
 #endif
 
 	std::string filepath = DownloadUpdate(url);
 
 #ifdef WIN32
-	rename(filepath.c_str(), "plugins/sampac.dll");
+	boost::filesystem::rename(filepath.c_str(), L"plugins/sampac.dll");
 #else
-	rename(filepath.c_str(), "plugins/sampac.so");
+	boost::filesystem::rename(filepath.c_str(), L"plugins/sampac.so");
 #endif
 }
 

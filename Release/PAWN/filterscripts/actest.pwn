@@ -45,7 +45,7 @@ CMD:acstatus(playerid, params[])
 			format(str, sizeof(str), "HardwareID: %s", hwid);
 			SendClientMessage(playerid, -1, str);
 
-			format(str, sizeof(str), "GetPlayerCBug: %d, GetPlayerLiteFoot: %d, GetPlayerSwitchReload: %d", GetPlayerCrouchBug(targetid), GetPlayerLiteFoot(targetid), GetPlayerSwitchReload(targetid));
+			format(str, sizeof(str), "GetPlayerCBug: %d, GetPlayerSwitchReload: %d", GetPlayerCrouchBug(targetid), GetPlayerSwitchReload(targetid));
 			SendClientMessage(playerid, -1, str);
 
 			format(str, sizeof(str), "GetPlayerFPSLimit: %d", GetPlayerFPSLimit(targetid));
@@ -84,23 +84,6 @@ CMD:setmyfps(playerid, params[])
 
 	new str[128];
 	format(str, sizeof(str), "Set FPS limit to: %d", strval(params));
-	SendClientMessage(playerid, -1, str);
-
-	return 1;
-}
-
-CMD:litefoot(playerid, params[])
-{
-	if(!IsACPluginLoaded())
-		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
-
-	if(!IsPlayerUsingSampAC(playerid))
-		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
-
-	TogglePlayerLiteFoot(playerid, !!strval(params));
-
-	new str[128];
-	format(str, sizeof(str), "Set lite foot to: %d", !!strval(params));
 	SendClientMessage(playerid, -1, str);
 
 	return 1;
@@ -149,7 +132,6 @@ CMD:togglebugs(playerid, params[])
 		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
 
 	TogglePlayerCrouchBug(playerid, !!strval(params));
-	TogglePlayerLiteFoot(playerid, !!strval(params));
 	TogglePlayerSwitchReload(playerid, !!strval(params));
 
 	return 1;

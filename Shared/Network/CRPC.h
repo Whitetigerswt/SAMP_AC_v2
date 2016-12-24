@@ -13,12 +13,18 @@ enum eRPC : unsigned short
 {
 	// -- CLIENT RPCs --
 
+	// MAKE SURE VERSION_NOT_COMPATIBLE IS THE FIRST RPC AT ALL TIMES
+	// VERY IMPORTANT.
+	// ------------------------------------------------------------------------------
+	// Called when the server determines the client's AC version is not compatible.
+	VERSION_NOT_COMPATIBLE,
+
 	// Called when the server asks the client to send verified packet.
 	VERIFY_CLIENT,
 
 	// Called when the server requests a region of memory checksum to be calculated.
 	MD5_MEMORY_REGION,
-	
+
 	// Called when the server requests a file to be md5'd 
 	MD5_FILE,
 
@@ -31,14 +37,8 @@ enum eRPC : unsigned short
 	// Called when the server requests the client to exit process
 	EXIT_PROCESS,
 
-	// Called when the server determines the client's AC version is not compatible.
-	VERSION_NOT_COMPATIBLE,
-
 	// Called when the server wants to turn on or off crouch bug.
 	TOGGLE_CROUCH_BUG,
-
-	// Called when the server wants to turn on or off lite foot.
-	TOGGLE_LITE_FOOT,
 
 	// Called when the server wants to turn on or off unlimited sprint.
 	TOGGLE_UNLIMITED_SPRINT,
