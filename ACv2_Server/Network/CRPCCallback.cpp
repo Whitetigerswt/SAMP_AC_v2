@@ -39,7 +39,7 @@ void CRPCCallback::Initialize()
 RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
 {
 	// Calculate verified packet
-	std::wstring rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
 	bool verified = true;
 
@@ -47,8 +47,8 @@ RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtr
 	BYTE md5[16];
 	for (int i = 0; i < 16; ++i)
 	{
-		std::wstring bt = rawVerifiedP.substr(i * 2, 2);
-		md5[i] = static_cast<BYTE>(wcstoul(bt.c_str(), NULL, 16));
+		std::string bt = rawVerifiedP.substr(i * 2, 2);
+		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
 
 		// Read what is sent from client in the same order
 		BYTE read;
@@ -261,15 +261,15 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	CAntiCheatHandler::Init(iExtra);
 
 	// Calculate verified packet
-	std::wstring rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
 	// Convert to byte
 	BYTE md5[16];
 	bool verified = true;
 	for (int i = 0; i < 16; ++i)
 	{
-		std::wstring bt = rawVerifiedP.substr(i * 2, 2);
-		md5[i] = static_cast<BYTE>(wcstoul(bt.c_str(), NULL, 16));
+		std::string bt = rawVerifiedP.substr(i * 2, 2);
+		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
 
 		// Read what is sent from client in the same order
 		BYTE read;

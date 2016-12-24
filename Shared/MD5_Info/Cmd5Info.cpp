@@ -6,6 +6,10 @@
 #include <fstream>
 #include <curl/curl.h>
 
+#include <ostream>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/stream.hpp>
+
 #ifndef WIN32
 #define MAX_PATH 260
 #endif
@@ -206,6 +210,7 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 	return "";
 }
 
+#ifdef WIN32
 std::string Cmd5Info::DownloadFile(std::string url, std::wstring fname)
 {
 	// Create an output stream to paste the URL contents.
@@ -219,3 +224,19 @@ std::string Cmd5Info::DownloadFile(std::string url, std::wstring fname)
 
 	return result;
 }
+#else
+std::string Cmd5Info::DownloadFile(std::string url, std::string fname)
+{
+	// Create an output stream to paste the URL contents.
+	std::ofstream ofs(fname.c_str());
+
+	// Save the URL contents so we can return it later.
+	std::string result = GetWebsiteText(url);
+
+	// Paste the URL contents.
+	ofs << static_cast<std::string>(result) << std::endl;
+
+	return result;
+}
+#endif
+

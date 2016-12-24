@@ -25,7 +25,11 @@ public:
 	// PURPOSE: Download a file onto the machine.
 	// REQUIRES: A URL to download from.
 	// REQUIRES: A filename to place it into.
-	static std::string DownloadFile(std::string url, std::wstring fname);
+#ifdef WIN32
+	static std::string DownloadFile(std::string url, const std::wstring fname);
+#else
+	static std::string DownloadFile(std::string url, const std::string fname);
+#endif
 
 	// PURPOSE: Get a list of bad gta directory files in md5s.
 	// REQUIRES: NULL

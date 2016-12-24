@@ -1,12 +1,12 @@
 #include "ACVerifiedPacket.h"
 #include "../MD5_Info/Cmd5Info.h"
-#include "../../acv2/md5.h"
+#include "../../ACv2_Server/md5.h"
 
 #include <stdlib.h>
 
 namespace ACVerifiedPacket
 {
-	std::wstring RawVerifiedPacket()
+	std::string RawVerifiedPacket()
 	{
 		/* 
 			Request something to MD5. That thing changes and is never the same which
@@ -33,7 +33,7 @@ namespace ACVerifiedPacket
 
 		// MD5 everything
 		MD5 md5 = MD5();
-		std::wstring md5ed_data = std::wstring(md5.digestString((wchar_t*)response_data.c_str()));
+		std::string md5ed_data = std::string(md5.digestString((char*)response_data.c_str()));
 
 		// Return hashed data
 		return md5ed_data;

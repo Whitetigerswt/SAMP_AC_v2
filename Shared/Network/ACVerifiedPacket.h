@@ -6,5 +6,5 @@ namespace ACVerifiedPacket
 {
 	// PURPOSE: Compute verified AC packet.
 	// NOTES: Returned value varies, can never have the same value twice.
-	std::wstring RawVerifiedPacket();
+	std::string RawVerifiedPacket();
 }
