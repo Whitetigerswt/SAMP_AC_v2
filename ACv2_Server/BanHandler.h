@@ -3,6 +3,7 @@
 #include <string>
 
 #define AC_BAN_HANDLER_ADD				"https://apples.sampcup.com/addcheater.php"
+
 #define AC_BAN_HANDLER_CHECK				"https://apples.sampcup.com/checkcheater.php"
 
 namespace BanHandler
