@@ -147,8 +147,6 @@ static DWORD FOVPatchJmpBack = 0x522F68;
 
 static DWORD KeyPressJmpBack = 0x541C9D;
 
-static DWORD LiteFootHookJmpBack = 0x60A746;
-
 static DWORD GravityHookJmpBack1 = 0x543081;
 static DWORD GravityHookJmpBack2 = 0x543093;
 
@@ -168,8 +166,6 @@ static DWORD sampInfoAddr = NULL;
 
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
-
-float CHookManager::LiteFoot = 0.0f;
 
 DWORD NameTag_je1;
 DWORD NameTag_je2;
@@ -383,8 +379,7 @@ void CHookManager::Load()
 	// Patch widescreen_lite.asi mod
 	// Parts of it's source code are here: https://github.com/ThirteenAG/Widescreen_Fixes_Pack/tree/master/GTASA_widescreen_fix
 	CMem::ApplyJmp(FUNC_WidescreenPatch, (DWORD)WidescreenPatch, 6);
-	
-	CMem::ApplyJmp(FUNC_LiteFoot, (DWORD)LiteFootHook, 6);
+
 	CMem::ApplyJmp(FUNC_Gravity, (DWORD)GravityHook, 6);
 
 	// Make it so we can launch more than 1 gta_sa.exe (reversed addresses from http://ugbase.eu/releases-52/gtasa-multiprocess/)
@@ -689,24 +684,6 @@ HOOK CHookManager::NameTagHook()
 		jmp[NameTagHookJmpBack]
 	}
 }
-#pragma warning(default:4731)
-
-void CHookManager::SetLiteFoot(bool toggle)
-{
-	if (toggle)
-		LiteFoot = 1.0f;
-	else
-		LiteFoot = 0.0f;
-}
-
-HOOK CHookManager::LiteFootHook()
-{
-	__asm
-	{
-		fld dword ptr [LiteFoot]
-		jmp[LiteFootHookJmpBack]
-	}
-}
 
 void LoadRakClient()
 {
@@ -915,11 +892,6 @@ HOOK CHookManager::KeyPress()
 			lea ecx, [ebx + 78h]
 			jmp[KeyPressJmpBack]
 		}
-	}
-
-	if (dwLastCrouch > GetTickCount() && LiteFoot == 0.0f)
-	{
-		SPRINT_KEY = 0;
 	}
 
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.

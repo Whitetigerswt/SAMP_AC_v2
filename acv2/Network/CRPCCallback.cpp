@@ -23,7 +23,6 @@ void CRPCCallback::Initialize()
 	CRPC::Add(EXIT_PROCESS, ExitThisProcess);
 	CRPC::Add(VERSION_NOT_COMPATIBLE, VersionNotCompatible);
 	CRPC::Add(TOGGLE_CROUCH_BUG, ToggleCrouchBug);
-	CRPC::Add(TOGGLE_LITE_FOOT, ToggleLiteFoot);
 	CRPC::Add(TOGGLE_UNLIMITED_SPRINT, ToggleUnlimitedSprint);
 	CRPC::Add(TOGGLE_MACRO_LIMITS, ToggleMacroLimits);
 	CRPC::Add(TOGGLE_SPRINT_ALL_SURFACES, ToggleSprintOnAllSurfaces);
@@ -255,17 +254,6 @@ void CRPCCallback::VersionNotCompatible(RakNet::BitStream &bsData, int iExtra)
 	// Disconnect from the server.
 	//Network::Disconnect();
 	CRakClientHandler::Disconnect();
-}
-
-void CRPCCallback::ToggleLiteFoot(RakNet::BitStream &bsData, int iExtra)
-{
-	// Create new variable to hold the value the server sent us.
-	bool toggle;
-
-	if (bsData.Read(toggle))
-	{
-		CHookManager::SetLiteFoot(toggle);
-	}
 }
 
 void CRPCCallback::ToggleUnlimitedSprint(RakNet::BitStream &bsData, int iExtra)
