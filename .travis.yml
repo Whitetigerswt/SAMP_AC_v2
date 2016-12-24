@@ -5,3 +5,5 @@ compiler:
 - g++
 os:
 - linux
+before_install: cd ACv2_Server
+script: make
