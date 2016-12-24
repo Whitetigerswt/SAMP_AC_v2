@@ -5,5 +5,7 @@ compiler:
 - g++
 os:
 - linux
-before_install: cd ACv2_Server
-script: make
+before_install:
+- sudo apt-get -qq update
+- sudo apt-get install -y g++-4.4
+script: ACv2_Server/make
