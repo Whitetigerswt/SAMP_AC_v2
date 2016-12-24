@@ -3,6 +3,7 @@
 #include "../Shared/Network/CRPC.h"
 #include "Network\Network.h"
 #include "Network\CRakClientHandler.h"
+#include "Misc.h"
 
 #include <Windows.h>
 #include <string>
@@ -22,7 +23,7 @@ CFileCheck::~CFileCheck()
 	m_MD5List.clear();
 }
 
-std::string CFileCheck::GetFileMD5(std::string file)
+std::wstring CFileCheck::GetFileMD5(std::wstring file)
 {
 	// Create an MD5 object to calculate the MD5 of the file path
 	if (FileExists(file))
@@ -31,21 +32,17 @@ std::string CFileCheck::GetFileMD5(std::string file)
 		MD5 objmd5 = MD5();
 
 		// Calculate the file path.
-		std::string md5 = objmd5.digestFile((char*)file.c_str());
+		std::wstring md5 = objmd5.digestFile((wchar_t*)file.c_str());
 
 		return md5;
 	}
-	return "NULL";
+	return TEXT("NULL");
 }
 
-bool CFileCheck::FileExists(std::string name)
+bool CFileCheck::FileExists(std::wstring name)
 {
 	// Open the file
-<<<<<<< HEAD
-	if (FILE *file = fopen(name.c_str(), "r")) 
-=======
-	if (FILE *file = fopen(name.c_str(), "r"))
->>>>>>> refs/remotes/origin/master
+	if (FILE *file = _tfopen(name.c_str(), TEXT("r")))
 	{
 		// It was successful at opening the file, now close it.
 		fclose(file);
@@ -53,23 +50,19 @@ bool CFileCheck::FileExists(std::string name)
 		// And return true
 		return true;
 	}
-<<<<<<< HEAD
-	else 
-=======
 	else
->>>>>>> refs/remotes/origin/master
 	{
 		// We were not successful at opening the file, it must not exist.
 		return false;
 	}
 }
 
-void CFileCheck::AddFile(std::string file)
+void CFileCheck::AddFile(std::wstring file)
 {
 	AddFile(file, GetFileMD5(file));
 }
 
-void CFileCheck::AddFile(std::string file, std::string md5)
+void CFileCheck::AddFile(std::wstring file, std::wstring md5)
 {
 	if (!file.empty() && !md5.empty())
 	{
@@ -84,20 +77,16 @@ void CFileCheck::AddFile(std::string file, std::string md5)
 	}
 }
 
-void CFileCheck::OnFileExecuted(const char* file, const char* md5)
+void CFileCheck::OnFileExecuted(const wchar_t* file, const wchar_t* md5)
 {
-	// Make sure the length is greater than 3 characters.
-<<<<<<< HEAD
-	if (strlen(file) > 3) 
-=======
-	if (strlen(file) > 3)
->>>>>>> refs/remotes/origin/master
+	// Make sure the length is greater than 0 characters.
+	if (_tcslen(file) > 0)
 	{
 		// Convert it to an std::string.
-		std::string szFile(file);
+		std::wstring szFile(file);
 
 		// Find the last instance of a \, cause we only want the file name and not the complete path.
-		int i = szFile.rfind("\\");
+		int i = szFile.rfind(TEXT("\\"));
 
 		// Change the string to only the files name and not it's complete path.
 		szFile = szFile.substr(i + 1);
@@ -110,23 +99,19 @@ void CFileCheck::OnFileExecuted(const char* file, const char* md5)
 		bitStream.Write(ON_FILE_EXECUTED);
 
 		bitStream.Write((unsigned short)szFile.length());
-		bitStream.Write((const char*)szFile.c_str(), szFile.length());
+		bitStream.Write((const char*)Misc::utf8_encode(szFile).c_str(), szFile.length());
 
 		// convert md5 string to bytes
 		BYTE digest[16];
-		std::string md5_string(md5);
+		std::wstring md5_string(md5);
 
 		// if string isn't null
-		if (strcmp(md5, "NULL"))
+		if (_tcscmp(md5, TEXT("NULL")))
 		{
-<<<<<<< HEAD
 			for (int i = 0; i < 16; ++i) 
-=======
-			for (int i = 0; i < 16; ++i)
->>>>>>> refs/remotes/origin/master
 			{
-				std::string bt = md5_string.substr(i * 2, 2);
-				digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+				std::wstring bt = md5_string.substr(i * 2, 2);
+				digest[i] = static_cast<BYTE>(_tcstoul(bt.c_str(), NULL, 16));
 				bitStream.Write(digest[i]);
 			}
 		}
@@ -158,13 +143,13 @@ void CFileCheck::ResendFiles()
 	}
 }
 
-bool CFileCheck::DoesFileExist(std::string file)
+bool CFileCheck::DoesFileExist(std::wstring file)
 {
 	// Get the MD5 hash of this file
-	std::string md5 = GetFileMD5(file);
+	std::wstring md5 = GetFileMD5(file);
 
 	// Search the MD5 list to check if this MD5 hash exists.
-	for (std::vector<std::string>::iterator i = m_MD5List.begin(); i != m_MD5List.end(); ++i)
+	for (std::vector<std::wstring>::iterator i = m_MD5List.begin(); i != m_MD5List.end(); ++i)
 	{
 		// Compare the MD5 of the file we calculated, to an index in our list of MD5s.
 		if ((*i).compare(md5) == 0)
@@ -175,7 +160,3 @@ bool CFileCheck::DoesFileExist(std::string file)
 
 	return false;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/remotes/origin/master

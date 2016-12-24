@@ -89,7 +89,7 @@ void HookedRakClientInterface::SendInitialInfo()
 		bsData.Write(digest[i]);
 	}
 
-	std::string hwid = "";
+	std::wstring hwid = TEXT("");
 
 	// Get the hardware ID
 	if (EP_CheckupIsProtected())
@@ -98,13 +98,13 @@ void HookedRakClientInterface::SendInitialInfo()
 	}
 
 	MD5 md5 = MD5();
-	hwid = std::string(md5.digestString((char*)hwid.c_str()));
+	hwid = std::wstring(md5.digestString((wchar_t*)hwid.c_str()));
 
 	// string to byte
 	for (int i = 0; i < 16; ++i)
 	{
-		std::string bt = hwid.substr(i * 2, 2);
-		digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+		std::wstring bt = hwid.substr(i * 2, 2);
+		digest[i] = static_cast<BYTE>(_tcstoul(bt.c_str(), NULL, 16));
 		bsData.Write(digest[i]);
 	}
 
@@ -113,10 +113,6 @@ void HookedRakClientInterface::SendInitialInfo()
 
 	// Send the info to the server.
 	Send(&bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
-
-	// Print in AC log
-	CLog acLog(AC_LOG_FILE_PATH, true);
-	acLog.Write("Sent initial info!");
 }
 
 bool HookedRakClientInterface::Send(RakNet::BitStream * bitStream, int priority, int reliability, char orderingChannel)

@@ -18,10 +18,6 @@ public:
 	// REQUIRES: NULL
 	static void SetFrameLimiterPatch();
 
-	// PURPOSE: Toggle lite foot on and off.
-	// REQUIRES: NULL
-	static void SetLiteFoot(bool toggle);
-
 	// PURPOSE: Toggle on and off the macro limitations.
 	// REQUIRES: NULL
 	static void SetMacroLocks(bool toggle);
@@ -78,11 +74,6 @@ private:
 	// Hook to limit sprint
 	static void SprintHook();
 
-	// Hook to prevent litefooting, hooks inside some weird sprint function after you shoot
-	// note: only partially works, people can still litefoot :(
-	// needs further research...
-	static void LiteFootHook();
-
 	// Hooks gravity function which causes sobeit to crash.
 	static void GravityHook();
 
@@ -112,13 +103,7 @@ private:
 	static float CameraXPos;
 	static float CameraYPos;
 
-	static unsigned int iLastTick;
-	static int iLastPress;
-	static int iTickOffset;
-
 	static int NameTagHookAddr;
-
-	static float LiteFoot;
 
 	// TOO MANY HOOKS TO DOCUMENT
 	// basically all the camera hooks do is redirect the game's X and Y camera pos's to the variables "CameraXPos" and "CameraYPos"

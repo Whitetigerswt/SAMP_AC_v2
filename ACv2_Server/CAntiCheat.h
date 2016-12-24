@@ -70,14 +70,6 @@ public:
 	// REQUIRES: NULL
 	int GetFPSLimit() { return m_FrameLimit; }
 
-	// PURPOSE: Toggle Lite foot.
-	// REQUIRES: The player is using AC.
-	void ToggleLiteFoot(bool toggle);
-
-	// PURPOSE: Get players lite foot status.
-	// REQUIRES: NULL
-	bool GetLiteFoot() { return m_LiteFoot; }
-
 	// PURPOSE: Set the players crouch bug status.
 	// REQUIRES: The client is using AC.
 	void ToggleCrouchBug(unsigned short toggle);
@@ -154,9 +146,6 @@ private:
 
 	// PURPOSE: Remember the player's playerID.
 	int ID;
-
-	// PURPOSE: Keep track of the player's lite foot status.
-	bool m_LiteFoot;
 
 	// PURPOSE: Keep track of the player's cbug status.
 	unsigned short m_CBug;

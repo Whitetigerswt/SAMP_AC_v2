@@ -164,13 +164,11 @@
     <ClInclude Include="BanHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="..\Shared\Network\ACVerifiedPacket.h">
       <Filter>Source Files\Shared\Network</Filter>
-=======
+    </ClInclude>
     <ClInclude Include="CVector4D.h">
       <Filter>Header Files</Filter>
->>>>>>> refs/remotes/origin/master
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
