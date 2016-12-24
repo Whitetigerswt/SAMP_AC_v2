@@ -61,14 +61,14 @@ void SendVerificationPacket()
 	bitStream.Write(ON_CLIENT_VERIFIED);
 
 	// Calculate verified packet
-	std::wstring rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
 	// Convert verified packet from string to byte
 	BYTE digest[16];
 	for (int i = 0; i < 16; ++i)
 	{
-		std::wstring bt = rawVerifiedP.substr(i * 2, 2);
-		digest[i] = static_cast<BYTE>(wcstoul(bt.c_str(), NULL, 16));
+		std::string bt = rawVerifiedP.substr(i * 2, 2);
+		digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
 
 		// Write this byte
 		bitStream.Write(digest[i]);
