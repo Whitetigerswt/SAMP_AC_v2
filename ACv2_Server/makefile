@@ -10,7 +10,8 @@ GCC = gcc
 AC_OUTFILE = "bin/sampac.so"
 
 COMPILE_FLAGS = -m32 -fPIC -c -O2 -w -D LINUX -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -D NO_BOOST_DATE_TIME_INLINE -D PROJECT_NAME=\"sampac\" -D SAMPGDK_AMALGAMATION -D SUBHOOK_STATIC -I ./../Shared/
-LIBS = -L./../Shared/libs -static -static-libgcc -lc -lgcc -ldl -lsampgdk -lboost_system -lboost_thread -lboost_filesystem -lboost_regex -lboost_date_time -lrt -lsubhook -lcurl
+LIBS_TRAVIS = -L./../Shared/libs -static -static-libgcc -lc -lgcc -ldl -lsampgdk -lboost_system -lboost_thread -lboost_filesystem -lboost_regex -lboost_date_time -lrt -lsubhook
+LIBS_NO_TRAVIS = -lcurl
 
 LDFLAGS = -shared -lpthread
 
@@ -22,12 +23,20 @@ clean:
 	-rm -f *~ *.o *.so
 
 quick:
-	$(GPP) -m32 -O2 -fshort-wchar -static -o $(AC_OUTFILE) *.o $(LDFLAGS) $(LIBS)
+	$(GPP) -m32 -O2 -fshort-wchar -static -o $(AC_OUTFILE) *.o $(LDFLAGS) $(LIBS_TRAVIS) $(LIBS_NO_TRAVIS)
 
 quickcomp:
 
 	$(GPP) $(SAMPAC) *.cpp
 	quick
+	
+travis: clean
+	$(GPP) $(SAMPAC) ./SDK/samp-sdk/*.cpp
+	$(GPP) $(SAMPAC) *.cpp
+	$(GPP) $(SAMPAC) ./Network/*.cpp
+	$(GPP) $(SAMPAC) ../Shared/MD5_Info/*.cpp
+	$(GPP) $(SAMPAC) ../Shared/Network/*.cpp
+	$(GPP) -m32 -O2 -fshort-wchar -static -o $(AC_OUTFILE) *.o $(LDFLAGS) $(LIBS_TRAVIS) 
 
 SAMPAC: clean
 	$(GPP) $(SAMPAC) ./SDK/samp-sdk/*.cpp
@@ -35,5 +44,5 @@ SAMPAC: clean
 	$(GPP) $(SAMPAC) ./Network/*.cpp
 	$(GPP) $(SAMPAC) ../Shared/MD5_Info/*.cpp
 	$(GPP) $(SAMPAC) ../Shared/Network/*.cpp
-	$(GPP) -m32 -O2 -fshort-wchar -static -o $(AC_OUTFILE) *.o $(LDFLAGS) $(LIBS)
+	$(GPP) -m32 -O2 -fshort-wchar -static -o $(AC_OUTFILE) *.o $(LDFLAGS) $(LIBS_TRAVIS) $(LIBS_NO_TRAVIS)
 
