@@ -53,7 +53,7 @@ std::wstring CDirectoryScanner::MD5_Specific_File(std::wstring path)
 	if (boost::filesystem::exists(path))
 	{
 		// Calculate the MD5 of the file and store it in a C-style char value.
-		CStyleMD5 = md5obj.digestFile((wchar_t*)path.c_str());
+		CStyleMD5 = md5obj.digestFileChar((wchar_t*)path.c_str());
 	}
 
 	// Convert the result to an std::string
@@ -117,24 +117,20 @@ void CDirectoryScanner::img_scan(std::wstring path_to_gta3_img)
 				bitStream.Write(Misc::utf8_encode(filename).c_str(), _tcslen(filename));
 
 				// convert md5 string to bytes
-				BYTE digest[16];
 
 				// if string isn't null
 				if (_tcscmp(md5.c_str(), TEXT("NULL")))
 				{
 					for (int i = 0; i < 16; ++i)
 					{
-						std::wstring bt = md5.substr(i * 2, 2);
-						digest[i] = static_cast<BYTE>(_tcstoul(bt.c_str(), NULL, 16));
-						bitStream.Write(digest[i]);
+						bitStream.Write(md5obj.digestRaw[i]);
 					}
 				}
 				else
 				{
 					for (int i = 0; i < 16; ++i)
 					{
-						digest[i] = NULL;
-						bitStream.Write(digest[i]);
+						bitStream.Write(NULL);
 					}
 				}
 

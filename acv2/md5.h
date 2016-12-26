@@ -339,7 +339,31 @@ public:
 
 	/// Load a file from disk and digest it
 	// Digests a file and returns the result.
-	wchar_t* digestFile(wchar_t *filename)
+	BYTE* digestFile(wchar_t *filename)
+	{
+		Init();
+
+		FILE *file;
+
+		int len;
+		unsigned char buffer[1024];
+
+		if ((file = _tfopen(filename, L"rb")) == NULL)
+		{
+		}
+		else
+		{
+			while (len = fread(buffer, 1, 1024, file))
+				Update(buffer, len);
+			Final();
+
+			fclose(file);
+		}
+
+		return digestRaw;
+	}
+
+	wchar_t* digestFileChar(wchar_t *filename)
 	{
 		Init();
 

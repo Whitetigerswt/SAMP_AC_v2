@@ -13,6 +13,7 @@
 #include "s0beit\samp.h"
 #include "Network\CRakClientHandler.h"
 #include "ManualInjection.h"
+#include "CLog.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -163,6 +164,7 @@ static DWORD CLEO_Func_JmpBack = 0x46A222;
 static DWORD MainLoadingJmpBack = 0x7F9B12;
 
 static DWORD sampInfoAddr = NULL;
+static boolean hooks_install_once = false;
 
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
@@ -175,23 +177,15 @@ DWORD NameTagHookJmpBack;
 
 void CHookManager::Load()
 {
-
 	DWORD dwOldProt;
 
 	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
+	DWORD samp = getSampBaseAddress();
 
-	DWORD samp = (DWORD)GetModuleHandle(TEXT("samp.dll"));
 	if (samp)
 	{
 		setSampBaseAddress(samp);
-	}
-	else if(getSampBaseAddress() != NULL)
-	{
-		samp = getSampBaseAddress();
-	}
 
-	if (samp)
-	{
 		// Add address offset
 		samp += 0x6FCF1;
 
@@ -203,21 +197,30 @@ void CHookManager::Load()
 		// Install hook
 		CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 7);
 
-		samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx", getSampBaseAddress(), getSampSize());
-
-		if (samp != 0 && g_SAMP == NULL)
+		if (!hooks_install_once)
 		{
-			// Save memory so we can remove hook later.
-			sampInfoAddr = samp;
+			samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx", getSampBaseAddress(), getSampSize());
 
-			// Unprotect memory so we can apply a jmp
-			VirtualProtect((void*)samp, 11, PAGE_EXECUTE_READWRITE, &dwOldProt);
+			CLog *log = new CLog("hooks.txt");
+			log->Write("base: 0x%x, size: 0x%x, addr: 0x%x", getSampBaseAddress(), getSampSize(), samp);
 
-			// Install hook
-			CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 11);
+			if (samp != 0)
+			{
+				// Save memory so we can remove hook later.
+				sampInfoAddr = samp;
+
+				// Unprotect memory so we can apply a jmp
+				VirtualProtect((void*)samp, 6, PAGE_EXECUTE_READWRITE, &dwOldProt);
+
+				// Install hook
+				CMem::ApplyJmp((BYTE*)samp, (DWORD)GetSampInfo, 6);
+
+				hooks_install_once = true;
+			}
 		}
 	}
 	
+
 	// Prevent CLEO 4 from loading scripts
 	VirtualProtect(FUNC_Init_SCM1, 5, PAGE_EXECUTE_READWRITE, &dwOldProt);
 	memcpy(FUNC_Init_SCM1, "\xE8\x74\xCF\xF2\xFF", 5);
@@ -483,7 +486,8 @@ void CHookManager::SetConnectPatches()
 	// Fix some slide issues with melee weps
 	CMem::ApplyJmp(FUNC_SlideFix, (DWORD)SlideFix, 6);
 
-	Load();
+	// Hook a main loading function of SAMP and GTA. 
+	CMem::ApplyJmp(FUNC_MainLoad, (DWORD)MainLoading, 5);
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
@@ -694,17 +698,12 @@ HOOK CHookManager::GetSampInfo()
 {
 	__asm
 	{
-		mov eax, [esi + 000003CDh]
-		mov eax, [eax + 18h]
-		test eax, eax
-
-
-		mov g_SAMP, esi
 		pushad
+		mov g_SAMP, esi
 		call LoadRakClient
 	}
 	// remove hook now that we got the address.
-	CMem::Cpy((void*)sampInfoAddr, "\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", 11);
+	CMem::Cpy((void*)sampInfoAddr, "\x8B\x86\xCD\x03\x00\x00", 6);
 	__asm
 	{
 		popad

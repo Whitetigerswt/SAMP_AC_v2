@@ -30,39 +30,38 @@ HookedRakClientInterface::~HookedRakClientInterface()
 bool HookedRakClientInterface::Connect(const char* host, unsigned short serverPort, unsigned short clientPort, unsigned int depreciated, int threadSleepTimer)
 {
 	hasSentInitInfo = false;
-	return client->GetRakClientInterface()->Connect(host, serverPort, clientPort, depreciated, threadSleepTimer);
+	return client->GetInterface()->Connect(host, serverPort, clientPort, depreciated, threadSleepTimer);
 }
 
 void HookedRakClientInterface::Disconnect(unsigned int blockDuration, unsigned char orderingChannel)
 {
 	CRakClientHandler::SetConnected(false);
 	hasSentInitInfo = false;
-	client->GetRakClientInterface()->Disconnect(blockDuration, orderingChannel);
+	client->GetInterface()->Disconnect(blockDuration, orderingChannel);
 }
 
 void HookedRakClientInterface::InitializeSecurity(const char *privKeyP, const char *privKeyQ)
 {
-	client->GetRakClientInterface()->InitializeSecurity(privKeyP, privKeyQ);
+	client->GetInterface()->InitializeSecurity(privKeyP, privKeyQ);
 }
 
 void HookedRakClientInterface::SetPassword(const char *_password)
 {
-	client->GetRakClientInterface()->SetPassword(_password);
+	client->GetInterface()->SetPassword(_password);
 }
 
 bool HookedRakClientInterface::HasPassword(void) const
 {
-	return client->GetRakClientInterface()->HasPassword();
+	return client->GetInterface()->HasPassword();
 }
 
 bool HookedRakClientInterface::Send(const char *data, const int length, int priority, int reliability, char orderingChannel)
 {
-	return client->GetRakClientInterface()->Send(data, length, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel);
+	return client->GetInterface()->Send(data, length, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel);
 }
 
 void HookedRakClientInterface::SendInitialInfo()
 {
-
 	if (hasSentInitInfo)
 		return;
 
@@ -103,9 +102,7 @@ void HookedRakClientInterface::SendInitialInfo()
 	// string to byte
 	for (int i = 0; i < 16; ++i)
 	{
-		std::wstring bt = hwid.substr(i * 2, 2);
-		digest[i] = static_cast<BYTE>(_tcstoul(bt.c_str(), NULL, 16));
-		bsData.Write(digest[i]);
+		bsData.Write(md5.digestRaw[i]);
 	}
 
 	// Write the user's AC version to the packet.
@@ -127,13 +124,13 @@ bool HookedRakClientInterface::Send(RakNet::BitStream * bitStream, int priority,
 		CRPCCallback::Initialize();
 	}
 
-	return client->GetRakClientInterface()->Send(bitStream, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel);
+	return client->GetInterface()->Send(bitStream, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel);
 }
 
 Packet* HookedRakClientInterface::Receive(void)
 {
 	Packet* p = NULL;
-	if ((p = client->GetRakClientInterface()->Receive()))
+	if ((p = client->GetInterface()->Receive()))
 	{
 		if (!p->bitSize)
 		{
@@ -172,77 +169,77 @@ Packet* HookedRakClientInterface::Receive(void)
 
 void HookedRakClientInterface::DeallocatePacket(Packet *packet)
 {
-	client->GetRakClientInterface()->DeallocatePacket(packet);
+	client->GetInterface()->DeallocatePacket(packet);
 }
 
 void HookedRakClientInterface::PingServer(void)
 {
-	client->GetRakClientInterface()->PingServer();
+	client->GetInterface()->PingServer();
 }
 
 void HookedRakClientInterface::PingServer(const char* host, unsigned short serverPort, unsigned short clientPort, bool onlyReplyOnAcceptingConnections)
 {
-	client->GetRakClientInterface()->PingServer(host, serverPort, clientPort, onlyReplyOnAcceptingConnections);
+	client->GetInterface()->PingServer(host, serverPort, clientPort, onlyReplyOnAcceptingConnections);
 }
 
 int HookedRakClientInterface::GetAveragePing(void)
 {
-	return client->GetRakClientInterface()->GetAveragePing();
+	return client->GetInterface()->GetAveragePing();
 }
 
 int HookedRakClientInterface::GetLastPing(void) const
 {
-	return client->GetRakClientInterface()->GetLastPing();
+	return client->GetInterface()->GetLastPing();
 }
 
 int HookedRakClientInterface::GetLowestPing(void) const
 {
-	return client->GetRakClientInterface()->GetLowestPing();
+	return client->GetInterface()->GetLowestPing();
 }
 
 int HookedRakClientInterface::GetPlayerPing(const PlayerID playerId)
 {
-	return client->GetRakClientInterface()->GetPlayerPing(playerId);
+	return client->GetInterface()->GetPlayerPing(playerId);
 }
 
 void HookedRakClientInterface::StartOccasionalPing(void)
 {
-	client->GetRakClientInterface()->StartOccasionalPing();
+	client->GetInterface()->StartOccasionalPing();
 }
 
 void HookedRakClientInterface::StopOccasionalPing(void)
 {
-	client->GetRakClientInterface()->StopOccasionalPing();
+	client->GetInterface()->StopOccasionalPing();
 }
 
 bool HookedRakClientInterface::IsConnected(void) const
 {
-	return client->GetRakClientInterface()->IsConnected();
+	return client->GetInterface()->IsConnected();
 }
 
 unsigned int HookedRakClientInterface::GetSynchronizedRandomInteger(void) const
 {
-	return client->GetRakClientInterface()->GetSynchronizedRandomInteger();
+	return client->GetInterface()->GetSynchronizedRandomInteger();
 }
 
 bool HookedRakClientInterface::GenerateCompressionLayer(unsigned int inputFrequencyTable[256], bool inputLayer)
 {
-	return client->GetRakClientInterface()->GenerateCompressionLayer(inputFrequencyTable, inputLayer);
+	return client->GetInterface()->GenerateCompressionLayer(inputFrequencyTable, inputLayer);
 }
 
 bool HookedRakClientInterface::DeleteCompressionLayer(bool inputLayer)
 {
-	return client->GetRakClientInterface()->DeleteCompressionLayer(inputLayer);
+	return client->GetInterface()->DeleteCompressionLayer(inputLayer);
 }
 
 void HookedRakClientInterface::RegisterAsRemoteProcedureCall(int* uniqueID, void(*functionPointer) (RPCParameters *rpcParms))
 {
-	client->GetRakClientInterface()->RegisterAsRemoteProcedureCall(uniqueID, functionPointer);
+	client->GetInterface()->RegisterAsRemoteProcedureCall(uniqueID, functionPointer);
 }
 
 void HookedRakClientInterface::RegisterClassMemberRPC(int* uniqueID, void *functionPointer)
 {
-	client->GetRakClientInterface()->RegisterClassMemberRPC(uniqueID, functionPointer);
+	client->GetInterface()->RegisterClassMemberRPC(uniqueID, functionPointer);
 }
 
 void HookedRakClientInterface::UnregisterAsRemoteProcedureCall(int* uniqueID)
@@ -251,14 +248,14 @@ void HookedRakClientInterface::UnregisterAsRemoteProcedureCall(int* uniqueID)
 	// Fix a crash when the game closes by setting the raknet interface back to the one SA-MP expects.
 
 	stSAMP* samp = stGetSampInfo();
-	samp->pRakClientInterface = client->GetRakClientInterface();
+	samp->pRakClientInterface = client->GetInterface();
 
-	client->GetRakClientInterface()->UnregisterAsRemoteProcedureCall(uniqueID);
+	client->GetInterface()->UnregisterAsRemoteProcedureCall(uniqueID);
 }
 
 bool HookedRakClientInterface::RPC(int* uniqueID, const char *data, unsigned int bitLength, int priority, int reliability, char orderingChannel, bool shiftTimestamp)
 {
-	return client->GetRakClientInterface()->RPC(uniqueID, data, bitLength, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel, shiftTimestamp);
+	return client->GetInterface()->RPC(uniqueID, data, bitLength, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel, shiftTimestamp);
 }
 
 bool HookedRakClientInterface::RPC(int* uniqueID, RakNet::BitStream *parameters, int priority, int reliability, char orderingChannel, bool shiftTimestamp)
@@ -270,144 +267,144 @@ bool HookedRakClientInterface::RPC(int* uniqueID, RakNet::BitStream *parameters,
 	Log( "< [RPC Send] %d, len: %d", *uniqueID, len );
 	}*/
 
-	return client->GetRakClientInterface()->RPC(uniqueID, parameters, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel, shiftTimestamp);
+	return client->GetInterface()->RPC(uniqueID, parameters, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel, shiftTimestamp);
 }
 
 void HookedRakClientInterface::SetTrackFrequencyTable(bool b)
 {
-	client->GetRakClientInterface()->SetTrackFrequencyTable(b);
+	client->GetInterface()->SetTrackFrequencyTable(b);
 }
 
 bool HookedRakClientInterface::GetSendFrequencyTable(unsigned int outputFrequencyTable[256])
 {
-	return client->GetRakClientInterface()->GetSendFrequencyTable(outputFrequencyTable);
+	return client->GetInterface()->GetSendFrequencyTable(outputFrequencyTable);
 }
 
 float HookedRakClientInterface::GetCompressionRatio(void) const
 {
-	return client->GetRakClientInterface()->GetCompressionRatio();
+	return client->GetInterface()->GetCompressionRatio();
 }
 
 float HookedRakClientInterface::GetDecompressionRatio(void) const
 {
-	return client->GetRakClientInterface()->GetDecompressionRatio();
+	return client->GetInterface()->GetDecompressionRatio();
 }
 
 void HookedRakClientInterface::AttachPlugin(void *messageHandler)
 {
-	client->GetRakClientInterface()->AttachPlugin(messageHandler);
+	client->GetInterface()->AttachPlugin(messageHandler);
 }
 
 void HookedRakClientInterface::DetachPlugin(void *messageHandler)
 {
-	client->GetRakClientInterface()->DetachPlugin(messageHandler);
+	client->GetInterface()->DetachPlugin(messageHandler);
 }
 
 RakNet::BitStream * HookedRakClientInterface::GetStaticServerData(void)
 {
-	return client->GetRakClientInterface()->GetStaticServerData();
+	return client->GetInterface()->GetStaticServerData();
 }
 
 void HookedRakClientInterface::SetStaticServerData(const char *data, const int length)
 {
-	client->GetRakClientInterface()->SetStaticServerData(data, length);
+	client->GetInterface()->SetStaticServerData(data, length);
 }
 
 RakNet::BitStream * HookedRakClientInterface::GetStaticClientData(const PlayerID playerId)
 {
-	return client->GetRakClientInterface()->GetStaticClientData(playerId);
+	return client->GetInterface()->GetStaticClientData(playerId);
 }
 
 void HookedRakClientInterface::SetStaticClientData(const PlayerID playerId, const char *data, const int length)
 {
-	client->GetRakClientInterface()->SetStaticClientData(playerId, data, length);
+	client->GetInterface()->SetStaticClientData(playerId, data, length);
 }
 
 void HookedRakClientInterface::SendStaticClientDataToServer(void)
 {
-	client->GetRakClientInterface()->SendStaticClientDataToServer();
+	client->GetInterface()->SendStaticClientDataToServer();
 }
 
 PlayerID HookedRakClientInterface::GetServerID(void) const
 {
-	return client->GetRakClientInterface()->GetServerID();
+	return client->GetInterface()->GetServerID();
 }
 
 PlayerID HookedRakClientInterface::GetPlayerID(void) const
 {
-	return client->GetRakClientInterface()->GetPlayerID();
+	return client->GetInterface()->GetPlayerID();
 }
 
 PlayerID HookedRakClientInterface::GetInternalID(void) const
 {
-	return client->GetRakClientInterface()->GetInternalID();
+	return client->GetInterface()->GetInternalID();
 }
 
 const char* HookedRakClientInterface::PlayerIDToDottedIP(const PlayerID playerId) const
 {
-	return client->GetRakClientInterface()->PlayerIDToDottedIP(playerId);
+	return client->GetInterface()->PlayerIDToDottedIP(playerId);
 }
 
 void HookedRakClientInterface::PushBackPacket(Packet *packet, bool pushAtHead)
 {
-	client->GetRakClientInterface()->PushBackPacket(packet, pushAtHead);
+	client->GetInterface()->PushBackPacket(packet, pushAtHead);
 }
 
 void HookedRakClientInterface::SetRouterInterface(void *routerInterface)
 {
-	client->GetRakClientInterface()->SetRouterInterface(routerInterface);
+	client->GetInterface()->SetRouterInterface(routerInterface);
 }
 void HookedRakClientInterface::RemoveRouterInterface(void *routerInterface)
 {
-	client->GetRakClientInterface()->RemoveRouterInterface(routerInterface);
+	client->GetInterface()->RemoveRouterInterface(routerInterface);
 }
 
 void HookedRakClientInterface::SetTimeoutTime(RakNetTime timeMS)
 {
-	client->GetRakClientInterface()->SetTimeoutTime(timeMS);
+	client->GetInterface()->SetTimeoutTime(timeMS);
 }
 
 bool HookedRakClientInterface::SetMTUSize(int size)
 {
-	return client->GetRakClientInterface()->SetMTUSize(size);
+	return client->GetInterface()->SetMTUSize(size);
 }
 
 int HookedRakClientInterface::GetMTUSize(void) const
 {
-	return client->GetRakClientInterface()->GetMTUSize();
+	return client->GetInterface()->GetMTUSize();
 }
 
 void HookedRakClientInterface::AllowConnectionResponseIPMigration(bool allow)
 {
-	client->GetRakClientInterface()->AllowConnectionResponseIPMigration(allow);
+	client->GetInterface()->AllowConnectionResponseIPMigration(allow);
 }
 
 void HookedRakClientInterface::AdvertiseSystem(const char *host, unsigned short remotePort, const char *data, int dataLength)
 {
-	client->GetRakClientInterface()->AdvertiseSystem(host, remotePort, data, dataLength);
+	client->GetInterface()->AdvertiseSystem(host, remotePort, data, dataLength);
 }
 
 RakNetStatisticsStruct* const HookedRakClientInterface::GetStatistics(void)
 {
-	return client->GetRakClientInterface()->GetStatistics();
+	return client->GetInterface()->GetStatistics();
 }
 
 void HookedRakClientInterface::ApplyNetworkSimulator(double maxSendBPS, unsigned short minExtraPing, unsigned short extraPingVariance)
 {
-	client->GetRakClientInterface()->ApplyNetworkSimulator(maxSendBPS, minExtraPing, extraPingVariance);
+	client->GetInterface()->ApplyNetworkSimulator(maxSendBPS, minExtraPing, extraPingVariance);
 }
 
 bool HookedRakClientInterface::IsNetworkSimulatorActive(void)
 {
-	return client->GetRakClientInterface()->IsNetworkSimulatorActive();
+	return client->GetInterface()->IsNetworkSimulatorActive();
 }
 
 PlayerIndex HookedRakClientInterface::GetPlayerIndex(void)
 {
-	return client->GetRakClientInterface()->GetPlayerIndex();
+	return client->GetInterface()->GetPlayerIndex();
 }
 
 bool HookedRakClientInterface::RPC_(int* uniqueID, RakNet::BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp, NetworkID networkID)
 {
-	return client->GetRakClientInterface()->RPC_(uniqueID, bitStream, priority, reliability, orderingChannel, shiftTimestamp, networkID);
+	return client->GetInterface()->RPC_(uniqueID, bitStream, priority, reliability, orderingChannel, shiftTimestamp, networkID);
 }

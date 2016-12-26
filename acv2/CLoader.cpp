@@ -66,6 +66,13 @@ void CLoader::Initialize(HMODULE hMod)
 		setSampBaseAddress((DWORD)mInfo.lpBaseOfDll);
 		setSampSize((DWORD)mInfo.SizeOfImage);
 
+		// Hide samp.dll and this .asi from the loaded module list.
+		PELPEB peb = EL_GetPeb();
+		EL_HideModule(peb, TEXT("samp.dll"));
+		wchar_t path[MAX_PATH];
+		GetModuleFileName(hMod, path, sizeof(path));
+		EL_HideModule(peb, path);
+
 		// Hook LoadLibrary function.
 		CModuleSecurity::HookLoadLibrary();
 
@@ -92,25 +99,15 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Make sure we're using the latest version of this mod.
 		CClientUpdater::CheckForUpdate(hMod);
-
-		// Setup memory one more time.
-		CHookManager::Load();
-
-		// Hide samp.dll and this .asi from the loaded module list.
-		PELPEB peb = EL_GetPeb();
-		EL_HideModule(peb, TEXT("samp.dll"));
-		wchar_t path[MAX_PATH];
-		GetModuleFileName(hMod, path, sizeof(path));
-		EL_HideModule(peb, path);
 	}
 
 	while (true)
 	{
 		// Scan for new processes.
-		Processes.Scan();
+		//Processes.Scan();
 
 		// Scan for new injected modules.
-		Modules.Scan();
+		//Modules.Scan();
 
 		// Sleep
 		Sleep(1000);
