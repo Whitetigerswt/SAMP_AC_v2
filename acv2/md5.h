@@ -325,7 +325,7 @@ public:
 		int pos;
 
 		for (pos = 0; pos < 16; pos++)
-			_stprintf_s(digestChars + (pos * 2), sizeof(digestChars), L"%02x", digestRaw[pos]);
+			sprintf_s(digestChars + (pos * 2), sizeof(digestChars), "%02x", digestRaw[pos]);
 	}
 
 
@@ -335,7 +335,7 @@ public:
 
 	// This version of the digest is actually
 	// a "printf'd" version of the digest.
-	wchar_t digestChars[33];
+	char digestChars[33];
 
 	/// Load a file from disk and digest it
 	// Digests a file and returns the result.
@@ -363,7 +363,7 @@ public:
 		return digestRaw;
 	}
 
-	wchar_t* digestFileChar(wchar_t *filename)
+	char* digestFileChar(wchar_t *filename)
 	{
 		Init();
 
@@ -388,7 +388,7 @@ public:
 	}
 
 	/// Digests a byte-array already in memory
-	wchar_t* digestMemory(BYTE *memchunk, int len)
+	char* digestMemory(BYTE *memchunk, int len)
 	{
 		Init();
 		Update(memchunk, len);
@@ -398,10 +398,10 @@ public:
 	}
 
 	// Digests a string and prints the result.
-	wchar_t* digestString(wchar_t *string)
+	char* digestString(unsigned char *string)
 	{
 		Init();
-		Update((unsigned char*)string, _tcslen(string));
+		Update(string, strlen((const char*)string));
 		Final();
 
 		return digestChars;

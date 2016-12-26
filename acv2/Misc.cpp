@@ -9,15 +9,15 @@
 
 namespace Misc
 {
-	std::wstring MD5_Memory(int address, int size)
+	std::string MD5_Memory(int address, int size)
 	{
 		// let's calculate the MD5 hash.
-		wchar_t* hash;
+		char* hash;
 		MD5 md5 = MD5();
 		hash = md5.digestMemory((BYTE*)address, size);
 
 		// convert it to an std::string finally
-		std::wstring result(hash);
+		std::string result(hash);
 
 		// and return the result.
 		return result;

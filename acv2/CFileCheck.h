@@ -24,7 +24,7 @@ public:
 	// REQUIRES: a valid file (exists)
 	// REQUIRES: the file's MD5.
 	// PROMISE: The file will be added to the internal file list.
-	void AddFile(std::wstring, std::wstring);
+	void AddFile(std::wstring, std::string);
 
 	// PURPOSE: Check if a file is already added to the file list. Does not check if the file actually exists on the hard drive.
 	// REQUIRES: A file to check
@@ -46,7 +46,7 @@ protected:
 
 private:
 	// PURPOSE: Files by MD5 in an std::vector. This is a list of files we've already checked.
-	std::vector<std::wstring> m_MD5List;
+	std::vector<std::string> m_MD5List;
 
 	// PURPOSE: Files by file path in an std::vector.
 	std::vector<std::wstring> m_FilePaths;
@@ -55,6 +55,6 @@ private:
 	// REQUIRES: A valid file and MD5.
 	void OnFileExecuted(const wchar_t* file, BYTE* md5);
 
-	std::wstring GetFileMD5Chars(std::wstring file);
+	std::string GetFileMD5Chars(std::wstring file);
 };
 

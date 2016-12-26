@@ -9,7 +9,6 @@
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "Addresses.h"
 #include "Network\CRakClientHandler.h"
-#include "CLog.h"
 
 #include <Boost\filesystem.hpp>
 
@@ -35,7 +34,7 @@ void CDirectoryScanner::Scan(std::wstring path)
 	img_scan(path);
 }
 
-std::wstring CDirectoryScanner::MD5_Specific_File(std::wstring path)
+std::string CDirectoryScanner::MD5_Specific_File(std::wstring path)
 {
 
 	// Create an MD5 object so we can calculate MD5's
@@ -47,7 +46,7 @@ std::wstring CDirectoryScanner::MD5_Specific_File(std::wstring path)
 	// Replace the $(GtaDirectory) macro with the actual GTA directory.
 	boost::replace_first(path, "$(GtaDirectory)", gtadir);
 	
-	wchar_t* CStyleMD5 = TEXT("");
+	char* CStyleMD5 = "";
 
 	// Make sure the file exists to avoid a crash if it doesn't
 	if (boost::filesystem::exists(path))
@@ -57,7 +56,7 @@ std::wstring CDirectoryScanner::MD5_Specific_File(std::wstring path)
 	}
 
 	// Convert the result to an std::string
-	std::wstring md5(CStyleMD5);
+	std::string md5(CStyleMD5);
 
 	// And return it.
 	return md5;
@@ -99,10 +98,10 @@ void CDirectoryScanner::img_scan(std::wstring path_to_gta3_img)
 			(*entry).ReadEntireFile((void*)filecontents);
 
 			// MD5 each entry
-			std::wstring md5 = md5obj.digestMemory((BYTE*)filecontents, (*entry).GetFilesize());
+			std::string md5 = md5obj.digestMemory((BYTE*)filecontents, (*entry).GetFilesize());
 
 			// Compare the md5 calculated to the list of files we got from the "Internet"
-			if (md5.compare(Misc::utf8_decode(Gta3ImgDefaults[Misc::utf8_encode(filename).c_str()])) != 0)
+			if (md5.compare(Gta3ImgDefaults[Misc::utf8_encode(filename).c_str()]) != 0)
 			{
 
 				// Tell the server that the MD5 doesn't match on this file.
@@ -119,7 +118,7 @@ void CDirectoryScanner::img_scan(std::wstring path_to_gta3_img)
 				// convert md5 string to bytes
 
 				// if string isn't null
-				if (_tcscmp(md5.c_str(), TEXT("NULL")))
+				if (strcmp(md5.c_str(), "NULL"))
 				{
 					for (int i = 0; i < 16; ++i)
 					{

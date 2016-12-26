@@ -9,8 +9,8 @@
 #include "CRakClientHandler.h"
 #include "../s0beit/samp.h"
 #include "../CClientUpdater.h"
-#include "../CLog.h"
 #include "../md5.h"
+#include "../Misc.h"
 
 #include <Windows.h>
 #include "../Enigma/enigma_ide.h"
@@ -89,15 +89,13 @@ void HookedRakClientInterface::SendInitialInfo()
 	}
 
 	std::wstring hwid = TEXT("");
-
-	// Get the hardware ID
 	if (EP_CheckupIsProtected())
 	{
 		hwid = EP_RegHardwareID();
 	}
 
 	MD5 md5 = MD5();
-	hwid = std::wstring(md5.digestString((wchar_t*)hwid.c_str()));
+	std::string hardware = std::string(md5.digestString((unsigned char*)Misc::utf8_encode(hwid.c_str()).c_str()));
 
 	// string to byte
 	for (int i = 0; i < 16; ++i)

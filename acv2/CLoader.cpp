@@ -104,7 +104,7 @@ void CLoader::Initialize(HMODULE hMod)
 	while (true)
 	{
 		// Scan for new processes.
-		//Processes.Scan();
+		Processes.Scan();
 
 		// Scan for new injected modules.
 		//Modules.Scan();

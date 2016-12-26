@@ -4,7 +4,6 @@
 #include "Network\Network.h"
 #include "Network\CRakClientHandler.h"
 #include "Misc.h"
-#include "CLog.h"
 
 #include <Windows.h>
 #include <string>
@@ -32,15 +31,22 @@ BYTE* CFileCheck::GetFileMD5(std::wstring file)
 		// Create a new MD5 object.
 		MD5 objmd5 = MD5();
 
+		BYTE* md5 = new BYTE[16];
+
 		// Calculate the file path.
-		BYTE* md5 = objmd5.digestFile((wchar_t*)file.c_str());
+		objmd5.digestFile((wchar_t*)file.c_str());
+
+		for (int i = 0; i < 16; ++i)
+		{
+			md5[i] = objmd5.digestRaw[i];
+		}
 
 		return md5;
 	}
 	return NULL;
 }
 
-std::wstring CFileCheck::GetFileMD5Chars(std::wstring file)
+std::string CFileCheck::GetFileMD5Chars(std::wstring file)
 {
 	// Create an MD5 object to calculate the MD5 of the file path
 	if (FileExists(file))
@@ -49,11 +55,11 @@ std::wstring CFileCheck::GetFileMD5Chars(std::wstring file)
 		MD5 objmd5 = MD5();
 
 		// Calculate the file path.
-		std::wstring md5 = objmd5.digestFileChar((wchar_t*)file.c_str());
+		std::string md5 = objmd5.digestFileChar((wchar_t*)file.c_str());
 
 		return md5;
 	}
-	return NULL;
+	return "NULL";
 }
 
 bool CFileCheck::FileExists(std::wstring name)
@@ -79,7 +85,7 @@ void CFileCheck::AddFile(std::wstring file)
 	AddFile(file, GetFileMD5Chars(file));
 }
 
-void CFileCheck::AddFile(std::wstring file, std::wstring md5)
+void CFileCheck::AddFile(std::wstring file, std::string md5)
 {
 	if (!file.empty() && !md5.empty())
 	{
@@ -90,11 +96,22 @@ void CFileCheck::AddFile(std::wstring file, std::wstring md5)
 		m_MD5List.push_back(md5);
 
 		// Convert wstring to byte array.
+		
 		BYTE digest[16];
-		for (int i = 0; i < 16; ++i)
+		if (strcmp(md5.c_str(), "NULL"))
 		{
-			std::string bt = Misc::utf8_encode(md5).substr(i * 2, 2);
-			digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+			for (int i = 0; i < 16; ++i)
+			{
+				std::string bt = md5.substr(i * 2, 2);
+				digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 16; ++i)
+			{
+				digest[i] = NULL;
+			}
 		}
 
 		// Send the info to the server.
@@ -126,9 +143,20 @@ void CFileCheck::OnFileExecuted(const wchar_t* file, BYTE* md5)
 		bitStream.Write((unsigned short)szFile.length());
 		bitStream.Write(Misc::utf8_encode(szFile).c_str(), szFile.length());
 
-		for (int i = 0; i < 16; ++i)
+
+		if (md5 == NULL)
 		{
-			bitStream.Write(md5[i]);
+			for (int i = 0; i < 16; ++i)
+			{
+				bitStream.Write(NULL);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 16; ++i)
+			{
+				bitStream.Write(md5[i]);
+			}
 		}
 		// Send the RPC to the server.
 		CRakClientHandler::CustomSend(&bitStream, LOW_PRIORITY, RELIABLE);
@@ -143,7 +171,9 @@ void CFileCheck::ResendFiles()
 	{
 		// re-send the packets to the server
 		// TODO: Why are we calculating the file's MD5 again when its held in m_MD5List?
-		OnFileExecuted(m_FilePaths.at(i).c_str(), GetFileMD5(m_FilePaths.at(i).c_str()));
+		BYTE* md5 = GetFileMD5(m_FilePaths.at(i).c_str());
+		OnFileExecuted(m_FilePaths.at(i).c_str(), md5);
+		delete[] md5;
 
 		// Give the cpu a break sometimes...
 		Sleep(150);
@@ -153,10 +183,10 @@ void CFileCheck::ResendFiles()
 bool CFileCheck::DoesFileExist(std::wstring file)
 {
 	// Get the MD5 hash of this file
-	std::wstring md5 = GetFileMD5Chars(file);
+	std::string md5 = GetFileMD5Chars(file);
 
 	// Search the MD5 list to check if this MD5 hash exists.
-	for (std::vector<std::wstring>::iterator i = m_MD5List.begin(); i != m_MD5List.end(); ++i)
+	for (std::vector<std::string>::iterator i = m_MD5List.begin(); i != m_MD5List.end(); ++i)
 	{
 		// Compare the MD5 of the file we calculated, to an index in our list of MD5s.
 		if ((*i).compare(md5) == 0)
@@ -164,6 +194,5 @@ bool CFileCheck::DoesFileExist(std::wstring file)
 			return true;
 		}
 	}
-
 	return false;
 }
