@@ -107,7 +107,7 @@ void CLoader::Initialize(HMODULE hMod)
 		Processes.Scan();
 
 		// Scan for new injected modules.
-		//Modules.Scan();
+		Modules.Scan();
 
 		// Sleep
 		Sleep(1000);
