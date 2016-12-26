@@ -8,3 +8,204 @@ c:\users\white\github\samp_ac_v2\acv2\s0beit\samp.h(24): fatal error C1083: Cann
 c:\users\white\github\samp_ac_v2\acv2\directx hooks\cd3d9deviceproxy.h(3): fatal error C1083: Cannot open include file: 'DirectX/d3d9.h': No such file or directory
   CRakClientHandler.cpp
 c:\users\white\github\samp_ac_v2\acv2\s0beit\samp.h(24): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Misc.cpp
+c:\users\white\github\samp_ac_v2\acv2\md5.h(328): error C2664: 'int sprintf_s(char *const ,const std::size_t,const char *const ,...)': cannot convert argument 1 from 'wchar_t *' to 'char *const '
+  c:\users\white\github\samp_ac_v2\acv2\md5.h(328): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\md5.h(351): error C2664: 'FILE *fopen(const char *,const char *)': cannot convert argument 1 from 'wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\md5.h(351): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\md5.h(380): error C2664: 'size_t strlen(const char *)': cannot convert argument 1 from 'wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\md5.h(380): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\md5.h(380): error C2660: 'MD5::Update': function does not take 1 arguments
+c:\users\white\github\samp_ac_v2\acv2\misc.cpp(32): error C2664: 'DWORD GetModuleFileNameA(HMODULE,LPSTR,DWORD)': cannot convert argument 2 from 'wchar_t [261]' to 'LPSTR'
+  c:\users\white\github\samp_ac_v2\acv2\misc.cpp(32): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+  ManualInjection.cpp
+  IMG.cpp
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): error C2440: 'initializing': cannot convert from 'const char [4]' to 'const wchar_t *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): error C2440: 'initializing': cannot convert from 'const char [6]' to 'const wchar_t *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): error C2440: 'initializing': cannot convert from 'const char [12]' to 'const wchar_t *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): error C2440: 'initializing': cannot convert from 'const char [18]' to 'const wchar_t *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): error C2440: 'initializing': cannot convert from 'const char [15]' to 'const wchar_t *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): error C2440: 'initializing': cannot convert from 'const char [22]' to 'const wchar_t *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): error C2440: 'initializing': cannot convert from 'const char [9]' to 'const wchar_t *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(48): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(68): error C2440: '=': cannot convert from 'const char [33]' to 'wchar_t *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(68): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(89): error C2664: 'FILE *fopen(const char *,const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(89): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(91): error C2664: 'DWORD GetFullPathNameA(LPCSTR,DWORD,LPSTR,LPSTR *)': cannot convert argument 1 from 'const wchar_t *' to 'LPCSTR'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(91): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(122): error C2665: '_tcsrchr': none of the 2 overloads could convert all the argument types
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\tchar.h(2026): note: could be 'char *_tcsrchr(char *,unsigned int)'
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\tchar.h(1569): note: or       'const char *_tcsrchr(const char *,unsigned int)'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(122): note: while trying to match the argument list '(const wchar_t *, char)'
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(134): error C2664: 'char *strcpy(char *,const char *)': cannot convert argument 1 from 'wchar_t *' to 'char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(134): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(137): error C2664: 'FILE *fopen(const char *,const char *)': cannot convert argument 1 from 'wchar_t [260]' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(137): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(234): error C2664: 'DWORD GetFullPathNameA(LPCSTR,DWORD,LPSTR,LPSTR *)': cannot convert argument 1 from 'const wchar_t *' to 'LPCSTR'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(234): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(244): error C2665: '_tcsrchr': none of the 2 overloads could convert all the argument types
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\tchar.h(2026): note: could be 'char *_tcsrchr(char *,unsigned int)'
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\tchar.h(1569): note: or       'const char *_tcsrchr(const char *,unsigned int)'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(244): note: while trying to match the argument list '(const wchar_t *, char)'
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(248): error C2664: 'char *strcpy(char *,const char *)': cannot convert argument 1 from 'wchar_t *' to 'char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(248): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(250): error C2664: 'FILE *fopen(const char *,const char *)': cannot convert argument 1 from 'wchar_t [260]' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(250): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(250): error C2664: 'FILE *fopen(const char *,const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(250): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(262): error C2664: 'FILE *fopen(const char *,const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(262): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(274): error C2664: 'FILE *fopen(const char *,const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(274): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(293): error C2664: 'BOOL PathFileExistsA(LPCSTR)': cannot convert argument 1 from 'const wchar_t *' to 'LPCSTR'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(293): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(345): error C2664: 'char *strcpy(char *,const char *)': cannot convert argument 1 from 'wchar_t [276]' to 'char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(345): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(346): error C2664: 'char *strcpy(char *,const char *)': cannot convert argument 1 from 'wchar_t [276]' to 'char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(346): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(350): error C2664: 'FILE *fopen(const char *,const char *)': cannot convert argument 1 from 'wchar_t [276]' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(350): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(382): error C2664: 'FILE *fopen(const char *,const char *)': cannot convert argument 1 from 'wchar_t [260]' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(382): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(493): error C2664: 'int _tcscmp(const char *,const char *)': cannot convert argument 1 from 'wchar_t [256]' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(493): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(499): error C2664: 'int _tcscmp(const char *,const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(499): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(528): error C2664: 'char *strcpy(char *,const char *)': cannot convert argument 1 from 'wchar_t [256]' to 'char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(528): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(579): warning C4267: '=': conversion from 'size_t' to 'WORD', possible loss of data
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(581): warning C4267: '=': conversion from 'size_t' to 'WORD', possible loss of data
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(634): error C2664: 'size_t strlen(const char *)': cannot convert argument 1 from 'wchar_t [256]' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(634): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(636): error C2664: 'char *strcpy(char *,const char *)': cannot convert argument 1 from 'wchar_t [256]' to 'char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(636): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(641): error C2664: 'size_t strlen(const char *)': cannot convert argument 1 from 'wchar_t [256]' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(641): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(652): error C2664: 'size_t strlen(const char *)': cannot convert argument 1 from 'const wchar_t [256]' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(652): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(670): error C2664: 'size_t strlen(const char *)': cannot convert argument 1 from 'const wchar_t [256]' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(670): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(694): error C2664: 'int _tcsicmp(const char *,const char *)': cannot convert argument 1 from 'wchar_t [256]' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(694): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(713): error C2664: 'size_t strlen(const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(713): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(721): error C2440: 'initializing': cannot convert from 'const char [1]' to 'wchar_t *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(721): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(723): error C2664: 'DWORD GetFullPathNameA(LPCSTR,DWORD,LPSTR,LPSTR *)': cannot convert argument 1 from 'const wchar_t *' to 'LPCSTR'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(723): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(728): error C2664: 'errno_t _tcsncpy_s(char *,std::size_t,const char *,std::size_t)': cannot convert argument 1 from 'wchar_t *' to 'char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(728): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(843): error C2664: 'size_t strlen(const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(843): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(847): error C2664: 'int _tcsicmp(const char *,const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(847): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(859): error C2664: 'int atoi(const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(859): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(984): error C2440: 'initializing': cannot convert from 'const char [33]' to 'const wchar_t []'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(984): note: The type of the string literal is not compatible with the type of the array
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(1264): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(1266): error C4996: '_itoa': This function or variable may be unsafe. Consider using _itoa_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdlib.h(637): note: see declaration of '_itoa'
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(1268): error C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(1330): error C2665: '_tcsrchr': none of the 2 overloads could convert all the argument types
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\tchar.h(2026): note: could be 'char *_tcsrchr(char *,unsigned int)'
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\tchar.h(1569): note: or       'const char *_tcsrchr(const char *,unsigned int)'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(1330): note: while trying to match the argument list '(wchar_t [256], char)'
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(1336): error C2664: 'errno_t strcpy_s(char *,std::rsize_t,const char *)': cannot convert argument 1 from 'wchar_t *' to 'char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(1336): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(1342): error C2665: '_tcsrchr': none of the 2 overloads could convert all the argument types
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\tchar.h(2026): note: could be 'char *_tcsrchr(char *,unsigned int)'
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\tchar.h(1569): note: or       'const char *_tcsrchr(const char *,unsigned int)'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(1342): note: while trying to match the argument list '(wchar_t [256], char)'
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(1351): error C2664: 'int _tcsicmp(const char *,const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(1351): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\img.cpp(1494): warning C4477: 'printf' : format string '%hs' requires an argument of type 'char *', but variadic argument 1 has type 'wchar_t *'
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(1494): note: consider using '%ls' in the format string
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(1494): note: consider using '%lls' in the format string
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(1494): note: consider using '%Ls' in the format string
+  c:\users\white\github\samp_ac_v2\acv2\img.cpp(1494): note: consider using '%ws' in the format string
+  GTASA_CRC32.cpp
+  CMessageProxy.cpp
+c:\users\white\github\samp_ac_v2\acv2\directx hooks\cd3d9deviceproxy.h(3): fatal error C1083: Cannot open include file: 'DirectX/d3d9.h': No such file or directory
+  CD3D9Proxy.cpp
+c:\users\white\github\samp_ac_v2\acv2\directx hooks\cd3d9proxy.h(3): fatal error C1083: Cannot open include file: 'DirectX/d3d9.h': No such file or directory
+  CD3D9DeviceProxy.cpp
+c:\users\white\github\samp_ac_v2\acv2\directx hooks\cd3d9deviceproxy.h(3): fatal error C1083: Cannot open include file: 'DirectX/d3d9.h': No such file or directory
+  CProcessList.cpp
+c:\users\white\github\samp_ac_v2\acv2\cprocesslist.cpp(25): error C2664: 'HMODULE GetModuleHandleA(LPCSTR)': cannot convert argument 1 from 'LPCWSTR' to 'LPCSTR'
+  c:\users\white\github\samp_ac_v2\acv2\cprocesslist.cpp(25): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\cprocesslist.cpp(76): error C2664: 'DWORD GetModuleFileNameExA(HANDLE,HMODULE,LPSTR,DWORD)': cannot convert argument 3 from 'wchar_t [260]' to 'LPSTR'
+  c:\users\white\github\samp_ac_v2\acv2\cprocesslist.cpp(76): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+  CParseCommandLine.cpp
+  CModuleSecurity.cpp
+c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(36): error C2664: 'void CModuleSecurity::AddAllowedModule(LPCTSTR)': cannot convert argument 1 from 'const wchar_t *' to 'LPCTSTR'
+  c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(36): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(39): error C2664: 'int _tcscmp(const char *,const char *)': cannot convert argument 1 from 'const wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(39): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(43): error C2664: 'UINT GetWindowsDirectoryA(LPSTR,UINT)': cannot convert argument 1 from 'wchar_t [260]' to 'LPSTR'
+  c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(43): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(46): error C2664: 'int sprintf_s(char *const ,const std::size_t,const char *const ,...)': cannot convert argument 1 from 'wchar_t [260]' to 'char *const '
+  c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(46): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(54): error C2511: 'void CModuleSecurity::AddAllowedModule(const wchar_t *)': overloaded member function not found in 'CModuleSecurity'
+  c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.h(12): note: see declaration of 'CModuleSecurity'
+c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(71): error C2664: 'void std::vector<std::wstring,std::allocator<_Ty>>::push_back(const std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t>> &)': cannot convert argument 1 from 'char [256]' to 'std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t>> &&'
+          with
+          [
+              _Ty=std::wstring
+          ]
+  c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(71): note: Reason: cannot convert from 'char [256]' to 'std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t>>'
+  c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(71): note: No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(103): error C2664: 'bool CModuleSecurity::IsAllowedModule(std::wstring)': cannot convert argument 1 from 'char [256]' to 'std::wstring'
+  c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(103): note: No constructor could take the source type, or constructor overload resolution was ambiguous
+c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(130): error C2664: 'HMODULE GetModuleHandleA(LPCSTR)': cannot convert argument 1 from 'const wchar_t [10]' to 'LPCSTR'
+  c:\users\white\github\samp_ac_v2\acv2\cmodulesecurity.cpp(130): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+  CMem.cpp
+  CLog.cpp
+c:\users\white\github\samp_ac_v2\acv2\clog.cpp(15): error C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\time.h(505): note: see declaration of 'localtime'
+  CLoader.cpp
+c:\users\white\github\samp_ac_v2\acv2\directx hooks\cd3d9deviceproxy.h(3): fatal error C1083: Cannot open include file: 'DirectX/d3d9.h': No such file or directory
+  CInjectedLibraries.cpp
+c:\users\white\github\samp_ac_v2\acv2\cinjectedlibraries.cpp(32): error C2664: 'DWORD GetModuleFileNameExA(HANDLE,HMODULE,LPSTR,DWORD)': cannot convert argument 3 from 'wchar_t [260]' to 'LPSTR'
+  c:\users\white\github\samp_ac_v2\acv2\cinjectedlibraries.cpp(32): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+  Generating Code...
+  Compiling...
+  CDirectX.cpp
+c:\users\white\github\samp_ac_v2\acv2\directx hooks\cd3d9deviceproxy.h(3): fatal error C1083: Cannot open include file: 'DirectX/d3d9.h': No such file or directory
+  CDirectoryScanner.cpp
+c:\users\white\github\samp_ac_v2\acv2\cdirectoryscanner.cpp(2): fatal error C1083: Cannot open include file: 'boost/network/protocol/http/client.hpp': No such file or directory
+  CClientUpdater.cpp
+c:\users\white\github\samp_ac_v2\acv2\directx hooks\cd3d9deviceproxy.h(3): fatal error C1083: Cannot open include file: 'DirectX/d3d9.h': No such file or directory
+  CHookManager.cpp
+c:\users\white\github\samp_ac_v2\acv2\chookmanager.cpp(2): fatal error C1083: Cannot open include file: 'Boost\thread.hpp': No such file or directory
+  CFunctionHooks.cpp
+  CFileCheck.cpp
+c:\users\white\github\samp_ac_v2\acv2\md5.h(328): error C2664: 'int sprintf_s(char *const ,const std::size_t,const char *const ,...)': cannot convert argument 1 from 'wchar_t *' to 'char *const '
+  c:\users\white\github\samp_ac_v2\acv2\md5.h(328): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\md5.h(351): error C2664: 'FILE *fopen(const char *,const char *)': cannot convert argument 1 from 'wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\md5.h(351): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\md5.h(380): error C2664: 'size_t strlen(const char *)': cannot convert argument 1 from 'wchar_t *' to 'const char *'
+  c:\users\white\github\samp_ac_v2\acv2\md5.h(380): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\white\github\samp_ac_v2\acv2\md5.h(380): error C2660: 'MD5::Update': function does not take 1 arguments
+c:\users\white\github\samp_ac_v2\acv2\cfilecheck.cpp(4): fatal error C1083: Cannot open include file: 'Network\Network.h': No such file or directory
+  CRPC.cpp
+  BitStream.cpp
+  ACVerifiedPacket.cpp
+c:\users\white\github\samp_ac_v2\acv2_server\md5.h(326): error C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+c:\users\white\github\samp_ac_v2\acv2_server\md5.h(349): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+  Cmd5Info.cpp
+c:\users\white\github\samp_ac_v2\shared\md5_info\cmd5info.cpp(2): fatal error C1083: Cannot open include file: 'boost/network/protocol/http/client.hpp': No such file or directory
+  Generating Code...
+c:\users\white\github\samp_ac_v2\acv2\cfunctionhooks.cpp(13): error C4716: 'CFunctionHooks::InstallHook': must return a value
+c:\users\white\github\samp_ac_v2\acv2\cfunctionhooks.cpp(8): error C4716: 'CFunctionHooks::CheckHookIntegrity': must return a value

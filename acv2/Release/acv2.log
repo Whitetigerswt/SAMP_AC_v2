@@ -1,4 +1,33 @@
-﻿  CFileCheck.cpp
+﻿  Cmd5Info.cpp
+  ACVerifiedPacket.cpp
+  BitStream.cpp
+  CRPC.cpp
+  CFileCheck.cpp
+  CHookManager.cpp
+  CClientUpdater.cpp
+  CDirectoryScanner.cpp
+  CDirectX.cpp
+  CInjectedLibraries.cpp
+  CLoader.cpp
+  CLog.cpp
+  CMem.cpp
+  CModuleSecurity.cpp
+  CParseCommandLine.cpp
+  CProcessList.cpp
+  CD3D9DeviceProxy.cpp
+  CD3D9Proxy.cpp
+  CMessageProxy.cpp
+  GTASA_CRC32.cpp
+  IMG.cpp
+  ManualInjection.cpp
+  Misc.cpp
+  CRakClientHandler.cpp
+  CRPCCallback.cpp
+  HookedRakClient.cpp
+  RakClient.cpp
+  PatternScan.cpp
+  samp.cpp
+  dllmain.cpp
   Generating code
   Finished generating code
 libcurl.lib(t1_reneg.obj) : warning LNK4099: PDB 'libmt.pdb' was not found with 'libcurl.lib(t1_reneg.obj)' or at 'C:\Users\white\GitHub\SAMP_AC_v2\Release\libmt.pdb'; linking object as if no debug info
