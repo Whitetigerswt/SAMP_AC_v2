@@ -21,6 +21,11 @@
 #include <Boost\thread.hpp>
 #include <Psapi.h>
 
+#include <process.h>
+#include <Tlhelp32.h>
+#include <winbase.h>
+#include <string.h>
+
 CInjectedLibraries CLoader::Modules = CInjectedLibraries();
 CProcessList CLoader::Processes = CProcessList();
 CDirectoryScanner CLoader::GtaDirectory = CDirectoryScanner();
@@ -32,6 +37,13 @@ void CLoader::Initialize(HMODULE hMod)
 {
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
+		/*
+ 		    Make sure other GTA:SA processes are not running.
+			This prevents crashing while game is starting.
+		*/
+		
+        TerminateOtherProcesses();
+
 		/* 
 			Force process elevation check. This will terminate the current process and run a new one if it's 
 			not elevated (if it's not running as admin).
@@ -51,8 +63,9 @@ void CLoader::Initialize(HMODULE hMod)
 					Sleep(5);
 				}
 
-				// The game is loaded now. Relaunch the game as admin (elevated)
-				RunElevated();
+				//RunElevated(); // Bug: Relaunched game sometimes starts in a single player mode.			
+				MessageBoxW ( NULL, L"You must run GTA:SA with admin privileges!", L"", MB_OK | MB_ICONERROR );
+                ExitProcess(0);
 				return;
 			}
 		}
@@ -112,6 +125,60 @@ void CLoader::Initialize(HMODULE hMod)
 		// Sleep
 		Sleep(1000);
 	}
+}
+
+std::wstring CLoader::GetProcessFileName(DWORD processID)
+{
+	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+    PROCESSENTRY32 pEntry;
+    pEntry.dwSize = sizeof (pEntry);
+    BOOL hRes = Process32First(hSnapShot, &pEntry);
+	
+    while (hRes)
+    {
+		if(processID == pEntry.th32ProcessID)
+		{
+			// Process ID matches. Let's return it's file name.
+			std::wstring pFileName(pEntry.szExeFile);
+		    return pFileName;
+		}
+        hRes = Process32Next(hSnapShot, &pEntry);
+    }
+    CloseHandle(hSnapShot);	
+	return L"NULL";
+}
+
+void CLoader::TerminateOtherProcesses()
+{
+    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+    PROCESSENTRY32 pEntry;
+    pEntry.dwSize = sizeof (pEntry);
+    BOOL hRes = Process32First(hSnapShot, &pEntry);
+	
+	// Get current process ID.
+	DWORD currentProcessID = GetCurrentProcessId();
+	
+	// Get current process file name. (GetModuleFileName doesn't work with mklink, so we need to do a snapshot.)
+	std::wstring currentProcessName = GetProcessFileName(currentProcessID);
+	
+	if(currentProcessName == L"NULL")
+		return;
+	
+    while (hRes)
+    {
+        if (currentProcessID != pEntry.th32ProcessID && wcscmp(pEntry.szExeFile, currentProcessName.c_str()) == 0)
+        {
+			  // Other GTA:SA process has been found. Terminate it!
+              HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD) pEntry.th32ProcessID);
+              if (hProcess != NULL)
+              {
+                  TerminateProcess(hProcess, 9);
+                  CloseHandle(hProcess);
+              }
+        }
+        hRes = Process32Next(hSnapShot, &pEntry);
+    }
+    CloseHandle(hSnapShot);
 }
 
 void CLoader::CheckElevation()
