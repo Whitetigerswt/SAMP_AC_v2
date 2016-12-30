@@ -926,7 +926,7 @@ HOOK CHookManager::KeyPress()
 		}
 	}
 
-	if (SPRINT_KEY > 0)
+	/*if (SPRINT_KEY > 0)
 	{
 		// fixes: [00:02] [U]27: you have to shoot, then hold all keys down afterwards at the same time (space, C, a, s, d, w (w/e direction) and aim (rmb)
 		// slide issue
@@ -934,7 +934,7 @@ HOOK CHookManager::KeyPress()
 		{
 			AIM_KEY = 0;
 		}
-	}
+	}*/
 
 	// Fixes switch weapon desync while sprinting/running
 	/*if ((VAR_CPED_STATE == 102 || VAR_CPED_STATE == 205) && AIM_KEY == 0 && VAR_CURRENT_WEAPON > 15)
