@@ -215,7 +215,6 @@ void CHookManager::Load()
 			}
 		}
 	}
-	
 
 	// Prevent CLEO 4 from loading scripts
 	VirtualProtect(FUNC_Init_SCM1, 5, PAGE_EXECUTE_READWRITE, &dwOldProt);
@@ -246,9 +245,17 @@ void CHookManager::Load()
 	// Disable Werner patch
 	CMem::ApplyJmp(FUNC_ShotgunBullet, (DWORD)LoadShotgunBullet, 11);
 	CMem::ApplyJmp(FUNC_DeagleBullet, (DWORD)LoadBullet, 7);
-
-	// Hook a main loading function of SAMP and GTA. 
-	CMem::ApplyJmp(FUNC_MainLoad, (DWORD)MainLoading, 5);
+	
+	if (Misc::GetGameVersion() == 1)
+	{
+		// Hook a main loading function of SAMP and GTA. 
+		CMem::ApplyJmp(FUNC_MainLoad, (DWORD)MainLoading, 5);
+	}
+	else if (Misc::GetGameVersion() == 2)
+	{
+		CMem::ApplyJmp(FUNC_MainLoadAlt, (DWORD)MainLoading, 5);
+		MainLoadingJmpBack = 0x7F9B52;
+	}
 
 	// -------------------------------------------------------------------------
 	// Hook camera position patches below, so aimbots cannot edit the camera position.
@@ -482,8 +489,17 @@ void CHookManager::SetConnectPatches()
 	// Fix some slide issues with melee weps
 	CMem::ApplyJmp(FUNC_SlideFix, (DWORD)SlideFix, 6);
 
-	// Hook a main loading function of SAMP and GTA. 
-	CMem::ApplyJmp(FUNC_MainLoad, (DWORD)MainLoading, 5);
+	if (Misc::GetGameVersion() == 1)
+	{
+		// Hook a main loading function of SAMP and GTA. 
+		CMem::ApplyJmp(FUNC_MainLoad, (DWORD)MainLoading, 5);
+	}
+	else if (Misc::GetGameVersion() == 2)
+	{
+		CMem::ApplyJmp(FUNC_MainLoadAlt, (DWORD)MainLoading, 5);
+		MainLoadingJmpBack = 0x7F9B52;
+	}
+
 }
 
 void CHookManager::ToggleSprintOnAllSurfaces(bool toggle)
