@@ -937,14 +937,14 @@ HOOK CHookManager::KeyPress()
 	}
 
 	// Fixes switch weapon desync while sprinting/running
-	if ((VAR_CPED_STATE == 102 || VAR_CPED_STATE == 205) && AIM_KEY == 0 && VAR_CURRENT_WEAPON > 15)
+	/*if ((VAR_CPED_STATE == 102 || VAR_CPED_STATE == 205) && AIM_KEY == 0 && VAR_CURRENT_WEAPON > 15)
 	{
 		if (FIRE_KEY > 0)
 		{
 			AIM_KEY = 128;
 			SPRINT_KEY = 0;
 		}
-	}
+	}*/
 
 	// Check if the crouch key is pressed.
 	if (CROUCH_KEY > 0)
