@@ -32,6 +32,7 @@ void CProcessList::Scan()
 	if (hProcessSnap != INVALID_HANDLE_VALUE)
 	{
 		pe32.dwSize = sizeof(PROCESSENTRY32);
+		
 		// Make sure the process list is valid and at least one process exists.
 		if (Process32First(hProcessSnap, &pe32))
 		{
@@ -95,10 +96,10 @@ void CProcessList::Scan()
 						// Continue on to the next process.
 						continue;
 					}
-
 					if (processpath != NULL) 
 					{
 						std::wstring path(processpath);
+
 						if (!DoesFileExist(path))
 						{
 							// Add process to the process list.

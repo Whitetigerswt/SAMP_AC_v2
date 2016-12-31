@@ -17,11 +17,6 @@ RakClient::RakClient( void *pRakClientInterface )
 	pRakClient = (RakClientInterface *)pRakClientInterface;
 }
 
-RakClient::~RakClient()
-{
-
-}
-
 bool RakClient::RPC( int rpcId, RakNet::BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp )
 {
 	if ( !pRakClient )

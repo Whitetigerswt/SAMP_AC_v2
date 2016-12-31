@@ -129,9 +129,6 @@
     <ClCompile Include="CHookManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CFunctionHooks.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shared\Network\ACVerifiedPacket.cpp">
       <Filter>Source Files\Shared\Network</Filter>
     </ClCompile>
@@ -850,9 +847,6 @@
     </ClInclude>
     <ClInclude Include="Enigma\enigma_keygen_ide.h">
       <Filter>Header Files\Enigma</Filter>
-    </ClInclude>
-    <ClInclude Include="CFunctionHooks.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\Network\ACVerifiedPacket.h">
       <Filter>Source Files\Shared\Network</Filter>

@@ -22,6 +22,15 @@ public:
 	// PURPOSE: Check if we've already loaded
 	// REQUIRES: NULL
 	static bool IsLoaded();
+	
+	// PURPOSE: Get process file name by ID.
+	// REQUIRES: Process ID.
+	// PROMISE: A returned file name.
+	static std::wstring GetProcessFileName(DWORD processID);
+	
+	// PURPOSE: Terminates other GTA:SA processes.
+	// REQUIRES: NULL
+    static void TerminateOtherProcesses();
 
 	// PURPOSE: Determine if the process is elevated.
 	// REQUIRES: NULL
