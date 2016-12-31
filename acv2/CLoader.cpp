@@ -36,6 +36,9 @@ HMODULE CLoader::ThishMod = NULL;
 
 void CLoader::Initialize(HMODULE hMod)
 {
+	boost::this_thread::yield();
+	CHookManager::Load();
+
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
 		/*
@@ -66,11 +69,7 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
 		HMODULE L = LoadLibrary(TEXT("samp.dll"));
-		if (GetLastError() != 0)
-		{
-			MessageBox(NULL, TEXT("We've failed to load samp.dll, please manually run samp.exe as an admin."), TEXT("ACv2 Error"), MB_ICONERROR);
-			ExitProcess(0);
-		}
+
 		MODULEINFO mInfo = { 0 };
 
 		GetModuleInformation(GetCurrentProcess(), L, &mInfo, sizeof(MODULEINFO));
@@ -84,6 +83,8 @@ void CLoader::Initialize(HMODULE hMod)
 		wchar_t path[MAX_PATH];
 		GetModuleFileName(hMod, path, sizeof(path));
 		EL_HideModule(peb, path);
+
+		CHookManager::Load();
 
 		// Hook LoadLibrary function.
 		CModuleSecurity::HookLoadLibrary();
