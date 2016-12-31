@@ -68,6 +68,8 @@ namespace BanHandler
 			*/
 			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
+			curl_easy_setopt(curl, CURLOPT_USERAGENT, "AC Server");
+
 			// Escape some parameters
 			char 
 				*escaped_name = curl_easy_escape(curl, name, 0), 
@@ -169,6 +171,9 @@ namespace BanHandler
 			* this check, but this will make the connection less secure.
 			*/
 			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+
+			curl_easy_setopt(curl, CURLOPT_USERAGENT, "AC Server");
+			// Again changes user agent.
 
 			// Format POST data with player's hardware ID.
 			char str[64];
