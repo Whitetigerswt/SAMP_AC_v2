@@ -30,6 +30,10 @@ namespace BanHandler
 
 		// Get the player's IP
 		GetPlayerIp(playerid, ip, sizeof ip);
+		
+		// Prevent localhost IP from being banned
+		if(!strcmp(ip,"127.0.0.1"))
+			strcpy(ip,"LocalBan");
 
 		// Get server info: hostname and port
 		char server_name[64];
