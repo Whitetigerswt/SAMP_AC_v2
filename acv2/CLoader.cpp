@@ -23,8 +23,9 @@
 
 #include <process.h>
 #include <Tlhelp32.h>
-#include <winbase.h>
+#include <windows.h>
 #include <string.h>
+#include <tchar.h>
 
 CInjectedLibraries CLoader::Modules = CInjectedLibraries();
 CProcessList CLoader::Processes = CProcessList();
@@ -64,12 +65,12 @@ void CLoader::Initialize(HMODULE hMod)
 		}
 
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
-		HMODULE L = NULL;
-		do
+		HMODULE L = LoadLibrary(TEXT("samp.dll"));
+		if (GetLastError() != 0)
 		{
-			L = LoadLibrary(TEXT("samp.dll"));
-			Sleep(5);
-		} while (L == NULL);
+			MessageBox(NULL, TEXT("We've failed to load samp.dll, please manually run samp.exe as an admin."), TEXT("ACv2 Error"), MB_ICONERROR);
+			ExitProcess(0);
+		}
 		MODULEINFO mInfo = { 0 };
 
 		GetModuleInformation(GetCurrentProcess(), L, &mInfo, sizeof(MODULEINFO));

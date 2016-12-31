@@ -906,7 +906,7 @@ HOOK CHookManager::KeyPress()
 	}
 
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.
-	if (SPRINT_KEY != 0)
+	/*if (SPRINT_KEY != 0)
 	{
 		// If not in a vehicle and macro locks is off.
 		if (VAR_CURRENT_VEHICLE == 0 && Misc::GetMacroLocks() == true)
@@ -924,7 +924,7 @@ HOOK CHookManager::KeyPress()
 			// Set sprint to 0
 			VAR_SPRINT_SPEED = 0.0f;
 		}
-	}
+	}*/
 
 	/*if (SPRINT_KEY > 0)
 	{
@@ -1004,7 +1004,7 @@ HOOK CHookManager::SprintHook()
 		pushad
 	}
 
-	if (VAR_SPRINT_SPEED > MAX_SPRINT_SPEED && Misc::GetMacroLocks() == true && VAR_CURRENT_VEHICLE == 0)
+	if (Misc::GetMacroLocks() == true && VAR_CURRENT_VEHICLE == 0)
 	{
 		VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
 	}

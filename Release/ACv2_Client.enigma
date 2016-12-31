@@ -2367,7 +2367,7 @@ Please, register this software to remove trial limitations!</Text>
       </Message>
     </CountOfExecutionLimit>
     <CountOfDaysLimit>
-      <Enabled>True</Enabled>
+      <Enabled>False</Enabled>
       <MaximalCountOfDays>3</MaximalCountOfDays>
       <TerminateAfterDelay>True</TerminateAfterDelay>
       <Delay>0</Delay>
@@ -2396,8 +2396,8 @@ Please, register this software to remove trial limitations!</Text>
       </Message>
     </CountOfDaysLimit>
     <ExpirationDateLimit>
-      <Enabled>False</Enabled>
-      <ExpirationDate>2015-03-12T23:59:30.629Z</ExpirationDate>
+      <Enabled>True</Enabled>
+      <ExpirationDate>2017-01-01T23:59:30.629Z</ExpirationDate>
       <TerminateAfterDelay>True</TerminateAfterDelay>
       <Delay>0</Delay>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
