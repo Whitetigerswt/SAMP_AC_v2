@@ -1,4 +1,4 @@
-﻿  CLoader.cpp
+﻿  CHookManager.cpp
   Generating code
   Finished generating code
 libcurl.lib(file.obj) : warning LNK4099: PDB 'libcurl.pdb' was not found with 'libcurl.lib(file.obj)' or at 'C:\Users\white\GitHub\SAMP_AC_v2\Release\libcurl.pdb'; linking object as if no debug info

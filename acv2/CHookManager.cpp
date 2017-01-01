@@ -1004,7 +1004,7 @@ HOOK CHookManager::SprintHook()
 		pushad
 	}
 
-	if (Misc::GetMacroLocks() == true && VAR_CURRENT_VEHICLE == 0)
+	if (Misc::GetMacroLocks() == true && VAR_CURRENT_VEHICLE == 0 && SPRINT_KEY != 0)
 	{
 		VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
 	}
