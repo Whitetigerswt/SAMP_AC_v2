@@ -68,7 +68,12 @@ void CLoader::Initialize(HMODULE hMod)
 		}
 
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
-		HMODULE L = LoadLibrary(TEXT("samp.dll"));
+		HMODULE L;
+		do
+		{
+			L = LoadLibrary(TEXT("samp.dll"));
+			Sleep(5);
+		} while (L == NULL);
 
 		MODULEINFO mInfo = { 0 };
 
@@ -97,16 +102,6 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Hook the D3D9Device functions.
 		CDirectX::HookD3DFunctions();
-
-		// Wait until the game is loaded.
-		while (ADDRESS_LOADED < 6)
-		{
-			// Stop CLEO from loading, and other memory hooks.
-			CHookManager::Load();
-
-			// Wait until the game is loaded in an infinite loop.
-			Sleep(5);
-		}
 
 		CModuleSecurity::AddAllowedModules();
 
