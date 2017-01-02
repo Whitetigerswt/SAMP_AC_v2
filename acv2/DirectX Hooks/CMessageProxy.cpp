@@ -51,6 +51,10 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 		{
 			case WM_SYSKEYDOWN:
 			case WM_KEYDOWN:
+			case WM_LBUTTONDOWN:
+			case WM_RBUTTONDOWN:
+			case WM_MBUTTONDOWN:
+			case WM_IME_KEYDOWN:
 			{
 				if ((GetAsyncKeyState(vKey) & 0x8000) || Misc::GetMacroLocks() == false)
 				{
