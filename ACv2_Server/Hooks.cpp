@@ -6,6 +6,7 @@
 
 #include "../Shared/Network/Network.h"
 #include "../Shared/Network/CRPC.h"
+#include "../Shared/Crypto++/CAESManager.h"
 
 #ifdef _WIN32
 	#include <Psapi.h>
@@ -88,6 +89,12 @@ typedef BYTE(*getPacketId)(Packet *p);
 BYTE GetPacketID(Packet *p)
 {
 	if (p == 0) return 255;
+
+	Utility::Printf("getpacketid");
+	std::string s = reinterpret_cast<char*>(p->data);
+	Utility::Printf("getpacketid2");
+	sprintf((char*)p->data, "%s", s.c_str());
+	Utility::Printf("getpacketid3");
 
 	if ((unsigned char)p->data[0] == 36)
 	{

@@ -46,6 +46,12 @@
     <Filter Include="Header Files\Enigma">
       <UniqueIdentifier>{2c29f211-032a-41c2-9445-7f1e4aaed63f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Crypto++">
+      <UniqueIdentifier>{0d1a6392-8008-4815-bea0-d917ce8b57b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shared\Crypto++">
+      <UniqueIdentifier>{c1b81165-c992-47c0-bce7-a63e306d03a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -140,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="..\Shared\Network\ACVerifiedPacket.cpp">
       <Filter>Source Files\Shared\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\Crypto++\CAESManager.cpp">
+      <Filter>Source Files\Shared</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -859,6 +868,444 @@
     </ClInclude>
     <ClInclude Include="..\Shared\Network\ACVerifiedPacket.h">
       <Filter>Source Files\Shared\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\3way.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\adler32.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\aes.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\algebra.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\algparam.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\arc4.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\argnames.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\asn.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\authenc.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\base32.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\base64.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\basecode.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\bench.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\blake2.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\blowfish.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\blumshub.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\camellia.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\cast.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\cbcmac.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\ccm.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\chacha.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\channels.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\cmac.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\config.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\cpu.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\crc.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\cryptlib.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\default.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\des.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\dh.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\dh2.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\dll.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\dmac.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\dsa.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\eax.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\ec2n.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\eccrypto.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\ecp.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\elgamal.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\emsa2.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\eprecomp.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\esign.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\factory.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\fhmqv.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\files.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\filters.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\fips140.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\fltrimpl.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\gcm.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\gf2_32.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\gf2n.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\gf256.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\gfpcrypt.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\gost.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\gzip.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\hex.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\hkdf.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\hmac.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\hmqv.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\hrtimer.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\ida.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\idea.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\integer.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\iterhash.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\keccak.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\lubyrack.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\luc.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\mars.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\md2.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\md4.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\md5.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\mdc.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\mersenne.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\misc.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\modarith.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\modes.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\modexppc.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\mqueue.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\mqv.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\nbtheory.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\network.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\nr.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\oaep.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\oids.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\osrng.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\ossig.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\panama.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\pch.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\pkcspad.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\polynomi.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\pssr.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\pubkey.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\pwdbased.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\queue.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\rabin.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\randpool.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\rc2.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\rc5.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\rc6.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\rdrand.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\resource.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\rijndael.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\ripemd.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\rng.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\rsa.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\rw.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\safer.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\salsa.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\seal.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\secblock.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\seckey.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\seed.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\serpent.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\serpentp.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\sha.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\sha3.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\shacal2.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\shark.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\simple.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\skipjack.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\smartptr.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\socketft.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\sosemanuk.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\square.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\stdcpp.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\strciphr.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\tea.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\tiger.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\trap.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\trdlocal.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\trunhash.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\ttmac.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\twofish.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\validate.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\vmac.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\wait.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\wake.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\whrlpool.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\winpipes.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\words.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\xtr.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\xtrcrypt.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\zdeflate.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\zinflate.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\zlib.h">
+      <Filter>Header Files\Crypto++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Crypto++\CAESManager.h">
+      <Filter>Source Files\Shared</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

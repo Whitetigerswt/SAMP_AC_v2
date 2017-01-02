@@ -46,7 +46,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)Shared\;$(SolutionDir)Shared\boost\libs;$(ProjectDir)SDK\sampgdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Shared\boost\libs;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Shared\libs;$(SolutionDir)Shared\boost\libs;$(LibraryPath)</LibraryPath>
     <TargetName>sampac</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -82,13 +82,14 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;psapi.lib;wldap32.lib;$(SolutionDir)Shared\libs\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cryptlib.lib;ws2_32.lib;psapi.lib;wldap32.lib;$(SolutionDir)Shared\libs\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>plugin.def</ModuleDefinitionFile>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Shared\Crypto++\CAESManager.cpp" />
     <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp" />
     <ClCompile Include="..\Shared\Network\ACVerifiedPacket.cpp" />
     <ClCompile Include="..\Shared\Network\BitStream.cpp" />
@@ -108,6 +109,152 @@
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Shared\Crypto++\3way.h" />
+    <ClInclude Include="..\Shared\Crypto++\adler32.h" />
+    <ClInclude Include="..\Shared\Crypto++\aes.h" />
+    <ClInclude Include="..\Shared\Crypto++\algebra.h" />
+    <ClInclude Include="..\Shared\Crypto++\algparam.h" />
+    <ClInclude Include="..\Shared\Crypto++\arc4.h" />
+    <ClInclude Include="..\Shared\Crypto++\argnames.h" />
+    <ClInclude Include="..\Shared\Crypto++\asn.h" />
+    <ClInclude Include="..\Shared\Crypto++\authenc.h" />
+    <ClInclude Include="..\Shared\Crypto++\base32.h" />
+    <ClInclude Include="..\Shared\Crypto++\base64.h" />
+    <ClInclude Include="..\Shared\Crypto++\basecode.h" />
+    <ClInclude Include="..\Shared\Crypto++\bench.h" />
+    <ClInclude Include="..\Shared\Crypto++\blake2.h" />
+    <ClInclude Include="..\Shared\Crypto++\blowfish.h" />
+    <ClInclude Include="..\Shared\Crypto++\blumshub.h" />
+    <ClInclude Include="..\Shared\Crypto++\CAESManager.h" />
+    <ClInclude Include="..\Shared\Crypto++\camellia.h" />
+    <ClInclude Include="..\Shared\Crypto++\cast.h" />
+    <ClInclude Include="..\Shared\Crypto++\cbcmac.h" />
+    <ClInclude Include="..\Shared\Crypto++\ccm.h" />
+    <ClInclude Include="..\Shared\Crypto++\chacha.h" />
+    <ClInclude Include="..\Shared\Crypto++\channels.h" />
+    <ClInclude Include="..\Shared\Crypto++\cmac.h" />
+    <ClInclude Include="..\Shared\Crypto++\config.h" />
+    <ClInclude Include="..\Shared\Crypto++\cpu.h" />
+    <ClInclude Include="..\Shared\Crypto++\crc.h" />
+    <ClInclude Include="..\Shared\Crypto++\cryptlib.h" />
+    <ClInclude Include="..\Shared\Crypto++\default.h" />
+    <ClInclude Include="..\Shared\Crypto++\des.h" />
+    <ClInclude Include="..\Shared\Crypto++\dh.h" />
+    <ClInclude Include="..\Shared\Crypto++\dh2.h" />
+    <ClInclude Include="..\Shared\Crypto++\dll.h" />
+    <ClInclude Include="..\Shared\Crypto++\dmac.h" />
+    <ClInclude Include="..\Shared\Crypto++\dsa.h" />
+    <ClInclude Include="..\Shared\Crypto++\eax.h" />
+    <ClInclude Include="..\Shared\Crypto++\ec2n.h" />
+    <ClInclude Include="..\Shared\Crypto++\eccrypto.h" />
+    <ClInclude Include="..\Shared\Crypto++\ecp.h" />
+    <ClInclude Include="..\Shared\Crypto++\elgamal.h" />
+    <ClInclude Include="..\Shared\Crypto++\emsa2.h" />
+    <ClInclude Include="..\Shared\Crypto++\eprecomp.h" />
+    <ClInclude Include="..\Shared\Crypto++\esign.h" />
+    <ClInclude Include="..\Shared\Crypto++\factory.h" />
+    <ClInclude Include="..\Shared\Crypto++\fhmqv.h" />
+    <ClInclude Include="..\Shared\Crypto++\files.h" />
+    <ClInclude Include="..\Shared\Crypto++\filters.h" />
+    <ClInclude Include="..\Shared\Crypto++\fips140.h" />
+    <ClInclude Include="..\Shared\Crypto++\fltrimpl.h" />
+    <ClInclude Include="..\Shared\Crypto++\gcm.h" />
+    <ClInclude Include="..\Shared\Crypto++\gf256.h" />
+    <ClInclude Include="..\Shared\Crypto++\gf2n.h" />
+    <ClInclude Include="..\Shared\Crypto++\gf2_32.h" />
+    <ClInclude Include="..\Shared\Crypto++\gfpcrypt.h" />
+    <ClInclude Include="..\Shared\Crypto++\gost.h" />
+    <ClInclude Include="..\Shared\Crypto++\gzip.h" />
+    <ClInclude Include="..\Shared\Crypto++\hex.h" />
+    <ClInclude Include="..\Shared\Crypto++\hkdf.h" />
+    <ClInclude Include="..\Shared\Crypto++\hmac.h" />
+    <ClInclude Include="..\Shared\Crypto++\hmqv.h" />
+    <ClInclude Include="..\Shared\Crypto++\hrtimer.h" />
+    <ClInclude Include="..\Shared\Crypto++\ida.h" />
+    <ClInclude Include="..\Shared\Crypto++\idea.h" />
+    <ClInclude Include="..\Shared\Crypto++\integer.h" />
+    <ClInclude Include="..\Shared\Crypto++\iterhash.h" />
+    <ClInclude Include="..\Shared\Crypto++\keccak.h" />
+    <ClInclude Include="..\Shared\Crypto++\lubyrack.h" />
+    <ClInclude Include="..\Shared\Crypto++\luc.h" />
+    <ClInclude Include="..\Shared\Crypto++\mars.h" />
+    <ClInclude Include="..\Shared\Crypto++\md2.h" />
+    <ClInclude Include="..\Shared\Crypto++\md4.h" />
+    <ClInclude Include="..\Shared\Crypto++\md5.h" />
+    <ClInclude Include="..\Shared\Crypto++\mdc.h" />
+    <ClInclude Include="..\Shared\Crypto++\mersenne.h" />
+    <ClInclude Include="..\Shared\Crypto++\misc.h" />
+    <ClInclude Include="..\Shared\Crypto++\modarith.h" />
+    <ClInclude Include="..\Shared\Crypto++\modes.h" />
+    <ClInclude Include="..\Shared\Crypto++\modexppc.h" />
+    <ClInclude Include="..\Shared\Crypto++\mqueue.h" />
+    <ClInclude Include="..\Shared\Crypto++\mqv.h" />
+    <ClInclude Include="..\Shared\Crypto++\nbtheory.h" />
+    <ClInclude Include="..\Shared\Crypto++\network.h" />
+    <ClInclude Include="..\Shared\Crypto++\nr.h" />
+    <ClInclude Include="..\Shared\Crypto++\oaep.h" />
+    <ClInclude Include="..\Shared\Crypto++\oids.h" />
+    <ClInclude Include="..\Shared\Crypto++\osrng.h" />
+    <ClInclude Include="..\Shared\Crypto++\ossig.h" />
+    <ClInclude Include="..\Shared\Crypto++\panama.h" />
+    <ClInclude Include="..\Shared\Crypto++\pch.h" />
+    <ClInclude Include="..\Shared\Crypto++\pkcspad.h" />
+    <ClInclude Include="..\Shared\Crypto++\polynomi.h" />
+    <ClInclude Include="..\Shared\Crypto++\pssr.h" />
+    <ClInclude Include="..\Shared\Crypto++\pubkey.h" />
+    <ClInclude Include="..\Shared\Crypto++\pwdbased.h" />
+    <ClInclude Include="..\Shared\Crypto++\queue.h" />
+    <ClInclude Include="..\Shared\Crypto++\rabin.h" />
+    <ClInclude Include="..\Shared\Crypto++\randpool.h" />
+    <ClInclude Include="..\Shared\Crypto++\rc2.h" />
+    <ClInclude Include="..\Shared\Crypto++\rc5.h" />
+    <ClInclude Include="..\Shared\Crypto++\rc6.h" />
+    <ClInclude Include="..\Shared\Crypto++\rdrand.h" />
+    <ClInclude Include="..\Shared\Crypto++\resource.h" />
+    <ClInclude Include="..\Shared\Crypto++\rijndael.h" />
+    <ClInclude Include="..\Shared\Crypto++\ripemd.h" />
+    <ClInclude Include="..\Shared\Crypto++\rng.h" />
+    <ClInclude Include="..\Shared\Crypto++\rsa.h" />
+    <ClInclude Include="..\Shared\Crypto++\rw.h" />
+    <ClInclude Include="..\Shared\Crypto++\safer.h" />
+    <ClInclude Include="..\Shared\Crypto++\salsa.h" />
+    <ClInclude Include="..\Shared\Crypto++\seal.h" />
+    <ClInclude Include="..\Shared\Crypto++\secblock.h" />
+    <ClInclude Include="..\Shared\Crypto++\seckey.h" />
+    <ClInclude Include="..\Shared\Crypto++\seed.h" />
+    <ClInclude Include="..\Shared\Crypto++\serpent.h" />
+    <ClInclude Include="..\Shared\Crypto++\serpentp.h" />
+    <ClInclude Include="..\Shared\Crypto++\sha.h" />
+    <ClInclude Include="..\Shared\Crypto++\sha3.h" />
+    <ClInclude Include="..\Shared\Crypto++\shacal2.h" />
+    <ClInclude Include="..\Shared\Crypto++\shark.h" />
+    <ClInclude Include="..\Shared\Crypto++\simple.h" />
+    <ClInclude Include="..\Shared\Crypto++\skipjack.h" />
+    <ClInclude Include="..\Shared\Crypto++\smartptr.h" />
+    <ClInclude Include="..\Shared\Crypto++\socketft.h" />
+    <ClInclude Include="..\Shared\Crypto++\sosemanuk.h" />
+    <ClInclude Include="..\Shared\Crypto++\square.h" />
+    <ClInclude Include="..\Shared\Crypto++\stdcpp.h" />
+    <ClInclude Include="..\Shared\Crypto++\strciphr.h" />
+    <ClInclude Include="..\Shared\Crypto++\tea.h" />
+    <ClInclude Include="..\Shared\Crypto++\tiger.h" />
+    <ClInclude Include="..\Shared\Crypto++\trap.h" />
+    <ClInclude Include="..\Shared\Crypto++\trdlocal.h" />
+    <ClInclude Include="..\Shared\Crypto++\trunhash.h" />
+    <ClInclude Include="..\Shared\Crypto++\ttmac.h" />
+    <ClInclude Include="..\Shared\Crypto++\twofish.h" />
+    <ClInclude Include="..\Shared\Crypto++\validate.h" />
+    <ClInclude Include="..\Shared\Crypto++\vmac.h" />
+    <ClInclude Include="..\Shared\Crypto++\wait.h" />
+    <ClInclude Include="..\Shared\Crypto++\wake.h" />
+    <ClInclude Include="..\Shared\Crypto++\whrlpool.h" />
+    <ClInclude Include="..\Shared\Crypto++\winpipes.h" />
+    <ClInclude Include="..\Shared\Crypto++\words.h" />
+    <ClInclude Include="..\Shared\Crypto++\xtr.h" />
+    <ClInclude Include="..\Shared\Crypto++\xtrcrypt.h" />
+    <ClInclude Include="..\Shared\Crypto++\zdeflate.h" />
+    <ClInclude Include="..\Shared\Crypto++\zinflate.h" />
+    <ClInclude Include="..\Shared\Crypto++\zlib.h" />
     <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h" />
     <ClInclude Include="..\Shared\Network\ACVerifiedPacket.h" />
     <ClInclude Include="..\Shared\Network\BitStream.h" />

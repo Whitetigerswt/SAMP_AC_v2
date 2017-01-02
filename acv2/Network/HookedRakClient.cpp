@@ -11,6 +11,9 @@
 #include "../CClientUpdater.h"
 #include "../md5.h"
 #include "../Misc.h"
+#include "../CLog.h"
+
+#include "../../Shared/Crypto++/CAESManager.h"
 
 #include <Windows.h>
 #include "../Enigma/enigma_ide.h"
@@ -114,8 +117,21 @@ bool HookedRakClientInterface::Send(RakNet::BitStream * bitStream, int priority,
 {
 	BYTE packetId;
 	bitStream->Read(packetId);
-	/*CLog log = CLog("packets_sent.txt");
-	log.Write("< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed());*/
+	CLog log = CLog("packets_sent.txt");
+	log.Write("< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed());
+
+	std::string e(reinterpret_cast<char*>(bitStream->GetData()));
+
+	log.Write("Reinterpreted");
+
+	char* c = new char[e.length() + 1];
+	log.Write("made new char");
+	sprintf_s(c, sizeof(c), "%s", e.c_str());
+	log.Write("sprintf'd it");
+
+	bitStream->SetData(reinterpret_cast<unsigned char*>(c));
+
+	log.Write("reinterpreted back");
 
 	if (packetId == ID_AUTH_KEY)
 	{
