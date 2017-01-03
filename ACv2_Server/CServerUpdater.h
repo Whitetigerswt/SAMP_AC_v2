@@ -8,6 +8,7 @@
 
 #define CURRENT_VERSION 2.8f
 #define CURRENT_MAJOR_VERSION 2.3f
+#define HTTP_REQUEST_USER_AGENT	"ACSVR_2.8" 
 
 #include <string>
 

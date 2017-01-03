@@ -1,20 +1,9 @@
-﻿  Cmd5Info.cpp
-  ACVerifiedPacket.cpp
-  BitStream.cpp
-  CRPC.cpp
-  Callback.cpp
+﻿  Callback.cpp
   CAntiCheat.cpp
-  CAntiCheatHandler.cpp
   CServerUpdater.cpp
   CRPCCallback.cpp
-  Network.cpp
   plugin.cpp
-  amxplugin.cpp
-  Hooks.cpp
   BanHandler.cpp
-  Utility.cpp
-  sampgdk.c
-  subhook.c
      Creating library E:\SAMP_AC_v2\Release\sampac.lib and object E:\SAMP_AC_v2\Release\sampac.exp
   Generating code
   Finished generating code
