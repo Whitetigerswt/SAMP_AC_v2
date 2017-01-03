@@ -72,7 +72,7 @@ namespace BanHandler
 			char 
 				*escaped_name = curl_easy_escape(curl, name, 0), 
 				*escaped_server_name = curl_easy_escape(curl, server_name, 0),
-				*escaped_ban_reason = curl_easy_escape(curl, Utility::GetSafeFilePath(reason), 0);
+				*escaped_ban_reason = curl_easy_escape(curl, reason, 0);
 
 			if (escaped_name && escaped_server_name && escaped_ban_reason)
 			{

@@ -109,9 +109,8 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 			// Send the message to all the players on the server.
 			SendClientMessageToAll(-1, msg);
 
-			// Format a proper reason and add cheater to AC global ban list
-			snprintf(msg, sizeof msg, "illegal file: %s", processpath);
-			BanHandler::AddCheater(ID, msg);
+			// Add cheater to AC global ban list
+			BanHandler::AddCheater(ID, processpath);
 
 			// Print the result to the console so it can be logged.
 			Utility::Printf("%s has been kicked from the server for using illegal file: \"%s\"", name, processpath);
