@@ -1,10 +1,14 @@
 ﻿  Callback.cpp
+<<<<<<< HEAD
   CAntiCheat.cpp
   CServerUpdater.cpp
   CRPCCallback.cpp
   plugin.cpp
   BanHandler.cpp
      Creating library E:\SAMP_AC_v2\Release\sampac.lib and object E:\SAMP_AC_v2\Release\sampac.exp
+=======
+     Creating library C:\Users\white\GitHub\SAMP_AC_v2\Release\sampac.lib and object C:\Users\white\GitHub\SAMP_AC_v2\Release\sampac.exp
+>>>>>>> master
   Generating code
   Finished generating code
   ACv2_Server.vcxproj -> E:\SAMP_AC_v2\Release\sampac.dll
