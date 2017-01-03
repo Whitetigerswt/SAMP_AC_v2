@@ -4,6 +4,7 @@
 #include "CAntiCheatHandler.h"
 #include <curl/curl.h>
 #include "Utility.h"
+#include "CServerUpdater.h"
 
 namespace BanHandler
 {
@@ -68,11 +69,14 @@ namespace BanHandler
 			*/
 			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
+			// Adds user agent to request
+			curl_easy_setopt(curl, CURLOPT_USERAGENT, HTTP_REQUEST_USER_AGENT);
+
 			// Escape some parameters
 			char 
 				*escaped_name = curl_easy_escape(curl, name, 0), 
 				*escaped_server_name = curl_easy_escape(curl, server_name, 0),
-				*escaped_ban_reason = curl_easy_escape(curl, Utility::GetSafeFilePath(reason), 0);
+				*escaped_ban_reason = curl_easy_escape(curl, reason, 0);
 
 			if (escaped_name && escaped_server_name && escaped_ban_reason)
 			{
@@ -169,6 +173,9 @@ namespace BanHandler
 			* this check, but this will make the connection less secure.
 			*/
 			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+
+			// Adds user agent to request
+			curl_easy_setopt(curl, CURLOPT_USERAGENT, HTTP_REQUEST_USER_AGENT);
 
 			// Format POST data with player's hardware ID.
 			char str[64];
