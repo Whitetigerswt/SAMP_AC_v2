@@ -16,6 +16,7 @@
 #include "../../Shared/Crypto++/CAESManager.h"
 
 #include <Windows.h>
+#include <stdio.h>
 #include "../Enigma/enigma_ide.h"
 
 bool hasSentInitInfo = false;
@@ -120,16 +121,29 @@ bool HookedRakClientInterface::Send(RakNet::BitStream * bitStream, int priority,
 	CLog log = CLog("packets_sent.txt");
 	log.Write("< [Packet Send] %d, len: %d", packetId, bitStream->GetNumberOfBytesUsed());
 
-	std::string e(reinterpret_cast<char*>(bitStream->GetData()));
-
 	log.Write("Reinterpreted");
 
-	char* c = new char[e.length() + 1];
-	log.Write("made new char");
-	sprintf_s(c, sizeof(c), "%s", e.c_str());
-	log.Write("sprintf'd it");
+	int len = bitStream->GetNumberOfBitsUsed();
+	char* c = new char[len + 1];
+	bitStream->ResetReadPointer();
+	bitStream->CopyData((unsigned char**)&c);
+	std::string encrypted(CAESManager::Encrypt(c));
+	log.Write("Orginal: %s", c);
+	log.Write("Encrypted: %s", encrypted.c_str());
+	//log.Write("Decrypted: %s", CAESManager::Decrypt(encrypted));
+	RakNet::BitStream *bs = new RakNet::BitStream();
+	bs->Write(packetId);
+	bs->Write((unsigned short)strlen("ummmm hey boy"));
+	bs->Write((const char*)"ummmm hey boy", strlen("ummmm hey boy"));
+	log.Write("Encrypted: %s", c);
+	//log.Write("Decrypted: %s", CAESManager::Decrypt(c));
 
-	bitStream->SetData(reinterpret_cast<unsigned char*>(c));
+	if (packetId == PACKET_RPC)
+	{
+		bitStream->SetWriteOffset(1);
+		bitStream->Write((unsigned short)strlen("ummmm hey boy"));
+		bitStream->Write((const char*)"ummmm hey boy", strlen("ummmm hey boy"));
+	}
 
 	log.Write("reinterpreted back");
 

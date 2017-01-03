@@ -5,6 +5,36 @@
 #include <iostream>
 #include <string>
 
+#include "../Shared/Crypto++/osrng.h"
+using CryptoPP::AutoSeededRandomPool;
+
+#include <iostream>
+using std::cout;
+using std::cerr;
+using std::endl;
+
+#include <string>
+using std::string;
+
+#include <cstdlib>
+using std::exit;
+
+#include "../Shared/Crypto++/cryptlib.h"
+using CryptoPP::Exception;
+
+#include "../Shared/Crypto++/hex.h"
+using CryptoPP::HexEncoder;
+using CryptoPP::HexDecoder;
+
+using CryptoPP::StringSink;
+using CryptoPP::StringSource;
+using CryptoPP::StreamTransformationFilter;
+
+using CryptoPP::AES;
+
+#include "ccm.h"
+using CryptoPP::CBC_Mode;
+
 std::string CAESManager::Encrypt(std::string plaintext)
 {
 	//Key and IV setup
@@ -20,14 +50,27 @@ std::string CAESManager::Encrypt(std::string plaintext)
 	//
 	// Create Cipher Text
 	//
-	CryptoPP::AES::Encryption aesEncryption(key, CryptoPP::AES::DEFAULT_KEYLENGTH);
-	CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption(aesEncryption, iv);
 
-	CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::StringSink(ciphertext));
-	stfEncryptor.Put(reinterpret_cast<const unsigned char*>(plaintext.c_str()), plaintext.length() + 1);
-	stfEncryptor.MessageEnd();
+	CBC_Mode< AES >::Encryption e;
+	e.SetKeyWithIV(key, sizeof(key), iv);
 
-	return ciphertext;
+	// The StreamTransformationFilter removes
+	//  padding as required.
+	StringSource s(plaintext, true,
+		new StreamTransformationFilter(e,
+			new StringSink(ciphertext)
+		) // StreamTransformationFilter
+	); // StringSource
+
+	string encoded;
+
+	StringSource(ciphertext, true,
+		new HexEncoder(
+			new StringSink(encoded)
+		) // HexEncoder
+	); // StringSource
+
+	return encoded;
 }
 
 std::string CAESManager::Decrypt(std::string ciphertext)
@@ -40,14 +83,21 @@ std::string CAESManager::Decrypt(std::string ciphertext)
 	memset(key, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
 	memset(iv, 0x00, CryptoPP::AES::BLOCKSIZE);
 
-	std::string plaintext;
+	CBC_Mode< AES >::Decryption d;
+	d.SetKeyWithIV(key, sizeof(key), iv);
 
-	CryptoPP::AES::Decryption aesDecryption(key, CryptoPP::AES::DEFAULT_KEYLENGTH);
-	CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption, iv);
+	string recovered;
 
-	CryptoPP::StreamTransformationFilter stfDecryptor(cbcDecryption, new CryptoPP::StringSink(plaintext));
-	stfDecryptor.Put(reinterpret_cast<const unsigned char*>(ciphertext.c_str()), ciphertext.size());
-	stfDecryptor.MessageEnd();
+	// The StreamTransformationFilter removes
+	//  padding as required.
+	StringSource s(ciphertext, true,
+		new StreamTransformationFilter(d,
+			new HexEncoder(
+				new StringSink(recovered)
+			)
+		) // StreamTransformationFilter
+	); // StringSource
 
-	return plaintext;
+
+	return recovered;
 }

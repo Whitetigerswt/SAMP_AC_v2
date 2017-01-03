@@ -90,12 +90,6 @@ BYTE GetPacketID(Packet *p)
 {
 	if (p == 0) return 255;
 
-	Utility::Printf("getpacketid");
-	std::string s = reinterpret_cast<char*>(p->data);
-	Utility::Printf("getpacketid2");
-	sprintf((char*)p->data, "%s", s.c_str());
-	Utility::Printf("getpacketid3");
-
 	if ((unsigned char)p->data[0] == 36)
 	{
 		assert(p->length > sizeof(unsigned char) + sizeof(unsigned long));
@@ -115,13 +109,23 @@ static BYTE HOOK_GetPacketID(Packet *p)
 	if (packetId == 0xFF) {
 		return 0xFF;
 	}
-
+	
+	unsigned char c[1024];
 	// If packetId is our custom RPC sending function
 	if (packetId == PACKET_RPC)
 	{
 		// Read the data sent
 		RakNet::BitStream bsData(&p->data[1], p->length - 1, false);
+		bsData.ReadString(c);
+
+		Utility::Printf((char*)c);
 		unsigned short usRpcId;
+
+		/*char* data = new char[bsData.GetNumberOfBytesUsed() + 1];
+		bsData.Read(data, bsData.GetNumberOfBytesUsed());
+
+		RakNet::BitStream newBsData;
+		newBsData.Write(data);*/
 
 		if (bsData.Read(usRpcId))
 		{
