@@ -438,6 +438,7 @@ namespace Callback
 			Default_SprintOnAllSurfaces = true;
 			Default_MacroLimits = true;
 			Default_VehicleBlips = true;
+			Default_SwitchReload = true;
 
 			Default_CrouchBug = 9999;
 			Default_FrameLimit = 9999;

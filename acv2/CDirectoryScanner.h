@@ -15,7 +15,7 @@ public:
 
 	// PURPOSE: MD5 a specific file.
 	// REQUIRES: The current gta sa path directory.
-	std::wstring MD5_Specific_File(std::wstring path);
+	std::string MD5_Specific_File(std::wstring path);
 private:
 
 	// PURPOSE: Scan the files inside gta3.img.

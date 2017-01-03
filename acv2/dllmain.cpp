@@ -18,9 +18,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 		{
 			if (!CLoader::IsLoaded())
 			{
-				// Load the CLEO hooks so CLEO will not load scripts properly.
-				CHookManager::Load();
-
 				//CModuleSecurity::AddAllowedModules();
 
 				// Make sure we aren't loading this DLL at sometime other than init

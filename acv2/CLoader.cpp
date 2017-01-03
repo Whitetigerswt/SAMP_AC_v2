@@ -21,6 +21,12 @@
 #include <Boost\thread.hpp>
 #include <Psapi.h>
 
+#include <process.h>
+#include <Tlhelp32.h>
+#include <windows.h>
+#include <string.h>
+#include <tchar.h>
+
 CInjectedLibraries CLoader::Modules = CInjectedLibraries();
 CProcessList CLoader::Processes = CProcessList();
 CDirectoryScanner CLoader::GtaDirectory = CDirectoryScanner();
@@ -30,8 +36,18 @@ HMODULE CLoader::ThishMod = NULL;
 
 void CLoader::Initialize(HMODULE hMod)
 {
+	boost::this_thread::yield();
+	CHookManager::Load();
+
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
+		/*
+ 		    Make sure other GTA:SA processes are not running.
+			This prevents crashing while game is starting.
+		*/
+		
+        TerminateOtherProcesses();
+
 		/* 
 			Force process elevation check. This will terminate the current process and run a new one if it's 
 			not elevated (if it's not running as admin).
@@ -45,26 +61,35 @@ void CLoader::Initialize(HMODULE hMod)
 			// Check if process is not elevated (not running as admin)
 			if (!IsProcessElevated())
 			{
-				// It's not elevated. Wait for the game to be loaded, so we can do our work to elevate it afterwards
-				while (ADDRESS_LOADED < 6)
-				{
-					Sleep(5);
-				}
-
-				// The game is loaded now. Relaunch the game as admin (elevated)
-				RunElevated();
+				CheckElevation();
+                ExitProcess(0);
 				return;
 			}
 		}
 
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
-		HMODULE L = LoadLibrary(TEXT("samp.dll"));
+		HMODULE L;
+		do
+		{
+			L = LoadLibrary(TEXT("samp.dll"));
+			Sleep(5);
+		} while (L == NULL);
+
 		MODULEINFO mInfo = { 0 };
 
 		GetModuleInformation(GetCurrentProcess(), L, &mInfo, sizeof(MODULEINFO));
 
 		setSampBaseAddress((DWORD)mInfo.lpBaseOfDll);
 		setSampSize((DWORD)mInfo.SizeOfImage);
+
+		// Hide samp.dll and this .asi from the loaded module list.
+		PELPEB peb = EL_GetPeb();
+		EL_HideModule(peb, TEXT("samp.dll"));
+		wchar_t path[MAX_PATH];
+		GetModuleFileName(hMod, path, sizeof(path));
+		EL_HideModule(peb, path);
+
+		CHookManager::Load();
 
 		// Hook LoadLibrary function.
 		CModuleSecurity::HookLoadLibrary();
@@ -78,30 +103,10 @@ void CLoader::Initialize(HMODULE hMod)
 		// Hook the D3D9Device functions.
 		CDirectX::HookD3DFunctions();
 
-		// Wait until the game is loaded.
-		while (ADDRESS_LOADED < 6)
-		{
-			// Stop CLEO from loading, and other memory hooks.
-			CHookManager::Load();
-
-			// Wait until the game is loaded in an infinite loop.
-			Sleep(5);
-		}
-
 		CModuleSecurity::AddAllowedModules();
 
 		// Make sure we're using the latest version of this mod.
 		CClientUpdater::CheckForUpdate(hMod);
-
-		// Setup memory one more time.
-		CHookManager::Load();
-
-		// Hide samp.dll and this .asi from the loaded module list.
-		PELPEB peb = EL_GetPeb();
-		EL_HideModule(peb, TEXT("samp.dll"));
-		wchar_t path[MAX_PATH];
-		GetModuleFileName(hMod, path, sizeof(path));
-		EL_HideModule(peb, path);
 	}
 
 	while (true)
@@ -117,13 +122,73 @@ void CLoader::Initialize(HMODULE hMod)
 	}
 }
 
+std::wstring CLoader::GetProcessFileName(DWORD processID)
+{
+	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+    PROCESSENTRY32 pEntry;
+    pEntry.dwSize = sizeof (pEntry);
+    BOOL hRes = Process32First(hSnapShot, &pEntry);
+	
+    while (hRes)
+    {
+		if(processID == pEntry.th32ProcessID)
+		{
+			// Process ID matches. Let's return it's file name.
+			std::wstring pFileName(pEntry.szExeFile);
+		    return pFileName;
+		}
+        hRes = Process32Next(hSnapShot, &pEntry);
+    }
+    CloseHandle(hSnapShot);	
+	return L"NULL";
+}
+
+void CLoader::TerminateOtherProcesses()
+{
+	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+	PROCESSENTRY32 pEntry;
+	pEntry.dwSize = sizeof(pEntry);
+	BOOL hRes = Process32First(hSnapShot, &pEntry);
+
+	// Get current process ID.
+	DWORD currentProcessID = GetCurrentProcessId();
+
+	// Get current process file name. (GetModuleFileName doesn't work with mklink, so we need to do a snapshot.)
+	std::wstring currentProcessName = GetProcessFileName(currentProcessID);
+
+	if (currentProcessName == L"NULL")
+		return;
+
+	while (hRes)
+	{
+		if (currentProcessID != pEntry.th32ProcessID && wcscmp(pEntry.szExeFile, currentProcessName.c_str()) == 0)
+		{
+			// Other GTA:SA process has been found. Terminate it!
+			HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD)pEntry.th32ProcessID);
+			if (hProcess != NULL)
+			{
+				TerminateProcess(hProcess, 9);
+				CloseHandle(hProcess);
+			}
+		}
+		hRes = Process32Next(hSnapShot, &pEntry);
+	}
+	CloseHandle(hSnapShot);
+}
+
+
 void CLoader::CheckElevation()
 {
 	// Check if process is elevated already
 	if (!IsProcessElevated())
 	{
+
+		while (ADDRESS_LOADED < 6)
+		{
+			Sleep(5);
+		}
+
 		// If it's not, we need to elevate it.
-		// run our elevator .exe program
 		RunElevated();
 		ExitProcess(0);
 	}

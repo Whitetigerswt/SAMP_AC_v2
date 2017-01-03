@@ -7,6 +7,7 @@
 #include "../s0beit/samp.h"
 #include "../../Shared/Network/Network.h"
 #include "../CLoader.h"
+#include "../CLog.h"
 
 #include "CRPCCallback.h"
 #include "CRakClientHandler.h"
@@ -52,10 +53,10 @@ bool CRakClientHandler::IsConnected()
 	if (!client)
 		return false;
 
-	if (!client->GetRakClientInterface())
+	if (!client->GetInterface())
 		return false;
 
-	return client->GetRakClientInterface()->IsConnected();
+	return client->GetInterface()->IsConnected();
 }
 
 void CRakClientHandler::Disconnect()
@@ -63,10 +64,10 @@ void CRakClientHandler::Disconnect()
 	if (!client)
 		return;
 
-	if (!client->GetRakClientInterface())
+	if (!client->GetInterface())
 		return;
 
-	return client->GetRakClientInterface()->Disconnect(500);
+	return client->GetInterface()->Disconnect(500);
 }
 
 void CRakClientHandler::SetConnected(bool toggle)

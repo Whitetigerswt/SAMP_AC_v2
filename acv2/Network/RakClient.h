@@ -1,18 +1,35 @@
-/* 
- * PROJECT: mod_sa
- * COPYRIGHT: FYP
- * DATE: 21.02.2013
- * FILE: RakClient.h
+/*
+
+PROJECT:		mod_sa
+LICENSE:		See LICENSE in the top level directory
+COPYRIGHT:		Copyright we_sux, BlastHack
+
+mod_sa is available from https://github.com/BlastHackNet/mod_s0beit_sa/
+
+mod_sa is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+mod_sa is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with mod_sa.  If not, see <http://www.gnu.org/licenses/>.
+
 */
+
 #pragma once
 
+#include "../../Shared/Network/BitStream.h"
 #include "../s0beit/stdtypes.h"
 
 typedef unsigned int RakNetTime;
 typedef long long RakNetTimeNS;
 
-typedef unsigned int RakNetTime;
-typedef long long RakNetTimeNS;
+using namespace RakNet;
 
 enum RPCEnumeration
 {
@@ -157,9 +174,9 @@ enum RPCEnumeration
 	RPC_SetVehicleParamsForPlayer = 161,
 	RPC_SetCameraBehindPlayer = 162,
 	RPC_WorldPlayerRemove = 163,
-	RPC_WorldVehicleAdd				= 164,
-	RPC_WorldVehicleRemove			= 165,
-	RPC_WorldPlayerDeath 			= 166,
+	RPC_WorldVehicleAdd = 164,
+	RPC_WorldVehicleRemove = 165,
+	RPC_WorldPlayerDeath = 166,
 };
 
 enum PacketEnumeration
@@ -227,6 +244,7 @@ enum PacketPriority
 	NUMBER_OF_PRIORITIES
 };
 
+
 /// These enumerations are used to describe how packets are delivered.
 /// \note  Note to self: I write this with 3 bits in the stream.  If I add more remember to change that
 enum PacketReliability
@@ -238,9 +256,9 @@ enum PacketReliability
 	RELIABLE_SEQUENCED /// This message is reliable and will arrive in the sequence you sent it.  Out or order messages will be dropped.  Same overhead as UNRELIABLE_SEQUENCED.
 };
 
-
 typedef unsigned short PlayerIndex;
 
+#pragma pack(push, 1)
 struct PlayerID
 {
 	///The peer address from inet_addr.
@@ -248,17 +266,17 @@ struct PlayerID
 	///The port number
 	unsigned short port;
 
-	PlayerID& operator = ( const PlayerID& input )
+	PlayerID& operator = (const PlayerID& input)
 	{
 		binaryAddress = input.binaryAddress;
 		port = input.port;
 		return *this;
 	}
 
-	bool operator==( const PlayerID& right ) const;
-	bool operator!=( const PlayerID& right ) const;
-	bool operator > ( const PlayerID& right ) const;
-	bool operator < ( const PlayerID& right ) const;
+	bool operator==(const PlayerID& right) const;
+	bool operator!=(const PlayerID& right) const;
+	bool operator > (const PlayerID& right) const;
+	bool operator < (const PlayerID& right) const;
 };
 
 struct NetworkID
@@ -271,6 +289,9 @@ struct NetworkID
 /// This represents a user message from another system.
 struct Packet
 {
+	/// Server only - this is the index into the player array that this playerId maps to
+	PlayerIndex playerIndex;
+
 	/// The system that send this packet.
 	PlayerID playerId;
 
@@ -308,21 +329,27 @@ struct RPCParameters
 	/// This is only sent back if the RPC call originally passed a BitStream to receive the reply.
 	/// If you do so and your send is reliable, it will block until you get a reply or you get disconnected from the system you are sending to, whichever is first.
 	/// If your send is not reliable, it will block for triple the ping time, or until you are disconnected, or you get a reply, whichever is first.
-	RakNet::BitStream *replyToSender;
+	BitStream *replyToSender;
+};
+
+struct RPCNode
+{
+	uint8_t uniqueIdentifier;
+	void(*staticFunctionPointer) (RPCParameters *rpcParms);
 };
 
 /// Store Statistics information related to network usage 
 struct RakNetStatisticsStruct
 {
 	///  Number of Messages in the send Buffer (high, medium, low priority)
-	unsigned messageSendBuffer[ NUMBER_OF_PRIORITIES ];
+	unsigned messageSendBuffer[NUMBER_OF_PRIORITIES];
 	///  Number of messages sent (high, medium, low priority)
-	unsigned messagesSent[ NUMBER_OF_PRIORITIES ];
+	unsigned messagesSent[NUMBER_OF_PRIORITIES];
 	///  Number of data bits used for user messages
-	unsigned messageDataBitsSent[ NUMBER_OF_PRIORITIES ];
+	unsigned messageDataBitsSent[NUMBER_OF_PRIORITIES];
 	///  Number of total bits used for user messages, including headers
-	unsigned messageTotalBitsSent[ NUMBER_OF_PRIORITIES ];
-	
+	unsigned messageTotalBitsSent[NUMBER_OF_PRIORITIES];
+
 	///  Number of packets sent containing only acknowledgements
 	unsigned packetsContainingOnlyAcknowlegements;
 	///  Number of acknowledgements sent
@@ -331,10 +358,10 @@ struct RakNetStatisticsStruct
 	unsigned acknowlegementsPending;
 	///  Number of acknowledgements bits sent
 	unsigned acknowlegementBitsSent;
-	
+
 	///  Number of packets containing only acknowledgements and resends
 	unsigned packetsContainingOnlyAcknowlegementsAndResends;
-	
+
 	///  Number of messages resent
 	unsigned messageResends;
 	///  Number of bits resent of actual data
@@ -343,32 +370,32 @@ struct RakNetStatisticsStruct
 	unsigned messagesTotalBitsResent;
 	///  Number of messages waiting for ack (// TODO - rename this)
 	unsigned messagesOnResendQueue;
-	
+
 	///  Number of messages not split for sending
 	unsigned numberOfUnsplitMessages;
 	///  Number of messages split for sending
 	unsigned numberOfSplitMessages;
 	///  Total number of splits done for sending
 	unsigned totalSplits;
-	
+
 	///  Total packets sent
 	unsigned packetsSent;
-	
+
 	///  Number of bits added by encryption
 	unsigned encryptionBitsSent;
 	///  total bits sent
 	unsigned totalBitsSent;
-	
+
 	///  Number of sequenced messages arrived out of order
 	unsigned sequencedMessagesOutOfOrder;
 	///  Number of sequenced messages arrived in order
 	unsigned sequencedMessagesInOrder;
-	
+
 	///  Number of ordered messages arrived out of order
 	unsigned orderedMessagesOutOfOrder;
 	///  Number of ordered messages arrived in order
 	unsigned orderedMessagesInOrder;
-	
+
 	///  Packets with a good CRC received
 	unsigned packetsReceived;
 	///  Packets with a bad CRC received
@@ -396,18 +423,19 @@ struct RakNetStatisticsStruct
 	///  connection start time
 	RakNetTime connectionStartTime;
 };
+#pragma pack(pop)
 
 class RakClientInterface
 {
 public:
-	virtual ~RakClientInterface() { };
+	virtual ~RakClientInterface() {};
 	virtual bool Connect(const char* host, unsigned short serverPort, unsigned short clientPort, unsigned int depreciated, int threadSleepTimer);
 	virtual void Disconnect(unsigned int blockDuration, unsigned char orderingChannel = 0);
 	virtual void InitializeSecurity(const char *privKeyP, const char *privKeyQ);
 	virtual void SetPassword(const char *_password);
 	virtual bool HasPassword(void) const;
 	virtual bool Send(const char *data, const int length, PacketPriority priority, PacketReliability reliability, char orderingChannel);
-	virtual bool Send(RakNet::BitStream * bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel);
+	virtual bool Send(BitStream * bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel);
 	virtual Packet* Receive(void);
 	virtual void DeallocatePacket(Packet *packet);
 	virtual void PingServer(void);
@@ -426,17 +454,17 @@ public:
 	virtual void RegisterClassMemberRPC(int* uniqueID, void *functionPointer);
 	virtual void UnregisterAsRemoteProcedureCall(int* uniqueID);
 	virtual bool RPC(int* uniqueID, const char *data, unsigned int bitLength, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp);
-	virtual bool RPC(int* uniqueID, RakNet::BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp);
-	virtual bool RPC_(int* uniqueID, RakNet::BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp, NetworkID networkID);
+	virtual bool RPC(int* uniqueID, BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp);
+	virtual bool RPC_(int* uniqueID, BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp, NetworkID networkID);
 	virtual void SetTrackFrequencyTable(bool b);
 	virtual bool GetSendFrequencyTable(unsigned int outputFrequencyTable[256]);
 	virtual float GetCompressionRatio(void) const;
 	virtual float GetDecompressionRatio(void) const;
 	virtual void AttachPlugin(void *messageHandler);
 	virtual void DetachPlugin(void *messageHandler);
-	virtual RakNet::BitStream * GetStaticServerData(void);
+	virtual BitStream * GetStaticServerData(void);
 	virtual void SetStaticServerData(const char *data, const int length);
-	virtual RakNet::BitStream * GetStaticClientData(const PlayerID playerId);
+	virtual BitStream * GetStaticClientData(const PlayerID playerId);
 	virtual void SetStaticClientData(const PlayerID playerId, const char *data, const int length);
 	virtual void SendStaticClientDataToServer(void);
 	virtual PlayerID GetServerID(void) const;
@@ -455,25 +483,28 @@ public:
 	virtual void ApplyNetworkSimulator(double maxSendBPS, unsigned short minExtraPing, unsigned short extraPingVariance);
 	virtual bool IsNetworkSimulatorActive(void);
 	virtual PlayerIndex GetPlayerIndex(void);
-	bool RPC(int uniqueID, RakNet::BitStream *bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, bool shiftTimestamp)
-	{
-		return this->RPC(&uniqueID, bitStream, priority, reliability, orderingChannel, shiftTimestamp);
-	};
+};
+
+enum NetPatchType
+{
+	INCOMING_RPC,
+	OUTCOMING_RPC,
+	INCOMING_PACKET,
+	OUTCOMING_PACKET,
 };
 
 class RakClient
 {
 public:
-	RakClient( void *pRakClientInterface );
-	~RakClient();
-	bool RPC(int rpcId, RakNet::BitStream *bitStream, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = RELIABLE_ORDERED, char orderingChannel = 0, bool shiftTimestamp = false);
-	bool Send(RakNet::BitStream *bitStream, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = RELIABLE, char orderingChannel = 0);
-	void SendDeath( uint16_t killerId, uint8_t reason );
-	void RequestClass( int classId );
-	void SendSCMEvent( int vehicleID, int eventId, int param1, int param2 );
-	void SendSpawn( void );
-	void SendPickUp( int pickupId );
-	RakClientInterface *GetRakClientInterface( void ) { return pRakClient; };
+	RakClient(void *pRakClientInterface);
+	bool RPC(int rpcId, BitStream *bitStream, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = RELIABLE_ORDERED, char orderingChannel = 0, bool shiftTimestamp = false);
+	bool Send(BitStream *bitStream, PacketPriority priority = HIGH_PRIORITY, PacketReliability reliability = UNRELIABLE_SEQUENCED, char orderingChannel = 0);
+	void SendDeath(uint16_t killerId, uint8_t reason);
+	void RequestClass(int classId);
+	void SendSCMEvent(int vehicleID, int eventId, int param1, int param2);
+	void SendSpawn(void);
+	void SendPickUp(int pickupId);
+	RakClientInterface *GetInterface(void) { return pRakClient; };
 
 private:
 	RakClientInterface *pRakClient;

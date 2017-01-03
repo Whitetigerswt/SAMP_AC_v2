@@ -61,6 +61,7 @@
 
 // Main loading patch
 #define FUNC_MainLoad						(BYTE*)0x7F9B0D
+#define FUNC_MainLoadAlt					(BYTE*)0x7F9B4D
 
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
