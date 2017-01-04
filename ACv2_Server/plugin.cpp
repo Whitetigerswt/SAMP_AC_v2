@@ -319,7 +319,7 @@ cell AMX_NATIVE_CALL TogglePlayerVehicleBlipsProc(AMX* pAmx, cell* pParams)
 	// Make sure the player is connected 
 	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
-	ac->ToggleVehicleBlips(!!pParams[2]);
+	ac->ToggleVehicleBlips(pParams[2]);
 
 	return 1;
 }

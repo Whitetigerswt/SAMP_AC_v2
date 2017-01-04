@@ -389,7 +389,7 @@ void CAntiCheat::OnBanChecked(bool status)
 void CAntiCheat::CheckVersionCompatible(float version)
 {
 	// Check if the version is incompatible with the server version.
-	if (version > CURRENT_MAJOR_VERSION)
+	if (version != CURRENT_MAJOR_VERSION)
 	{
 		// Inform the player there version of AC is not compatible with the server.
 		char msg[150];
