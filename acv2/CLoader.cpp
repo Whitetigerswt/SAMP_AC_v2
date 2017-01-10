@@ -14,6 +14,7 @@
 #include "VersionHelpers.h"
 #include "ManualInjection.h"
 #include "s0beit\samp.h"
+#include "BugSplat.h"
 
 #include <map>
 #include <Aclapi.h>
@@ -34,10 +35,19 @@ int CLoader::isElevated = false;
 bool CLoader::isLoaded = false;
 HMODULE CLoader::ThishMod = NULL;
 
+bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2);
+
+MiniDmpSender *mpSender;
+
 void CLoader::Initialize(HMODULE hMod)
 {
 	boost::this_thread::yield();
 	CHookManager::Load();
+
+	wchar_t version[50];
+	swprintf_s(version, TEXT("%f - %f"), CURRENT_MAJOR_VERSION, CURRENT_VERSION);
+	mpSender = new MiniDmpSender(L"whitetigerswt_gmail_com", L"ACv2_Client", version, NULL);
+	mpSender->setDefaultUserName(GetCommandLine());
 
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
@@ -479,4 +489,42 @@ Cleanup:
 bool CLoader::IsLoaded()
 {
 	return isLoaded;
+}
+
+// BugSplat exception callback
+bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2)
+{
+
+	switch (nCode)
+	{
+	case MDSCB_EXCEPTIONCODE:
+	{
+		EXCEPTION_RECORD *p = (EXCEPTION_RECORD *)lpVal1;
+		DWORD code = p ? p->ExceptionCode : 0;
+
+		// create some files in the %temp% directory and attach them
+		wchar_t cmdString[2 * MAX_PATH];
+		wchar_t filePath[MAX_PATH];
+		wchar_t tempPath[MAX_PATH];
+		GetTempPathW(MAX_PATH, tempPath);
+
+		wsprintf(filePath, L"%sException.txt", tempPath);
+		wsprintf(cmdString, L"echo Exception Code = 0x%08x > %s", code, filePath);
+		_wsystem(cmdString);
+		mpSender->sendAdditionalFile(filePath);
+
+		wsprintf(filePath, L"%sfile2.txt", tempPath);
+
+		wchar_t buf[_MAX_PATH];
+		mpSender->getMinidumpPath(buf, _MAX_PATH);
+
+		wsprintf(cmdString, L"echo Crash reporting is so clutch!  minidump path = %s > %s", buf, filePath);
+		_wsystem(cmdString);
+		mpSender->sendAdditionalFile(filePath);
+
+	}
+	break;
+	}
+
+	return false;
 }

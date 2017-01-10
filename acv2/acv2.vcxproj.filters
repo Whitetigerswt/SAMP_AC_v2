@@ -860,6 +860,9 @@
     <ClInclude Include="..\Shared\Network\ACVerifiedPacket.h">
       <Filter>Source Files\Shared\Network</Filter>
     </ClInclude>
+    <ClInclude Include="BugSplat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectX\D3DX_DXGIFormatConvert.inl">
