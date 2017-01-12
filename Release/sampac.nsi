@@ -120,6 +120,8 @@ Function .onInit
   Quit
 
   VerOK:
+  ;For Redist installation
+  InitPluginsDir 
 FunctionEnd 
 
 ;--------------------------------
@@ -165,6 +167,11 @@ Section "ASI Loader" SecASILoader
   File "vorbisHooked.dll"
   File "vorbisFile.dll"
 
+SectionEnd
+
+Section ; Visual C++ Redistributable
+  File /oname=$PLUGINSDIR\vcredist_x86.exe "vcredist_x86.exe"
+  ExecWait '"$PLUGINSDIR\vcredist_x86.exe" /install /passive' $0
 SectionEnd
 
 ;--------------------------------
