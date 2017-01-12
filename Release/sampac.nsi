@@ -7,6 +7,7 @@
 
   !include "MUI2.nsh"
   !include 'nsdialogs.nsh'
+  !include 'WinVer.nsh'
   
 !define MUI_ICON		"ac.ico"
 !define MUI_UNICON		"ac.ico"
@@ -89,6 +90,37 @@ FunctionEnd
 Function VisitDiscordOnFinish
   ExecShell "open" "https://discord.gg/BTmHr"
 FunctionEnd
+
+;--------------------------------
+;Initialization
+
+Function .onInit
+; Windows version check
+; It is based on MSVC++ redist 2013 sys req
+  ${If} ${IsWinXP}
+  ${AndIf} ${AtLeastServicePack} 3
+    Goto VerOK
+  ${EndIf}
+  
+  ${If} ${IsWinVista}
+  ${AndIf} ${AtLeastServicePack} 2
+    Goto VerOK
+  ${EndIf}
+  
+  ${If} ${IsWin7}
+  ${AndIf} ${AtLeastServicePack} 1
+    Goto VerOK
+  ${EndIf}
+  
+  ${If} ${AtLeastWin8}
+    Goto VerOK
+  ${EndIf}
+
+  MessageBox MB_OK|MB_ICONSTOP|MB_TOPMOST "SA:MP AC requires at least:$\n- Windows XP SP3$\n- Windows Vista SP2$\n- Windows 7 SP1"
+  Quit
+
+  VerOK:
+FunctionEnd 
 
 ;--------------------------------
 ;Installer Sections
