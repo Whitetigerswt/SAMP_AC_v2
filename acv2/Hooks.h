@@ -219,3 +219,6 @@
 #define VAR_STATDISP_PATH					(void*)0x863F80
 #define VAR_ARSTATS_DAT_PATH				(void*)0x863FA0
 #define VAR_SURFINFO_DAT_PATH				(void*)0x864DB4
+
+// RakNet hooks:
+#define FUNC_OFFSET_RAKPEER__SENDBUFFERED	0x37490

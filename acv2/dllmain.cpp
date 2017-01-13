@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <Boost\thread.hpp>
 
+#include "Network\CRakClientHandler.h"
 #include "CHookManager.h"
 #include "CLoader.h"
 #include "Addresses.h"
