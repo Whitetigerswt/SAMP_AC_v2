@@ -8,6 +8,7 @@
 #include "../../Shared/Network/Network.h"
 #include "../CLoader.h"
 #include "../CLog.h"
+#include "../CPacketIntegrity.h"
 
 #include "CRPCCallback.h"
 #include "CRakClientHandler.h"
@@ -38,6 +39,9 @@ void CRakClientHandler::CustomSend(RakNet::BitStream *bs, PacketPriority priorit
 {
 	if (IsConnected())
 	{
+		// save packet for comparing before sending
+		CPacketIntegrity::Send(bs);
+
 		client->Send(bs, priority, reliability, orderingChannel);
 	}
 }

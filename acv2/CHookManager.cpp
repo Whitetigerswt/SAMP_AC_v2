@@ -14,6 +14,7 @@
 #include "s0beit\samp.h"
 #include "ManualInjection.h"
 #include "CLog.h"
+#include "CPacketIntegrity.h"
 #include "Detours\detours.h"
 
 // Small children look away, this is gonna get ugly...
@@ -731,10 +732,13 @@ HOOK CHookManager::GetSampInfo()
 RakPeer__SendBuffered_t CHookManager::m_pfnRakPeer__SendBuffered = NULL;
 void __thiscall CHookManager::RakPeer__SendBufferedHook(void *_this, const char *data, int numberOfBitsToSend, PacketPriority priority, PacketReliability reliability, char orderingChannel, PlayerID playerId, bool broadcast, /*RemoteSystemStruct::ConnectMode*/ int connectionMode)
 {
-	CLog log = CLog("sendbuffered.txt");
-	log.Write("call");
-
-	m_pfnRakPeer__SendBuffered(_this, data, numberOfBitsToSend, priority, reliability, orderingChannel, playerId, broadcast, connectionMode);
+	char *new_data = nullptr;
+	CPacketIntegrity::Check(data, numberOfBitsToSend, new_data);
+	
+	m_pfnRakPeer__SendBuffered(_this, (new_data == nullptr)?data:new_data, numberOfBitsToSend, priority, reliability, orderingChannel, playerId, broadcast, connectionMode);
+	
+	if(new_data != nullptr)
+		delete[] new_data;
 }
 
 HOOK CHookManager::GravityHook()

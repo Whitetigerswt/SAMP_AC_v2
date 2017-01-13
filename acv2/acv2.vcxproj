@@ -111,6 +111,7 @@
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CMem.cpp" />
     <ClCompile Include="CModuleSecurity.cpp" />
+    <ClCompile Include="CPacketIntegrity.cpp" />
     <ClCompile Include="CParseCommandLine.cpp" />
     <ClCompile Include="CProcessList.cpp" />
     <ClCompile Include="DirectX Hooks\CD3D9DeviceProxy.cpp" />
@@ -277,6 +278,7 @@
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CMem.h" />
     <ClInclude Include="CModuleSecurity.h" />
+    <ClInclude Include="CPacketIntegrity.h" />
     <ClInclude Include="CParseCommandLine.h" />
     <ClInclude Include="CPatch.h" />
     <ClInclude Include="CProcessList.h" />
