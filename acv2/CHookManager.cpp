@@ -13,7 +13,6 @@
 #include "DirectX Hooks\CMessageProxy.h"
 #include "s0beit\samp.h"
 #include "ManualInjection.h"
-#include "CLog.h"
 #include "CPacketIntegrity.h"
 #include "Detours\detours.h"
 

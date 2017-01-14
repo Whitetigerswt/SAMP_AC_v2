@@ -3,7 +3,6 @@
 #include "Network\CRakClientHandler.h"
 #include "CPacketIntegrity.h"
 #include "Misc.h"
-#include "CLog.h"
 
 const int MAX_TIME_DIFFERENCE = 1500;
 
@@ -35,7 +34,6 @@ void CPacketIntegrity::Check(const char *data, int size_in_bits)
 	// Maybe this check should be done in another thread?
 	// Is MD5'ing every packet slowing down sending process? or causing fps drops?
 
-	CLog("integrity.txt").Write(__FUNCTION__" called");
 	unsigned int tick = GetTickCount();
 	std::string md5 = Misc::MD5_Memory(reinterpret_cast<int>(data), BITS_TO_BYTES(size_in_bits));
 	std::vector<std::pair<CPacketIntegrity*, bool>> packets_to_remove; // bool = was packet lost?
@@ -55,8 +53,8 @@ void CPacketIntegrity::Check(const char *data, int size_in_bits)
 	{
 		if (p.second)
 		{
-			CLog("integrity.txt").Write(__FUNCTION__" packet lost");
 			// PACKET LOST!
+			// Force crash?
 		}
 
 		delete p.first;
