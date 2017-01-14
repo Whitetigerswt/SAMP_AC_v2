@@ -85,7 +85,9 @@ private:
 	// Obtain stSAMP struct
 	static void GetSampInfo();
 
-	// PURPOSE: Hook RakNet internals and prevent packet manipulating
+	// PURPOSE: Hook RakNet internals and detect packet manipulating
+	// NOTE: this function is called from multiple threads
+	// NOTE: packets come from multiple sources: SA-MP, SAMPAC, RakNet itself, other loaded libraries
 	static void __thiscall RakPeer__SendBufferedHook(void *_this, const char *data, int numberOfBitsToSend, PacketPriority priority, PacketReliability reliability, char orderingChannel, PlayerID playerId, bool broadcast, /*RemoteSystemStruct::ConnectMode*/ int connectionMode);
 	static RakPeer__SendBuffered_t m_pfnRakPeer__SendBuffered;
 

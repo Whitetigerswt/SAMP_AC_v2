@@ -1,4 +1,5 @@
 #include "../../Shared/Network/BitStream.h"
+#include <boost\thread.hpp>
 #include <Windows.h>
 
 #include "../s0beit/stdtypes.h"
@@ -40,7 +41,7 @@ void CRakClientHandler::CustomSend(RakNet::BitStream *bs, PacketPriority priorit
 	if (IsConnected())
 	{
 		// save packet for comparing before sending
-		CPacketIntegrity::Send(bs);
+		new CPacketIntegrity(bs);
 
 		client->Send(bs, priority, reliability, orderingChannel);
 	}

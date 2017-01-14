@@ -1,47 +1,64 @@
+#include <boost\thread.hpp>
+
 #include "Network\CRakClientHandler.h"
 #include "CPacketIntegrity.h"
-#include "CMem.h"
+#include "Misc.h"
 #include "CLog.h"
 
-char *CPacketIntegrity::m_Data = nullptr;
-size_t CPacketIntegrity::m_SizeInBits = 0;
+const int MAX_TIME_DIFFERENCE = 1500;
 
-void CPacketIntegrity::Send(BitStream *bitStream)
+std::vector<CPacketIntegrity*> CPacketIntegrity::m_instances;
+boost::shared_mutex CPacketIntegrity::m_access;
+
+CPacketIntegrity::CPacketIntegrity(BitStream *bitStream)
 {
-	CLog("integrity.txt").Write(__FUNCTION__" called");
-	if (m_Data != nullptr) 
-	{
-		// last packet was 'lost' on the way to RakPeer::SendBuffered() meaning that somebody blocked our packet, or see below:
-		// sometimes this function gives false alarms, or at least in early stages of connection initialization
-		
-		// force quit?
+	m_time = GetTickCount();
+	m_md5 = Misc::MD5_Memory(reinterpret_cast<int>(bitStream->GetData()), BITS_TO_BYTES(bitStream->GetNumberOfBitsUsed()));
 
-		CLog("integrity.txt").Write("lost packet");
-		delete[] m_Data;
-	}
-
-	// check if previous packet was sent
-	m_SizeInBits = bitStream->GetNumberOfBitsUsed();
-	m_Data = new char[BITS_TO_BYTES(m_SizeInBits)]; // m_SizeInBytes can't be 0, right?
-	CMem::Cpy(m_Data, bitStream->GetData(), BITS_TO_BYTES(m_SizeInBits));
+	boost::unique_lock<boost::shared_mutex> lock(m_access);
+	m_instances.push_back(this);
 }
 
-void CPacketIntegrity::Check(const char *data, int& size_in_bits, char *new_data)
+CPacketIntegrity::~CPacketIntegrity()
 {
-	CLog("integrity.txt").Write(__FUNCTION__" called");
-	if (m_Data != nullptr) 
-	{
-		if (m_SizeInBits != size_in_bits || memcmp(data, m_Data, BITS_TO_BYTES(m_SizeInBits)) != 0)
-		{
-			// our packet was modified; we're putting back original data
-			size_in_bits = m_SizeInBits;
-			new_data = new char[BITS_TO_BYTES(m_SizeInBits)];
-			CMem::Cpy(new_data, m_Data, BITS_TO_BYTES(m_SizeInBits));
+	boost::unique_lock<boost::shared_mutex> lock(m_access);
+	m_instances.erase(std::remove(m_instances.begin(), m_instances.end(), this), m_instances.end());
+}
 
-			CLog("integrity.txt").Write("modified packet");
-			// announce the server?
+bool CPacketIntegrity::Compare(std::string const& md5)
+{
+	return md5 == m_md5;
+}
+
+void CPacketIntegrity::Check(const char *data, int size_in_bits)
+{
+	// Maybe this check should be done in another thread?
+	// Is MD5'ing every packet slowing down sending process? or causing fps drops?
+
+	CLog("integrity.txt").Write(__FUNCTION__" called");
+	unsigned int tick = GetTickCount();
+	std::string md5 = Misc::MD5_Memory(reinterpret_cast<int>(data), BITS_TO_BYTES(size_in_bits));
+	std::vector<std::pair<CPacketIntegrity*, bool>> packets_to_remove; // bool = was packet lost?
+	
+	{
+		boost::shared_lock<boost::shared_mutex> lock(m_access);
+		for (auto& p : m_instances)
+		{
+			if (tick - p->m_time > MAX_TIME_DIFFERENCE)
+				packets_to_remove.push_back(std::make_pair(p, true));
+			else if (p->Compare(md5))
+				packets_to_remove.push_back(std::make_pair(p, false));
 		}
-		delete[] m_Data;
-		m_Data = nullptr;
+	}
+	
+	for (auto& p : packets_to_remove)
+	{
+		if (p.second)
+		{
+			CLog("integrity.txt").Write(__FUNCTION__" packet lost");
+			// PACKET LOST!
+		}
+
+		delete p.first;
 	}
 }
