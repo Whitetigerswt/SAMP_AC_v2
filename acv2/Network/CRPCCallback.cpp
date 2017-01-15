@@ -1,4 +1,5 @@
 #include "CRPCCallback.h"
+#include "CRakClientHandler.h"
 #include "../CLoader.h"
 #include "../CLog.h"
 #include "../Misc.h"
@@ -8,7 +9,6 @@
 #include "../CMem.h"
 #include "../../Shared/Network/Network.h"
 #include "../../Shared/Network/ACVerifiedPacket.h"
-#include "CRakClientHandler.h"
 
 #include <Boost\thread.hpp>
 #include <tchar.h>

@@ -3,6 +3,8 @@
 
 #define HOOK __declspec(naked) void
 
+typedef void(__thiscall* RakPeer__SendBuffered_t)(void*, const char*, int, PacketPriority, PacketReliability, char, PlayerID, bool, int/*original prototype: RemoteSystemStruct::ConnectMode*/);
+
 class CHookManager
 {
 public:
@@ -82,6 +84,12 @@ private:
 
 	// Obtain stSAMP struct
 	static void GetSampInfo();
+
+	// PURPOSE: Hook RakNet internals and detect packet manipulating
+	// NOTE: this function is called from multiple threads
+	// NOTE: packets come from multiple sources: SA-MP, SAMPAC, RakNet itself, other loaded libraries
+	static void __thiscall RakPeer__SendBufferedHook(void *_this, const char *data, int numberOfBitsToSend, PacketPriority priority, PacketReliability reliability, char orderingChannel, PlayerID playerId, bool broadcast, /*RemoteSystemStruct::ConnectMode*/ int connectionMode);
+	static RakPeer__SendBuffered_t m_pfnRakPeer__SendBuffered;
 
 	static void AltTabHook();
 
