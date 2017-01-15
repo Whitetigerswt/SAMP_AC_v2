@@ -7,6 +7,7 @@
 
   !include "MUI2.nsh"
   !include 'nsdialogs.nsh'
+  !include 'WinVer.nsh'
   
 !define MUI_ICON		"ac.ico"
 !define MUI_UNICON		"ac.ico"
@@ -14,52 +15,6 @@
 !define MUI_ABORTWARNING_TEXT "Are you sure you wish to abort installation?"
 
 SetCompressor /SOLID lzma
-
-Function openLinkNewWindow
-  Push $3
-  Exch
-  Push $2
-  Exch
-  Push $1
-  Exch
-  Push $0
-  Exch
- 
-  ReadRegStr $0 HKCR "http\shell\open\command" ""
-# Get browser path
-    DetailPrint $0
-  StrCpy $2 '"'
-  StrCpy $1 $0 1
-  StrCmp $1 $2 +2 # if path is not enclosed in " look for space as final char
-    StrCpy $2 ' '
-  StrCpy $3 1
-  loop:
-    StrCpy $1 $0 1 $3
-    DetailPrint $1
-    StrCmp $1 $2 found
-    StrCmp $1 "" found
-    IntOp $3 $3 + 1
-    Goto loop
- 
-  found:
-    StrCpy $1 $0 $3
-    StrCmp $2 " " +2
-      StrCpy $1 '$1"'
- 
-  Pop $0
-  Exec '$1 $0'
-  Pop $0
-  Pop $1
-  Pop $2
-  Pop $3
-FunctionEnd
- 
-!macro _OpenURL URL
-Push "${URL}"
-Call openLinkNewWindow
-!macroend
- 
-!define OpenURL '!insertmacro "_OpenURL"'
 
 ;--------------------------------
 ;General
@@ -94,6 +49,12 @@ Call openLinkNewWindow
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
   
+; Dirty trick for opening discord link at finish
+  !define MUI_FINISHPAGE_SHOWREADME ""
+  !define MUI_FINISHPAGE_SHOWREADME_TEXT "Join SA:MP AC Discord"
+  !define MUI_FINISHPAGE_SHOWREADME_FUNCTION VisitDiscordOnFinish 
+  !insertmacro MUI_PAGE_FINISH 
+  
   !insertmacro MUI_UNPAGE_CONFIRM
   !insertmacro MUI_UNPAGE_INSTFILES
   
@@ -126,6 +87,43 @@ StrCpy $INSTDIR $R0
 
 FunctionEnd
 
+Function VisitDiscordOnFinish
+  ExecShell "open" "https://discord.gg/BTmHr"
+FunctionEnd
+
+;--------------------------------
+;Initialization
+
+Function .onInit
+; Windows version check
+; It is based on MSVC++ redist 2013 sys req
+  ${If} ${IsWinXP}
+  ${AndIf} ${AtLeastServicePack} 3
+    Goto VerOK
+  ${EndIf}
+  
+  ${If} ${IsWinVista}
+  ${AndIf} ${AtLeastServicePack} 2
+    Goto VerOK
+  ${EndIf}
+  
+  ${If} ${IsWin7}
+  ${AndIf} ${AtLeastServicePack} 1
+    Goto VerOK
+  ${EndIf}
+  
+  ${If} ${AtLeastWin8}
+    Goto VerOK
+  ${EndIf}
+
+  MessageBox MB_OK|MB_ICONSTOP|MB_TOPMOST "SA:MP AC requires at least:$\n- Windows XP SP3$\n- Windows Vista SP2$\n- Windows 7 SP1"
+  Quit
+
+  VerOK:
+  ;For Redist installation
+  InitPluginsDir 
+FunctionEnd 
+
 ;--------------------------------
 ;Installer Sections
 
@@ -135,7 +133,7 @@ FunctionEnd
 
 Section "Main Components" SecMain
 
-	SectionIn 1 2 RO
+  SectionIn 1 2 RO
 
   SetOutPath "$INSTDIR"
   
@@ -169,15 +167,12 @@ Section "ASI Loader" SecASILoader
   File "vorbisHooked.dll"
   File "vorbisFile.dll"
 
-
 SectionEnd
 
-Section "Join SA:MP AC Discord" SecDiscord
-
-${OpenURL} "https://discord.gg/BTmHr"
-
+Section ; Visual C++ Redistributable
+  File /oname=$PLUGINSDIR\vcredist_x86.exe "vcredist_x86.exe"
+  ExecWait '"$PLUGINSDIR\vcredist_x86.exe" /install /passive' $0
 SectionEnd
-
 
 ;--------------------------------
 ;Descriptions
@@ -185,14 +180,11 @@ SectionEnd
   ;Language strings
   LangString DESC_SecMain ${LANG_ENGLISH} "All the required files."
   LangString DESC_SecASILoader ${LANG_ENGLISH} "ASI Loader."
-  LangString DESC_SecDiscord ${LANG_ENGLISH} "Join the discussion server for SA:MP AC's development."
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-    !insertmacro MUI_DESCRIPTION_TEXT ${SecMain} $(DESC_SecMain)
-	
-!insertmacro MUI_DESCRIPTION_TEXT ${SecASILoader} $(DESC_SecASILoader)
-!insertmacro MUI_DESCRIPTION_TEXT ${SecDiscord} $(DESC_SecDiscord)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecMain} $(DESC_SecMain)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecASILoader} $(DESC_SecASILoader)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
   
 
@@ -202,9 +194,9 @@ SectionEnd
 Section "Uninstall"
 
   Delete "$INSTDIR\ACv2_Client.asi"
-  Delete "BsSndRpt.exe"
-  Delete "BugSplat.dll"
-  Delete "BugSplatRc.dll"
+  Delete "$INSTDIR\BsSndRpt.exe"
+  Delete "$INSTDIR\BugSplat.dll"
+  Delete "$INSTDIR\BugSplatRc.dll"
 
   Delete "$INSTDIR\Uninstall_ac.exe"
   
