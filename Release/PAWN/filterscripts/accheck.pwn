@@ -255,19 +255,6 @@ COMMAND:acchecklist(playerid, params[])
 	return 1;
 }
 
-public AC_OnFileExecuted(playerid, module[], md5[], bool:isCheat)
-{
-	// If it's a cheat file, ac is not enabled and this player has got ac-checked enabled on them
-	if(isCheat && !IsACEnabled() && PlayerACCheck[playerid] == true)
-	{
-	    // Report it to other players
-		new str[144];
-		format(str, sizeof str, "{FF0000}[AC] {FFFFFF}File execution report from {FF0000}%s {FFFFFF}module: %s / blacklisted: Yes", ReturnPlayerName(playerid), module);
-		SendClientMessageToAll(-1, str);
-	}
-	return 1;
-}
-
 public AC_OnImgFileModifed(playerid, filename[], md5[])
 {
     // If it's a modified file, ac is not enabled and this player has got ac-checked enabled on them
