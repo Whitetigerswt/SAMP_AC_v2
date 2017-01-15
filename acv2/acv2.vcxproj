@@ -94,6 +94,7 @@
       <MapFileName>ACv2_Client.map</MapFileName>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
+      <AdditionalOptions>/NODEFAULTLIB:LIBCMT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -395,7 +395,7 @@ void CAntiCheat::CheckVersionCompatible(float version)
 		char msg[150];
 
 		// Format the message letting the user know their AC version will not work on this server.
-		snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. IT WILL NOT WORK ON THIS SERVER.");
+		snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
 
 		// Send the message to the user.
 		SendClientMessage(ID, -1, msg);

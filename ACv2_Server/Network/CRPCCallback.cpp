@@ -34,8 +34,24 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_TAMPER_ATTEMPT, OnTamperAttempt);
 	CRPC::Add(TOGGLE_PAUSE, OnPauseToggled);
 	CRPC::Add(TAKE_SCREENSHOT, OnTakeScreenshot);
+	CRPC::Add(VERSION_INCOMPAT2, VersionIncompat);
 }
 
+
+RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra)
+{
+	// Inform the player there version of AC is not compatible with the server.
+	char msg[150];
+
+	// Format the message letting the user know their AC version will not work on this server.
+	snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
+
+	// Send the message to the user.
+	SendClientMessage(iExtra, -1, msg);
+
+	// Close the connection.
+	Kick(iExtra);
+}
 RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
 {
 	// Calculate verified packet
