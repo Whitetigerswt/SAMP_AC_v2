@@ -97,31 +97,13 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 		// Loop through the list of bad processes to see if we can find a match to the one just sent to us by the client.
 		if(found)
 		{
-			// Create 2 variables, one holding the player name, and one holding a formatted string telling why we're going to kick this player.
-			char name[MAX_PLAYER_NAME], msg[144];
-
-			// Get the player name and store it in the name variable.
-			GetPlayerName(ID, name, sizeof(name));
-
-			// Format the string telling all the players on the server why we kicked this one.
-			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for using an illegal file: \"{FF0000}%s{FFFFFF}\"", name, Utility::GetSafeFilePath(processpath));
-
-			// Send the message to all the players on the server.
-			SendClientMessageToAll(-1, msg);
-
 			// Add cheater to AC global ban list
 			BanHandler::AddCheater(ID, processpath);
-
-			// Print the result to the console so it can be logged.
-			Utility::Printf("%s has been kicked from the server for using illegal file: \"%s\"", name, processpath);
-
-			// Kick the player from the server.
-			SetTimer(3000, 0, Callback::KickPlayer, (void*)ID);
 		}
 	}
 
 	// Execute the PAWN callback.
-	Callback::Execute("AC_OnFileExecuted", "issi", found, md5, processpath, ID);
+	Callback::Execute("AC_OnFileExecuted", "ssi", md5, processpath, ID);
 }
 
 void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
@@ -158,18 +140,8 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 
 void CAntiCheat::OnFileCalculated(char* path, char* md5)
 {	
-	/*
-			Create a boolean variable to indicate whether a match has been found for this file in our list
-		of the MD5 of original/unmodified game files.
-
-			In other words, we will set this variable to TRUE once we find a match (md5 comparison) for it
-		in our list of the MD5 of original/unmodified game files. So, setting its value to TRUE means 
-		everything is FINE. 
-		
-			But, if we do not find a match for this file in our trusted list, this means it is a modified 
-		file and the value of 'found' will remain FALSE. Hence, FALSE means this is a bad file or a cheat.
-	*/
-	bool found = false;
+	// Indicate whether this file is modified or not.
+	bool isModified = true;
 
 	// Loop through a list of our trusted md5's that we stored previously...
 	for (std::vector<std::string>::iterator it = m_MD5s.begin(); it != m_MD5s.end(); ++it)
@@ -177,13 +149,8 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 		// Compare the md5 sent to us by the client to our list of trusted MD5's
 		if (strcmp(it->c_str(), md5) == 0)
 		{
-			/*
-					Okay, we found a match for our client's file in our trusted list of files. This means
-				our client is not cheating and is using original/unmodified game files. So we set the value
-				of our variable to TRUE which indicates that everything is alright.
-
-			*/
-			found = true;
+			// File exists in our trusted list, so it is not modified
+			isModified = false;
 			break;
 		}
 	}
@@ -192,7 +159,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 	if (Callback::GetACEnabled() == true)
 	{
 		// See if we have not found a match for this file in our trusted list of files. This means it's a bad file.
-		if (!found)
+		if (isModified)
 		{
 			// Create a new variable holding a string that will be formatted to let the player know he's been kicked.
 			char msg[160];
@@ -221,18 +188,9 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 			SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 		}
 	}
-	/* 
-		Execute PAWN callback.
-
-		# Sidenote
-		There's a reason why we send the value of the 'found' variable reversed (i.e  !found).
-		If you read the documentation of AC_OnFileCalculated callback, you will realize that the
-		value of 'isCheat' boolean variable is TRUE when there is dangerous while 'found' variable
-		is completely contrary which is why we reverse values. 
-		(Scroll up! Documentation is written where the local variable, 'found', is declared).
-
-	*/
-	Callback::Execute("AC_OnFileCalculated", "issi", !found, md5, path, ID);
+	
+	// Execute PAWN callback.
+	Callback::Execute("AC_OnFileCalculated", "issi", isModified, md5, path, ID);
 }
 
 void CAntiCheat::OnImgFileModified(char* filename, char* md5)

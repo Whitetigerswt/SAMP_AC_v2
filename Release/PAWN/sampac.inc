@@ -241,7 +241,7 @@ forward AC_OnMD5Calculated(playerid, address, size, md5[]);
 // bool:isCheat   - true if this file is on the AC blacklist.
 //
 // Returns: irrelevant
-forward AC_OnFileExecuted(playerid, module[], md5[], bool:isCheat);
+forward AC_OnFileExecuted(playerid, module[], md5[]);
 
 // PURPOSE: Callback for when the AC has detected there is a file inside gta3.img that is modifed that is also on the list of bad gta3.img files. (Files that can't be modified in gta3.img)
 // REQUIRES: The player is using AC.
