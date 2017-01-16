@@ -45,7 +45,7 @@ void CLoader::Initialize(HMODULE hMod)
 	CHookManager::Load();
 
 	wchar_t version[50];
-	swprintf_s(version, TEXT("%f - %f"), CURRENT_MAJOR_VERSION, CURRENT_VERSION);
+	swprintf_s(version, TEXT("%f"), CURRENT_VERSION);
 	mpSender = new MiniDmpSender(L"whitetigerswt_gmail_com", L"ACv2_Client", version, NULL);
 	mpSender->setDefaultUserName(GetCommandLine());
 
