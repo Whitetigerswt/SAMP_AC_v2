@@ -88,41 +88,11 @@ StrCpy $INSTDIR $R0
 FunctionEnd
 
 Function VisitDiscordOnFinish
-  ExecShell "open" "https://discord.gg/BTmHr"
+  ExecShell "open" "https://discord.gg/3NS5dMB"
 FunctionEnd
 
 ;--------------------------------
 ;Initialization
-
-Function .onInit
-; Windows version check
-; It is based on MSVC++ redist 2013 sys req
-  ${If} ${IsWinXP}
-  ${AndIf} ${AtLeastServicePack} 3
-    Goto VerOK
-  ${EndIf}
-  
-  ${If} ${IsWinVista}
-  ${AndIf} ${AtLeastServicePack} 2
-    Goto VerOK
-  ${EndIf}
-  
-  ${If} ${IsWin7}
-  ${AndIf} ${AtLeastServicePack} 1
-    Goto VerOK
-  ${EndIf}
-  
-  ${If} ${AtLeastWin8}
-    Goto VerOK
-  ${EndIf}
-
-  MessageBox MB_OK|MB_ICONSTOP|MB_TOPMOST "SA:MP AC requires at least:$\n- Windows XP SP3$\n- Windows Vista SP2$\n- Windows 7 SP1"
-  Quit
-
-  VerOK:
-  ;For Redist installation
-  InitPluginsDir 
-FunctionEnd 
 
 ;--------------------------------
 ;Installer Sections
@@ -141,7 +111,8 @@ Section "Main Components" SecMain
   File "BsSndRpt.exe"
   File "BugSplat.dll"
   File "BugSplatRc.dll"
-  
+  File "samp_launcher.exe"
+
   Delete "$INSTDIR\d3d9.dll"
   
   ;Store installation folder
@@ -169,11 +140,6 @@ Section "ASI Loader" SecASILoader
 
 SectionEnd
 
-Section ; Visual C++ Redistributable
-  File /oname=$PLUGINSDIR\vcredist_x86.exe "vcredist_x86.exe"
-  ExecWait '"$PLUGINSDIR\vcredist_x86.exe" /install /passive' $0
-SectionEnd
-
 ;--------------------------------
 ;Descriptions
 
@@ -197,6 +163,7 @@ Section "Uninstall"
   Delete "$INSTDIR\BsSndRpt.exe"
   Delete "$INSTDIR\BugSplat.dll"
   Delete "$INSTDIR\BugSplatRc.dll"
+  Delete "$INSTDIR\samp_launcher.exe"
 
   Delete "$INSTDIR\Uninstall_ac.exe"
   

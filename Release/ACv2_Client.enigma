@@ -2327,7 +2327,7 @@ Please, register this software to remove trial limitations!</Text>
     </CountOfDaysLimit>
     <ExpirationDateLimit>
       <Enabled>True</Enabled>
-      <ExpirationDate>2017-01-11T23:59:30.629Z</ExpirationDate>
+      <ExpirationDate>2017-01-19T23:59:30.629Z</ExpirationDate>
       <TerminateAfterDelay>True</TerminateAfterDelay>
       <Delay>0</Delay>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>

@@ -426,7 +426,7 @@ void CLoader::RunElevated()
 	// Set our info to run gta_sa.exe with admin permissions
 	SHELLEXECUTEINFO sei = { sizeof(sei) };
 	sei.lpVerb = TEXT("runas");
-	sei.lpFile = TEXT("gta_sa.exe");
+	sei.lpFile = TEXT("samp_launcher.exe");
 	sei.nShow = SW_NORMAL;
 	sei.lpParameters = GetCommandLine();
 
