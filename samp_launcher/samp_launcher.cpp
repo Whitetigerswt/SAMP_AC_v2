@@ -3,6 +3,7 @@
 // The purpose of this program is just to show the basics of a custom launcher that people can make in SA-MP.
 
 #include <iostream>
+#include <tchar.h>
 
 // entry point
 int main(int argc, char* argv[])
@@ -14,56 +15,41 @@ int main(int argc, char* argv[])
 	memset(&ProcessInfo, 0, sizeof(PROCESS_INFORMATION));
 	memset(&StartupInfo, 0, sizeof(STARTUPINFO));
 
-	// Tell the user to enter an IP.
-	/*std::cout << "Please enter the IP you would like to connect to.\n";
-
-	// Get the IP.
-	char ip[24];
-	std::cin >> ip;
-
-	// Tell the user to enter a port
-	std::cout << "Please enter the port.\n";
-
-	// Get the port they typed.
-	int port;
-	std::cin >> port;
-	*/
-	// Get the user's gta_sa location
-	char exeLocation[256];
+	wchar_t exeLocation[256];
 	DWORD buffer = sizeof(exeLocation);
 
 	// Open registry key
 	HKEY hKey;
 	long lError = RegOpenKeyEx(HKEY_CURRENT_USER,
-		"Software\\SAMP",
+		L"Software\\SAMP",
 		0,
 		KEY_READ,
 		&hKey);
 
 	// Get value
-	DWORD dwRet = RegQueryValueEx(hKey, "gta_sa_exe", NULL, NULL, (LPBYTE)&exeLocation, &buffer);
+	DWORD dwRet = RegQueryValueEx(hKey, L"gta_sa_exe", NULL, NULL, (LPBYTE)&exeLocation, &buffer);
 
 	// Make sure we got a good value for the gta_sa path
 	if (dwRet != ERROR_SUCCESS)
 	{
-		MessageBoxA(NULL, "Could not get the location of your GTA:SA installation. Is SA-MP installed correctly?", "SA:MP Launcher", MB_ICONERROR);
+		MessageBox(NULL, L"Could not get the location of your GTA:SA installation. Is SA-MP installed correctly?", L"SA:MP Launcher", MB_ICONERROR);
 		return 0;
 	}
 
 	// remove \gta_sa.exe in a new variable (leaving just the directory path)
-	char path[256];
-	strcpy_s(path, sizeof(path), exeLocation);
-	path[strlen(path) - 11] = '\0';
+	wchar_t path[256];
+	_tcscpy_s(path, sizeof(path), exeLocation);
+	path[_tcslen(path) - 11] = '\0';
 
 	// Create a new process, but don't let it run yet, it's suspended.
 	if (CreateProcess(exeLocation, GetCommandLine(), NULL, NULL, FALSE, DETACHED_PROCESS | CREATE_SUSPENDED, NULL, path, &StartupInfo, &ProcessInfo))
 	{
 		// Create a new string that will hold the path to the file samp.dll
-		char szWithSampdll[256] = "";
-		sprintf_s(szWithSampdll, sizeof(szWithSampdll), "%s\\samp.dll", path);
+		wchar_t szWithSampdll[256] = L"";
+		_stprintf_s(szWithSampdll, sizeof(szWithSampdll), L"%ls\\samp.dll", path);
 
 		// Get the module handle to kernal32.dll
-		HMODULE hMod = GetModuleHandle("kernel32.dll");
+		HMODULE hMod = GetModuleHandle(L"kernel32.dll");
 
 		// Create address variable to hold the address of the LoadLibrary function.
 		void* addr = NULL;
@@ -71,25 +57,25 @@ int main(int argc, char* argv[])
 		// If it was a valid handle.
 		if (hMod)
 			// Get the address of the LoadLibrary function so we can load samp.dll
-			addr = (void*)GetProcAddress(hMod, "LoadLibraryA");
+			addr = (void*)GetProcAddress(hMod, "LoadLibraryW");
 		else
 		{
-			MessageBoxA(NULL, "Could not find kernel32.dll", "SA:MP Launcher", MB_ICONERROR);
+			MessageBox(NULL, L"Could not find kernel32.dll", L"SA:MP Launcher", MB_ICONERROR);
 			return 0;
 		}
 
 		// Allocate memory in the new process we just created to store the string of the samp.dll file path.
-		void* arg = (void*)VirtualAllocEx(ProcessInfo.hProcess, NULL, strlen(szWithSampdll), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+		void* arg = (void*)VirtualAllocEx(ProcessInfo.hProcess, NULL, _tcslen(szWithSampdll), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 
 		// Make sure the space was allocated.
 		if (arg != NULL)
 			// Write to the memory we just allocated the file path to samp.dll including directory.
-			WriteProcessMemory(ProcessInfo.hProcess, arg, szWithSampdll, strlen(szWithSampdll), NULL);
+			WriteProcessMemory(ProcessInfo.hProcess, arg, szWithSampdll, _tcslen(szWithSampdll), NULL);
 		else
 		{
 			// arg is null, and we can't continue then.
 			// Let the user know there was a problem and exit.
-			MessageBoxA(NULL, "Memory could not be allocated to inject samp.dll", "SA:MP Launcher", MB_ICONERROR);
+			MessageBox(NULL, L"Memory could not be allocated to inject samp.dll", L"SA:MP Launcher", MB_ICONERROR);
 			return 0;
 		}
 
@@ -105,7 +91,7 @@ int main(int argc, char* argv[])
 		}
 		else
 		{
-			MessageBoxA(NULL, "Could not find the address of LoadLibraryA", "SA:MP Launcher", MB_ICONERROR);
+			MessageBox(NULL, L"Could not find the address of LoadLibraryA", L"SA:MP Launcher", MB_ICONERROR);
 			return 0;
 		}
 
@@ -122,7 +108,7 @@ int main(int argc, char* argv[])
 		}
 		else
 		{
-			MessageBoxA(NULL, "the ID returned from CreateRemoteThread was invalid.", "SA:MP Launcher", MB_ICONERROR);
+			MessageBox(NULL, L"the ID returned from CreateRemoteThread was invalid.", L"SA:MP Launcher", MB_ICONERROR);
 			return 0;
 		}
 
