@@ -100,7 +100,7 @@
       <Command>copy /Y "$(ProjectDir)ACv2_Client.map" "$(SolutionDir)Release\ACv2_Client.map"
 copy /Y "$(SolutionDir)Release\ACv2_Client.asi" "$(SolutionDir)Release\ACv2_Client_unencrypted.asi"
 cd $(TargetDir)
-sendPdbs.exe /u whitetigerswt@gmail.com /p j#HRRfA1AjK2RG*u /a SAMP_AC_v2 /v 2.8 /f "ACv2_Client.pdb;ACv2_Client.asi"
+sendPdbs.exe /u whitetigerswt@gmail.com /p j#HRRfA1AjK2RG*u /a SAMP_AC_v2 /v 2.81 /f "ACv2_Client.pdb;ACv2_Client.asi"
 "$(MSBuildProgramFiles32)\The Enigma Protector\enigma32.exe" "$(SolutionDir)Release\ACv2_Client.enigma"
 "$(MSBuildProgramFiles32)\NSIS\makensis.exe" "$(TargetDir)sampac.nsi"</Command>
       <Message>copy /Y "$(ProjectDir)ACv2_Client.map" "$(SolutionDir)Release\ACv2_Client.map"</Message>
