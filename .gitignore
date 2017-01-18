@@ -1,0 +1,8 @@
+*.tlog
+.vs/acv2/v14/.suo
+*.db
+*.user
+acv2/Debug/ACv2_Client.Build.CppClean.log
+*.obj
+*.o
+*.log

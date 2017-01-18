@@ -119,25 +119,6 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 // Returns: bool - True if switch reload is enabled (default)
 #define GetPlayerSwitchReload(%0) ac_gateway_param1("GetPlayerSwitchReload", %0)
 
-// PURPOSE: Toggle the players ability to use lite foot.
-// REQUIRES: The player is using AC.
-//
-// Params:
-// playerid         - Player to change
-// bool:toggle      - true to enable litefoot, false to disable
-//
-// Returns: True if the action was sent to the client.
-#define TogglePlayerLiteFoot(%0) ac_gateway_param2("TogglePlayerLiteFoot", %0)
-
-// PURPOSE: Get the players ability to use lite foot.
-// REQUIRES: Nothing
-//
-// Params:
-// playerid         - Player to check
-//
-// Returns: bool - true if litefoot is enabled for this player (default: false)
-#define GetPlayerLiteFoot(%0) ac_gateway_param1("GetPlayerLiteFoot", %0)
-
 // PURPOSE: Toggle the players unlimited sprint.
 // REQUIRES: The player is using AC.
 // NOTES: Calling this function to true, and then back to false does NOT replenish sprint. Only SpawnPlayer will replenish sprint.
@@ -215,7 +196,16 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 // Returns: bool - True if vehicle blips are enabled.
 #define GetPlayerVehicleBlips(%0) ac_gateway_param1("GetPlayerVehicleBlips", %0)
 
-// PURPOSE: Check if the AC is enabled via /actoggle 
+// PURPOSE: Check if the player is banned on Anti-Cheat or not.
+// REQUIRES: Nothing.
+//
+// Params:
+// playerid         - Player to check
+//
+// Returns: bool - True if player is banned.
+#define AC_IsPlayerBanned(%0) ac_gateway_param1("AC_IsPlayerBanned", %0)
+
+// PURPOSE: Check if the AC is enabled via /actoggle
 // REQUIRES: Nothing
 //
 // Params: Nothing
@@ -251,7 +241,7 @@ forward AC_OnMD5Calculated(playerid, address, size, md5[]);
 // bool:isCheat   - true if this file is on the AC blacklist.
 //
 // Returns: irrelevant
-forward AC_OnFileExecuted(playerid, module[], md5[], bool:isCheat);
+forward AC_OnFileExecuted(playerid, module[], md5[]);
 
 // PURPOSE: Callback for when the AC has detected there is a file inside gta3.img that is modifed that is also on the list of bad gta3.img files. (Files that can't be modified in gta3.img)
 // REQUIRES: The player is using AC.
@@ -298,7 +288,7 @@ forward AC_OnPlayerPause(playerid, type, bool:pause);
 // playerid         - Player who just took a screenshot
 //
 // Returns: irrelevant
-forward AC_OnScreenshotTaken(playerid); 
+forward AC_OnScreenshotTaken(playerid);
 
 // PURPOSE: Callback for when a player's hardware ID has been initially calculated.
 // REQUIRES: The player is using AC.
