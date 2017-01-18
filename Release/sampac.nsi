@@ -7,7 +7,6 @@
 
   !include "MUI2.nsh"
   !include 'nsdialogs.nsh'
-  !include 'WinVer.nsh'
   
 !define MUI_ICON		"ac.ico"
 !define MUI_UNICON		"ac.ico"
