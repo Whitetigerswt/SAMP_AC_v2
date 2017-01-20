@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <cstring>
 
+#include <boost/thread.hpp>
 #include <boost/algorithm/string.hpp>
 
 #ifndef MAX_PATH
@@ -52,16 +53,16 @@ RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra
 	// Close the connection.
 	Kick(iExtra);
 }
-RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
+
+void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 {
-	// Calculate verified packet
 	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
 	bool verified = true;
 
 	// Convert to byte
 	BYTE md5[16];
-	for (int i = 0; i < 16; ++i)
+	for (int i = 0; i < 16 || verified == false; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
 		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
@@ -73,18 +74,7 @@ RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtr
 		// See if any of the bytes sent from client does not match
 		if (read != md5[i])
 		{
-			// Kick the client
-
-			char kickmsg[144], name[MAX_PLAYER_NAME];
-			GetPlayerName(iExtra, name, sizeof name);
-			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client properly.", name, iExtra);
-
-			SendClientMessageToAll(0xFF0000FF, kickmsg);
-			Utility::Printf(kickmsg);
-
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
 			verified = false;
-			break;
 		}
 	}
 
@@ -92,6 +82,13 @@ RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtr
 	{
 		Callback::SetLastTimeVerifiedClient(iExtra);
 	}
+}
+
+RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
+{
+	// Calculate verified packet
+
+	boost::thread verify(&CRPCCallback::ThreadedClientVerify, bsData, iExtra);	
 }
 
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
