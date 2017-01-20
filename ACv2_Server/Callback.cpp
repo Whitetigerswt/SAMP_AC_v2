@@ -251,22 +251,6 @@ namespace Callback
 							SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 							break;
 						}
-						case false:
-						{
-							// AC is not enabled. A quick informing should sufficie.
-							char msg[144];
-
-							// Tell the player
-							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
-							SendClientMessage(playerid, -1, msg);
-							char name[MAX_PLAYER_NAME];
-							GetPlayerName(playerid, name, sizeof name);
-
-							// Tell other players connected
-							snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned from AC servers. Know more: %s", name, AC_WEBSITE);
-							SendClientMessageToAll(-1, msg);
-							break;
-						}
 					}
 					return true;
 				}
