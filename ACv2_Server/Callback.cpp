@@ -226,50 +226,8 @@ namespace Callback
 
 			if (ac != NULL)
 			{
-				// Ban list checking
-				if (ac->AC_IsBanned())
-				{
-					// This player is a cheater and has been banned before. 
-					switch (ACToggle)
-					{
-						case true:
-						{
-							// AC is enabled. Kick the banned player.
-							char msg[144];
-
-							// Tell the player
-							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
-							SendClientMessage(playerid, -1, msg);
-							char name[MAX_PLAYER_NAME];
-							GetPlayerName(playerid, name, sizeof name);
-
-							// Tell other players connected
-							snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked for being banned from AC servers.", name);
-							SendClientMessageToAll(-1, msg);
-
-							// Kick the player from the server
-							SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
-							break;
-						}
-						case false:
-						{
-							// AC is not enabled. A quick informing should sufficie.
-							char msg[144];
-
-							// Tell the player
-							snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
-							SendClientMessage(playerid, -1, msg);
-							char name[MAX_PLAYER_NAME];
-							GetPlayerName(playerid, name, sizeof name);
-
-							// Tell other players connected
-							snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned from AC servers. Know more: %s", name, AC_WEBSITE);
-							SendClientMessageToAll(-1, msg);
-							break;
-						}
-					}
-					return true;
-				}
+				// Request player's ban status
+				BanHandler::CheckCheater(playerid);
 
 				// Get the player's Hardware ID.
 				hwid = ac->GetPlayerHardwareID();
@@ -281,6 +239,12 @@ namespace Callback
 				else
 				{
 					ac->SetPlayerConnected(true);
+
+					if (ACToggle)
+					{
+						// Tell the player we're using the AC on this server.
+						SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
+					}
 				}
 
 				// Send the client the files we need them to return md5's to.
@@ -344,60 +308,6 @@ namespace Callback
 			return true;
 		}
 
-		return true;
-	}
-
-	PLUGIN_EXPORT bool PLUGIN_CALL OnPublicCall(AMX *amx, const char *name, cell *params, cell *retval)
-	{
-		if (!strcmp(name, "OnPlayerConnect"))
-		{
-			int playerid = params[1];
-
-			if (IsPlayerNPC(playerid))
-			{
-				// Return
-				return true;
-			}
-
-			if (CAntiCheatHandler::IsConnected(playerid))
-			{
-				// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
-				CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
-
-				if (ac != NULL)
-				{
-					if (ac->HasOnPlayerConnectCalled())
-					{
-						return true;
-					}
-					else
-					{
-						ac->SetPlayerConnected(true);
-
-						// if the AC is on, let the user know this server is protected.
-						if (ACToggle)
-						{
-							// Tell the player we're using the AC on this server.
-							SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
-						}
-					}
-
-					// Request player's ban status
-					BanHandler::CheckCheater(playerid);
-
-					// Send the client the files we need them to return md5's to.
-					ac->CheckGTAFiles(playerid);
-
-					// Set defaults
-					ac->ToggleUnlimitedSprint(Callback::Default_InfSprint);
-					ac->ToggleSprintOnAllSurfaces(Callback::Default_SprintOnAllSurfaces);
-					ac->ToggleMacroLimitations(Callback::Default_MacroLimits);
-					ac->ToggleSwitchReload(Callback::Default_SwitchReload);
-					ac->ToggleCrouchBug(Callback::Default_CrouchBug);
-					ac->ToggleVehicleBlips(Callback::Default_VehicleBlips);
-				}
-			}
-		}
 		return true;
 	}
 
