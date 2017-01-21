@@ -120,7 +120,11 @@ public:
 
 	// PURPOSE: Get the player's AC ban status.
 	// REQUIRES: NULL
-	bool AC_IsBanned() { return m_IsBanned; }
+	short AC_GetBanStatus() { return m_BanStatus; }
+
+	// PURPOSE: Check whether player is banned (unretrieved ban status is taken as NOT BANNED).
+	// REQUIRES: NULL
+	bool AC_IsBanned() { return (m_BanStatus == 1); }
 
 	// PURPOSE: Called when the player pauses or unpauses, or alt tabs from the game.
 	// REQUIRES: NULL
@@ -168,8 +172,8 @@ private:
 	// PURPOSE: Keep track of player's status of vehicle blips.
 	bool m_VehicleBlips;
 
-	// PURPOSE: Indicate whether the player is banned on Anti-Cheat or not.
-	bool m_IsBanned;
+	// PURPOSE: Keep track of player's ban status on Anti-Cheat.
+	short m_BanStatus;
 
 	// Check if onplayerconnect has been called
 	bool m_IsConnected;

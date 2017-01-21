@@ -135,11 +135,7 @@ namespace BanHandler
 		if (ac == NULL)
 		{
 			// error?
-			CThreadSync::OnCheaterCheckResponse__parameters param;
-			param.playerid = playerid;
-			param.ischeater = 0;
 			Utility::Printf("failed while checking if player %d is in ban list due to CAntiCheat class error.", playerid);
-			CThreadSync::OnCheaterCheckResponse(&param);
 		}
 
 		// Get the player's IP

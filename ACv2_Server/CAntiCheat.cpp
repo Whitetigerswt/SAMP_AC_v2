@@ -32,7 +32,7 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_VehicleBlips = true;
 	m_LastCheatUpdate = 0;
 	m_IsConnected = false;
-	m_IsBanned = false;
+	m_BanStatus = -1;
 }
 
 CAntiCheat::~CAntiCheat()
@@ -342,9 +342,12 @@ void CAntiCheat::OnTamperAttempt()
 void CAntiCheat::OnBanChecked(bool status)
 {
 	// Set our instance variable to the player's ban status so we can store it for later use.
-	m_IsBanned = status;
+	m_BanStatus = status;
 
-	if (m_IsBanned)
+	// Notify scripts about player's ban status
+	Callback::Execute("AC_OnBanStatusRetrieved", "ii", status, ID);
+
+	if (m_BanStatus)
 	{
 		// This player is a cheater and has been banned before. 
 		if (Callback::GetACEnabled())
