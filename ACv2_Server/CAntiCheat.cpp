@@ -32,6 +32,7 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_VehicleBlips = true;
 	m_LastCheatUpdate = 0;
 	m_IsConnected = false;
+	m_IsBanned = false;
 }
 
 CAntiCheat::~CAntiCheat()
