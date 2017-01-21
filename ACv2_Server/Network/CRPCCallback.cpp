@@ -274,11 +274,11 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	CAntiCheatHandler::Init(iExtra);
 
 	// Calculate verified packet
-	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+	//std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
 	// Convert to byte
 	BYTE md5[16];
-	bool verified = true;
+	/*bool verified = true;
 	for (int i = 0; i < 16; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
@@ -302,7 +302,9 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	if (verified == true)
 	{
 		Callback::SetLastTimeVerifiedClient(iExtra);
-	}
+	}*/
+
+	Callback::SetLastTimeVerifiedClient(iExtra);
 
 	// Create a big variable to hold hardware ID.
 	float version;
