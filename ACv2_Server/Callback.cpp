@@ -232,19 +232,10 @@ namespace Callback
 				// Get the player's Hardware ID.
 				hwid = ac->GetPlayerHardwareID();
 
-				if (ac->HasOnPlayerConnectCalled())
+				if (ACToggle)
 				{
-					return true;
-				}
-				else
-				{
-					ac->SetPlayerConnected(true);
-
-					if (ACToggle)
-					{
-						// Tell the player we're using the AC on this server.
-						SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
-					}
+					// Tell the player we're using the AC on this server.
+					SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
 				}
 
 				// Send the client the files we need them to return md5's to.
