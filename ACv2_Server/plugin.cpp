@@ -1,3 +1,4 @@
+#include "CThreadSync.h"
 #include "plugin.h"
 #include "Utility.h"
 #include "Network/BitStream.h"
@@ -9,8 +10,10 @@
 #include "CServerUpdater.h"
 #include "CAntiCheatHandler.h"
 #include "Hooks.h"
+#include <curl/curl.h>
 
 void **PluginData;
+CThreadSync *pMainThreadSync;
 
 cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 {
@@ -359,6 +362,9 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
+	// Handle thread sync
+	pMainThreadSync->Process();
+
 	// Handle sampGDK ticking.
 	return sampgdk::ProcessTick();
 }
@@ -371,11 +377,17 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Initialize
 	Utility::Initialize(ppData);
 
+	// Initialize cURL
+	curl_global_init(CURL_GLOBAL_ALL);
+
 	// hook amx_register
 	InstallAmxHooks();
 
 	// Find addresses to hook
 	FindAddresses();
+
+	// Initialize main thread sync
+	pMainThreadSync = new CThreadSync();
 
 	PluginData = ppData;
 
@@ -390,6 +402,11 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
 	// The plugin has been unloaded, let them know we're leaving :(
 	Utility::Printf("Unloaded SA-MP Anti-Cheat v%0.2f", CURRENT_VERSION);
+
+	// Clean up
+	// Not really necessary
+	// curl_global_cleanup();
+	
 	return sampgdk::Unload();
 }
 

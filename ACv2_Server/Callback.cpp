@@ -382,11 +382,8 @@ namespace Callback
 						}
 					}
 
-					// Fetch player's ban status
-					bool banStatus = BanHandler::CheckCheater(playerid);
-
-					// Send to our helper class so it can store it.
-					ac->OnBanChecked(banStatus);
+					// Request player's ban status
+					BanHandler::CheckCheater(playerid);
 
 					// Send the client the files we need them to return md5's to.
 					ac->CheckGTAFiles(playerid);
