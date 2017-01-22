@@ -98,7 +98,7 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 		if(found)
 		{
 			// Add cheater to AC global ban list
-			BanHandler::AddCheater(ID, processpath);
+			BanHandler::AddCheater(ID, std::string(processpath));
 		}
 	}
 
