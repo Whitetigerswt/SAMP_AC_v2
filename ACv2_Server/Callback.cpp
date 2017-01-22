@@ -162,8 +162,9 @@ namespace Callback
 	// to make it harder to unload AC module after initial verification.
 	void SAMPGDK_CALL VerifyClients(int timerid, void *params)
 	{
-		int benchStart = sampgdk_GetTickCount();
 		Utility::Printf("DEBUG: VerifyClients timer callback start");
+		int benchStart = sampgdk_GetTickCount();
+
 		// Loop through all players.
 		for (int i = 0; i < MAX_PLAYERS; ++i)
 		{
