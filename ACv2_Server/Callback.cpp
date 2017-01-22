@@ -196,7 +196,6 @@ namespace Callback
 					Network::PlayerSend(i, &bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
 				}
 			}
-			return;
 		}
 		Utility::Printf("DEBUG: VerifyClients timer callback end: %d", sampgdk_GetTickCount() - benchStart);
 	}
