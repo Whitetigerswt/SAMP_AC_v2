@@ -2,12 +2,15 @@
 #include "GDK/sampgdk.h"
 #include "CAntiCheat.h"
 #include "CAntiCheatHandler.h"
+#include "CThreadSync.h"
 #include <curl/curl.h>
 #include "Utility.h"
+#include "plugin.h"
 #include "CServerUpdater.h"
 
 namespace BanHandler
 {
+
 	void AddCheater(unsigned int playerid, std::string reason)
 	{
 		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
@@ -38,14 +41,13 @@ namespace BanHandler
 		int server_port;
 		server_port = GetServerVarAsInt("port");
 
-		boost::thread addBan(BanHandler::addBan, std::string(name), std::string(ip), hwid, reason, std::string(server_name), server_port);
+		boost::thread addCheaterThread(&BanHandler::Thread_AddCheater, playerid, reason, hwid, std::string(name), std::string(ip), std::string(server_name), server_port);
 	}
 
-	void addBan(std::string name, std::string ip, std::string hwid, std::string reason, std::string server_name, int server_port)
+	void Thread_AddCheater(unsigned int playerid, std::string reason, std::string hwid, std::string name, std::string ip, std::string server_name, int server_port)
 	{
 		// Completely prepared now. Let's send data to the web server (which takes it to database)!
 		CURL *curl;
-		curl_global_init(CURL_GLOBAL_ALL);
 
 		// curl handle
 		curl = curl_easy_init();
@@ -88,7 +90,7 @@ namespace BanHandler
 				// Format POST data
 				char str[400];
 				snprintf(str, sizeof str, "Cheater=%s&CheaterIP=%s&Hardware=%s&Reason=%s&ServerName=%s&Port=%d",
-					escaped_name, ip, hwid.c_str(), escaped_ban_reason, escaped_server_name, server_port);
+					escaped_name, ip.c_str(), hwid.c_str(), escaped_ban_reason, escaped_server_name, server_port);
 
 				// Set POST data
 				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str);
@@ -96,6 +98,17 @@ namespace BanHandler
 				// Send the request and store result into "res" variable
 				CURLcode res;
 				res = curl_easy_perform(curl);
+
+
+				// Handle possible errors
+				if (res != CURLE_OK)
+				{
+					Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
+				}
+			}
+			else
+			{
+				Utility::Printf("curl_easy_escape() failed while trying to add player %d to ban list.", playerid);
 			}
 
 
@@ -105,6 +118,25 @@ namespace BanHandler
 			curl_free(escaped_ban_reason);
 			curl_easy_cleanup(curl);
 		}
+		else
+		{
+			Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
+		}
+	}
+
+	void CheckCheater(unsigned int playerid)
+	{
+		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
+		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
+		if (ac == NULL)
+		{
+			// error?
+			Utility::Printf("failed while checking if player %d is in ban list due to CAntiCheat class error.", playerid);
+		}
+
+		// Get the player's IP
+		char ip[16];
+		GetPlayerIp(playerid, ip, sizeof ip);
 
 		// Clean up
 		curl_global_cleanup();
@@ -115,8 +147,15 @@ namespace BanHandler
 
 		bool ischeater = false;
 
+		boost::thread checkCheaterThread(&BanHandler::CheckCheater_Thread, playerid, hwid, std::string(ip));
+	}
+
+	void CheckCheater_Thread(unsigned int playerid, std::string hwid, std::string ip)
+	{
+		// Create this variable which holds info whether this player is a cheater or not.
+		bool ischeater = false;
+
 		CURL *curl;
-		curl_global_init(CURL_GLOBAL_ALL);
 		// curl handle
 		curl = curl_easy_init();
 		if (curl)
@@ -178,37 +217,17 @@ namespace BanHandler
 			Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
 		}
 
+		// Return whether this is a cheater or not
+		CThreadSync::OnCheaterCheckResponse__parameters *param = new CThreadSync::OnCheaterCheckResponse__parameters;
+		param->playerid = playerid;
+		param->ischeater = ischeater;
+		pMainThreadSync->AddCallbackToQueue(&CThreadSync::OnCheaterCheckResponse, param);
+    
 		// Clean up
 		curl_global_cleanup();
 
 		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
 
 		ac->OnBanChecked(ischeater);
-	}
-
-	void CheckCheater(unsigned int playerid)
-	{
-
-		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
-		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
-		if (ac == NULL)
-		{
-			// error?
-			Utility::Printf("failed while checking if player %d is in ban list due to CAntiCheat class error.", playerid);
-		}
-
-		// Get the player's IP
-		char ip[16];
-		GetPlayerIp(playerid, ip, sizeof ip);
-
-		// Get the player's Hardware ID.
-		std::string hwid = "";
-		hwid = ac->GetPlayerHardwareID();
-
-		boost::thread NetworkCall(&BanHandler::CheckCheaterWeb, playerid, std::string(ip), hwid);
-
-
-		// Return whether this is a cheater or not
-		//return ischeater;
 	}
 }

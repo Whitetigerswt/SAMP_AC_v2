@@ -38,7 +38,6 @@ void CRPCCallback::Initialize()
 	CRPC::Add(VERSION_INCOMPAT2, VersionIncompat);
 }
 
-
 RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra)
 {
 	// Inform the player there version of AC is not compatible with the server.
@@ -51,7 +50,7 @@ RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra
 	SendClientMessage(iExtra, -1, msg);
 
 	// Close the connection.
-	Kick(iExtra);
+	SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
 }
 
 void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)

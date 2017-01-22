@@ -21,6 +21,7 @@
 #include <Shellapi.h>
 #include <Boost\thread.hpp>
 #include <Psapi.h>
+#include <curl\curl.h>
 
 #include <process.h>
 #include <Tlhelp32.h>
@@ -103,6 +104,9 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Hook LoadLibrary function.
 		CModuleSecurity::HookLoadLibrary();
+
+		// Initialize cURL
+		curl_global_init(CURL_GLOBAL_ALL);
 
 		// Record that we're loaded
 		isLoaded = true;

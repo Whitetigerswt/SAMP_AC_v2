@@ -31,8 +31,7 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_SprintOnAllSurfaces = false;
 	m_VehicleBlips = true;
 	m_LastCheatUpdate = 0;
-	m_IsConnected = false;
-	m_IsBanned = false;
+	m_BanStatus = -1;
 }
 
 CAntiCheat::~CAntiCheat()
@@ -342,7 +341,48 @@ void CAntiCheat::OnTamperAttempt()
 void CAntiCheat::OnBanChecked(bool status)
 {
 	// Set our instance variable to the player's ban status so we can store it for later use.
-	m_IsBanned = status;
+	m_BanStatus = status;
+
+	// Notify scripts about player's ban status
+	Callback::Execute("AC_OnBanStatusRetrieved", "ii", status, ID);
+
+	if (m_BanStatus)
+	{
+		// This player is a cheater and has been banned before. 
+		if (Callback::GetACEnabled())
+		{
+			// AC is enabled. Kick the banned player.
+			char msg[144];
+
+			// Tell the player
+			snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
+			SendClientMessage(this->GetID(), -1, msg);
+			char name[MAX_PLAYER_NAME];
+			GetPlayerName(this->GetID(), name, sizeof name);
+
+			// Tell other players connected
+			snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked for being banned from AC servers.", name);
+			SendClientMessageToAll(-1, msg);
+
+			// Kick the player from the server
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)this->GetID());
+		}
+		else
+		{
+			// AC is not enabled. A quick informing should sufficie.
+			char msg[144];
+
+			// Tell the player
+			snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
+			SendClientMessage(this->GetID(), -1, msg);
+			char name[MAX_PLAYER_NAME];
+			GetPlayerName(this->GetID(), name, sizeof name);
+
+			// Tell other players connected
+			snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned from AC servers. Know more: %s", name, AC_WEBSITE);
+			SendClientMessageToAll(-1, msg);
+		}
+	}
 }
 
 void CAntiCheat::CheckVersionCompatible(float version)

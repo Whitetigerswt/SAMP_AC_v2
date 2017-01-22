@@ -156,8 +156,6 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 	try
 	{
 		CURL* curl; //our curl object
-
-		curl_global_init(CURL_GLOBAL_ALL); //pretty obvious
 		curl = curl_easy_init();
 
 		if (curl)
@@ -200,7 +198,6 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 		{
 			printf("[SAMP_AC_V2]: GetWebsiteText: failure. cURL handle returned NULL\n");
 		}
-		curl_global_cleanup();
 		return data;
 	}
 	catch (std::exception &e)

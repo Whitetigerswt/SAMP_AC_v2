@@ -97,6 +97,7 @@
     <ClCompile Include="CAntiCheat.cpp" />
     <ClCompile Include="CAntiCheatHandler.cpp" />
     <ClCompile Include="CServerUpdater.cpp" />
+    <ClCompile Include="CThreadSync.cpp" />
     <ClCompile Include="GDK\sampgdk.c" />
     <ClCompile Include="Network\CRPCCallback.cpp" />
     <ClCompile Include="Network\Network.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="CAntiCheat.h" />
     <ClInclude Include="CAntiCheatHandler.h" />
     <ClInclude Include="CServerUpdater.h" />
+    <ClInclude Include="CThreadSync.h" />
     <ClInclude Include="CVector.h" />
     <ClInclude Include="CVector4D.h" />
     <ClInclude Include="GDK\sampgdk.h" />

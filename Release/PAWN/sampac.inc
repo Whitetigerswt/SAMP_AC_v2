@@ -197,13 +197,22 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 #define GetPlayerVehicleBlips(%0) ac_gateway_param1("GetPlayerVehicleBlips", %0)
 
 // PURPOSE: Check if the player is banned on Anti-Cheat or not.
-// REQUIRES: Nothing.
+// REQUIRES: The player is using AC.
 //
 // Params:
 // playerid         - Player to check
 //
 // Returns: bool - True if player is banned.
 #define AC_IsPlayerBanned(%0) ac_gateway_param1("AC_IsPlayerBanned", %0)
+
+// PURPOSE: Get player's ban status on Anti-Cheat.
+// REQUIRES: The player is using AC.
+//
+// Params:
+// playerid         - Player to check
+//
+// Returns: (-1) = unknown ban status, 0 = not banned, 1 = banned
+#define AC_GetPlayerBanStatus(%0) ac_gateway_param1("AC_GetPlayerBanStatus", %0)
 
 // PURPOSE: Check if the AC is enabled via /actoggle
 // REQUIRES: Nothing
@@ -301,6 +310,17 @@ forward AC_OnScreenshotTaken(playerid);
 //
 // Returns: irrelevant
 forward AC_OnHardwareIDCalculated(playerid, hwid[], len = sizeof(hwid));
+
+// PURPOSE: Callback for when a player's ban status is retrieved.
+// REQUIRES: The player is using AC.
+// NOTES: This callback might never get called.
+//
+// Params:
+// playerid         - Player who just had their hardware id calculated.
+// status           - (-1) = unknown ban status, 0 = not banned, 1 = banned 
+//
+// Returns: irrelevant
+forward AC_OnBanStatusRetrieved(playerid, status);
 
 stock TogglePlayerCrouchBug(playerid, bool:toggle)
 {

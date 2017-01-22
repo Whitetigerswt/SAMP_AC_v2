@@ -17,7 +17,7 @@ public DelayedKick(playerid)
     return 1;
 }
 
-public OnPlayerConnect(playerid)
+public AC_OnBanStatusRetrieved(playerid, status)
 {
 	// Check if AC plugin is loaded or not.
 	if(IsACPluginLoaded())
