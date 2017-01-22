@@ -9,9 +9,7 @@ public OnFilterScriptInit()
 
 public OnPlayerConnect(playerid)
 {
-	printf("IsPlayerUsingSampAC: %d", IsPlayerUsingSampAC(playerid));	
-
-	TogglePlayerVehicleBlips(playerid, true);
+	SendClientMessage(playerid, -1, "Use some of the AC test commands: /cbug /switchreload /vehblips /infsprint /sprintsurface /md5");
 	return 1;
 }
 
@@ -89,6 +87,66 @@ CMD:setmyfps(playerid, params[])
 	return 1;
 }
 
+CMD:vehblips(playerid, params[])
+{
+	if(!IsACPluginLoaded())
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+
+	if(!IsPlayerUsingSampAC(playerid))
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
+
+	if(GetPlayerVehicleBlips(playerid) == 1)
+		TogglePlayerVehicleBlips(playerid, false);
+	else
+	    TogglePlayerVehicleBlips(playerid, true);
+
+	new str[128];
+	format(str, sizeof(str), "Set vehicle blips to: %d", GetPlayerVehicleBlips(playerid));
+	SendClientMessage(playerid, -1, str);
+
+	return 1;
+}
+
+CMD:sprintsurface(playerid, params[])
+{
+	if(!IsACPluginLoaded())
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+
+	if(!IsPlayerUsingSampAC(playerid))
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
+
+	if(GetPlayerSprintOnAllSurfaces(playerid) == 1)
+		TogglePlayerSprintOnAllSurfaces(playerid, 0);
+	else
+		TogglePlayerSprintOnAllSurfaces(playerid, 1);
+	
+	new str[128];
+	format(str, sizeof(str), "Set sprint on all surfaces to: %d", GetPlayerSprintOnAllSurfaces(playerid));
+	SendClientMessage(playerid, -1, str);
+
+	return 1;
+}
+
+CMD:infsprint(playerid, params[])
+{
+	if(!IsACPluginLoaded())
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+
+	if(!IsPlayerUsingSampAC(playerid))
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
+
+	if(GetPlayerUnlimitedSprint(playerid) == 1)
+		TogglePlayerUnlimitedSprint(playerid, 0);
+	else
+		TogglePlayerUnlimitedSprint(playerid, 1);
+
+	new str[128];
+	format(str, sizeof(str), "Set sprint on all surfaces to: %d", GetPlayerUnlimitedSprint(playerid));
+	SendClientMessage(playerid, -1, str);
+
+	return 1;
+}
+
 CMD:cbug(playerid, params[])
 {
 	if(!IsACPluginLoaded())
@@ -97,10 +155,13 @@ CMD:cbug(playerid, params[])
 	if(!IsPlayerUsingSampAC(playerid))
 		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
 
-	TogglePlayerCrouchBug(playerid, !!strval(params));
+	if(GetPlayerCrouchBug(playerid) >= 1)
+		TogglePlayerCrouchBug(playerid, false);
+	else
+		TogglePlayerCrouchBug(playerid, true);
 
 	new str[128];
-	format(str, sizeof(str), "Set cbug to: %d", !!strval(params));
+	format(str, sizeof(str), "Set cbug to: %d", GetPlayerCrouchBug(playerid));
 	SendClientMessage(playerid, -1, str);
 
 	return 1;
@@ -114,10 +175,13 @@ CMD:switchreload(playerid, params[])
 	if(!IsPlayerUsingSampAC(playerid))
 		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
 
-	TogglePlayerSwitchReload(playerid, !!strval(params));
+	if(GetPlayerSwitchReload(playerid) == 1)
+		TogglePlayerSwitchReload(playerid, 0);
+	else
+		TogglePlayerSwitchReload(playerid, 1);
 
 	new str[128];
-	format(str, sizeof(str), "Set switch reload to: %d", !!strval(params));
+	format(str, sizeof(str), "Set switch reload to: %d", GetPlayerSwitchReload(playerid));
 	SendClientMessage(playerid, -1, str);
 
 	return 1;
@@ -137,6 +201,27 @@ CMD:togglebugs(playerid, params[])
 	return 1;
 }
 
+CMD:md5(playerid, params[])
+{
+	if(!IsACPluginLoaded())
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+
+	if(!IsPlayerUsingSampAC(playerid))
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
+		
+	if(strlen(params) == 0)
+	{
+	    SendClientMessage(playerid, -1, "[Usage] /md5 [memory-address]");
+	    return 1;
+	}
+	
+	SendClientMessage(playerid, -1, "All md5's are 256 bytes of memory.");
+		
+	MD5_Memory(playerid, strval(params), 256);
+	
+	return 1;
+}
+
 public AC_OnFileExecuted(playerid, module[], md5[])
 {
 	printf("PAWN - OnFileExecuted(%d, %s, %s)", playerid, module, md5);
@@ -144,6 +229,12 @@ public AC_OnFileExecuted(playerid, module[], md5[])
 
 public AC_OnMD5Calculated(playerid, address, size, md5[])
 {
+	if(address != 0xC8C418)
+	{
+	    new s[128];
+	    format(s, sizeof(s), "OnMD5Calculated(%d, %d, %d, %s)", playerid, address, size, md5);
+	    SendClientMessage(playerid, -1, s);
+	}
 	printf("PAWN - OnMD5Calculated(%d, %d, %d, %s)", playerid, address, size, md5);
 }
 

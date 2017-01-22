@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <Boost\thread.hpp>
 
+#include "Network\CRakClientHandler.h"
 #include "CHookManager.h"
 #include "CPatch.h"
 #include "Hooks.h"
@@ -11,8 +12,9 @@
 #include "PatternScan.h"
 #include "DirectX Hooks\CMessageProxy.h"
 #include "s0beit\samp.h"
-#include "Network\CRakClientHandler.h"
 #include "ManualInjection.h"
+#include "CPacketIntegrity.h"
+#include "Detours\detours.h"
 
 // Small children look away, this is gonna get ugly...
 // This is the most poorly documented file, and the most confusing in all of the project.
@@ -179,14 +181,14 @@ void CHookManager::Load()
 	DWORD dwOldProt;
 
 	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
-	DWORD samp = getSampBaseAddress();
+	DWORD samp_base_addr = getSampBaseAddress();
 
-	if (samp)
+	if (samp_base_addr)
 	{
-		setSampBaseAddress(samp);
+		setSampBaseAddress(samp_base_addr);
 
 		// Add address offset
-		samp += 0x6FCF1;
+		DWORD samp = samp_base_addr + 0x6FCF1;
 
 		NameTagHookJmpBack = samp + 0x8;
 
@@ -213,6 +215,9 @@ void CHookManager::Load()
 
 				hooks_install_once = true;
 			}
+
+			samp = samp_base_addr + FUNC_OFFSET_RAKPEER__SENDBUFFERED;
+		    m_pfnRakPeer__SendBuffered = (RakPeer__SendBuffered_t)DetourFunction((PBYTE)samp, (PBYTE)CHookManager::RakPeer__SendBufferedHook);
 		}
 	}
 
@@ -723,6 +728,13 @@ HOOK CHookManager::GetSampInfo()
 	}
 }
 
+RakPeer__SendBuffered_t CHookManager::m_pfnRakPeer__SendBuffered = NULL;
+void __thiscall CHookManager::RakPeer__SendBufferedHook(void *_this, const char *data, int numberOfBitsToSend, PacketPriority priority, PacketReliability reliability, char orderingChannel, PlayerID playerId, bool broadcast, /*RemoteSystemStruct::ConnectMode*/ int connectionMode)
+{
+	CPacketIntegrity::Check(data, numberOfBitsToSend);
+	m_pfnRakPeer__SendBuffered(_this, data, numberOfBitsToSend, priority, reliability, orderingChannel, playerId, broadcast, connectionMode);
+}
+
 HOOK CHookManager::GravityHook()
 {
 	__asm
@@ -906,7 +918,7 @@ HOOK CHookManager::KeyPress()
 	}
 
 	// Check if the sprint key is pressed & we're on foot, and it wasn't pressed in the last frame.
-	/*if (SPRINT_KEY != 0)
+	if (SPRINT_KEY != 0)
 	{
 		// If not in a vehicle and macro locks is off.
 		if (VAR_CURRENT_VEHICLE == 0 && Misc::GetMacroLocks() == true)
@@ -916,7 +928,7 @@ HOOK CHookManager::KeyPress()
 		}
 	}
 	// Sprint key is NOT pressed
-	else
+	/*else
 	{
 		// And aim key is pressed
 		if (AIM_KEY != 0 || FIRE_KEY != 0)

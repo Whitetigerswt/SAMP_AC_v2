@@ -14,15 +14,16 @@ Windows
 ----------
 ```
 1) Download Visual Studio 2015 Community Edition - https://www.visualstudio.com/en-us/visual-studio-homepage-vs.aspx
-3) Open acv2.sln with Visual Studio 2015 (Make sure you installed the VC++ 2015 tools with XP support)
+2) Download Visual Studio 2013 SDK - https://www.microsoft.com/en-us/download/details.aspx?id=40758
+3) Open acv2.sln with Visual Studio 2015
 4) Switch to release mode
-4) Compile
+5) Compile
 ```
 
 Client Specific
 ----------
-* Ask Whitetiger to run the Enigma protector on the compiled file (Or ask for the key for the enigma protector v5.00 - http://www.enigmaprotector.com/ - Yes I did purchase this. only v4.4 is avilable to the public, but I use v5.0 as it's better with anti-viruses.)
-* Download nullsoft scriptable install system v2.46. - http://nsis.sourceforge.net/Download
+* Ask Whitetiger to run the Enigma protector on the compiled file - you can use the demo for testing.
+* Download nullsoft scriptable install system - http://nsis.sourceforge.net/Download
 * Run sampac.nsi
 
 Linux
@@ -31,7 +32,7 @@ Linux
 1) Use _32_-bit Ubuntu 14.04.3 LTS Through VMWare (Or whatever distro you want, Ubuntu is the easiest)
 2) sudo apt-get update
 3) sudo apt-get upgrade 
-4) sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev cmake g++4.4 make git geomview libcurl4-openssl-dev
+4) sudo apt-get install build-essential git g++-4.4
 5) Follow steps here to generate an ssh key and add to github: https://help.github.com/articles/generating-ssh-keys/
 6) git clone git@github.com:Whitetigerswt/SAMP_AC_v2.git
 7) cd to "ACv2_Server"

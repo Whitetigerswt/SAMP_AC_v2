@@ -120,7 +120,11 @@ public:
 
 	// PURPOSE: Get the player's AC ban status.
 	// REQUIRES: NULL
-	bool AC_IsBanned() { return m_IsBanned; }
+	short AC_GetBanStatus() { return m_BanStatus; }
+
+	// PURPOSE: Check whether player is banned (unretrieved ban status is taken as NOT BANNED).
+	// REQUIRES: NULL
+	bool AC_IsBanned() { return (m_BanStatus == 1); }
 
 	// PURPOSE: Called when the player pauses or unpauses, or alt tabs from the game.
 	// REQUIRES: NULL
@@ -133,14 +137,6 @@ public:
 	// PURPOSE: Get player's ID.
 	// REQUIRES: NULL
 	int GetID() { return ID; }
-
-	// PURPOSE: Set the player as connected.
-	// REQUIRES: true or false
-	void SetPlayerConnected(bool toggle) { m_IsConnected = toggle; }
-
-	// PURPOSE: Get if onplayerconnect has been called for this player in any filterscript
-	// REQUIRES: NULL
-	bool HasOnPlayerConnectCalled() { return m_IsConnected; }
 
 private:
 
@@ -168,11 +164,8 @@ private:
 	// PURPOSE: Keep track of player's status of vehicle blips.
 	bool m_VehicleBlips;
 
-	// PURPOSE: Indicate whether the player is banned on Anti-Cheat or not.
-	bool m_IsBanned;
-
-	// Check if onplayerconnect has been called
-	bool m_IsConnected;
+	// PURPOSE: Keep track of player's ban status on Anti-Cheat.
+	short m_BanStatus;
 
 	// PURPOSE: Store the player's hardware ID.
 	std::string m_HardwareID;

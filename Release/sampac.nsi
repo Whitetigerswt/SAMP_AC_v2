@@ -48,6 +48,12 @@ SetCompressor /SOLID lzma
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
   
+; Dirty trick for opening discord link at finish
+  !define MUI_FINISHPAGE_SHOWREADME ""
+  !define MUI_FINISHPAGE_SHOWREADME_TEXT "Join SA:MP AC Discord"
+  !define MUI_FINISHPAGE_SHOWREADME_FUNCTION VisitDiscordOnFinish 
+  !insertmacro MUI_PAGE_FINISH 
+  
   !insertmacro MUI_UNPAGE_CONFIRM
   !insertmacro MUI_UNPAGE_INSTFILES
   
@@ -80,6 +86,13 @@ StrCpy $INSTDIR $R0
 
 FunctionEnd
 
+Function VisitDiscordOnFinish
+  ExecShell "open" "https://discord.gg/3NS5dMB"
+FunctionEnd
+
+;--------------------------------
+;Initialization
+
 ;--------------------------------
 ;Installer Sections
 
@@ -89,12 +102,16 @@ FunctionEnd
 
 Section "Main Components" SecMain
 
-	SectionIn 1 2 RO
+  SectionIn 1 2 RO
 
   SetOutPath "$INSTDIR"
   
   File "ACv2_Client.asi"
-  
+  File "BsSndRpt.exe"
+  File "BugSplat.dll"
+  File "BugSplatRc.dll"
+  File "samp_launcher.exe"
+
   Delete "$INSTDIR\d3d9.dll"
   
   ;Store installation folder
@@ -120,7 +137,6 @@ Section "ASI Loader" SecASILoader
   File "vorbisHooked.dll"
   File "vorbisFile.dll"
 
-
 SectionEnd
 
 ;--------------------------------
@@ -132,8 +148,8 @@ SectionEnd
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-    !insertmacro MUI_DESCRIPTION_TEXT ${SecMain} $(DESC_SecMain)
-	!insertmacro MUI_DESCRIPTION_TEXT ${SecASILoader} $(DESC_SecASILoader)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecMain} $(DESC_SecMain)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecASILoader} $(DESC_SecASILoader)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
   
 
@@ -143,6 +159,10 @@ SectionEnd
 Section "Uninstall"
 
   Delete "$INSTDIR\ACv2_Client.asi"
+  Delete "$INSTDIR\BsSndRpt.exe"
+  Delete "$INSTDIR\BugSplat.dll"
+  Delete "$INSTDIR\BugSplatRc.dll"
+  Delete "$INSTDIR\samp_launcher.exe"
 
   Delete "$INSTDIR\Uninstall_ac.exe"
   

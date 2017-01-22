@@ -1,3 +1,4 @@
+#include "CThreadSync.h"
 #include "plugin.h"
 #include "Utility.h"
 #include "Network/BitStream.h"
@@ -9,8 +10,10 @@
 #include "CServerUpdater.h"
 #include "CAntiCheatHandler.h"
 #include "Hooks.h"
+#include <curl/curl.h>
 
 void **PluginData;
+CThreadSync *pMainThreadSync;
 
 cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 {
@@ -352,6 +355,20 @@ cell AMX_NATIVE_CALL AC_IsPlayerBannedProc(AMX* pAmx, cell* pParams)
 	return ac->AC_IsBanned();
 }
 
+cell AMX_NATIVE_CALL AC_GetPlayerBanStatusProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "AC_GetPlayerBanStatus");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+
+	return ac->AC_GetBanStatus();
+}
+
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
 	return sampgdk::Supports() | SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
@@ -359,6 +376,9 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
+	// Handle thread sync
+	pMainThreadSync->Process();
+
 	// Handle sampGDK ticking.
 	return sampgdk::ProcessTick();
 }
@@ -371,11 +391,17 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Initialize
 	Utility::Initialize(ppData);
 
+	// Initialize cURL
+	curl_global_init(CURL_GLOBAL_ALL);
+
 	// hook amx_register
 	InstallAmxHooks();
 
 	// Find addresses to hook
 	FindAddresses();
+
+	// Initialize main thread sync
+	pMainThreadSync = new CThreadSync();
 
 	PluginData = ppData;
 
@@ -390,6 +416,11 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
 	// The plugin has been unloaded, let them know we're leaving :(
 	Utility::Printf("Unloaded SA-MP Anti-Cheat v%0.2f", CURRENT_VERSION);
+
+	// Clean up
+	// Not really necessary
+	// curl_global_cleanup();
+	
 	return sampgdk::Unload();
 }
 
@@ -418,6 +449,7 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "GetPlayerVehicleBlips", GetPlayerVehicleBlipsProc },
 	{ "IsACEnabled", IsACEnabledProc },
 	{ "AC_IsPlayerBanned", AC_IsPlayerBannedProc },
+	{ "AC_GetPlayerBanStatus", AC_GetPlayerBanStatusProc },
 	{ 0, 0 }
 };
 

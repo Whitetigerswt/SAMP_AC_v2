@@ -3,12 +3,12 @@
 #include <Windows.h>
 
 // Changing CURRENT_VERSION will force the client to update when they run it next.
-#define CURRENT_VERSION 2.8f
+#define CURRENT_VERSION 2.81f
 
 // Changing CURRENT_MAJOR_VERSION DOES NOT FORCE THE USER TO UPDATE IF IT'S CHANGED!
 // Only changing CURRENT_VERSION will force the user to update.
 // CURRENT_MAJOR_VERSION is sent to the server and is used ONLY to tell the server if this client is compatible with it.
-#define CURRENT_MAJOR_VERSION 2.3f
+#define CURRENT_MAJOR_VERSION 2.31f
 
 // The current update URL
 #define UPDATE_URL L"http://samp-ac.com/API/SAMP_AC_v2_Client_Updater.html"

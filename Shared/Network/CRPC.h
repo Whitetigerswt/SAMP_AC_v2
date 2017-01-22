@@ -19,6 +19,9 @@ enum eRPC : unsigned short
 	// Called when the server determines the client's AC version is not compatible.
 	VERSION_NOT_COMPATIBLE,
 
+	// Called when the player has sent it's initial info.
+	ON_INITIAL_INFO,
+
 	// Called when the server asks the client to send verified packet.
 	VERIFY_CLIENT,
 
@@ -66,14 +69,14 @@ enum eRPC : unsigned short
 	// Called when a file's md5 has been calculated, most likely in the GTA directory.
 	ON_FILE_CALCULATED,
 
+	// Called with an old version of SAMP_AC. Should never be called normally.
+	VERSION_INCOMPAT2,
+
 	// Called when a file inside gta3.img's md5 has been calculated.
 	ON_IMG_FILE_MODIFIED,
 
 	// Called when a macro is detected on the client machine.
 	ON_MACRO_DETECTED,
-
-	// Called when the player has sent it's initial info.
-	ON_INITIAL_INFO,
 
 	// Called when the player is using a virtual machine, debugger, or the CRC image doesn't match
 	ON_TAMPER_ATTEMPT,

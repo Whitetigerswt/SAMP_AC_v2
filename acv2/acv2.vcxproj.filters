@@ -141,6 +141,9 @@
     <ClCompile Include="..\Shared\Network\ACVerifiedPacket.cpp">
       <Filter>Source Files\Shared\Network</Filter>
     </ClCompile>
+    <ClCompile Include="CPacketIntegrity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\Network\CRPC.h">
@@ -859,6 +862,12 @@
     </ClInclude>
     <ClInclude Include="..\Shared\Network\ACVerifiedPacket.h">
       <Filter>Source Files\Shared\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="BugSplat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPacketIntegrity.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

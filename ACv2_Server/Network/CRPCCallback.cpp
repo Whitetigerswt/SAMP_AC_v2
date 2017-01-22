@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <cstring>
 
+#include <boost/thread.hpp>
 #include <boost/algorithm/string.hpp>
 
 #ifndef MAX_PATH
@@ -34,18 +35,33 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_TAMPER_ATTEMPT, OnTamperAttempt);
 	CRPC::Add(TOGGLE_PAUSE, OnPauseToggled);
 	CRPC::Add(TAKE_SCREENSHOT, OnTakeScreenshot);
+	CRPC::Add(VERSION_INCOMPAT2, VersionIncompat);
+}
+
+RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra)
+{
+	// Inform the player there version of AC is not compatible with the server.
+	char msg[150];
+
+	// Format the message letting the user know their AC version will not work on this server.
+	snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
+
+	// Send the message to the user.
+	SendClientMessage(iExtra, -1, msg);
+
+	// Close the connection.
+	SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
 }
 
 RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
 {
-	// Calculate verified packet
 	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
 	bool verified = true;
 
 	// Convert to byte
 	BYTE md5[16];
-	for (int i = 0; i < 16; ++i)
+	for (int i = 0; i < 16 || verified == false; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
 		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
@@ -57,18 +73,7 @@ RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtr
 		// See if any of the bytes sent from client does not match
 		if (read != md5[i])
 		{
-			// Kick the client
-
-			char kickmsg[144], name[MAX_PLAYER_NAME];
-			GetPlayerName(iExtra, name, sizeof name);
-			snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client properly.", name, iExtra);
-
-			SendClientMessageToAll(0xFF0000FF, kickmsg);
-			Utility::Printf(kickmsg);
-
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
 			verified = false;
-			break;
 		}
 	}
 
@@ -76,6 +81,13 @@ RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtr
 	{
 		Callback::SetLastTimeVerifiedClient(iExtra);
 	}
+}
+
+RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
+{
+	// Calculate verified packet
+
+	boost::thread verify(&CRPCCallback::ThreadedClientVerify, bsData, iExtra);	
 }
 
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
@@ -261,11 +273,11 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	CAntiCheatHandler::Init(iExtra);
 
 	// Calculate verified packet
-	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+	//std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
 	// Convert to byte
 	BYTE md5[16];
-	bool verified = true;
+	/*bool verified = true;
 	for (int i = 0; i < 16; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
@@ -289,7 +301,9 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	if (verified == true)
 	{
 		Callback::SetLastTimeVerifiedClient(iExtra);
-	}
+	}*/
+
+	Callback::SetLastTimeVerifiedClient(iExtra);
 
 	// Create a big variable to hold hardware ID.
 	float version;

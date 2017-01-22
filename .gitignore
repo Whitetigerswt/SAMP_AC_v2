@@ -14,7 +14,10 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
+*.asi
+*.enigmadb
+*.enigmamail
+*.amx
 
 # Fortran module files
 *.mod
@@ -23,11 +26,8 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.a
-*.lib
 
 # Executables
-*.exe
 *.out
 *.app
 
@@ -49,7 +49,6 @@
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
 [Rr]eleases/
 x64/
 x86/
@@ -62,6 +61,9 @@ bld/
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
+
+*.tlog
+*.lastbuildstate
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -303,3 +305,8 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+sampac.exp
+sampac.lib
+sampac-client.exe
+ACv2_Client.map
