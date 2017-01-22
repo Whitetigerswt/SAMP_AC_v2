@@ -222,6 +222,9 @@ namespace Callback
 
 		if (CAntiCheatHandler::IsConnected(playerid))
 		{
+			Utility::Printf("DEBUG: PLUGIN_CALL > OnPlayerConnect start");
+			int benchStart = sampgdk_GetTickCount();
+
 			// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
 			CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
 
@@ -274,7 +277,9 @@ namespace Callback
 					SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 				}
 
-			} // hwid.empty()
+			}
+			Utility::Printf("DEBUG: PLUGIN_CALL > OnPlayerConnect end", sampgdk_GetTickCount() - benchStart);
+			// hwid.empty()
 		} // CAntiCheatHandler::IsConnected(playerid)
 		else if (ACToggle)
 		{

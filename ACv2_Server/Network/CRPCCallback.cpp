@@ -276,6 +276,8 @@ void SAMPGDK_CALL KickUnverifiedClient(int timerid, void *params)
 
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("DEBUG: CRPCCallback > OnIntialInfoGotten start");
+	int benchStart = sampgdk_GetTickCount();
 	CAntiCheatHandler::Init(iExtra);
 
 	// Calculate verified packet
@@ -339,6 +341,7 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 			ac->CheckVersionCompatible(version);
 		}
 	}
+	Utility::Printf("DEBUG: CRPCCallback > OnIntialInfoGotten end: %d", sampgdk_GetTickCount() - benchStart);
 }
 
 RPC_CALLBACK CRPCCallback::OnTamperAttempt(RakNet::BitStream &bsData, int iExtra)
