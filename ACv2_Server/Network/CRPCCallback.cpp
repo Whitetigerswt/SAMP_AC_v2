@@ -55,6 +55,8 @@ RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra
 
 void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 {
+	int benchStart = sampgdk_GetTickCount();
+	Utility::Printf("DEBUG: ThreadedClientVerify threaded callback start");
 	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
 	bool verified = true;
@@ -81,13 +83,16 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 	{
 		Callback::SetLastTimeVerifiedClient(iExtra);
 	}
+	Utility::Printf("DEBUG: ThreadedClientVerify threaded callback end: %d", sampgdk_GetTickCount() - benchStart);
 }
 
 RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
 {
 	// Calculate verified packet
-
-	boost::thread verify(&CRPCCallback::ThreadedClientVerify, bsData, iExtra);	
+	int benchStart = sampgdk_GetTickCount();
+	Utility::Printf("DEBUG: OnClientVerified callback start");
+	boost::thread verify(&CRPCCallback::ThreadedClientVerify, bsData, iExtra);
+	Utility::Printf("DEBUG: OnClientVerified callback end: %d", sampgdk_GetTickCount() - benchStart);
 }
 
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
