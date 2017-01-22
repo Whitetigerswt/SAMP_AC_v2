@@ -138,14 +138,9 @@ namespace BanHandler
 		char ip[16];
 		GetPlayerIp(playerid, ip, sizeof ip);
 
-		// Clean up
-		curl_global_cleanup();
-	}
-
-	void CheckCheaterWeb(unsigned int playerid, std::string ip, std::string hwid)
-	{
-
-		bool ischeater = false;
+		// Get the player's Hardware ID.
+		std::string hwid = "";
+		hwid = ac->GetPlayerHardwareID();
 
 		boost::thread checkCheaterThread(&BanHandler::CheckCheater_Thread, playerid, hwid, std::string(ip));
 	}
@@ -222,12 +217,5 @@ namespace BanHandler
 		param->playerid = playerid;
 		param->ischeater = ischeater;
 		pMainThreadSync->AddCallbackToQueue(&CThreadSync::OnCheaterCheckResponse, param);
-    
-		// Clean up
-		curl_global_cleanup();
-
-		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
-
-		ac->OnBanChecked(ischeater);
 	}
 }
