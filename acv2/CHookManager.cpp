@@ -466,12 +466,6 @@ void CHookManager::SetConnectPatches()
 	// Hook key presses, this is an all key presses hook.
 	CMem::ApplyJmp(FUNC_KeyPress, (DWORD)KeyPress, 8);
 
-	DWORD dwOldProt;
-
-	// Change a jump early in the function to jump over our sprint hook
-	VirtualProtect((void*)0x60A72B, sizeof(BYTE), PAGE_EXECUTE_READWRITE, &dwOldProt);
-	CMem::PutSingle < BYTE >(0x60A72B, 0x34);
-
 	// Disable changing of FOV. 
 	// Source code to this mod: https://github.com/Whitetigerswt/samp-fov-changer
 	CMem::ApplyJmp(FUNC_FOVPatch, (DWORD)FOVPatch, 5);
