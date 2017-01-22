@@ -153,7 +153,6 @@ static DWORD GravityHookJmpBack1 = 0x543081;
 static DWORD GravityHookJmpBack2 = 0x543093;
 
 static DWORD PauseJmpBack = 0x576C2D;
-static DWORD SprintHookJmpBack = 0x60A760;
 
 static DWORD SetCursorPosHookJmpBack = 0x745433;
 static DWORD SlideFixJmpBack = 0x686C39;
@@ -467,8 +466,6 @@ void CHookManager::SetConnectPatches()
 	// Hook key presses, this is an all key presses hook.
 	CMem::ApplyJmp(FUNC_KeyPress, (DWORD)KeyPress, 8);
 
-	// Hook sprint speed
-	CMem::ApplyJmp(FUNC_SprintHook, (DWORD)SprintHook, 9);
 	DWORD dwOldProt;
 
 	// Change a jump early in the function to jump over our sprint hook
@@ -1004,27 +1001,6 @@ HOOK CHookManager::KeyPress()
 		call[KeyPressCall]
 		lea ecx, [ebx + 78h]
 		jmp[KeyPressJmpBack]
-	}
-}
-
-HOOK CHookManager::SprintHook()
-{
-	__asm
-	{
-		fstp dword ptr[ecx + 1Ch]
-		mov ecx, [edi + 00000480h]
-		pushad
-	}
-
-	if (Misc::GetMacroLocks() == true && VAR_CURRENT_VEHICLE == 0 && SPRINT_KEY != 0)
-	{
-		VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
-	}
-
-	__asm
-	{
-		popad
-		jmp[SprintHookJmpBack]
 	}
 }
 
