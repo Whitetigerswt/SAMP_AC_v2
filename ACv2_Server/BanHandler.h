@@ -9,7 +9,7 @@ namespace BanHandler
 {
 	// PURPOSE: Add a player to the global banlist.
 	// NOTES: "reason" must contain the name of cheat used and any extra info (e.g. reason = "modified FILE_NAME")
-	void AddCheater(unsigned int playerid, char *reason);
+	void AddCheater(unsigned int playerid, std::string reason);
 
 	// PURPOSE: POST data (in another thread)
 	void Thread_AddCheater(unsigned int playerid, std::string reason, std::string hwid, std::string name, std::string ip, std::string server_name, int server_port);

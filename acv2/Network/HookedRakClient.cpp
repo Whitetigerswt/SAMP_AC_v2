@@ -75,7 +75,7 @@ void HookedRakClientInterface::SendInitialInfo()
 	bsData.Write(ON_INITIAL_INFO);
 
 	// Calculate verified packet
-	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+	/*std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
 	// Convert verified packet from string to byte
 	BYTE digest[16];
@@ -86,7 +86,7 @@ void HookedRakClientInterface::SendInitialInfo()
 
 		// Write this byte
 		bsData.Write(digest[i]);
-	}
+	}*/
 
 	std::wstring hwid = TEXT("");
 	if (EP_CheckupIsProtected())
@@ -107,7 +107,7 @@ void HookedRakClientInterface::SendInitialInfo()
 	bsData.Write(CURRENT_MAJOR_VERSION);
 
 	// Send the info to the server.
-	Send(&bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
+	Send(&bsData, HIGH_PRIORITY, RELIABLE_ORDERED, 0);
 }
 
 bool HookedRakClientInterface::Send(RakNet::BitStream * bitStream, int priority, int reliability, char orderingChannel)
@@ -263,6 +263,11 @@ bool HookedRakClientInterface::RPC(int* uniqueID, RakNet::BitStream *parameters,
 	{
 	int len = parameters ? parameters->GetNumberOfBytesUsed() : 0;
 	Log( "< [RPC Send] %d, len: %d", *uniqueID, len );
+	}*/
+
+	/*if (*uniqueID == RPC_ClientJoin)
+	{
+		SendInitialInfo();
 	}*/
 
 	return client->GetInterface()->RPC(uniqueID, parameters, (PacketPriority)priority, (PacketReliability)reliability, orderingChannel, shiftTimestamp);
