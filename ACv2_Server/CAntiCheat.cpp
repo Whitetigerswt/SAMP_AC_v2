@@ -31,7 +31,6 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_SprintOnAllSurfaces = false;
 	m_VehicleBlips = true;
 	m_LastCheatUpdate = 0;
-  m_isConnected = false;
 	m_BanStatus = -1;
 }
 

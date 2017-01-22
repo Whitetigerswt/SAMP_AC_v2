@@ -230,30 +230,4 @@ namespace BanHandler
 
 		ac->OnBanChecked(ischeater);
 	}
-
-	void CheckCheater(unsigned int playerid)
-	{
-
-		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
-		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
-		if (ac == NULL)
-		{
-			// error?
-			Utility::Printf("failed while checking if player %d is in ban list due to CAntiCheat class error.", playerid);
-		}
-
-		// Get the player's IP
-		char ip[16];
-		GetPlayerIp(playerid, ip, sizeof ip);
-
-		// Get the player's Hardware ID.
-		std::string hwid = "";
-		hwid = ac->GetPlayerHardwareID();
-
-		boost::thread NetworkCall(&BanHandler::CheckCheaterWeb, playerid, std::string(ip), hwid);
-
-
-		// Return whether this is a cheater or not
-		//return ischeater;
-	}
 }

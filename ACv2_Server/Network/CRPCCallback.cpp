@@ -53,7 +53,7 @@ RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra
 	SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
 }
 
-RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
+void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 {
 	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
