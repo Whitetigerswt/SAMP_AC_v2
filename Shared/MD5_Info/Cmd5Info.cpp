@@ -153,6 +153,7 @@ size_t writeCallback(char* buf, size_t size, size_t nmemb, void* up)
 
 std::string Cmd5Info::GetWebsiteText(std::string url)
 {
+	printf("GetWebsiteText call\n");
 	try
 	{
 		CURL* curl; //our curl object
@@ -198,6 +199,7 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 		{
 			printf("[SAMP_AC_V2]: GetWebsiteText: failure. cURL handle returned NULL\n");
 		}
+		printf("Data: %s\n", data.c_str());
 		return data;
 	}
 	catch (std::exception &e)

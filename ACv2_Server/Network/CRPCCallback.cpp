@@ -73,6 +73,8 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 		BYTE read;
 		bsData.Read(read);
 
+		Utility::Printf("sent from client: %d  /  original: %d", read, md5[i]);
+
 		// See if any of the bytes sent from client does not match
 		if (read != md5[i])
 		{
