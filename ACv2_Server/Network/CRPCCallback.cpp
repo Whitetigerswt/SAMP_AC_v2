@@ -64,7 +64,7 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 
 	// Convert to byte
 	BYTE md5[16];
-	for (int i = 0; i < 16 || verified == false; ++i)
+	for (int i = 0; i < 16 && verified == true; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
 		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
