@@ -62,6 +62,9 @@ void SendVerificationPacket()
 	// Calculate verified packet
 	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
+	CLog log = CLog("verf_packet.txt");
+	log.Write("Verified Packet: %s", rawVerifiedP.c_str());
+
 	// Convert verified packet from string to byte
 	BYTE digest[16];
 	for (int i = 0; i < 16; ++i)
@@ -69,6 +72,7 @@ void SendVerificationPacket()
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
 		digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
 
+		log.Write("Written by client: %d", digest[i]);
 		// Write this byte
 		bitStream.Write(digest[i]);
 	}
