@@ -55,6 +55,7 @@ RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra
 
 void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 {
+	Utility::Printf("Addr2: %d", bsData);
 	Utility::Printf("DEBUG: ThreadedClientVerify threaded callback start");
 	int benchStart = sampgdk_GetTickCount();
 
@@ -66,7 +67,7 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 	// Convert to byte
 	BYTE md5[16];
 	bool didRead;
-	for (int i = 0; i < 16/* && verified == true*/; ++i)
+	for (int i = 0; i < 16 && verified == true; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
 		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
@@ -93,11 +94,42 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 
 RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
 {
+	/*Utility::Printf("Addr1: %d", bsData);
 	// Calculate verified packet
 	int benchStart = sampgdk_GetTickCount();
 	Utility::Printf("DEBUG: OnClientVerified callback start");
 	boost::thread verify(&CRPCCallback::ThreadedClientVerify, bsData, iExtra);
-	Utility::Printf("DEBUG: OnClientVerified callback end: %d", sampgdk_GetTickCount() - benchStart);
+	Utility::Printf("DEBUG: OnClientVerified callback end: %d", sampgdk_GetTickCount() - benchStart);*/
+	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
+	Utility::Printf("Verified Packet: %s", rawVerifiedP.c_str());
+
+	bool verified = true;
+
+	// Convert to byte
+	BYTE md5[16];
+	bool didRead;
+	for (int i = 0; i < 16 && verified == true; ++i)
+	{
+		std::string bt = rawVerifiedP.substr(i * 2, 2);
+		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+
+		// Read what is sent from client in the same order
+		BYTE read;
+		didRead = bsData.Read(read);
+
+		Utility::Printf("Read? (%d): sent from client: %d  /  original: %d", didRead, read, md5[i]);
+
+		// See if any of the bytes sent from client does not match
+		if (read != md5[i])
+		{
+			verified = false;
+		}
+	}
+
+	if (verified == true)
+	{
+		Callback::SetLastTimeVerifiedClient(iExtra);
+	}
 }
 
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
