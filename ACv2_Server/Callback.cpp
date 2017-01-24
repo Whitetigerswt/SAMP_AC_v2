@@ -17,7 +17,7 @@
 #include <boost/filesystem/path.hpp>
 
 // Time needed to ask players to verify their AC clients again
-#define VERIFY_CLIENTS_INTERVAL 5000
+#define VERIFY_CLIENTS_INTERVAL 180000
 
 // Last time a player verified their AC client
 int LastTimeVerifiedClient[MAX_PLAYERS];
