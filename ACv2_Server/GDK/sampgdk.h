@@ -13,6 +13,10 @@
  * limitations under the License.
  */
 
+#ifdef _WIN32
+#include <Windows.h> // avoids https://github.com/Zeex/sampgdk/issues/90
+#endif
+
 #ifndef SAMPGDK_BOOL_H
 #define SAMPGDK_BOOL_H
 
