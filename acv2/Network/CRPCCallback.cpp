@@ -66,8 +66,6 @@ void SendVerificationPacket()
 	BYTE digest[16];
 	for (int i = 0; i < sizeof digest; ++i)
 	{
-		//std::string bt = rawVerifiedP.substr(i * 2, 2);
-		//digest[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
 		digest[i] = static_cast<BYTE>(rawVerifiedP.at(i));
 
 		// Write this byte

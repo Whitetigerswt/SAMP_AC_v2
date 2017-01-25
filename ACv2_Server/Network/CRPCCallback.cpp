@@ -73,8 +73,6 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 	BYTE bytVerifiedP;
 	for (int i = 0; i < sizeof readClient && verified == true; ++i)
 	{
-		//std::string bt = rawVerifiedP.substr(i * 2, 2);
-		//md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
 		bytVerifiedP = static_cast<BYTE>(rawVerifiedP.at(i));
 
 		Utility::Printf("sent from client: %d  /  original: %d", readClient[i], bytVerifiedP);
@@ -88,7 +86,7 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 
 	if (verified == true)
 	{
-		Callback::SetLastTimeVerifiedClient(iExtra);
+		Callback::SetLastTimeVerifiedClient(iExtra, benchStart);
 	}
 
 	Utility::Printf("DEBUG: ThreadedClientVerify threaded callback end: %d", sampgdk_GetTickCount() - benchStart);
@@ -318,7 +316,7 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 		Callback::SetLastTimeVerifiedClient(iExtra);
 	}*/
 
-	Callback::SetLastTimeVerifiedClient(iExtra);
+	Callback::SetLastTimeVerifiedClient(iExtra, benchStart);
 
 	// Create a big variable to hold hardware ID.
 	float version;

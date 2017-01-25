@@ -165,7 +165,7 @@ namespace Callback
 		Utility::Printf("DEBUG: VerifyClients timer callback start");
 		int benchStart = sampgdk_GetTickCount();
 
-		int minInterval = VERIFY_CLIENTS_INTERVAL + 5000; // considering latency
+		int minInterval = VERIFY_CLIENTS_INTERVAL + 2000; // considering latency
 		// Loop through all players.
 		for (int i = 0; i < MAX_PLAYERS; ++i)
 		{
@@ -207,9 +207,9 @@ namespace Callback
 		return ACToggle;
 	}
 
-	void SetLastTimeVerifiedClient(unsigned int playerid)
+	void SetLastTimeVerifiedClient(unsigned int playerid, unsigned int time)
 	{
-		LastTimeVerifiedClient[playerid] = GetTickCount();
+		LastTimeVerifiedClient[playerid] = time;
 	}
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
