@@ -162,8 +162,8 @@
   #pragma GCC diagnostic ignored "-Wattributes"
 #endif
 
-#include "amx/amx.h"
-#include "plugincommon.h"
+#include "../SDK/samp-sdk/amx/amx.h"
+#include "../SDK/samp-sdk/plugincommon.h"
 
 #if defined __INTEL_COMPILER
   /* ... */
