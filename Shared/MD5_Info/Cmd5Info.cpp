@@ -163,7 +163,7 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 			curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
 			// If destination is secured
-			if (url.find("https") != std::string::npos)
+			if (url.compare(0, 5, "https") == 0)
 			{
 				/*
 				* If you want to connect to a site who isn't using a certificate that is
