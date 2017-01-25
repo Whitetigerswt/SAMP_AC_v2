@@ -22,6 +22,9 @@
 // Last time a player verified their AC client
 int LastTimeVerifiedClient[MAX_PLAYERS];
 
+// How many times a player has been warned for not verifying
+unsigned short UnverifiedClientWarnings[MAX_PLAYERS];
+
 namespace Callback
 {
 	static AMX* amx_allowed = NULL;
@@ -165,7 +168,6 @@ namespace Callback
 		Utility::Printf("DEBUG: VerifyClients timer callback start");
 		int benchStart = sampgdk_GetTickCount();
 
-		int minInterval = VERIFY_CLIENTS_INTERVAL + 2000; // considering latency
 		// Loop through all players.
 		for (int i = 0; i < MAX_PLAYERS; ++i)
 		{
@@ -173,16 +175,9 @@ namespace Callback
 			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
 			{
 				// See if they haven't verified their client in a while
-				if (GetTickCount() - LastTimeVerifiedClient[i] > minInterval)
+				if (GetTickCount() - LastTimeVerifiedClient[i] > VERIFY_CLIENTS_INTERVAL)
 				{
-					char msg[144], name[MAX_PLAYER_NAME];
-					GetPlayerName(i, name, sizeof name);
-					snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client in time.", name);
-					SendClientMessageToAll(0xFF0000FF, msg);
-					Utility::Printf(msg);
-
-					// Kick the player from the server
-					SetTimer(1000, 0, Callback::KickPlayer, (void*)i);
+					WarnUnverifiedClient(i);
 				}
 				else
 				{
@@ -195,7 +190,7 @@ namespace Callback
 					bsData.Write(VERIFY_CLIENT);
 
 					// Send RPC.
-					Network::PlayerSend(i, &bsData, SYSTEM_PRIORITY, RELIABLE_ORDERED, 0);
+					Network::PlayerSend(i, &bsData, HIGH_PRIORITY, RELIABLE);
 				}
 			}
 		}
@@ -210,6 +205,27 @@ namespace Callback
 	void SetLastTimeVerifiedClient(unsigned int playerid, unsigned int time)
 	{
 		LastTimeVerifiedClient[playerid] = time;
+		UnverifiedClientWarnings[playerid] = 0;
+	}
+
+	void WarnUnverifiedClient(unsigned int playerid)
+	{
+		if (UnverifiedClientWarnings[playerid] == 2)
+		{
+			char msg[144], name[MAX_PLAYER_NAME];
+			GetPlayerName(playerid, name, sizeof name);
+			snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client in time.", name);
+			SendClientMessageToAll(0xFF0000FF, msg);
+			Utility::Printf(msg);
+
+			// Kick the player from the server
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+			return;
+		}
+		UnverifiedClientWarnings[playerid] ++;
+		char name[MAX_PLAYER_NAME];
+		GetPlayerName(playerid, name, sizeof name);
+		Utility::Printf("%s has been warned for not verifying anti-cheat client in time (Warnings: %d).", name, UnverifiedClientWarnings[playerid]);
 	}
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)

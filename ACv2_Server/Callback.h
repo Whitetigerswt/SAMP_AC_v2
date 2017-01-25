@@ -49,4 +49,5 @@ namespace Callback
 
 	bool GetACEnabled();
 	void SetLastTimeVerifiedClient(unsigned int playerid, unsigned int time);
+	void WarnUnverifiedClient(unsigned int playerid);
 }
