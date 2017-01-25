@@ -17,7 +17,7 @@
 #include <boost/filesystem/path.hpp>
 
 // Time needed to ask players to verify their AC clients again
-#define VERIFY_CLIENTS_INTERVAL 180000
+#define VERIFY_CLIENTS_INTERVAL 8000
 
 // Last time a player verified their AC client
 int LastTimeVerifiedClient[MAX_PLAYERS];
@@ -165,6 +165,7 @@ namespace Callback
 		Utility::Printf("DEBUG: VerifyClients timer callback start");
 		int benchStart = sampgdk_GetTickCount();
 
+		int minInterval = VERIFY_CLIENTS_INTERVAL + 5000; // considering latency
 		// Loop through all players.
 		for (int i = 0; i < MAX_PLAYERS; ++i)
 		{
@@ -172,11 +173,11 @@ namespace Callback
 			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
 			{
 				// See if they haven't verified their client in a while
-				if (GetTickCount() - LastTimeVerifiedClient[i] > VERIFY_CLIENTS_INTERVAL)
+				if (GetTickCount() - LastTimeVerifiedClient[i] > minInterval)
 				{
 					char msg[144], name[MAX_PLAYER_NAME];
 					GetPlayerName(i, name, sizeof name);
-					snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client properly.", name);
+					snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client in time.", name);
 					SendClientMessageToAll(0xFF0000FF, msg);
 					Utility::Printf(msg);
 

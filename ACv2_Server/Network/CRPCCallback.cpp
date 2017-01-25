@@ -58,27 +58,29 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 	Utility::Printf("DEBUG: ThreadedClientVerify threaded callback start");
 	int benchStart = sampgdk_GetTickCount();
 
+	// Convert what's sent from client to byte array
+	BYTE readClient[16];
+	for (int i = 0; i < sizeof readClient; ++i)
+	{
+		// Read what is sent from client in the same order
+		bsData.Read(readClient[i]);
+	}
+
+	// Fetch verified packet from web server
 	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
-	Utility::Printf("Verified Packet: %s", rawVerifiedP.c_str());
 
 	bool verified = true;
-
-	// Convert to byte
-	BYTE md5[16];
-	bool didRead;
-	for (int i = 0; i < 16/* && verified == true*/; ++i)
+	BYTE bytVerifiedP;
+	for (int i = 0; i < sizeof readClient && verified == true; ++i)
 	{
-		std::string bt = rawVerifiedP.substr(i * 2, 2);
-		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+		//std::string bt = rawVerifiedP.substr(i * 2, 2);
+		//md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+		bytVerifiedP = static_cast<BYTE>(rawVerifiedP.at(i));
 
-		// Read what is sent from client in the same order
-		BYTE read;
-		didRead = bsData.Read(read);
-
-		Utility::Printf("Read? (%d): sent from client: %d  /  original: %d", didRead, read, md5[i]);
+		Utility::Printf("sent from client: %d  /  original: %d", readClient[i], bytVerifiedP);
 
 		// See if any of the bytes sent from client does not match
-		if (read != md5[i])
+		if (readClient[i] != bytVerifiedP)
 		{
 			verified = false;
 		}
@@ -88,6 +90,7 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 	{
 		Callback::SetLastTimeVerifiedClient(iExtra);
 	}
+
 	Utility::Printf("DEBUG: ThreadedClientVerify threaded callback end: %d", sampgdk_GetTickCount() - benchStart);
 }
 
