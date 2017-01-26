@@ -219,7 +219,7 @@ namespace Callback
 			Utility::Printf(msg);
 
 			// Kick the player from the server
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+			//SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 			return;
 		}
 		UnverifiedClientWarnings[playerid] ++;
