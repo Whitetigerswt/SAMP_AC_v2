@@ -175,12 +175,12 @@ namespace Callback
 			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
 			{
 				// See if they haven't verified their client in a while
-				/*if (GetTickCount() - LastTimeVerifiedClient[i] > VERIFY_CLIENTS_INTERVAL)
+				if (GetTickCount() - LastTimeVerifiedClient[i] > VERIFY_CLIENTS_INTERVAL)
 				{
 					WarnUnverifiedClient(i);
 				}
 				else
-				{*/
+				{
 					// Request verified packet from client
 
 					RakNet::BitStream bsData;
@@ -191,7 +191,7 @@ namespace Callback
 
 					// Send RPC.
 					Network::PlayerSend(i, &bsData, HIGH_PRIORITY, RELIABLE);
-				//}
+				}
 			}
 		}
 		Utility::Printf("DEBUG: VerifyClients timer callback end: %d", sampgdk_GetTickCount() - benchStart);
