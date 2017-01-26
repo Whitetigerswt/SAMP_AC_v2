@@ -17,7 +17,7 @@ namespace ACVerifiedPacket
 		std::string response_data = Cmd5Info::GetWebsiteText("https://apples.sampcup.com/cain.php");
 		std::string number = Cmd5Info::GetWebsiteText("https://apples.sampcup.com/abel.php");
 
-		/*if (atoi(number.c_str()) > 0)
+		if (atoi(number.c_str()) > 0)
 		{
 			// If that random/unknown number is positive, append static data
 			response_data.append("9f3973ed275e6c49b3f13a1c0968957f");
@@ -26,7 +26,7 @@ namespace ACVerifiedPacket
 		{
 			// If that random/unknown number is negative, append different static data
 			response_data.append("86ec47700f49aa06e717505af301f14d");
-		}*/
+		}
 
 		// Then append the random number itself
 		response_data.append(number);

@@ -58,7 +58,8 @@ void SendVerificationPacket()
 	// Add header info
 	bitStream.Write((unsigned char)PACKET_RPC);
 	bitStream.Write(ON_CLIENT_VERIFIED);
-
+	//bitStream.Write((BYTE)13);
+	
 	// Calculate verified packet
 	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
