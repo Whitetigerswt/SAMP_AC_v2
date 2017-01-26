@@ -157,7 +157,7 @@ namespace BanHandler
 	void CheckCheater_Thread(unsigned int playerid, std::string hwid, std::string ip)
 	{
 		Utility::Printf("DEBUG: CheckCheater_Thread start");
-		//int benchStart = sampgdk_GetTickCount();
+		int benchStart = sampgdk_GetTickCount();
 		// Create this variable which holds info whether this player is a cheater or not.
 		bool ischeater = false;
 
@@ -222,17 +222,15 @@ namespace BanHandler
 		{
 			Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
 		}
-		//Utility::Printf("DEBUG: CheckCheater_Thread end: %d", sampgdk_GetTickCount() - benchStart);
-		Utility::Printf("DEBUG: CheckCheater_Thread end.");
+		Utility::Printf("DEBUG: CheckCheater_Thread end: %d", sampgdk_GetTickCount() - benchStart);
 
 		Utility::Printf("DEBUG: Create OnCheaterCheckResponse start");
-		//benchStart = sampgdk_GetTickCount();
+		benchStart = sampgdk_GetTickCount();
 		// Return whether this is a cheater or not
 		CThreadSync::OnCheaterCheckResponse__parameters *param = new CThreadSync::OnCheaterCheckResponse__parameters;
 		param->playerid = playerid;
 		param->ischeater = ischeater;
 		pMainThreadSync->AddCallbackToQueue(&CThreadSync::OnCheaterCheckResponse, param);
-		//Utility::Printf("DEBUG: Create OnCheaterCheckResponse finish: %d", sampgdk_GetTickCount() - benchStart);
-		Utility::Printf("DEBUG: Create OnCheaterCheckResponse finish.");
+		Utility::Printf("DEBUG: Create OnCheaterCheckResponse finish: %d", sampgdk_GetTickCount() - benchStart);
 	}
 }
