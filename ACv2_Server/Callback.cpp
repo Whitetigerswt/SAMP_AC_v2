@@ -222,6 +222,7 @@ namespace Callback
 			//SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 			return;
 		}
+		LastTimeVerifiedClient[playerid] = sampgdk_GetTickCount();
 		UnverifiedClientWarnings[playerid] ++;
 		char name[MAX_PLAYER_NAME];
 		GetPlayerName(playerid, name, sizeof name);
