@@ -193,18 +193,20 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 			curl_easy_perform(curl);
 
 			curl_easy_cleanup(curl);
+			
+			return data;
 		}
 		else
 		{
 			printf("[SAMP_AC_V2]: GetWebsiteText: failure. cURL handle returned NULL\n");
+			return "NULL";
 		}
-		return data;
 	}
 	catch (std::exception &e)
 	{
 		return e.what();
 	}
-	return "";
+	return "NULL";
 }
 
 #ifdef WIN32

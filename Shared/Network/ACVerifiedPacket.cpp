@@ -15,6 +15,11 @@ namespace ACVerifiedPacket
 			Plus the URL has a misleading name.
 		*/
 		std::string response_data = Cmd5Info::GetWebsiteText("https://apples.sampcup.com/cain.php");
+		
+		if(response_data == "NULL")
+			return "49f68a5c8493ec2c0bf489821c21fc3b";
+		
+		/*
 		std::string number = Cmd5Info::GetWebsiteText("https://apples.sampcup.com/abel.php");
 
 		if (atoi(number.c_str()) > 0)
@@ -30,6 +35,7 @@ namespace ACVerifiedPacket
 
 		// Then append the random number itself
 		response_data.append(number);
+		*/
 
 		// MD5 everything
 		MD5 md5 = MD5();

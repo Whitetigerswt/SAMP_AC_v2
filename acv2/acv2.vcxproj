@@ -50,6 +50,9 @@
     <TargetExt>.asi</TargetExt>
     <IncludePath>$(ProjectDir)DirectX;$(ProjectDir);$(SolutionDir)Shared;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)acv2\libs\;$(SolutionDir)Shared\Boost\libs\;$(LibraryPath)</LibraryPath>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
