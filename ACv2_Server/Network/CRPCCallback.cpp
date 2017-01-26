@@ -61,7 +61,7 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 
 	// Convert to byte
 	BYTE md5[16];
-	for (int i = 0; i < 16 && verified == true; ++i)
+	for (int i = 0; i < 16 || verified == false; ++i)
 	{
 		std::string bt = rawVerifiedP.substr(i * 2, 2);
 		md5[i] = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
@@ -69,8 +69,6 @@ void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
 		// Read what is sent from client in the same order
 		BYTE read;
 		bsData.Read(read);
-		
-		Utility::Printf("sent from client: %d  /  original: %d", read, md5[i]);
 
 		// See if any of the bytes sent from client does not match
 		if (read != md5[i])
