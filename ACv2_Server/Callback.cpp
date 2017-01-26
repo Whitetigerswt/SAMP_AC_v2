@@ -17,7 +17,7 @@
 #include <boost/filesystem/path.hpp>
 
 // Time needed to ask players to verify their AC clients again
-#define VERIFY_CLIENTS_INTERVAL 8000
+#define VERIFY_CLIENTS_INTERVAL 180000
 
 // Last time a player verified their AC client
 int LastTimeVerifiedClient[MAX_PLAYERS];
@@ -219,7 +219,7 @@ namespace Callback
 			Utility::Printf(msg);
 
 			// Kick the player from the server
-			//SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 			return;
 		}
 		LastTimeVerifiedClient[playerid] = sampgdk_GetTickCount();
