@@ -1,10 +1,9 @@
 #pragma once
 
-#include <string>
-
 namespace ACVerifiedPacket
 {
-	// PURPOSE: Compute verified AC packet.
-	// NOTES: Returned value varies, can never have the same value twice.
-	std::string RawVerifiedPacket();
+	const unsigned short int MAX_ARRAY_SIZE = 4;
+	
+	// PURPOSE: Takes a byte and apply verified packet algorithm to it.
+	void Verify(unsigned char *byt);
 }

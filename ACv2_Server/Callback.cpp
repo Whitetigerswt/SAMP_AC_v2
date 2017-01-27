@@ -8,6 +8,7 @@
 #include "CAntiCheatHandler.h"
 #include "PacketPriority.h"
 #include "BanHandler.h"
+#include "VerifiedPacketChecker.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,15 +16,6 @@
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-
-// Time needed to ask players to verify their AC clients again
-#define VERIFY_CLIENTS_INTERVAL 180000
-
-// Last time a player verified their AC client
-int LastTimeVerifiedClient[MAX_PLAYERS];
-
-// How many times a player has been warned for not verifying
-unsigned short UnverifiedClientWarnings[MAX_PLAYERS];
 
 namespace Callback
 {
@@ -161,72 +153,9 @@ namespace Callback
 		}
 	}
 
-	// This asks connected players to verify their AC clients from time to time
-	// to make it harder to unload AC module after initial verification.
-	void SAMPGDK_CALL VerifyClients(int timerid, void *params)
-	{
-		Utility::Printf("DEBUG: VerifyClients timer callback start");
-		int benchStart = sampgdk_GetTickCount();
-
-		// Loop through all players.
-		for (int i = 0; i < MAX_PLAYERS; ++i)
-		{
-			// Make sure the player is connected to the AC and the server.
-			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
-			{
-				// See if they haven't verified their client in a while
-				if (GetTickCount() - LastTimeVerifiedClient[i] > VERIFY_CLIENTS_INTERVAL)
-				{
-					WarnUnverifiedClient(i);
-				}
-				else
-				{
-					// Request verified packet from client
-
-					RakNet::BitStream bsData;
-
-					// Write header
-					bsData.Write((unsigned char)PACKET_RPC);
-					bsData.Write(VERIFY_CLIENT);
-
-					// Send RPC.
-					Network::PlayerSend(i, &bsData, HIGH_PRIORITY, RELIABLE);
-				}
-			}
-		}
-		Utility::Printf("DEBUG: VerifyClients timer callback end: %d", sampgdk_GetTickCount() - benchStart);
-	}
-
 	bool GetACEnabled()
 	{
 		return ACToggle;
-	}
-
-	void SetLastTimeVerifiedClient(unsigned int playerid, unsigned int time)
-	{
-		LastTimeVerifiedClient[playerid] = time;
-		UnverifiedClientWarnings[playerid] = 0;
-	}
-
-	void WarnUnverifiedClient(unsigned int playerid)
-	{
-		if (UnverifiedClientWarnings[playerid] == 2)
-		{
-			char msg[144], name[MAX_PLAYER_NAME];
-			GetPlayerName(playerid, name, sizeof name);
-			snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client in time.", name);
-			SendClientMessageToAll(0xFF0000FF, msg);
-			Utility::Printf(msg);
-
-			// Kick the player from the server
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
-			return;
-		}
-		LastTimeVerifiedClient[playerid] = sampgdk_GetTickCount();
-		UnverifiedClientWarnings[playerid] ++;
-		char name[MAX_PLAYER_NAME];
-		GetPlayerName(playerid, name, sizeof name);
-		Utility::Printf("%s has been warned for not verifying anti-cheat client in time (Warnings: %d).", name, UnverifiedClientWarnings[playerid]);
 	}
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
@@ -351,7 +280,7 @@ namespace Callback
 		SetTimer(60000, true, CheckPlayersMemory, NULL);
 
 		// Request client verification in a repeated timer
-		SetTimer(VERIFY_CLIENTS_INTERVAL, true, VerifyClients, NULL);
+		VerifiedPacketChecker::StartVerifiedPacketChecker();
 
 		if (!boost::filesystem::exists("ac_config.ini"))
 		{

@@ -51,25 +51,25 @@ void CRPCCallback::ResendFileInformation()
 	CLoader::GtaDirectory.Scan(Misc::GetGTADirectory());
 }
 
-void SendVerificationPacket()
+void SendVerificationPacket(RakNet::BitStream &bsData, int iExtra)
 {
 	RakNet::BitStream bitStream;
 
 	// Add header info
 	bitStream.Write((unsigned char)PACKET_RPC);
 	bitStream.Write(ON_CLIENT_VERIFIED);
-	
-	// Calculate verified packet
-	std::string rawVerifiedP = ACVerifiedPacket::RawVerifiedPacket();
 
-	// Convert verified packet from string to byte
-	BYTE digest[16];
-	for (int i = 0; i < sizeof digest; ++i)
+	unsigned char byt;
+	for (int i = 0; i != ACVerifiedPacket::MAX_ARRAY_SIZE; ++i)
 	{
-		digest[i] = static_cast<BYTE>(rawVerifiedP.at(i));
+		// Read byte
+		bsData.Read(byt);
 
-		// Write this byte
-		bitStream.Write(digest[i]);
+		// Apply verified packet algorithm to it
+		ACVerifiedPacket::Verify(&byt);
+
+		// Write to bitstream which will be sent to the server
+		bitStream.Write(byt);
 	}
 
 	// Send the RPC to the server.
@@ -79,7 +79,7 @@ void SendVerificationPacket()
 void CRPCCallback::VerifyClient(RakNet::BitStream &bsData, int iExtra)
 {
 	// Create a separated thread for client verification procedure 
-	boost::thread VerifyClientThread(&SendVerificationPacket);
+	boost::thread VerifyClientThread(&SendVerificationPacket, bsData, iExtra);
 
 	// Run it detached which means it does not affect the current caller thread (won't slow down or freeze game)
 	VerifyClientThread.detach();
