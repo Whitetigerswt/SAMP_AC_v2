@@ -9,6 +9,7 @@
 #include "PacketPriority.h"
 #include "BanHandler.h"
 #include <ctime>
+#include <cstring>
 
 std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;
