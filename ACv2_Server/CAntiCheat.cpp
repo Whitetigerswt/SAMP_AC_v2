@@ -8,6 +8,7 @@
 #include "CServerUpdater.h"
 #include "PacketPriority.h"
 #include "BanHandler.h"
+#include <ctime>
 
 std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;
