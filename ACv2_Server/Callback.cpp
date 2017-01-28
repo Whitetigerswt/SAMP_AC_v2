@@ -280,7 +280,7 @@ namespace Callback
 		VerifiedPacketChecker::StartVerifiedPacketChecker();
 
 		// Seed for rand()
-		srand(time(NULL));
+		srand((unsigned int)time(NULL));
 
 		if (!boost::filesystem::exists("ac_config.ini"))
 		{

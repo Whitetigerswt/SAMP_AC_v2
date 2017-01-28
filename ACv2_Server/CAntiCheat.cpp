@@ -409,7 +409,7 @@ void CAntiCheat::CheckVersionCompatible(float version)
 		Network::PlayerSend(ID, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED);
 
 		// Close the connection.
-		Kick(ID);
+		SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 	}
 }
 
