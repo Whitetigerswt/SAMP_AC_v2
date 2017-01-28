@@ -7,6 +7,8 @@
 #include "Network/Network.h"
 #include "../Shared/Network/CRPC.h"
 #include "PacketPriority.h"
+#include <cstdio>
+#include <cstring>
 
 ClientVerificationStruct ClientVerification[MAX_PLAYERS];
 
