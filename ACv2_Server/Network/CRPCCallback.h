@@ -53,6 +53,4 @@ private:
 	static RPC_CALLBACK OnTakeScreenshot(RPC_ARGS);
 
 	static RPC_CALLBACK VersionIncompat(RPC_ARGS);
-
-	static void ThreadedClientVerify(RPC_ARGS);
 };

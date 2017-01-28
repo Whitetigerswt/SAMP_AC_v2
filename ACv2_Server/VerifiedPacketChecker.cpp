@@ -36,9 +36,16 @@ namespace VerifiedPacketChecker
 		ClientVerification[playerid].UnverifiedClientWarnings ++;
 	}
 
-	bool IsVerified(unsigned int playerid, unsigned char byt, unsigned int index)
+	bool IsVerified(unsigned int playerid, RakNet::BitStream &bs)
 	{
-		return (byt == ClientVerification[playerid].ToVerify[index]);
+		unsigned char readData[ACVerifiedPacket::MAX_ARRAY_SIZE];
+		unsigned short readDataSize = bs.GetNumberOfBytesUsed() - sizeof(eRPC); // we subtract size of RPC_* header from actual size
+
+		if (readDataSize != ClientVerification[playerid].ToVerifySize)
+			return 0;
+		
+		bs.Read((char*)&readData, readDataSize);
+		return (0 == memcmp(readData, ClientVerification[playerid].ToVerify, ClientVerification[playerid].ToVerifySize));
 	}
 
 	// This asks connected players to verify their AC clients from time to time
@@ -62,25 +69,25 @@ namespace VerifiedPacketChecker
 
 					RakNet::BitStream bsData;
 
-					// Write header
+					unsigned char nBytes = ACVerifiedPacket::MIN_ARRAY_SIZE + rand() % (ACVerifiedPacket::MAX_ARRAY_SIZE - ACVerifiedPacket::MIN_ARRAY_SIZE + 1); // [8 .. 16]
+					unsigned char keyByte = rand() % nBytes; // [0 .. nBytes]
+					unsigned char sendArray[ACVerifiedPacket::MAX_ARRAY_SIZE+2]; // this array size must be at least (nBytes+2)
+					for (int j = 0; j < nBytes; ++j)
+						sendArray[j] = rand() % 256;
+
+					sendArray[nBytes] = sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE];
+					sendArray[nBytes+1] = sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE + 1];
+
+					sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE] = keyByte;
+					sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE + 1] = nBytes;
+
 					bsData.Write((unsigned char)PACKET_RPC);
 					bsData.Write(VERIFY_CLIENT);
-
-					// Generate random array and send it to client
-					for (int j = 0; j != ACVerifiedPacket::MAX_ARRAY_SIZE; ++j)
-					{
-						// Generate randomly
-						ClientVerification[i].ToVerify[j] = rand() % 255;
-						
-						// Write raw byte to bitstream
-						bsData.Write(ClientVerification[i].ToVerify[j]);
-
-						// Apply verified packet algorithm and store it so we can compare when client replies
-						ACVerifiedPacket::Verify(&ClientVerification[i].ToVerify[j]);
-					}
-
-					// Send RPC.
+					bsData.Write((char*)&sendArray, nBytes + 2);
 					Network::PlayerSend(i, &bsData, HIGH_PRIORITY, RELIABLE);
+
+					bsData.SetReadOffset(BYTES_TO_BITS((sizeof(unsigned char) + sizeof(eRPC)))); // skip header
+					ACVerifiedPacket::Verify(bsData, ClientVerification[i].ToVerify, ClientVerification[i].ToVerifySize);
 				}
 			}
 		}

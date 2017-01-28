@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -281,6 +282,9 @@ namespace Callback
 
 		// Request client verification in a repeated timer
 		VerifiedPacketChecker::StartVerifiedPacketChecker();
+
+		// Seed for rand()
+		srand(time(NULL));
 
 		if (!boost::filesystem::exists("ac_config.ini"))
 		{

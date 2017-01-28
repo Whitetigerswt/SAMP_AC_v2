@@ -53,41 +53,17 @@ RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra
 	SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
 }
 
-void CRPCCallback::ThreadedClientVerify(RakNet::BitStream &bsData, int iExtra)
-{
-	Utility::Printf("DEBUG: ThreadedClientVerify threaded callback start");
-	int callTimestamp = sampgdk_GetTickCount();
-
-	bool verified = true;
-
-	// Convert what's sent from client to byte
-	BYTE readClient;
-	for (int i = 0; i != ACVerifiedPacket::MAX_ARRAY_SIZE && verified == true; ++i)
-	{
-		// Read what is sent from client in the same order
-		bsData.Read(readClient);
-
-		// See if any of the bytes sent from client does not match
-		if (!VerifiedPacketChecker::IsVerified(iExtra, readClient, i))
-		{
-			verified = false;
-		}
-	}
-
-	if (verified == true)
-	{
-		VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, callTimestamp);
-	}
-
-	Utility::Printf("DEBUG: ThreadedClientVerify threaded callback end: %d", sampgdk_GetTickCount() - callTimestamp);
-}
-
 RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
 {
 	// Calculate verified packet
 	int benchStart = sampgdk_GetTickCount();
 	Utility::Printf("DEBUG: OnClientVerified callback start");
-	boost::thread verify(&CRPCCallback::ThreadedClientVerify, bsData, iExtra);
+
+	if (VerifiedPacketChecker::IsVerified(iExtra, bsData))
+	{
+		VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, benchStart);
+	}
+
 	Utility::Printf("DEBUG: OnClientVerified callback end: %d", sampgdk_GetTickCount() - benchStart);
 }
 
