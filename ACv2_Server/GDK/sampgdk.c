@@ -1,5 +1,9 @@
 #define IN_SAMPGDK
 
+#ifndef SAMPGDK_AMALGAMATION
+  #define SAMPGDK_AMALGAMATION
+#endif
+
 #include "sampgdk.h"
 
 #if SAMPGDK_WINDOWS
@@ -12,13 +16,13 @@
   #undef KillTimer
   #undef SelectObject
   #undef SetTimer
-#ifndef WIN32_LEAN_AND_MEAN
-  #define WIN32_LEAN_AND_MEAN
-#endif
+  #ifndef WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
+  #endif
   #include <windows.h>
 #endif
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,28 +47,41 @@ struct sampgdk_array {
   int   elem_size;
 };
 
+/* Element compaison function. */
 typedef int (*sampgdk_array_cmp)(const void *x, const void *y);
 
 int sampgdk_array_new(struct sampgdk_array *a, int size, int elem_size);
 void sampgdk_array_free(struct sampgdk_array *a);
+
+/* Fills the aray with zeros. */
 int sampgdk_array_zero(struct sampgdk_array *a);
+
 int sampgdk_array_resize(struct sampgdk_array *a, int new_size);
 int sampgdk_array_grow(struct sampgdk_array *a);
 int sampgdk_array_shrink(struct sampgdk_array *a);
 int sampgdk_array_pad(struct sampgdk_array *a);
+
 void *sampgdk_array_get(struct sampgdk_array *a, int index);
-int sampgdk_array_get_index(struct sampgdk_array *a, void *elem);
 void sampgdk_array_set(struct sampgdk_array *a,int index, void *elem);
-int sampgdk_array_insert(struct sampgdk_array *a, int index, int count, void *elems);
+
+/* Returns the index of the element pointed to by elem. */
+int sampgdk_array_get_index(struct sampgdk_array *a, void *elem);
+
+int sampgdk_array_insert(struct sampgdk_array *a, int index,
+    int count, void *elems);
+int sampgdk_array_append(struct sampgdk_array *a, void *elem);
+
 int sampgdk_array_remove(struct sampgdk_array *a, int index, int count);
 int sampgdk_array_clear(struct sampgdk_array *a);
-int sampgdk_array_append(struct sampgdk_array *a, void *elem);
-int sampgdk_array_find(struct sampgdk_array *a, const void *key, sampgdk_array_cmp cmp);
-int sampgdk_array_find_remove(struct sampgdk_array *a, const void *key, sampgdk_array_cmp cmp);
+
+int sampgdk_array_find(struct sampgdk_array *a, const void *key,
+    sampgdk_array_cmp cmp);
+int sampgdk_array_find_remove(struct sampgdk_array *a, const void *key,
+    sampgdk_array_cmp cmp);
 
 #endif /* !SAMPGDK_INTERNAL_ARRAY_H */
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +114,7 @@ void *sampgdk_hook_trampoline(sampgdk_hook_t hook);
 
 #endif /* !SAMPGDK_INTERNAL_HOOK_H */
 
-/* Copyright (C) 2013-2014 Zeex
+/* Copyright (C) 2013-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +143,7 @@ void sampgdk_module_cleanup(void);
 
 #endif /* !SAMPGDK_INTERNAL_INIT_H */
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -145,16 +162,16 @@ void sampgdk_module_cleanup(void);
 #define SAMPGDK_INTERNAL_LIKELY_H
 
 #if defined __GNUC__
-  #define likely(x)   __builtin_expect((x), 1)
-  #define unlikely(x) __builtin_expect((x), 0)
+  #define SAMPGDK_LIKELY(x)   __builtin_expect((x), 1)
+  #define SAMPGDK_UNLIKELY(x) __builtin_expect((x), 0)
 #else
-  #define likely(x)   (x)
-  #define unlikely(x) (x)
+  #define SAMPGDK_LIKELY(x)   (x)
+  #define SAMPGDK_UNLIKELY(x) (x)
 #endif
 
 #endif /* !SAMPGDK_INTERNAL_LIKELY_H */
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,7 +196,7 @@ void sampgdk_log_error(const char *format, ...);
 
 #endif /* !SAMPGDK_INTERNAL_LOG_H */
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,13 +216,15 @@ void sampgdk_log_error(const char *format, ...);
 
 #include <stdarg.h>
 
-extern void *sampgdk_logprintf_impl;
+typedef void (*logprintf_t)(const char *format, ...);
+
+extern logprintf_t sampgdk_logprintf_impl;
 
 void sampgdk_do_vlogprintf(const char *format, va_list va);
 
 #endif /* !SAMPGDK_INTERNAL_LOGPRINTF_H */
 
-/* Copyright (C) 2014 Zeex
+/* Copyright (C) 2014-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -224,14 +243,25 @@ void sampgdk_do_vlogprintf(const char *format, va_list va);
 #define SAMPGDK_INTERNAL_TYPES_H
 
 #if defined _MSC_VER && _MSC_VER <= 1600
-	typedef __int8 int8_t;
-	typedef unsigned __int8 uint8_t;
-	typedef __int16 int16_t;
-	typedef unsigned __int16 uint16_t;
-	typedef __int32 int32_t;
-	typedef unsigned __int32 uint32_t;
+  typedef __int8 int8_t;
+  typedef unsigned __int8 uint8_t;
+  typedef __int16 int16_t;
+  typedef unsigned __int16 uint16_t;
+  typedef __int32 int32_t;
+  typedef unsigned __int32 uint32_t;
 #else
-	#include <stdint.h>
+  #include <stdint.h>
+#endif
+
+#if SAMPGDK_WINDOWS
+  #ifndef PRId32
+    #define PRId32 "I32d"
+  #endif
+  #ifndef PRId64
+    #define PRId64 "I64d"
+  #endif
+#else
+  #include <inttypes.h>
 #endif
 
 #endif /* !SAMPGDK_INTERNAL_TYPES_H */
@@ -313,7 +343,417 @@ void sampgdk_module_cleanup(void) {
 }
 
 
-/* Copyright (C) 2012-2014 Zeex
+struct sampgdk_api {
+  bool (SAMPGDK_CALL *sampgdk_Load)(void **ppData, sampgdk_hidden_t hidden);
+  void (SAMPGDK_CALL *sampgdk_logprintf)(const char *format, ...);
+  void (SAMPGDK_CALL *sampgdk_ProcessTick)(sampgdk_hidden_t hidden);
+  unsigned int (SAMPGDK_CALL *sampgdk_Supports)(void);
+  void (SAMPGDK_CALL *sampgdk_Unload)(sampgdk_hidden_t hidden);
+  void (SAMPGDK_CALL *sampgdk_vlogprintf)(const char *format, va_list args);
+  cell (SAMPGDK_CALL *sampgdk_CallNative)(AMX_NATIVE native, cell *params);
+  AMX_NATIVE (SAMPGDK_CALL *sampgdk_FindNative)(const char *name);
+  const AMX_NATIVE_INFO *(SAMPGDK_CALL *sampgdk_GetNatives)(int *number);
+  cell (SAMPGDK_CALL *sampgdk_InvokeNative)(AMX_NATIVE native, const char *format, ...);
+  cell (SAMPGDK_CALL *sampgdk_InvokeNativeArray)(AMX_NATIVE native, const char *format, void **args);
+  cell (SAMPGDK_CALL *sampgdk_InvokeNativeV)(AMX_NATIVE native, const char *format, va_list args);
+  int (SAMPGDK_CALL *sampgdk_GetVersion)(void);
+  const char * (SAMPGDK_CALL *sampgdk_GetVersionString)(void);
+  int (SAMPGDK_CALL *sampgdk_CreateActor)(int modelid, float x, float y, float z, float rotation);
+  bool (SAMPGDK_CALL *sampgdk_DestroyActor)(int actorid);
+  bool (SAMPGDK_CALL *sampgdk_IsActorStreamedIn)(int actorid, int forplayerid);
+  bool (SAMPGDK_CALL *sampgdk_SetActorVirtualWorld)(int actorid, int vworld);
+  int (SAMPGDK_CALL *sampgdk_GetActorVirtualWorld)(int actorid);
+  bool (SAMPGDK_CALL *sampgdk_ApplyActorAnimation)(int actorid, const char * animlib, const char * animname, float fDelta, bool loop, bool lockx, bool locky, bool freeze, int time);
+  bool (SAMPGDK_CALL *sampgdk_ClearActorAnimations)(int actorid);
+  bool (SAMPGDK_CALL *sampgdk_SetActorPos)(int actorid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetActorPos)(int actorid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetActorFacingAngle)(int actorid, float angle);
+  bool (SAMPGDK_CALL *sampgdk_GetActorFacingAngle)(int actorid, float * angle);
+  bool (SAMPGDK_CALL *sampgdk_SetActorHealth)(int actorid, float health);
+  bool (SAMPGDK_CALL *sampgdk_GetActorHealth)(int actorid, float * health);
+  bool (SAMPGDK_CALL *sampgdk_SetActorInvulnerable)(int actorid, bool invulnerable);
+  bool (SAMPGDK_CALL *sampgdk_IsActorInvulnerable)(int actorid);
+  bool (SAMPGDK_CALL *sampgdk_IsValidActor)(int actorid);
+  bool (SAMPGDK_CALL *sampgdk_HTTP)(int index, int type, const char * url, const char * data);
+  int (SAMPGDK_CALL *sampgdk_CreateObject)(int modelid, float x, float y, float z, float rX, float rY, float rZ, float DrawDistance);
+  bool (SAMPGDK_CALL *sampgdk_AttachObjectToVehicle)(int objectid, int vehicleid, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float fRotZ);
+  bool (SAMPGDK_CALL *sampgdk_AttachObjectToObject)(int objectid, int attachtoid, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float fRotZ, bool SyncRotation);
+  bool (SAMPGDK_CALL *sampgdk_AttachObjectToPlayer)(int objectid, int playerid, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float fRotZ);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectPos)(int objectid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetObjectPos)(int objectid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectRot)(int objectid, float rotX, float rotY, float rotZ);
+  bool (SAMPGDK_CALL *sampgdk_GetObjectRot)(int objectid, float * rotX, float * rotY, float * rotZ);
+  int (SAMPGDK_CALL *sampgdk_GetObjectModel)(int objectid);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectNoCameraCol)(int objectid);
+  bool (SAMPGDK_CALL *sampgdk_IsValidObject)(int objectid);
+  bool (SAMPGDK_CALL *sampgdk_DestroyObject)(int objectid);
+  int (SAMPGDK_CALL *sampgdk_MoveObject)(int objectid, float X, float Y, float Z, float Speed, float RotX, float RotY, float RotZ);
+  bool (SAMPGDK_CALL *sampgdk_StopObject)(int objectid);
+  bool (SAMPGDK_CALL *sampgdk_IsObjectMoving)(int objectid);
+  bool (SAMPGDK_CALL *sampgdk_EditObject)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_EditPlayerObject)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_SelectObject)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_CancelEdit)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_CreatePlayerObject)(int playerid, int modelid, float x, float y, float z, float rX, float rY, float rZ, float DrawDistance);
+  bool (SAMPGDK_CALL *sampgdk_AttachPlayerObjectToPlayer)(int objectplayer, int objectid, int attachplayer, float OffsetX, float OffsetY, float OffsetZ, float rX, float rY, float rZ);
+  bool (SAMPGDK_CALL *sampgdk_AttachPlayerObjectToVehicle)(int playerid, int objectid, int vehicleid, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float RotZ);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerObjectPos)(int playerid, int objectid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerObjectPos)(int playerid, int objectid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerObjectRot)(int playerid, int objectid, float rotX, float rotY, float rotZ);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerObjectRot)(int playerid, int objectid, float * rotX, float * rotY, float * rotZ);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerObjectModel)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerObjectNoCameraCol)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_IsValidPlayerObject)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_DestroyPlayerObject)(int playerid, int objectid);
+  int (SAMPGDK_CALL *sampgdk_MovePlayerObject)(int playerid, int objectid, float x, float y, float z, float Speed, float RotX, float RotY, float RotZ);
+  bool (SAMPGDK_CALL *sampgdk_StopPlayerObject)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerObjectMoving)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectMaterial)(int objectid, int materialindex, int modelid, const char * txdname, const char * texturename, int materialcolor);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerObjectMaterial)(int playerid, int objectid, int materialindex, int modelid, const char * txdname, const char * texturename, int materialcolor);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectMaterialText)(int objectid, const char * text, int materialindex, int materialsize, const char * fontface, int fontsize, bool bold, int fontcolor, int backcolor, int textalignment);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerObjectMaterialText)(int playerid, int objectid, const char * text, int materialindex, int materialsize, const char * fontface, int fontsize, bool bold, int fontcolor, int backcolor, int textalignment);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectsDefaultCameraCol)(bool disable);
+  bool (SAMPGDK_CALL *sampgdk_SetSpawnInfo)(int playerid, int team, int skin, float x, float y, float z, float rotation, int weapon1, int weapon1_ammo, int weapon2, int weapon2_ammo, int weapon3, int weapon3_ammo);
+  bool (SAMPGDK_CALL *sampgdk_SpawnPlayer)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerPos)(int playerid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerPosFindZ)(int playerid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerPos)(int playerid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerFacingAngle)(int playerid, float angle);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerFacingAngle)(int playerid, float * angle);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerInRangeOfPoint)(int playerid, float range, float x, float y, float z);
+  float (SAMPGDK_CALL *sampgdk_GetPlayerDistanceFromPoint)(int playerid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerStreamedIn)(int playerid, int forplayerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerInterior)(int playerid, int interiorid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerInterior)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerHealth)(int playerid, float health);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerHealth)(int playerid, float * health);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerArmour)(int playerid, float armour);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerArmour)(int playerid, float * armour);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerAmmo)(int playerid, int weaponid, int ammo);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerAmmo)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerWeaponState)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerTargetPlayer)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerTargetActor)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerTeam)(int playerid, int teamid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerTeam)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerScore)(int playerid, int score);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerScore)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerDrunkLevel)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerDrunkLevel)(int playerid, int level);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerColor)(int playerid, int color);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerColor)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerSkin)(int playerid, int skinid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerSkin)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GivePlayerWeapon)(int playerid, int weaponid, int ammo);
+  bool (SAMPGDK_CALL *sampgdk_ResetPlayerWeapons)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerArmedWeapon)(int playerid, int weaponid);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerWeaponData)(int playerid, int slot, int * weapon, int * ammo);
+  bool (SAMPGDK_CALL *sampgdk_GivePlayerMoney)(int playerid, int money);
+  bool (SAMPGDK_CALL *sampgdk_ResetPlayerMoney)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_SetPlayerName)(int playerid, const char * name);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerMoney)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerState)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerIp)(int playerid, char * ip, int size);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerPing)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerWeapon)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerKeys)(int playerid, int * keys, int * updown, int * leftright);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerName)(int playerid, char * name, int size);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerTime)(int playerid, int hour, int minute);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerTime)(int playerid, int * hour, int * minute);
+  bool (SAMPGDK_CALL *sampgdk_TogglePlayerClock)(int playerid, bool toggle);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerWeather)(int playerid, int weather);
+  bool (SAMPGDK_CALL *sampgdk_ForceClassSelection)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerWantedLevel)(int playerid, int level);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerWantedLevel)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerFightingStyle)(int playerid, int style);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerFightingStyle)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerVelocity)(int playerid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerVelocity)(int playerid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_PlayCrimeReportForPlayer)(int playerid, int suspectid, int crime);
+  bool (SAMPGDK_CALL *sampgdk_PlayAudioStreamForPlayer)(int playerid, const char * url, float posX, float posY, float posZ, float distance, bool usepos);
+  bool (SAMPGDK_CALL *sampgdk_StopAudioStreamForPlayer)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerShopName)(int playerid, const char * shopname);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerSkillLevel)(int playerid, int skill, int level);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerSurfingVehicleID)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerSurfingObjectID)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_RemoveBuildingForPlayer)(int playerid, int modelid, float fX, float fY, float fZ, float fRadius);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerLastShotVectors)(int playerid, float * fOriginX, float * fOriginY, float * fOriginZ, float * fHitPosX, float * fHitPosY, float * fHitPosZ);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerAttachedObject)(int playerid, int index, int modelid, int bone, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float fRotZ, float fScaleX, float fScaleY, float fScaleZ, int materialcolor1, int materialcolor2);
+  bool (SAMPGDK_CALL *sampgdk_RemovePlayerAttachedObject)(int playerid, int index);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerAttachedObjectSlotUsed)(int playerid, int index);
+  bool (SAMPGDK_CALL *sampgdk_EditAttachedObject)(int playerid, int index);
+  int (SAMPGDK_CALL *sampgdk_CreatePlayerTextDraw)(int playerid, float x, float y, const char * text);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawDestroy)(int playerid, int text);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawLetterSize)(int playerid, int text, float x, float y);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawTextSize)(int playerid, int text, float x, float y);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawAlignment)(int playerid, int text, int alignment);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawColor)(int playerid, int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawUseBox)(int playerid, int text, bool use);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawBoxColor)(int playerid, int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetShadow)(int playerid, int text, int size);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetOutline)(int playerid, int text, int size);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawBackgroundColor)(int playerid, int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawFont)(int playerid, int text, int font);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetProportional)(int playerid, int text, bool set);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetSelectable)(int playerid, int text, bool set);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawShow)(int playerid, int text);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawHide)(int playerid, int text);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetString)(int playerid, int text, const char * string);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetPreviewModel)(int playerid, int text, int modelindex);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetPreviewRot)(int playerid, int text, float fRotX, float fRotY, float fRotZ, float fZoom);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetPreviewVehCol)(int playerid, int text, int color1, int color2);
+  bool (SAMPGDK_CALL *sampgdk_SetPVarInt)(int playerid, const char * varname, int value);
+  int (SAMPGDK_CALL *sampgdk_GetPVarInt)(int playerid, const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_SetPVarString)(int playerid, const char * varname, const char * value);
+  bool (SAMPGDK_CALL *sampgdk_GetPVarString)(int playerid, const char * varname, char * value, int size);
+  bool (SAMPGDK_CALL *sampgdk_SetPVarFloat)(int playerid, const char * varname, float value);
+  float (SAMPGDK_CALL *sampgdk_GetPVarFloat)(int playerid, const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_DeletePVar)(int playerid, const char * varname);
+  int (SAMPGDK_CALL *sampgdk_GetPVarsUpperIndex)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GetPVarNameAtIndex)(int playerid, int index, char * varname, int size);
+  int (SAMPGDK_CALL *sampgdk_GetPVarType)(int playerid, const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerChatBubble)(int playerid, const char * text, int color, float drawdistance, int expiretime);
+  bool (SAMPGDK_CALL *sampgdk_PutPlayerInVehicle)(int playerid, int vehicleid, int seatid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerVehicleID)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerVehicleSeat)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_RemovePlayerFromVehicle)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_TogglePlayerControllable)(int playerid, bool toggle);
+  bool (SAMPGDK_CALL *sampgdk_PlayerPlaySound)(int playerid, int soundid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_ApplyAnimation)(int playerid, const char * animlib, const char * animname, float fDelta, bool loop, bool lockx, bool locky, bool freeze, int time, bool forcesync);
+  bool (SAMPGDK_CALL *sampgdk_ClearAnimations)(int playerid, bool forcesync);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerAnimationIndex)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GetAnimationName)(int index, char * animlib, int animlib_size, char * animname, int animname_size);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerSpecialAction)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerSpecialAction)(int playerid, int actionid);
+  bool (SAMPGDK_CALL *sampgdk_DisableRemoteVehicleCollisions)(int playerid, bool disable);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerCheckpoint)(int playerid, float x, float y, float z, float size);
+  bool (SAMPGDK_CALL *sampgdk_DisablePlayerCheckpoint)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerRaceCheckpoint)(int playerid, int type, float x, float y, float z, float nextx, float nexty, float nextz, float size);
+  bool (SAMPGDK_CALL *sampgdk_DisablePlayerRaceCheckpoint)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerWorldBounds)(int playerid, float x_max, float x_min, float y_max, float y_min);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerMarkerForPlayer)(int playerid, int showplayerid, int color);
+  bool (SAMPGDK_CALL *sampgdk_ShowPlayerNameTagForPlayer)(int playerid, int showplayerid, bool show);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerMapIcon)(int playerid, int iconid, float x, float y, float z, int markertype, int color, int style);
+  bool (SAMPGDK_CALL *sampgdk_RemovePlayerMapIcon)(int playerid, int iconid);
+  bool (SAMPGDK_CALL *sampgdk_AllowPlayerTeleport)(int playerid, bool allow);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerCameraPos)(int playerid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerCameraLookAt)(int playerid, float x, float y, float z, int cut);
+  bool (SAMPGDK_CALL *sampgdk_SetCameraBehindPlayer)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerCameraPos)(int playerid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerCameraFrontVector)(int playerid, float * x, float * y, float * z);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerCameraMode)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_EnablePlayerCameraTarget)(int playerid, bool enable);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerCameraTargetObject)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerCameraTargetVehicle)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerCameraTargetPlayer)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerCameraTargetActor)(int playerid);
+  float (SAMPGDK_CALL *sampgdk_GetPlayerCameraAspectRatio)(int playerid);
+  float (SAMPGDK_CALL *sampgdk_GetPlayerCameraZoom)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_AttachCameraToObject)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_AttachCameraToPlayerObject)(int playerid, int playerobjectid);
+  bool (SAMPGDK_CALL *sampgdk_InterpolateCameraPos)(int playerid, float FromX, float FromY, float FromZ, float ToX, float ToY, float ToZ, int time, int cut);
+  bool (SAMPGDK_CALL *sampgdk_InterpolateCameraLookAt)(int playerid, float FromX, float FromY, float FromZ, float ToX, float ToY, float ToZ, int time, int cut);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerConnected)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerInVehicle)(int playerid, int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerInAnyVehicle)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerInCheckpoint)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerInRaceCheckpoint)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerVirtualWorld)(int playerid, int worldid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerVirtualWorld)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_EnableStuntBonusForPlayer)(int playerid, bool enable);
+  bool (SAMPGDK_CALL *sampgdk_EnableStuntBonusForAll)(bool enable);
+  bool (SAMPGDK_CALL *sampgdk_TogglePlayerSpectating)(int playerid, bool toggle);
+  bool (SAMPGDK_CALL *sampgdk_PlayerSpectatePlayer)(int playerid, int targetplayerid, int mode);
+  bool (SAMPGDK_CALL *sampgdk_PlayerSpectateVehicle)(int playerid, int targetvehicleid, int mode);
+  bool (SAMPGDK_CALL *sampgdk_StartRecordingPlayerData)(int playerid, int recordtype, const char * recordname);
+  bool (SAMPGDK_CALL *sampgdk_StopRecordingPlayerData)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_CreateExplosionForPlayer)(int playerid, float X, float Y, float Z, int type, float Radius);
+  bool (SAMPGDK_CALL *sampgdk_SendClientMessage)(int playerid, int color, const char * message);
+  bool (SAMPGDK_CALL *sampgdk_SendClientMessageToAll)(int color, const char * message);
+  bool (SAMPGDK_CALL *sampgdk_SendPlayerMessageToPlayer)(int playerid, int senderid, const char * message);
+  bool (SAMPGDK_CALL *sampgdk_SendPlayerMessageToAll)(int senderid, const char * message);
+  bool (SAMPGDK_CALL *sampgdk_SendDeathMessage)(int killer, int killee, int weapon);
+  bool (SAMPGDK_CALL *sampgdk_SendDeathMessageToPlayer)(int playerid, int killer, int killee, int weapon);
+  bool (SAMPGDK_CALL *sampgdk_GameTextForAll)(const char * text, int time, int style);
+  bool (SAMPGDK_CALL *sampgdk_GameTextForPlayer)(int playerid, const char * text, int time, int style);
+  int (SAMPGDK_CALL *sampgdk_GetTickCount)();
+  int (SAMPGDK_CALL *sampgdk_GetMaxPlayers)();
+  float (SAMPGDK_CALL *sampgdk_VectorSize)(float x, float y, float z);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerPoolSize)();
+  int (SAMPGDK_CALL *sampgdk_GetVehiclePoolSize)();
+  int (SAMPGDK_CALL *sampgdk_GetActorPoolSize)();
+  bool (SAMPGDK_CALL *sampgdk_SHA256_PassHash)(const char * password, const char * salt, char * ret_hash, int ret_hash_len);
+  bool (SAMPGDK_CALL *sampgdk_SetSVarInt)(const char * varname, int int_value);
+  int (SAMPGDK_CALL *sampgdk_GetSVarInt)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_SetSVarString)(const char * varname, const char * string_value);
+  bool (SAMPGDK_CALL *sampgdk_GetSVarString)(const char * varname, char * string_return, int len);
+  bool (SAMPGDK_CALL *sampgdk_SetSVarFloat)(const char * varname, float float_value);
+  float (SAMPGDK_CALL *sampgdk_GetSVarFloat)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_DeleteSVar)(const char * varname);
+  int (SAMPGDK_CALL *sampgdk_GetSVarsUpperIndex)();
+  bool (SAMPGDK_CALL *sampgdk_GetSVarNameAtIndex)(int index, char * ret_varname, int ret_len);
+  int (SAMPGDK_CALL *sampgdk_GetSVarType)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_SetGameModeText)(const char * text);
+  bool (SAMPGDK_CALL *sampgdk_SetTeamCount)(int count);
+  int (SAMPGDK_CALL *sampgdk_AddPlayerClass)(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int weapon1, int weapon1_ammo, int weapon2, int weapon2_ammo, int weapon3, int weapon3_ammo);
+  int (SAMPGDK_CALL *sampgdk_AddPlayerClassEx)(int teamid, int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int weapon1, int weapon1_ammo, int weapon2, int weapon2_ammo, int weapon3, int weapon3_ammo);
+  int (SAMPGDK_CALL *sampgdk_AddStaticVehicle)(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int color1, int color2);
+  int (SAMPGDK_CALL *sampgdk_AddStaticVehicleEx)(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int color1, int color2, int respawn_delay, bool addsiren);
+  int (SAMPGDK_CALL *sampgdk_AddStaticPickup)(int model, int type, float x, float y, float z, int virtualworld);
+  int (SAMPGDK_CALL *sampgdk_CreatePickup)(int model, int type, float x, float y, float z, int virtualworld);
+  bool (SAMPGDK_CALL *sampgdk_DestroyPickup)(int pickup);
+  bool (SAMPGDK_CALL *sampgdk_ShowNameTags)(bool show);
+  bool (SAMPGDK_CALL *sampgdk_ShowPlayerMarkers)(int mode);
+  bool (SAMPGDK_CALL *sampgdk_GameModeExit)();
+  bool (SAMPGDK_CALL *sampgdk_SetWorldTime)(int hour);
+  bool (SAMPGDK_CALL *sampgdk_GetWeaponName)(int weaponid, char * name, int size);
+  bool (SAMPGDK_CALL *sampgdk_EnableTirePopping)(bool enable);
+  bool (SAMPGDK_CALL *sampgdk_EnableVehicleFriendlyFire)();
+  bool (SAMPGDK_CALL *sampgdk_AllowInteriorWeapons)(bool allow);
+  bool (SAMPGDK_CALL *sampgdk_SetWeather)(int weatherid);
+  bool (SAMPGDK_CALL *sampgdk_SetGravity)(float gravity);
+  float (SAMPGDK_CALL *sampgdk_GetGravity)();
+  bool (SAMPGDK_CALL *sampgdk_AllowAdminTeleport)(bool allow);
+  bool (SAMPGDK_CALL *sampgdk_SetDeathDropAmount)(int amount);
+  bool (SAMPGDK_CALL *sampgdk_CreateExplosion)(float x, float y, float z, int type, float radius);
+  bool (SAMPGDK_CALL *sampgdk_EnableZoneNames)(bool enable);
+  bool (SAMPGDK_CALL *sampgdk_UsePlayerPedAnims)();
+  bool (SAMPGDK_CALL *sampgdk_DisableInteriorEnterExits)();
+  bool (SAMPGDK_CALL *sampgdk_SetNameTagDrawDistance)(float distance);
+  bool (SAMPGDK_CALL *sampgdk_DisableNameTagLOS)();
+  bool (SAMPGDK_CALL *sampgdk_LimitGlobalChatRadius)(float chat_radius);
+  bool (SAMPGDK_CALL *sampgdk_LimitPlayerMarkerRadius)(float marker_radius);
+  bool (SAMPGDK_CALL *sampgdk_ConnectNPC)(const char * name, const char * script);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerNPC)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerAdmin)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_Kick)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_Ban)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_BanEx)(int playerid, const char * reason);
+  bool (SAMPGDK_CALL *sampgdk_SendRconCommand)(const char * command);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerNetworkStats)(int playerid, char * retstr, int size);
+  bool (SAMPGDK_CALL *sampgdk_GetNetworkStats)(char * retstr, int size);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerVersion)(int playerid, char * version, int len);
+  bool (SAMPGDK_CALL *sampgdk_BlockIpAddress)(const char * ip_address, int timems);
+  bool (SAMPGDK_CALL *sampgdk_UnBlockIpAddress)(const char * ip_address);
+  bool (SAMPGDK_CALL *sampgdk_GetServerVarAsString)(const char * varname, char * value, int size);
+  int (SAMPGDK_CALL *sampgdk_GetServerVarAsInt)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_GetServerVarAsBool)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_GetConsoleVarAsString)(const char * varname, char * buffer, int len);
+  int (SAMPGDK_CALL *sampgdk_GetConsoleVarAsInt)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_GetConsoleVarAsBool)(const char * varname);
+  int (SAMPGDK_CALL *sampgdk_GetServerTickRate)();
+  int (SAMPGDK_CALL *sampgdk_NetStats_GetConnectedTime)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_MessagesReceived)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_BytesReceived)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_MessagesSent)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_BytesSent)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_MessagesRecvPerSecond)(int playerid);
+  float (SAMPGDK_CALL *sampgdk_NetStats_PacketLossPercent)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_ConnectionStatus)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_NetStats_GetIpPort)(int playerid, char * ip_port, int ip_port_len);
+  int (SAMPGDK_CALL *sampgdk_CreateMenu)(const char * title, int columns, float x, float y, float col1width, float col2width);
+  bool (SAMPGDK_CALL *sampgdk_DestroyMenu)(int menuid);
+  int (SAMPGDK_CALL *sampgdk_AddMenuItem)(int menuid, int column, const char * menutext);
+  bool (SAMPGDK_CALL *sampgdk_SetMenuColumnHeader)(int menuid, int column, const char * columnheader);
+  bool (SAMPGDK_CALL *sampgdk_ShowMenuForPlayer)(int menuid, int playerid);
+  bool (SAMPGDK_CALL *sampgdk_HideMenuForPlayer)(int menuid, int playerid);
+  bool (SAMPGDK_CALL *sampgdk_IsValidMenu)(int menuid);
+  bool (SAMPGDK_CALL *sampgdk_DisableMenu)(int menuid);
+  bool (SAMPGDK_CALL *sampgdk_DisableMenuRow)(int menuid, int row);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerMenu)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_TextDrawCreate)(float x, float y, const char * text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawDestroy)(int text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawLetterSize)(int text, float x, float y);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawTextSize)(int text, float x, float y);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawAlignment)(int text, int alignment);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawColor)(int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawUseBox)(int text, bool use);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawBoxColor)(int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetShadow)(int text, int size);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetOutline)(int text, int size);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawBackgroundColor)(int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawFont)(int text, int font);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetProportional)(int text, bool set);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetSelectable)(int text, bool set);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawShowForPlayer)(int playerid, int text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawHideForPlayer)(int playerid, int text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawShowForAll)(int text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawHideForAll)(int text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetString)(int text, const char * string);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetPreviewModel)(int text, int modelindex);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetPreviewRot)(int text, float fRotX, float fRotY, float fRotZ, float fZoom);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetPreviewVehCol)(int text, int color1, int color2);
+  bool (SAMPGDK_CALL *sampgdk_SelectTextDraw)(int playerid, int hovercolor);
+  bool (SAMPGDK_CALL *sampgdk_CancelSelectTextDraw)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GangZoneCreate)(float minx, float miny, float maxx, float maxy);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneDestroy)(int zone);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneShowForPlayer)(int playerid, int zone, int color);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneShowForAll)(int zone, int color);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneHideForPlayer)(int playerid, int zone);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneHideForAll)(int zone);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneFlashForPlayer)(int playerid, int zone, int flashcolor);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneFlashForAll)(int zone, int flashcolor);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneStopFlashForPlayer)(int playerid, int zone);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneStopFlashForAll)(int zone);
+  int (SAMPGDK_CALL *sampgdk_Create3DTextLabel)(const char * text, int color, float x, float y, float z, float DrawDistance, int virtualworld, bool testLOS);
+  bool (SAMPGDK_CALL *sampgdk_Delete3DTextLabel)(int id);
+  bool (SAMPGDK_CALL *sampgdk_Attach3DTextLabelToPlayer)(int id, int playerid, float OffsetX, float OffsetY, float OffsetZ);
+  bool (SAMPGDK_CALL *sampgdk_Attach3DTextLabelToVehicle)(int id, int vehicleid, float OffsetX, float OffsetY, float OffsetZ);
+  bool (SAMPGDK_CALL *sampgdk_Update3DTextLabelText)(int id, int color, const char * text);
+  int (SAMPGDK_CALL *sampgdk_CreatePlayer3DTextLabel)(int playerid, const char * text, int color, float x, float y, float z, float DrawDistance, int attachedplayer, int attachedvehicle, bool testLOS);
+  bool (SAMPGDK_CALL *sampgdk_DeletePlayer3DTextLabel)(int playerid, int id);
+  bool (SAMPGDK_CALL *sampgdk_UpdatePlayer3DTextLabelText)(int playerid, int id, int color, const char * text);
+  bool (SAMPGDK_CALL *sampgdk_ShowPlayerDialog)(int playerid, int dialogid, int style, const char * caption, const char * info, const char * button1, const char * button2);
+  int (SAMPGDK_CALL *sampgdk_SetTimer)(int interval, bool repeat, TimerCallback callback, void * param);
+  bool (SAMPGDK_CALL *sampgdk_KillTimer)(int timerid);
+  bool (SAMPGDK_CALL *sampgdk_gpci)(int playerid, char * buffer, int size);
+  bool (SAMPGDK_CALL *sampgdk_IsValidVehicle)(int vehicleid);
+  float (SAMPGDK_CALL *sampgdk_GetVehicleDistanceFromPoint)(int vehicleid, float x, float y, float z);
+  int (SAMPGDK_CALL *sampgdk_CreateVehicle)(int vehicletype, float x, float y, float z, float rotation, int color1, int color2, int respawn_delay, bool addsiren);
+  bool (SAMPGDK_CALL *sampgdk_DestroyVehicle)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_IsVehicleStreamedIn)(int vehicleid, int forplayerid);
+  bool (SAMPGDK_CALL *sampgdk_GetVehiclePos)(int vehicleid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetVehiclePos)(int vehicleid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleZAngle)(int vehicleid, float * z_angle);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleRotationQuat)(int vehicleid, float * w, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleZAngle)(int vehicleid, float z_angle);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleParamsForPlayer)(int vehicleid, int playerid, int objective, int doorslocked);
+  bool (SAMPGDK_CALL *sampgdk_ManualVehicleEngineAndLights)();
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleParamsEx)(int vehicleid, int engine, int lights, int alarm, int doors, int bonnet, int boot, int objective);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleParamsEx)(int vehicleid, int * engine, int * lights, int * alarm, int * doors, int * bonnet, int * boot, int * objective);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleParamsSirenState)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleParamsCarDoors)(int vehicleid, int driver, int passenger, int backleft, int backright);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleParamsCarDoors)(int vehicleid, int * driver, int * passenger, int * backleft, int * backright);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleParamsCarWindows)(int vehicleid, int driver, int passenger, int backleft, int backright);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleParamsCarWindows)(int vehicleid, int * driver, int * passenger, int * backleft, int * backright);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleToRespawn)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_LinkVehicleToInterior)(int vehicleid, int interiorid);
+  bool (SAMPGDK_CALL *sampgdk_AddVehicleComponent)(int vehicleid, int componentid);
+  bool (SAMPGDK_CALL *sampgdk_RemoveVehicleComponent)(int vehicleid, int componentid);
+  bool (SAMPGDK_CALL *sampgdk_ChangeVehicleColor)(int vehicleid, int color1, int color2);
+  bool (SAMPGDK_CALL *sampgdk_ChangeVehiclePaintjob)(int vehicleid, int paintjobid);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleHealth)(int vehicleid, float health);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleHealth)(int vehicleid, float * health);
+  bool (SAMPGDK_CALL *sampgdk_AttachTrailerToVehicle)(int trailerid, int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_DetachTrailerFromVehicle)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_IsTrailerAttachedToVehicle)(int vehicleid);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleTrailer)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleNumberPlate)(int vehicleid, const char * numberplate);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleModel)(int vehicleid);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleComponentInSlot)(int vehicleid, int slot);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleComponentType)(int component);
+  bool (SAMPGDK_CALL *sampgdk_RepairVehicle)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleVelocity)(int vehicleid, float * X, float * Y, float * Z);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleVelocity)(int vehicleid, float X, float Y, float Z);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleAngularVelocity)(int vehicleid, float X, float Y, float Z);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleDamageStatus)(int vehicleid, int * panels, int * doors, int * lights, int * tires);
+  bool (SAMPGDK_CALL *sampgdk_UpdateVehicleDamageStatus)(int vehicleid, int panels, int doors, int lights, int tires);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleVirtualWorld)(int vehicleid, int worldid);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleVirtualWorld)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleModelInfo)(int model, int infotype, float * X, float * Y, float * Z);
+};
+
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -598,7 +1038,7 @@ int sampgdk_array_find_remove(struct sampgdk_array *a,
   return -EINVAL;
 }
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -763,7 +1203,7 @@ void sampgdk_log_error(const char *format, ...) {
   va_end(args);
 }
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -784,16 +1224,17 @@ void sampgdk_log_error(const char *format, ...) {
 #include "sampgdk.h"
 
 int sampgdk_plugin_register(void *plugin);
-bool sampgdk_plugin_is_registered(void *plugin);
 int sampgdk_plugin_unregister(void *plugin);
+
 void *sampgdk_plugin_get_symbol(void *plugin, const char *name);
 void *sampgdk_plugin_get_handle(void *address);
-void **sampgdk_plugin_table(int *number);
-int sampgdk_plugin_count(void);
+
+/* Returns all currently registered plugins. */
+void **sampgdk_plugin_get_plugins(int *number);
 
 #endif /* !SAMPGDK_INTERNAL_PLUGIN_H */
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -808,7 +1249,6 @@ int sampgdk_plugin_count(void);
  * limitations under the License.
  */
 
-#include <errno.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -817,32 +1257,38 @@ int sampgdk_plugin_count(void);
 
 /* #include "logprintf.h" */
 
-#define _SAMPGDK_LOGPRINTF_BUF_SIZE 1024
+#define _SAMPGDK_LOGPRINTF_BUFFER_SIZE 1024
 
 #ifdef _MSC_VER
   #define vsnprintf vsprintf_s
 #endif
 
-typedef void (SAMPGDK_CDECL *logprintf_t)(const char *format, ...);
-
+/*
+ * Gets called instead of the real logprintf when the library has not been
+ * initialized yet. See the declaration of sampgdk_logprintf_impl.
+ */
 static void _sampgdk_logprintf_stub(const char *format, ...) {
   va_list va;
+
   va_start(va, format);
   vprintf(format, va);
-  printf("\n");
   va_end(va);
+
+  printf("\n");
 }
 
-void *sampgdk_logprintf_impl = &_sampgdk_logprintf_stub;
+logprintf_t sampgdk_logprintf_impl = &_sampgdk_logprintf_stub;
 
 void sampgdk_do_vlogprintf(const char *format, va_list va) {
-  char buffer[_SAMPGDK_LOGPRINTF_BUF_SIZE];
+  char buffer[_SAMPGDK_LOGPRINTF_BUFFER_SIZE];
+
   vsnprintf(buffer, sizeof(buffer), format, va);
   buffer[sizeof(buffer) - 1] = '\0';
-  ((logprintf_t)sampgdk_logprintf_impl)("%s", buffer);
+
+  sampgdk_logprintf_impl("%s", buffer);
 }
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1104,7 +1550,7 @@ void *sampgdk_hook_trampoline(sampgdk_hook_t hook) {
   return hook->trampoline;
 }
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1161,16 +1607,12 @@ static int _sampgdk_plugin_compare_handle(const void *key,
 
 int sampgdk_plugin_register(void *plugin) {
   assert(plugin != NULL);
-  if (!sampgdk_plugin_is_registered(plugin)) {
+  if (sampgdk_array_find(&_sampgdk_plugins,
+                         plugin,
+                         _sampgdk_plugin_compare_handle) < 0) {
     return sampgdk_array_append(&_sampgdk_plugins, &plugin);
   }
   return -EINVAL;
-}
-
-bool sampgdk_plugin_is_registered(void *plugin) {
-  return sampgdk_array_find(&_sampgdk_plugins,
-                            plugin,
-                            _sampgdk_plugin_compare_handle) >= 0;
 }
 
 int sampgdk_plugin_unregister(void *plugin) {
@@ -1180,14 +1622,10 @@ int sampgdk_plugin_unregister(void *plugin) {
                                    _sampgdk_plugin_compare_handle);
 }
 
-void **sampgdk_plugin_table(int *number) {
+void **sampgdk_plugin_get_plugins(int *number) {
   assert(number != NULL);
   *number = _sampgdk_plugins.count;
   return _sampgdk_plugins.data;
-}
-
-int sampgdk_plugin_count(void) {
-  return _sampgdk_plugins.count;
 }
 
 #if SAMPGDK_WINDOWS
@@ -1226,7 +1664,7 @@ void *sampgdk_plugin_get_handle(void *address) {
 
 #endif /* !SAMPGDK_WINDOWS */
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1246,15 +1684,17 @@ void *sampgdk_plugin_get_handle(void *address) {
 
 #include "sampgdk.h"
 
-cell *sampgdk_param_get_start(AMX *amx);
 void sampgdk_param_get_cell(AMX *amx, int index, cell *param);
 void sampgdk_param_get_bool(AMX *amx, int index, bool *param);
 void sampgdk_param_get_float(AMX *amx, int index, float *param);
 void sampgdk_param_get_string(AMX *amx, int index, char **param);
 
+/* Returns pointer to the start of the parameter list. */
+cell *sampgdk_param_get_start(AMX *amx);
+
 #endif /* !SAMPGDK_INTERNAL_PARAM_H */
 
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1274,23 +1714,30 @@ void sampgdk_param_get_string(AMX *amx, int index, char **param);
 
 #include "sampgdk.h"
 
+/* Returns the global fake AMX instance. */
 AMX *sampgdk_fakeamx_amx(void);
+
+/* Changes the size of the fake AMX heap. Used in the amx_Allot() hook. */
 int sampgdk_fakeamx_resize_heap(int cells);
+
+/* Push a value onto the fake AMX heap. */
 int sampgdk_fakeamx_push(int cells, cell *address);
 int sampgdk_fakeamx_push_cell(cell value, cell *address);
 int sampgdk_fakeamx_push_float(float value, cell *address);
 int sampgdk_fakeamx_push_array(const cell *src, int size, cell *address);
 int sampgdk_fakeamx_push_string(const char *src, int *size, cell *address);
+void sampgdk_fakeamx_pop(cell address);
+
+/* Get stuff back from the heap. Usually used for output parameters. */
 void sampgdk_fakeamx_get_cell(cell address, cell *value);
 void sampgdk_fakeamx_get_bool(cell address, bool *value);
 void sampgdk_fakeamx_get_float(cell address, float *value);
 void sampgdk_fakeamx_get_array(cell address, cell *dest, int size);
 void sampgdk_fakeamx_get_string(cell address, char *dest, int size);
-void sampgdk_fakeamx_pop(cell address);
 
 #endif /* !SAMPGDK_INTERNAL_FAKEAMX_H */
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1310,16 +1757,35 @@ void sampgdk_fakeamx_pop(cell address);
 
 #include "sampgdk.h"
 
+/* Callback handler function. */
 typedef bool (*sampgdk_callback)(AMX *amx, void *func, cell *retval);
 
+/* Register and unregister a callback in the global callback table.
+ *
+ * This is usually done only from generated init and cleanup functions of a_*
+ * modules. Currently the only module that defines callbacks is a_samp.
+ */
 int sampgdk_callback_register(const char *name, sampgdk_callback handler);
 void sampgdk_callback_unregister(const char *name);
+
+/* Gets the name of the callback with the specified index,
+ * similar to amx_GetPublic().
+ */
 bool sampgdk_callback_get(int index, char **name);
-bool sampgdk_callback_invoke(AMX *amx, const char *name, int paramcount, cell *retval);
+
+/* Executes the callback handler registered for the specified callback.
+ *
+ * The return value indicates whether the callback returned a "bad" value,
+ * i.e. whether the gamemode is allowed to execute the associated public
+ * function. This value is specified in the IDL files via the callback's
+ * "badret" attribute.
+ */
+bool sampgdk_callback_invoke(AMX *amx, const char *name,
+    int paramcount, cell *retval);
 
 #endif /* !SAMPGDK_INTERNAL_CALLBACK_H */
 
-/* Copyright (C) 2013-2014 Zeex
+/* Copyright (C) 2013-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1394,56 +1860,56 @@ struct sampgdk_amx_api {
   int (AMXAPI *UTF8Put)(char *string, char **endptr, int maxchars, cell value);
 };
 
-extern struct sampgdk_amx_api *sampgdk_amx_api_ptr;
+extern struct sampgdk_amx_api *sampgdk_amx_api;
 
-#define amx_Align16      sampgdk_amx_api_ptr->Align16
-#define amx_Align32      sampgdk_amx_api_ptr->Align32
-#define amx_Align64      sampgdk_amx_api_ptr->Align64
-#define amx_Allot        sampgdk_amx_api_ptr->Allot
-#define amx_Callback     sampgdk_amx_api_ptr->Callback
-#define amx_Cleanup      sampgdk_amx_api_ptr->Cleanup
-#define amx_Clone        sampgdk_amx_api_ptr->Clone
-#define amx_Exec         sampgdk_amx_api_ptr->Exec
-#define amx_FindNative   sampgdk_amx_api_ptr->FindNative
-#define amx_FindPublic   sampgdk_amx_api_ptr->FindPublic
-#define amx_FindPubVar   sampgdk_amx_api_ptr->FindPubVar
-#define amx_FindTagId    sampgdk_amx_api_ptr->FindTagId
-#define amx_Flags        sampgdk_amx_api_ptr->Flags
-#define amx_GetAddr      sampgdk_amx_api_ptr->GetAddr
-#define amx_GetNative    sampgdk_amx_api_ptr->GetNative
-#define amx_GetPublic    sampgdk_amx_api_ptr->GetPublic
-#define amx_GetPubVar    sampgdk_amx_api_ptr->GetPubVar
-#define amx_GetString    sampgdk_amx_api_ptr->GetString
-#define amx_GetTag       sampgdk_amx_api_ptr->GetTag
-#define amx_GetUserData  sampgdk_amx_api_ptr->GetUserData
-#define amx_Init         sampgdk_amx_api_ptr->Init
-#define amx_InitJIT      sampgdk_amx_api_ptr->InitJIT
-#define amx_MemInfo      sampgdk_amx_api_ptr->MemInfo
-#define amx_NameLength   sampgdk_amx_api_ptr->NameLength
-#define amx_NativeInfo   sampgdk_amx_api_ptr->NativeInfo
-#define amx_NumNatives   sampgdk_amx_api_ptr->NumNatives
-#define amx_NumPublics   sampgdk_amx_api_ptr->NumPublics
-#define amx_NumPubVars   sampgdk_amx_api_ptr->NumPubVars
-#define amx_NumTags      sampgdk_amx_api_ptr->NumTags
-#define amx_Push         sampgdk_amx_api_ptr->Push
-#define amx_PushArray    sampgdk_amx_api_ptr->PushArray
-#define amx_PushString   sampgdk_amx_api_ptr->PushString
-#define amx_RaiseError   sampgdk_amx_api_ptr->RaiseError
-#define amx_Register     sampgdk_amx_api_ptr->Register
-#define amx_Release      sampgdk_amx_api_ptr->Release
-#define amx_SetCallback  sampgdk_amx_api_ptr->SetCallback
-#define amx_SetDebugHook sampgdk_amx_api_ptr->SetDebugHook
-#define amx_SetString    sampgdk_amx_api_ptr->SetString
-#define amx_SetUserData  sampgdk_amx_api_ptr->SetUserData
-#define amx_StrLen       sampgdk_amx_api_ptr->StrLen
-#define amx_UTF8Check    sampgdk_amx_api_ptr->UTF8Check
-#define amx_UTF8Get      sampgdk_amx_api_ptr->UTF8Get
-#define amx_UTF8Len      sampgdk_amx_api_ptr->UTF8Len
-#define amx_UTF8Put      sampgdk_amx_api_ptr->UTF8Put
+#define amx_Align16      sampgdk_amx_api->Align16
+#define amx_Align32      sampgdk_amx_api->Align32
+#define amx_Align64      sampgdk_amx_api->Align64
+#define amx_Allot        sampgdk_amx_api->Allot
+#define amx_Callback     sampgdk_amx_api->Callback
+#define amx_Cleanup      sampgdk_amx_api->Cleanup
+#define amx_Clone        sampgdk_amx_api->Clone
+#define amx_Exec         sampgdk_amx_api->Exec
+#define amx_FindNative   sampgdk_amx_api->FindNative
+#define amx_FindPublic   sampgdk_amx_api->FindPublic
+#define amx_FindPubVar   sampgdk_amx_api->FindPubVar
+#define amx_FindTagId    sampgdk_amx_api->FindTagId
+#define amx_Flags        sampgdk_amx_api->Flags
+#define amx_GetAddr      sampgdk_amx_api->GetAddr
+#define amx_GetNative    sampgdk_amx_api->GetNative
+#define amx_GetPublic    sampgdk_amx_api->GetPublic
+#define amx_GetPubVar    sampgdk_amx_api->GetPubVar
+#define amx_GetString    sampgdk_amx_api->GetString
+#define amx_GetTag       sampgdk_amx_api->GetTag
+#define amx_GetUserData  sampgdk_amx_api->GetUserData
+#define amx_Init         sampgdk_amx_api->Init
+#define amx_InitJIT      sampgdk_amx_api->InitJIT
+#define amx_MemInfo      sampgdk_amx_api->MemInfo
+#define amx_NameLength   sampgdk_amx_api->NameLength
+#define amx_NativeInfo   sampgdk_amx_api->NativeInfo
+#define amx_NumNatives   sampgdk_amx_api->NumNatives
+#define amx_NumPublics   sampgdk_amx_api->NumPublics
+#define amx_NumPubVars   sampgdk_amx_api->NumPubVars
+#define amx_NumTags      sampgdk_amx_api->NumTags
+#define amx_Push         sampgdk_amx_api->Push
+#define amx_PushArray    sampgdk_amx_api->PushArray
+#define amx_PushString   sampgdk_amx_api->PushString
+#define amx_RaiseError   sampgdk_amx_api->RaiseError
+#define amx_Register     sampgdk_amx_api->Register
+#define amx_Release      sampgdk_amx_api->Release
+#define amx_SetCallback  sampgdk_amx_api->SetCallback
+#define amx_SetDebugHook sampgdk_amx_api->SetDebugHook
+#define amx_SetString    sampgdk_amx_api->SetString
+#define amx_SetUserData  sampgdk_amx_api->SetUserData
+#define amx_StrLen       sampgdk_amx_api->StrLen
+#define amx_UTF8Check    sampgdk_amx_api->UTF8Check
+#define amx_UTF8Get      sampgdk_amx_api->UTF8Get
+#define amx_UTF8Len      sampgdk_amx_api->UTF8Len
+#define amx_UTF8Put      sampgdk_amx_api->UTF8Put
 
 #endif /* !SAMPGDK_INTERNAL_AMX_H */
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1465,19 +1931,25 @@ extern struct sampgdk_amx_api *sampgdk_amx_api_ptr;
 
 #include "sampgdk.h"
 
+/* Register a native function in the internal natives table. */
 int sampgdk_native_register(const char *name, AMX_NATIVE func);
+
 AMX_NATIVE sampgdk_native_find(const char *name);
 AMX_NATIVE sampgdk_native_find_warn(const char *name);
 AMX_NATIVE sampgdk_native_find_stub(const char *name);
 AMX_NATIVE sampgdk_native_find_warn_stub(const char *name);
-const AMX_NATIVE_INFO *sampgdk_native_get_table(int *number);
+AMX_NATIVE sampgdk_native_find_flexible(const char *name, AMX_NATIVE current);
+
+/* Returns all currently registered natives. */
+const AMX_NATIVE_INFO *sampgdk_native_get_natives(int *number);
+
 cell sampgdk_native_call(AMX_NATIVE native, cell *params);
 cell sampgdk_native_invoke(AMX_NATIVE native, const char *format, va_list args);
 cell sampgdk_native_invoke_array(AMX_NATIVE native, const char *format, void **args);
 
 #endif /* !SAMPGDK_NATIVE_H_ */
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1497,16 +1969,21 @@ cell sampgdk_native_invoke_array(AMX_NATIVE native, const char *format, void **a
 
 #include "sampgdk.h"
 
+/* Timer callback function.
+ * There's also a public typedef TimerCallback in <sampgdk/types.h>.
+ */
 typedef void (SAMPGDK_CALL *sampgdk_timer_callback)(int id, void *param);
 
 int sampgdk_timer_set(int interval, bool repeat,
     sampgdk_timer_callback calback, void *param);
 int sampgdk_timer_kill(int timerid);
+
+/* Processes timers created by the specified plugin. */
 void sampgdk_timer_process_timers(void *plugin);
 
 #endif /* !SAMPGDK_INTERNAL_TIMER_H */
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1686,7 +2163,7 @@ bool sampgdk_callback_invoke(AMX *amx,
   params[0] = paramcount * sizeof(cell);
   memcpy(&params[1], sampgdk_param_get_start(amx), params[0]);
 
-  plugins = sampgdk_plugin_table(&num_plugins);
+  plugins = sampgdk_plugin_get_plugins(&num_plugins);
 
   for (i = 0; i < num_plugins; i++) {
     void *func;
@@ -1711,7 +2188,7 @@ bool sampgdk_callback_invoke(AMX *amx,
   return true;
 }
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1731,13 +2208,6 @@ bool sampgdk_callback_invoke(AMX *amx,
 
 /* #include "amx.h" */
 /* #include "param.h" */
-
-cell *sampgdk_param_get_start(AMX *amx) {
-  unsigned char *data =  amx->data != NULL
-    ? amx->data
-    : amx->base + ((AMX_HEADER *)amx->base)->dat;
-  return (cell *)(data + amx->stk);
-}
 
 void sampgdk_param_get_cell(AMX *amx, int index, cell *param) {
   assert(param != NULL);
@@ -1765,7 +2235,7 @@ void sampgdk_param_get_string(AMX *amx, int index, char **param) {
   if (amx_GetAddr(amx, amx_addr, &phys_addr) != AMX_ERR_NONE) {
     return;
   }
- 
+
   amx_StrLen(phys_addr, &length);
   string = malloc((length + 1) * sizeof(char));
 
@@ -1778,7 +2248,14 @@ void sampgdk_param_get_string(AMX *amx, int index, char **param) {
   *param = string;
 }
 
-/* Copyright (C) 2011-2014 Zeex
+cell *sampgdk_param_get_start(AMX *amx) {
+  unsigned char *data =  amx->data != NULL
+    ? amx->data
+    : amx->base + ((AMX_HEADER *)amx->base)->dat;
+  return (cell *)(data + amx->stk);
+}
+
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1837,9 +2314,9 @@ SAMPGDK_MODULE_INIT(fakeamx) {
   _sampgdk_fakeamx.amx.base = (unsigned char *)&_sampgdk_fakeamx.amxhdr;
   _sampgdk_fakeamx.amx.data = (unsigned char *)_sampgdk_fakeamx.heap.data;
   _sampgdk_fakeamx.amx.callback = amx_Callback;
-
   _sampgdk_fakeamx.amx.stp = _sampgdk_fakeamx.heap.size * sizeof(cell);
   _sampgdk_fakeamx.amx.stk = _sampgdk_fakeamx.amx.stp;
+  _sampgdk_fakeamx.amx.flags = AMX_FLAG_NTVREG | AMX_FLAG_RELOC;
 
   sampgdk_array_pad(&_sampgdk_fakeamx.heap);
 
@@ -2039,7 +2516,7 @@ void sampgdk_fakeamx_pop(cell address) {
   }
 }
 
-/* Copyright (C) 2013-2014 Zeex
+/* Copyright (C) 2013-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2056,9 +2533,9 @@ void sampgdk_fakeamx_pop(cell address) {
 
 /* #include "amx.h" */
 
-struct sampgdk_amx_api *sampgdk_amx_api_ptr;
+struct sampgdk_amx_api *sampgdk_amx_api;
 
-/* Copyright (C) 2013-2014 Zeex
+/* Copyright (C) 2013-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2078,7 +2555,7 @@ struct sampgdk_amx_api *sampgdk_amx_api_ptr;
 /* #include "internal/native.h" */
 
 SAMPGDK_API(const AMX_NATIVE_INFO *, sampgdk_GetNatives(int *number)) {
-  return sampgdk_native_get_table(number);
+  return sampgdk_native_get_natives(number);
 }
 
 SAMPGDK_API(AMX_NATIVE, sampgdk_FindNative(const char *name)) {
@@ -2114,7 +2591,7 @@ SAMPGDK_API(cell, sampgdk_InvokeNativeArray(AMX_NATIVE native,
   return sampgdk_native_invoke_array(native, format, args);
 }
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2137,6 +2614,7 @@ SAMPGDK_API(cell, sampgdk_InvokeNativeArray(AMX_NATIVE native,
 /* #include "array.h" */
 /* #include "fakeamx.h" */
 /* #include "init.h" */
+/* #include "likely.h" */
 /* #include "native.h" */
 /* #include "log.h" */
 
@@ -2228,7 +2706,6 @@ AMX_NATIVE sampgdk_native_find_warn(const char *name) {
 }
 
 static cell AMX_NATIVE_CALL native_stub(AMX *amx, cell *params) {
-  sampgdk_log_warning("Native stub");
   return 0;
 }
 
@@ -2256,7 +2733,31 @@ AMX_NATIVE sampgdk_native_find_warn_stub(const char *name) {
   return func;
 }
 
-const AMX_NATIVE_INFO *sampgdk_native_get_table(int *number) {
+AMX_NATIVE sampgdk_native_find_flexible(const char *name, AMX_NATIVE current) {
+  char *always_search;
+
+  if (SAMPGDK_LIKELY(current != NULL && current != native_stub)) {
+    return current;
+  }
+
+  if (current == NULL) {
+    /* This is the first time this native is searched for, do it as usual.
+     */
+    return sampgdk_native_find_warn_stub(name);
+  }
+
+  if ((always_search = getenv("SAMGDK_NATIVE_SEARCH_ALWAYS")) != NULL
+      && atoi(always_search) != 0) {
+    /* Previous attempt to find the native failed, but the always search
+     * option is set so search again.
+     */
+    return sampgdk_native_find_warn_stub(name);
+  }
+
+  return current;
+}
+
+const AMX_NATIVE_INFO *sampgdk_native_get_natives(int *number) {
   if (number != NULL) {
     *number = _sampgdk_natives.count - 1;
   }
@@ -2265,6 +2766,7 @@ const AMX_NATIVE_INFO *sampgdk_native_get_table(int *number) {
 
 cell sampgdk_native_call(AMX_NATIVE native, cell *params) {
   AMX *amx = sampgdk_fakeamx_amx();
+  assert(native != NULL);
   return native(amx, params);
 }
 
@@ -2277,6 +2779,8 @@ cell sampgdk_native_invoke(AMX_NATIVE native,
                           _SAMPGDK_NATIVE_MAX_ARGS_SIZE];
   unsigned char *args_ptr = args_copy;
   void *args_array[_SAMPGDK_NATIVE_MAX_ARGS];
+
+  assert(format_ptr != NULL);
 
   while (*format_ptr != '\0' && i < _SAMPGDK_NATIVE_MAX_ARGS) {
     switch (*format_ptr) {
@@ -2314,7 +2818,7 @@ cell sampgdk_native_invoke(AMX_NATIVE native,
 cell sampgdk_native_invoke_array(AMX_NATIVE native, const char *format,
                                  void **args) {
   AMX *amx = sampgdk_fakeamx_amx();
-  char *format_ptr = (char *)format; /* cast away const for strtol() */
+  const char *format_ptr = format;
   cell i = 0;
   cell params[_SAMPGDK_NATIVE_MAX_ARGS + 1];
   cell size[_SAMPGDK_NATIVE_MAX_ARGS] = {0};
@@ -2328,6 +2832,9 @@ cell sampgdk_native_invoke_array(AMX_NATIVE native, const char *format,
     ST_READ_SIZE
   } state = ST_READ_SPEC;
   cell retval;
+
+  assert(format_ptr != NULL);
+  assert(args != NULL);
 
   while (*format_ptr != '\0' && i < _SAMPGDK_NATIVE_MAX_ARGS) {
     switch (state) {
@@ -2384,12 +2891,12 @@ cell sampgdk_native_invoke_array(AMX_NATIVE native, const char *format,
           format_ptr++;
           state = ST_READING_SIZE_ARG;
         } else {
-          size[needs_size] = (int)strtol(format_ptr, &format_ptr, 10);
+          size[needs_size] = (int)strtol(format_ptr, (char **)&format_ptr, 10);
           state = ST_READ_SIZE;
         }
         break;
       case ST_READING_SIZE_ARG: {
-        int index = (int)strtol(format_ptr, &format_ptr, 10);
+        int index = (int)strtol(format_ptr, (char **)&format_ptr, 10);
         size[needs_size] = *(int *)args[index];
         state = ST_READ_SIZE;
         break;
@@ -2426,6 +2933,7 @@ cell sampgdk_native_invoke_array(AMX_NATIVE native, const char *format,
   }
 
   params[0] = i * sizeof(cell);
+  assert(native != NULL);
   retval = native(amx, params);
 
   while (--i >= 0) {
@@ -2451,7 +2959,7 @@ cell sampgdk_native_invoke_array(AMX_NATIVE native, const char *format,
   return retval;
 }
 
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2549,15 +3057,6 @@ static int AMXAPI _sampgdk_amxhooks_Register(AMX *amx,
                               (amx, nativelist, number));
 }
 
-/* The server always makes a call to amx_FindPublic() before executing
- * a callback and then depending on the error code may or may not call
- * amx_Exec(). Therefore by always returning success in amx_FindPublic()
- * we can force it into calling amx_Exec() regardless of the callback's
- * existence.
- *
- * This works well as long as they don't check the returned index as it
- * can be invalid.
- */
 static int AMXAPI _sampgdk_amxhooks_FindPublic(AMX *amx,
                                                const char *name,
                                                int *index) {
@@ -2571,32 +3070,47 @@ static int AMXAPI _sampgdk_amxhooks_FindPublic(AMX *amx,
                                (amx, name, index));
   sampgdk_log_debug("amx_FindPublic returned %d", error);
 
-  /* We are interested in calling publics against two AMX instances:
+  /* We are interested in intercepting public calls against the following
+   * AMX instances:
+   *
    * - the main AMX (the gamemode)
    * - the fake AMX (this is needed for HTTP() to work)
    */
-  if (amx == _sampgdk_amxhooks_main_amx ||
-      amx == sampgdk_fakeamx_amx()) {
-    index_internal = sampgdk_callback_register(name, NULL);
-    index_real = AMX_EXEC_GDK - index_internal;
+  if (amx != _sampgdk_amxhooks_main_amx &&
+      amx != sampgdk_fakeamx_amx()) {
+    return error;
+  }
 
-    if (index_internal < 0) {
-      sampgdk_log_error("Error registering callback: %s",
-                        strerror(-index_internal));
-    } else if (error == AMX_ERR_NONE && *index < 0) {
-      /* If there are other plugins running they better return the same
-       * index as we do. Otherwise it would be a total mess and we can't
-       * let that happen.
-       */
-      if (*index != index_real) {
-        error = AMX_ERR_NOTFOUND;
-        sampgdk_log_warning("Index mismatch for %s (%d != %d)",
-                            name, *index, index_real);
-      }
-    } else if (error != AMX_ERR_NONE) {
-      error = AMX_ERR_NONE, *index = index_real;
-      sampgdk_log_debug("Registered callback: %s, index = %d", name, *index);
+  /* If the public was really found (and I mean REALLY) there's no need
+   * to mess with the index.
+   */
+  if (error == AMX_ERR_NONE && *index >= 0) {
+    return AMX_ERR_NONE;
+  }
+
+  /* OK, this public officially doesn't exist. Register it in our internal
+   * callback table and return success. The table will allow us to keep track
+   * of forged publics in amx_Exec().
+   */
+  index_internal = sampgdk_callback_register(name, NULL);
+  index_real = AMX_EXEC_GDK - index_internal;
+
+  if (index_internal < 0) {
+    sampgdk_log_error("Error registering callback: %s",
+                      strerror(-index_internal));
+  } else if (error == AMX_ERR_NONE && *index < 0) {
+    /* If there are other plugins running they better return the same
+     * index as we do. Otherwise it would be a total mess and we can't
+     * let that happen.
+     */
+    if (*index != index_real) {
+      error = AMX_ERR_NOTFOUND;
+      sampgdk_log_warning("Index mismatch for %s (%d != %d)",
+                          name, *index, index_real);
     }
+  } else if (error != AMX_ERR_NONE) {
+    error = AMX_ERR_NONE, *index = index_real;
+    sampgdk_log_debug("Registered callback: %s, index = %d", name, *index);
   }
 
   return error;
@@ -2627,7 +3141,7 @@ static int AMXAPI _sampgdk_amxhooks_Exec(AMX *amx, cell *retval, int index) {
     if (amx != NULL && _sampgdk_amxhooks_main_amx != amx) {
       _sampgdk_amxhooks_main_amx = amx;
 
-      sampgdk_log_info("Found main AMX, callbacks work now");
+      sampgdk_log_info("Found main AMX, callbacks should work now");
       sampgdk_log_debug("Main AMX instance: %p", amx);
 
       /* For some odd reason OnGameModeInit() is called before main().
@@ -2635,14 +3149,16 @@ static int AMXAPI _sampgdk_amxhooks_Exec(AMX *amx, cell *retval, int index) {
        */
       sampgdk_callback_invoke(amx, "OnGameModeInit", paramcount, retval);
     }
-  } else if (index != AMX_EXEC_CONT) {
+  } else if (index != AMX_EXEC_CONT && (amx == _sampgdk_amxhooks_main_amx ||
+                                        amx == sampgdk_fakeamx_amx())) {
     char *name = NULL;
 
     if (index <= AMX_EXEC_GDK) {
       sampgdk_callback_get(AMX_EXEC_GDK - index, &name);
     } else {
-      AMX_FUNCSTUBNT *publics =
-          (AMX_FUNCSTUBNT *)(amx->base + ((AMX_HEADER *)amx->base)->publics);
+      AMX *main_amx = _sampgdk_amxhooks_main_amx;
+      AMX_FUNCSTUBNT *publics = (AMX_FUNCSTUBNT *)(main_amx->base +
+          ((AMX_HEADER *)main_amx->base)->publics);
       name = (char *)(publics[index].nameofs + amx->base);
     }
 
@@ -2730,7 +3246,7 @@ static int AMXAPI _sampgdk_amxhooks_Allot(AMX *amx,
 static int _sampgdk_amxhooks_create(void) {
   #define _SAMPGDK_AMXHOOKS_CREATE_HOOK(name) \
     if ((_sampgdk_amxhooks_##name##_hook = \
-        sampgdk_hook_new((void *)sampgdk_amx_api_ptr->name, \
+        sampgdk_hook_new((void *)sampgdk_amx_api->name, \
                          (void *)_sampgdk_amxhooks_##name)) == NULL) \
       goto no_memory;
   _SAMPGDK_AMXHOOKS_FUNC_LIST(_SAMPGDK_AMXHOOKS_CREATE_HOOK)
@@ -2763,7 +3279,7 @@ SAMPGDK_MODULE_CLEANUP(amxhooks) {
   _sampgdk_amxhooks_destroy();
 }
 
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2788,7 +3304,7 @@ SAMPGDK_API(const char *, sampgdk_GetVersionString(void)) {
   return SAMPGDK_VERSION_STRING;
 }
 
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2837,20 +3353,24 @@ static void _sampgdk_init(void **plugin_data) {
   int error;
 
   sampgdk_logprintf_impl = plugin_data[PLUGIN_DATA_LOGPRINTF];
-  sampgdk_amx_api_ptr = plugin_data[PLUGIN_DATA_AMX_EXPORTS];
+  sampgdk_amx_api = plugin_data[PLUGIN_DATA_AMX_EXPORTS];
 
   error = sampgdk_module_init();
   if (error  < 0) {
     sampgdk_log_error("Initialization failed: %s", error);
   }
+
+  sampgdk_log_info("Version: " SAMPGDK_VERSION_STRING);
 }
 
 static int _sampgdk_init_plugin(void *plugin, void **plugin_data) {
   int error;
+  int num_plugins;
 
   assert(plugin != NULL);
 
-  if (sampgdk_plugin_count() == 0) {
+  (void)sampgdk_plugin_get_plugins(&num_plugins);
+  if (num_plugins == 0) {
     _sampgdk_init(plugin_data);
   }
 
@@ -2868,6 +3388,7 @@ static void _sampgdk_cleanup(void) {
 
 static void _sampgdk_cleanup_plugin(void *plugin) {
   int error;
+  int num_plugins;
 
   assert(plugin != NULL);
 
@@ -2876,7 +3397,8 @@ static void _sampgdk_cleanup_plugin(void *plugin) {
     sampgdk_log_error("Error unregistering plugin: %s", strerror(-error));
   }
 
-  if (sampgdk_plugin_count() == 0) {
+  (void)sampgdk_plugin_get_plugins(&num_plugins);
+  if (num_plugins == 0) {
     _sampgdk_cleanup();
   }
 }
@@ -2908,7 +3430,7 @@ SAMPGDK_API(void, sampgdk_vlogprintf(const char *format, va_list args)) {
   sampgdk_do_vlogprintf(format, args);
 }
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -3010,18 +3532,22 @@ static int _sampgdk_timer_find_slot(void) {
 static void _sampgdk_timer_fire(int timerid, int64_t elapsed) {
   struct _sampgdk_timer_info *timer;
   int64_t now = _sampgdk_timer_now();
+  int64_t started;
 
   assert(timerid > 0 && timerid <= _sampgdk_timers.count);
   timer = sampgdk_array_get(&_sampgdk_timers, timerid - 1);
 
-  sampgdk_log_debug("Firing timer %d, now = %ld, elapsed = %ld",
+  assert(timer->is_set);
+  started = timer->started;
+
+  sampgdk_log_debug("Firing timer %d, now = %"PRId64", elapsed = %"PRId64,
       timerid, now, elapsed);
   ((sampgdk_timer_callback)timer->callback)(timerid, timer->param);
 
-  /* At this point the could be killed by the timer callback,
-   * so the timer pointer may be no longer valid.
+  /* We don't want to kill the same timer twice, so make sure it's not
+   * been killed inside the timer callback.
    */
-  if (timer->is_set) {
+  if (timer->is_set && timer->started == started) {
     if (timer->repeat) {
       timer->started = now - (elapsed - timer->interval);
     } else {
@@ -3089,7 +3615,7 @@ int sampgdk_timer_set(int interval,
    */
   timerid = slot + 1;
 
-  sampgdk_log_debug("Created timer: ID = %d, interval = %ld, repeat = %s",
+  sampgdk_log_debug("Created timer: ID = %d, interval = %d, repeat = %s",
       timerid, interval, repeat ? "true" : "false");
 
   return timerid;
@@ -3145,7 +3671,6 @@ void sampgdk_timer_process_timers(void *plugin) {
 /* #include "internal/callback.h" */
 /* #include "internal/fakeamx.h" */
 /* #include "internal/init.h" */
-/* #include "internal/likely.h" */
 /* #include "internal/log.h" */
 /* #include "internal/native.h" */
 /* #include "internal/param.h" */
@@ -3155,9 +3680,7 @@ SAMPGDK_NATIVE(bool, SetSpawnInfo(int playerid, int team, int skin, float x, flo
   cell retval;
   cell params[14];
   sampgdk_log_debug("SetSpawnInfo(%d, %d, %d, %f, %f, %f, %f, %d, %d, %d, %d, %d, %d)", playerid, team, skin, x, y, z, rotation, weapon1, weapon1_ammo, weapon2, weapon2_ammo, weapon3, weapon3_ammo);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetSpawnInfo");
-  }
+  native = sampgdk_native_find_flexible("SetSpawnInfo", native);
   params[0] = 13 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)team;
@@ -3181,9 +3704,7 @@ SAMPGDK_NATIVE(bool, SpawnPlayer(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("SpawnPlayer(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SpawnPlayer");
-  }
+  native = sampgdk_native_find_flexible("SpawnPlayer", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3195,9 +3716,7 @@ SAMPGDK_NATIVE(bool, SetPlayerPos(int playerid, float x, float y, float z)) {
   cell retval;
   cell params[5];
   sampgdk_log_debug("SetPlayerPos(%d, %f, %f, %f)", playerid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerPos");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerPos", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(x);
@@ -3212,9 +3731,7 @@ SAMPGDK_NATIVE(bool, SetPlayerPosFindZ(int playerid, float x, float y, float z))
   cell retval;
   cell params[5];
   sampgdk_log_debug("SetPlayerPosFindZ(%d, %f, %f, %f)", playerid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerPosFindZ");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerPosFindZ", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(x);
@@ -3232,9 +3749,7 @@ SAMPGDK_NATIVE(bool, GetPlayerPos(int playerid, float * x, float * y, float * z)
   cell y_;
   cell z_;
   sampgdk_log_debug("GetPlayerPos(%d, %f, %f, %f)", playerid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerPos");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerPos", native);
   sampgdk_fakeamx_push(1, &x_);
   sampgdk_fakeamx_push(1, &y_);
   sampgdk_fakeamx_push(1, &z_);
@@ -3258,9 +3773,7 @@ SAMPGDK_NATIVE(bool, SetPlayerFacingAngle(int playerid, float angle)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerFacingAngle(%d, %f)", playerid, angle);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerFacingAngle");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerFacingAngle", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(angle);
@@ -3274,9 +3787,7 @@ SAMPGDK_NATIVE(bool, GetPlayerFacingAngle(int playerid, float * angle)) {
   cell params[3];
   cell angle_;
   sampgdk_log_debug("GetPlayerFacingAngle(%d, %f)", playerid, angle);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerFacingAngle");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerFacingAngle", native);
   sampgdk_fakeamx_push(1, &angle_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -3292,9 +3803,7 @@ SAMPGDK_NATIVE(bool, IsPlayerInRangeOfPoint(int playerid, float range, float x, 
   cell retval;
   cell params[6];
   sampgdk_log_debug("IsPlayerInRangeOfPoint(%d, %f, %f, %f, %f)", playerid, range, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerInRangeOfPoint");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerInRangeOfPoint", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(range);
@@ -3310,9 +3819,7 @@ SAMPGDK_NATIVE(float, GetPlayerDistanceFromPoint(int playerid, float x, float y,
   cell retval;
   cell params[5];
   sampgdk_log_debug("GetPlayerDistanceFromPoint(%d, %f, %f, %f)", playerid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerDistanceFromPoint");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerDistanceFromPoint", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(x);
@@ -3327,9 +3834,7 @@ SAMPGDK_NATIVE(bool, IsPlayerStreamedIn(int playerid, int forplayerid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("IsPlayerStreamedIn(%d, %d)", playerid, forplayerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerStreamedIn");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerStreamedIn", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)forplayerid;
@@ -3342,9 +3847,7 @@ SAMPGDK_NATIVE(bool, SetPlayerInterior(int playerid, int interiorid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerInterior(%d, %d)", playerid, interiorid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerInterior");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerInterior", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)interiorid;
@@ -3357,9 +3860,7 @@ SAMPGDK_NATIVE(int, GetPlayerInterior(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerInterior(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerInterior");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerInterior", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3371,9 +3872,7 @@ SAMPGDK_NATIVE(bool, SetPlayerHealth(int playerid, float health)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerHealth(%d, %f)", playerid, health);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerHealth");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerHealth", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(health);
@@ -3387,9 +3886,7 @@ SAMPGDK_NATIVE(bool, GetPlayerHealth(int playerid, float * health)) {
   cell params[3];
   cell health_;
   sampgdk_log_debug("GetPlayerHealth(%d, %f)", playerid, health);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerHealth");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerHealth", native);
   sampgdk_fakeamx_push(1, &health_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -3405,9 +3902,7 @@ SAMPGDK_NATIVE(bool, SetPlayerArmour(int playerid, float armour)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerArmour(%d, %f)", playerid, armour);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerArmour");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerArmour", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(armour);
@@ -3421,9 +3916,7 @@ SAMPGDK_NATIVE(bool, GetPlayerArmour(int playerid, float * armour)) {
   cell params[3];
   cell armour_;
   sampgdk_log_debug("GetPlayerArmour(%d, %f)", playerid, armour);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerArmour");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerArmour", native);
   sampgdk_fakeamx_push(1, &armour_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -3439,9 +3932,7 @@ SAMPGDK_NATIVE(bool, SetPlayerAmmo(int playerid, int weaponid, int ammo)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("SetPlayerAmmo(%d, %d, %d)", playerid, weaponid, ammo);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerAmmo");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerAmmo", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)weaponid;
@@ -3455,9 +3946,7 @@ SAMPGDK_NATIVE(int, GetPlayerAmmo(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerAmmo(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerAmmo");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerAmmo", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3469,9 +3958,7 @@ SAMPGDK_NATIVE(int, GetPlayerWeaponState(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerWeaponState(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerWeaponState");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerWeaponState", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3483,9 +3970,19 @@ SAMPGDK_NATIVE(int, GetPlayerTargetPlayer(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerTargetPlayer(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerTargetPlayer");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerTargetPlayer", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)playerid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(int, GetPlayerTargetActor(int playerid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("GetPlayerTargetActor(%d)", playerid);
+  native = sampgdk_native_find_flexible("GetPlayerTargetActor", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3497,9 +3994,7 @@ SAMPGDK_NATIVE(bool, SetPlayerTeam(int playerid, int teamid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerTeam(%d, %d)", playerid, teamid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerTeam");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerTeam", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)teamid;
@@ -3512,9 +4007,7 @@ SAMPGDK_NATIVE(int, GetPlayerTeam(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerTeam(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerTeam");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerTeam", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3526,9 +4019,7 @@ SAMPGDK_NATIVE(bool, SetPlayerScore(int playerid, int score)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerScore(%d, %d)", playerid, score);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerScore");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerScore", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)score;
@@ -3541,9 +4032,7 @@ SAMPGDK_NATIVE(int, GetPlayerScore(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerScore(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerScore");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerScore", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3555,9 +4044,7 @@ SAMPGDK_NATIVE(int, GetPlayerDrunkLevel(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerDrunkLevel(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerDrunkLevel");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerDrunkLevel", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3569,9 +4056,7 @@ SAMPGDK_NATIVE(bool, SetPlayerDrunkLevel(int playerid, int level)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerDrunkLevel(%d, %d)", playerid, level);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerDrunkLevel");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerDrunkLevel", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)level;
@@ -3584,9 +4069,7 @@ SAMPGDK_NATIVE(bool, SetPlayerColor(int playerid, int color)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerColor(%d, %d)", playerid, color);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerColor");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerColor", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)color;
@@ -3599,9 +4082,7 @@ SAMPGDK_NATIVE(int, GetPlayerColor(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerColor(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerColor");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerColor", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3613,9 +4094,7 @@ SAMPGDK_NATIVE(bool, SetPlayerSkin(int playerid, int skinid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerSkin(%d, %d)", playerid, skinid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerSkin");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerSkin", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)skinid;
@@ -3628,9 +4107,7 @@ SAMPGDK_NATIVE(int, GetPlayerSkin(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerSkin(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerSkin");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerSkin", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3642,9 +4119,7 @@ SAMPGDK_NATIVE(bool, GivePlayerWeapon(int playerid, int weaponid, int ammo)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("GivePlayerWeapon(%d, %d, %d)", playerid, weaponid, ammo);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GivePlayerWeapon");
-  }
+  native = sampgdk_native_find_flexible("GivePlayerWeapon", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)weaponid;
@@ -3658,9 +4133,7 @@ SAMPGDK_NATIVE(bool, ResetPlayerWeapons(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("ResetPlayerWeapons(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ResetPlayerWeapons");
-  }
+  native = sampgdk_native_find_flexible("ResetPlayerWeapons", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3672,9 +4145,7 @@ SAMPGDK_NATIVE(bool, SetPlayerArmedWeapon(int playerid, int weaponid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerArmedWeapon(%d, %d)", playerid, weaponid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerArmedWeapon");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerArmedWeapon", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)weaponid;
@@ -3689,9 +4160,7 @@ SAMPGDK_NATIVE(bool, GetPlayerWeaponData(int playerid, int slot, int * weapon, i
   cell weapon_;
   cell ammo_;
   sampgdk_log_debug("GetPlayerWeaponData(%d, %d, %d, %d)", playerid, slot, weapon, ammo);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerWeaponData");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerWeaponData", native);
   sampgdk_fakeamx_push(1, &weapon_);
   sampgdk_fakeamx_push(1, &ammo_);
   params[0] = 4 * sizeof(cell);
@@ -3712,9 +4181,7 @@ SAMPGDK_NATIVE(bool, GivePlayerMoney(int playerid, int money)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("GivePlayerMoney(%d, %d)", playerid, money);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GivePlayerMoney");
-  }
+  native = sampgdk_native_find_flexible("GivePlayerMoney", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)money;
@@ -3727,9 +4194,7 @@ SAMPGDK_NATIVE(bool, ResetPlayerMoney(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("ResetPlayerMoney(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ResetPlayerMoney");
-  }
+  native = sampgdk_native_find_flexible("ResetPlayerMoney", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3742,9 +4207,7 @@ SAMPGDK_NATIVE(int, SetPlayerName(int playerid, const char * name)) {
   cell params[3];
   cell name_;
   sampgdk_log_debug("SetPlayerName(%d, \"%s\")", playerid, name);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerName");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerName", native);
   sampgdk_fakeamx_push_string(name, NULL, &name_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -3759,9 +4222,7 @@ SAMPGDK_NATIVE(int, GetPlayerMoney(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerMoney(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerMoney");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerMoney", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3773,9 +4234,7 @@ SAMPGDK_NATIVE(int, GetPlayerState(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerState(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerState");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerState", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3788,9 +4247,7 @@ SAMPGDK_NATIVE(bool, GetPlayerIp(int playerid, char * ip, int size)) {
   cell params[4];
   cell ip_;
   sampgdk_log_debug("GetPlayerIp(%d, \"%s\", %d)", playerid, ip, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerIp");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerIp", native);
   sampgdk_fakeamx_push(size, &ip_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -3807,9 +4264,7 @@ SAMPGDK_NATIVE(int, GetPlayerPing(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerPing(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerPing");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerPing", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3821,9 +4276,7 @@ SAMPGDK_NATIVE(int, GetPlayerWeapon(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerWeapon(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerWeapon");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerWeapon", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3838,9 +4291,7 @@ SAMPGDK_NATIVE(bool, GetPlayerKeys(int playerid, int * keys, int * updown, int *
   cell updown_;
   cell leftright_;
   sampgdk_log_debug("GetPlayerKeys(%d, %d, %d, %d)", playerid, keys, updown, leftright);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerKeys");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerKeys", native);
   sampgdk_fakeamx_push(1, &keys_);
   sampgdk_fakeamx_push(1, &updown_);
   sampgdk_fakeamx_push(1, &leftright_);
@@ -3865,9 +4316,7 @@ SAMPGDK_NATIVE(int, GetPlayerName(int playerid, char * name, int size)) {
   cell params[4];
   cell name_;
   sampgdk_log_debug("GetPlayerName(%d, \"%s\", %d)", playerid, name, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerName");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerName", native);
   sampgdk_fakeamx_push(size, &name_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -3884,9 +4333,7 @@ SAMPGDK_NATIVE(bool, SetPlayerTime(int playerid, int hour, int minute)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("SetPlayerTime(%d, %d, %d)", playerid, hour, minute);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerTime");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerTime", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)hour;
@@ -3902,9 +4349,7 @@ SAMPGDK_NATIVE(bool, GetPlayerTime(int playerid, int * hour, int * minute)) {
   cell hour_;
   cell minute_;
   sampgdk_log_debug("GetPlayerTime(%d, %d, %d)", playerid, hour, minute);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerTime");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerTime", native);
   sampgdk_fakeamx_push(1, &hour_);
   sampgdk_fakeamx_push(1, &minute_);
   params[0] = 3 * sizeof(cell);
@@ -3924,9 +4369,7 @@ SAMPGDK_NATIVE(bool, TogglePlayerClock(int playerid, bool toggle)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TogglePlayerClock(%d, %d)", playerid, toggle);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TogglePlayerClock");
-  }
+  native = sampgdk_native_find_flexible("TogglePlayerClock", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)toggle;
@@ -3939,9 +4382,7 @@ SAMPGDK_NATIVE(bool, SetPlayerWeather(int playerid, int weather)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerWeather(%d, %d)", playerid, weather);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerWeather");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerWeather", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)weather;
@@ -3954,9 +4395,7 @@ SAMPGDK_NATIVE(bool, ForceClassSelection(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("ForceClassSelection(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ForceClassSelection");
-  }
+  native = sampgdk_native_find_flexible("ForceClassSelection", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3968,9 +4407,7 @@ SAMPGDK_NATIVE(bool, SetPlayerWantedLevel(int playerid, int level)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerWantedLevel(%d, %d)", playerid, level);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerWantedLevel");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerWantedLevel", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)level;
@@ -3983,9 +4420,7 @@ SAMPGDK_NATIVE(int, GetPlayerWantedLevel(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerWantedLevel(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerWantedLevel");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerWantedLevel", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -3997,9 +4432,7 @@ SAMPGDK_NATIVE(bool, SetPlayerFightingStyle(int playerid, int style)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerFightingStyle(%d, %d)", playerid, style);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerFightingStyle");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerFightingStyle", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)style;
@@ -4012,9 +4445,7 @@ SAMPGDK_NATIVE(int, GetPlayerFightingStyle(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerFightingStyle(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerFightingStyle");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerFightingStyle", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -4026,9 +4457,7 @@ SAMPGDK_NATIVE(bool, SetPlayerVelocity(int playerid, float x, float y, float z))
   cell retval;
   cell params[5];
   sampgdk_log_debug("SetPlayerVelocity(%d, %f, %f, %f)", playerid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerVelocity");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerVelocity", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(x);
@@ -4046,9 +4475,7 @@ SAMPGDK_NATIVE(bool, GetPlayerVelocity(int playerid, float * x, float * y, float
   cell y_;
   cell z_;
   sampgdk_log_debug("GetPlayerVelocity(%d, %f, %f, %f)", playerid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerVelocity");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerVelocity", native);
   sampgdk_fakeamx_push(1, &x_);
   sampgdk_fakeamx_push(1, &y_);
   sampgdk_fakeamx_push(1, &z_);
@@ -4072,9 +4499,7 @@ SAMPGDK_NATIVE(bool, PlayCrimeReportForPlayer(int playerid, int suspectid, int c
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayCrimeReportForPlayer(%d, %d, %d)", playerid, suspectid, crime);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayCrimeReportForPlayer");
-  }
+  native = sampgdk_native_find_flexible("PlayCrimeReportForPlayer", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)suspectid;
@@ -4089,9 +4514,7 @@ SAMPGDK_NATIVE(bool, PlayAudioStreamForPlayer(int playerid, const char * url, fl
   cell params[8];
   cell url_;
   sampgdk_log_debug("PlayAudioStreamForPlayer(%d, \"%s\", %f, %f, %f, %f, %d)", playerid, url, posX, posY, posZ, distance, usepos);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayAudioStreamForPlayer");
-  }
+  native = sampgdk_native_find_flexible("PlayAudioStreamForPlayer", native);
   sampgdk_fakeamx_push_string(url, NULL, &url_);
   params[0] = 7 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4111,9 +4534,7 @@ SAMPGDK_NATIVE(bool, StopAudioStreamForPlayer(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("StopAudioStreamForPlayer(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("StopAudioStreamForPlayer");
-  }
+  native = sampgdk_native_find_flexible("StopAudioStreamForPlayer", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -4126,9 +4547,7 @@ SAMPGDK_NATIVE(bool, SetPlayerShopName(int playerid, const char * shopname)) {
   cell params[3];
   cell shopname_;
   sampgdk_log_debug("SetPlayerShopName(%d, \"%s\")", playerid, shopname);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerShopName");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerShopName", native);
   sampgdk_fakeamx_push_string(shopname, NULL, &shopname_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4143,9 +4562,7 @@ SAMPGDK_NATIVE(bool, SetPlayerSkillLevel(int playerid, int skill, int level)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("SetPlayerSkillLevel(%d, %d, %d)", playerid, skill, level);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerSkillLevel");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerSkillLevel", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)skill;
@@ -4159,9 +4576,7 @@ SAMPGDK_NATIVE(int, GetPlayerSurfingVehicleID(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerSurfingVehicleID(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerSurfingVehicleID");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerSurfingVehicleID", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -4173,9 +4588,7 @@ SAMPGDK_NATIVE(int, GetPlayerSurfingObjectID(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerSurfingObjectID(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerSurfingObjectID");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerSurfingObjectID", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -4187,9 +4600,7 @@ SAMPGDK_NATIVE(bool, RemoveBuildingForPlayer(int playerid, int modelid, float fX
   cell retval;
   cell params[7];
   sampgdk_log_debug("RemoveBuildingForPlayer(%d, %d, %f, %f, %f, %f)", playerid, modelid, fX, fY, fZ, fRadius);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("RemoveBuildingForPlayer");
-  }
+  native = sampgdk_native_find_flexible("RemoveBuildingForPlayer", native);
   params[0] = 6 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)modelid;
@@ -4212,9 +4623,7 @@ SAMPGDK_NATIVE(bool, GetPlayerLastShotVectors(int playerid, float * fOriginX, fl
   cell fHitPosY_;
   cell fHitPosZ_;
   sampgdk_log_debug("GetPlayerLastShotVectors(%d, %f, %f, %f, %f, %f, %f)", playerid, fOriginX, fOriginY, fOriginZ, fHitPosX, fHitPosY, fHitPosZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerLastShotVectors");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerLastShotVectors", native);
   sampgdk_fakeamx_push(1, &fOriginX_);
   sampgdk_fakeamx_push(1, &fOriginY_);
   sampgdk_fakeamx_push(1, &fOriginZ_);
@@ -4250,9 +4659,7 @@ SAMPGDK_NATIVE(bool, SetPlayerAttachedObject(int playerid, int index, int modeli
   cell retval;
   cell params[16];
   sampgdk_log_debug("SetPlayerAttachedObject(%d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %d, %d)", playerid, index, modelid, bone, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ, fScaleX, fScaleY, fScaleZ, materialcolor1, materialcolor2);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerAttachedObject");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerAttachedObject", native);
   params[0] = 15 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)index;
@@ -4278,9 +4685,7 @@ SAMPGDK_NATIVE(bool, RemovePlayerAttachedObject(int playerid, int index)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("RemovePlayerAttachedObject(%d, %d)", playerid, index);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("RemovePlayerAttachedObject");
-  }
+  native = sampgdk_native_find_flexible("RemovePlayerAttachedObject", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)index;
@@ -4293,9 +4698,7 @@ SAMPGDK_NATIVE(bool, IsPlayerAttachedObjectSlotUsed(int playerid, int index)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("IsPlayerAttachedObjectSlotUsed(%d, %d)", playerid, index);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerAttachedObjectSlotUsed");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerAttachedObjectSlotUsed", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)index;
@@ -4308,9 +4711,7 @@ SAMPGDK_NATIVE(bool, EditAttachedObject(int playerid, int index)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("EditAttachedObject(%d, %d)", playerid, index);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("EditAttachedObject");
-  }
+  native = sampgdk_native_find_flexible("EditAttachedObject", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)index;
@@ -4324,9 +4725,7 @@ SAMPGDK_NATIVE(int, CreatePlayerTextDraw(int playerid, float x, float y, const c
   cell params[5];
   cell text_;
   sampgdk_log_debug("CreatePlayerTextDraw(%d, %f, %f, \"%s\")", playerid, x, y, text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CreatePlayerTextDraw");
-  }
+  native = sampgdk_native_find_flexible("CreatePlayerTextDraw", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4343,9 +4742,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawDestroy(int playerid, int text)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("PlayerTextDrawDestroy(%d, %d)", playerid, text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawDestroy");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawDestroy", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4358,9 +4755,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawLetterSize(int playerid, int text, float x, f
   cell retval;
   cell params[5];
   sampgdk_log_debug("PlayerTextDrawLetterSize(%d, %d, %f, %f)", playerid, text, x, y);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawLetterSize");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawLetterSize", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4375,9 +4770,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawTextSize(int playerid, int text, float x, flo
   cell retval;
   cell params[5];
   sampgdk_log_debug("PlayerTextDrawTextSize(%d, %d, %f, %f)", playerid, text, x, y);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawTextSize");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawTextSize", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4392,9 +4785,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawAlignment(int playerid, int text, int alignme
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawAlignment(%d, %d, %d)", playerid, text, alignment);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawAlignment");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawAlignment", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4408,9 +4799,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawColor(int playerid, int text, int color)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawColor(%d, %d, %d)", playerid, text, color);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawColor");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawColor", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4424,9 +4813,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawUseBox(int playerid, int text, bool use)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawUseBox(%d, %d, %d)", playerid, text, use);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawUseBox");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawUseBox", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4440,9 +4827,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawBoxColor(int playerid, int text, int color)) 
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawBoxColor(%d, %d, %d)", playerid, text, color);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawBoxColor");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawBoxColor", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4456,9 +4841,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawSetShadow(int playerid, int text, int size)) 
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawSetShadow(%d, %d, %d)", playerid, text, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawSetShadow");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawSetShadow", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4472,9 +4855,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawSetOutline(int playerid, int text, int size))
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawSetOutline(%d, %d, %d)", playerid, text, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawSetOutline");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawSetOutline", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4488,9 +4869,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawBackgroundColor(int playerid, int text, int c
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawBackgroundColor(%d, %d, %d)", playerid, text, color);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawBackgroundColor");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawBackgroundColor", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4504,9 +4883,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawFont(int playerid, int text, int font)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawFont(%d, %d, %d)", playerid, text, font);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawFont");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawFont", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4520,9 +4897,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawSetProportional(int playerid, int text, bool 
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawSetProportional(%d, %d, %d)", playerid, text, set);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawSetProportional");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawSetProportional", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4536,9 +4911,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawSetSelectable(int playerid, int text, bool se
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawSetSelectable(%d, %d, %d)", playerid, text, set);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawSetSelectable");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawSetSelectable", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4552,9 +4925,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawShow(int playerid, int text)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("PlayerTextDrawShow(%d, %d)", playerid, text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawShow");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawShow", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4567,9 +4938,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawHide(int playerid, int text)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("PlayerTextDrawHide(%d, %d)", playerid, text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawHide");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawHide", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4583,9 +4952,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawSetString(int playerid, int text, const char 
   cell params[4];
   cell string_;
   sampgdk_log_debug("PlayerTextDrawSetString(%d, %d, \"%s\")", playerid, text, string);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawSetString");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawSetString", native);
   sampgdk_fakeamx_push_string(string, NULL, &string_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4601,9 +4968,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawSetPreviewModel(int playerid, int text, int m
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerTextDrawSetPreviewModel(%d, %d, %d)", playerid, text, modelindex);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawSetPreviewModel");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawSetPreviewModel", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4617,9 +4982,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawSetPreviewRot(int playerid, int text, float f
   cell retval;
   cell params[7];
   sampgdk_log_debug("PlayerTextDrawSetPreviewRot(%d, %d, %f, %f, %f, %f)", playerid, text, fRotX, fRotY, fRotZ, fZoom);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawSetPreviewRot");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawSetPreviewRot", native);
   params[0] = 6 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4636,9 +4999,7 @@ SAMPGDK_NATIVE(bool, PlayerTextDrawSetPreviewVehCol(int playerid, int text, int 
   cell retval;
   cell params[5];
   sampgdk_log_debug("PlayerTextDrawSetPreviewVehCol(%d, %d, %d, %d)", playerid, text, color1, color2);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerTextDrawSetPreviewVehCol");
-  }
+  native = sampgdk_native_find_flexible("PlayerTextDrawSetPreviewVehCol", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -4654,9 +5015,7 @@ SAMPGDK_NATIVE(bool, SetPVarInt(int playerid, const char * varname, int value)) 
   cell params[4];
   cell varname_;
   sampgdk_log_debug("SetPVarInt(%d, \"%s\", %d)", playerid, varname, value);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPVarInt");
-  }
+  native = sampgdk_native_find_flexible("SetPVarInt", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4673,9 +5032,7 @@ SAMPGDK_NATIVE(int, GetPVarInt(int playerid, const char * varname)) {
   cell params[3];
   cell varname_;
   sampgdk_log_debug("GetPVarInt(%d, \"%s\")", playerid, varname);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPVarInt");
-  }
+  native = sampgdk_native_find_flexible("GetPVarInt", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4692,9 +5049,7 @@ SAMPGDK_NATIVE(bool, SetPVarString(int playerid, const char * varname, const cha
   cell varname_;
   cell value_;
   sampgdk_log_debug("SetPVarString(%d, \"%s\", \"%s\")", playerid, varname, value);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPVarString");
-  }
+  native = sampgdk_native_find_flexible("SetPVarString", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   sampgdk_fakeamx_push_string(value, NULL, &value_);
   params[0] = 3 * sizeof(cell);
@@ -4714,9 +5069,7 @@ SAMPGDK_NATIVE(bool, GetPVarString(int playerid, const char * varname, char * va
   cell varname_;
   cell value_;
   sampgdk_log_debug("GetPVarString(%d, \"%s\", \"%s\", %d)", playerid, varname, value, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPVarString");
-  }
+  native = sampgdk_native_find_flexible("GetPVarString", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   sampgdk_fakeamx_push(size, &value_);
   params[0] = 4 * sizeof(cell);
@@ -4737,9 +5090,7 @@ SAMPGDK_NATIVE(bool, SetPVarFloat(int playerid, const char * varname, float valu
   cell params[4];
   cell varname_;
   sampgdk_log_debug("SetPVarFloat(%d, \"%s\", %f)", playerid, varname, value);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPVarFloat");
-  }
+  native = sampgdk_native_find_flexible("SetPVarFloat", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4756,9 +5107,7 @@ SAMPGDK_NATIVE(float, GetPVarFloat(int playerid, const char * varname)) {
   cell params[3];
   cell varname_;
   sampgdk_log_debug("GetPVarFloat(%d, \"%s\")", playerid, varname);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPVarFloat");
-  }
+  native = sampgdk_native_find_flexible("GetPVarFloat", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4774,9 +5123,7 @@ SAMPGDK_NATIVE(bool, DeletePVar(int playerid, const char * varname)) {
   cell params[3];
   cell varname_;
   sampgdk_log_debug("DeletePVar(%d, \"%s\")", playerid, varname);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DeletePVar");
-  }
+  native = sampgdk_native_find_flexible("DeletePVar", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4791,9 +5138,7 @@ SAMPGDK_NATIVE(int, GetPVarsUpperIndex(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPVarsUpperIndex(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPVarsUpperIndex");
-  }
+  native = sampgdk_native_find_flexible("GetPVarsUpperIndex", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -4806,9 +5151,7 @@ SAMPGDK_NATIVE(bool, GetPVarNameAtIndex(int playerid, int index, char * varname,
   cell params[5];
   cell varname_;
   sampgdk_log_debug("GetPVarNameAtIndex(%d, %d, \"%s\", %d)", playerid, index, varname, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPVarNameAtIndex");
-  }
+  native = sampgdk_native_find_flexible("GetPVarNameAtIndex", native);
   sampgdk_fakeamx_push(size, &varname_);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4827,9 +5170,7 @@ SAMPGDK_NATIVE(int, GetPVarType(int playerid, const char * varname)) {
   cell params[3];
   cell varname_;
   sampgdk_log_debug("GetPVarType(%d, \"%s\")", playerid, varname);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPVarType");
-  }
+  native = sampgdk_native_find_flexible("GetPVarType", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4845,9 +5186,7 @@ SAMPGDK_NATIVE(bool, SetPlayerChatBubble(int playerid, const char * text, int co
   cell params[6];
   cell text_;
   sampgdk_log_debug("SetPlayerChatBubble(%d, \"%s\", %d, %f, %d)", playerid, text, color, drawdistance, expiretime);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerChatBubble");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerChatBubble", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -4865,9 +5204,7 @@ SAMPGDK_NATIVE(bool, PutPlayerInVehicle(int playerid, int vehicleid, int seatid)
   cell retval;
   cell params[4];
   sampgdk_log_debug("PutPlayerInVehicle(%d, %d, %d)", playerid, vehicleid, seatid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PutPlayerInVehicle");
-  }
+  native = sampgdk_native_find_flexible("PutPlayerInVehicle", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)vehicleid;
@@ -4881,9 +5218,7 @@ SAMPGDK_NATIVE(int, GetPlayerVehicleID(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerVehicleID(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerVehicleID");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerVehicleID", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -4895,9 +5230,7 @@ SAMPGDK_NATIVE(int, GetPlayerVehicleSeat(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerVehicleSeat(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerVehicleSeat");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerVehicleSeat", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -4909,9 +5242,7 @@ SAMPGDK_NATIVE(bool, RemovePlayerFromVehicle(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("RemovePlayerFromVehicle(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("RemovePlayerFromVehicle");
-  }
+  native = sampgdk_native_find_flexible("RemovePlayerFromVehicle", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -4923,9 +5254,7 @@ SAMPGDK_NATIVE(bool, TogglePlayerControllable(int playerid, bool toggle)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TogglePlayerControllable(%d, %d)", playerid, toggle);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TogglePlayerControllable");
-  }
+  native = sampgdk_native_find_flexible("TogglePlayerControllable", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)toggle;
@@ -4938,9 +5267,7 @@ SAMPGDK_NATIVE(bool, PlayerPlaySound(int playerid, int soundid, float x, float y
   cell retval;
   cell params[6];
   sampgdk_log_debug("PlayerPlaySound(%d, %d, %f, %f, %f)", playerid, soundid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerPlaySound");
-  }
+  native = sampgdk_native_find_flexible("PlayerPlaySound", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)soundid;
@@ -4958,9 +5285,7 @@ SAMPGDK_NATIVE(bool, ApplyAnimation(int playerid, const char * animlib, const ch
   cell animlib_;
   cell animname_;
   sampgdk_log_debug("ApplyAnimation(%d, \"%s\", \"%s\", %f, %d, %d, %d, %d, %d, %d)", playerid, animlib, animname, fDelta, loop, lockx, locky, freeze, time, forcesync);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ApplyAnimation");
-  }
+  native = sampgdk_native_find_flexible("ApplyAnimation", native);
   sampgdk_fakeamx_push_string(animlib, NULL, &animlib_);
   sampgdk_fakeamx_push_string(animname, NULL, &animname_);
   params[0] = 10 * sizeof(cell);
@@ -4985,9 +5310,7 @@ SAMPGDK_NATIVE(bool, ClearAnimations(int playerid, bool forcesync)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("ClearAnimations(%d, %d)", playerid, forcesync);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ClearAnimations");
-  }
+  native = sampgdk_native_find_flexible("ClearAnimations", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)forcesync;
@@ -5000,9 +5323,7 @@ SAMPGDK_NATIVE(int, GetPlayerAnimationIndex(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerAnimationIndex(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerAnimationIndex");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerAnimationIndex", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5016,9 +5337,7 @@ SAMPGDK_NATIVE(bool, GetAnimationName(int index, char * animlib, int animlib_siz
   cell animlib_;
   cell animname_;
   sampgdk_log_debug("GetAnimationName(%d, \"%s\", %d, \"%s\", %d)", index, animlib, animlib_size, animname, animname_size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetAnimationName");
-  }
+  native = sampgdk_native_find_flexible("GetAnimationName", native);
   sampgdk_fakeamx_push(animlib_size, &animlib_);
   sampgdk_fakeamx_push(animname_size, &animname_);
   params[0] = 5 * sizeof(cell);
@@ -5040,9 +5359,7 @@ SAMPGDK_NATIVE(int, GetPlayerSpecialAction(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerSpecialAction(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerSpecialAction");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerSpecialAction", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5054,12 +5371,23 @@ SAMPGDK_NATIVE(bool, SetPlayerSpecialAction(int playerid, int actionid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerSpecialAction(%d, %d)", playerid, actionid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerSpecialAction");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerSpecialAction", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)actionid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, DisableRemoteVehicleCollisions(int playerid, bool disable)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  sampgdk_log_debug("DisableRemoteVehicleCollisions(%d, %d)", playerid, disable);
+  native = sampgdk_native_find_flexible("DisableRemoteVehicleCollisions", native);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)playerid;
+  params[2] = (cell)disable;
   retval = native(sampgdk_fakeamx_amx(), params);
   return !!(retval);
 }
@@ -5069,9 +5397,7 @@ SAMPGDK_NATIVE(bool, SetPlayerCheckpoint(int playerid, float x, float y, float z
   cell retval;
   cell params[6];
   sampgdk_log_debug("SetPlayerCheckpoint(%d, %f, %f, %f, %f)", playerid, x, y, z, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerCheckpoint");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerCheckpoint", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(x);
@@ -5087,9 +5413,7 @@ SAMPGDK_NATIVE(bool, DisablePlayerCheckpoint(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("DisablePlayerCheckpoint(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DisablePlayerCheckpoint");
-  }
+  native = sampgdk_native_find_flexible("DisablePlayerCheckpoint", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5101,9 +5425,7 @@ SAMPGDK_NATIVE(bool, SetPlayerRaceCheckpoint(int playerid, int type, float x, fl
   cell retval;
   cell params[10];
   sampgdk_log_debug("SetPlayerRaceCheckpoint(%d, %d, %f, %f, %f, %f, %f, %f, %f)", playerid, type, x, y, z, nextx, nexty, nextz, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerRaceCheckpoint");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerRaceCheckpoint", native);
   params[0] = 9 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)type;
@@ -5123,9 +5445,7 @@ SAMPGDK_NATIVE(bool, DisablePlayerRaceCheckpoint(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("DisablePlayerRaceCheckpoint(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DisablePlayerRaceCheckpoint");
-  }
+  native = sampgdk_native_find_flexible("DisablePlayerRaceCheckpoint", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5137,9 +5457,7 @@ SAMPGDK_NATIVE(bool, SetPlayerWorldBounds(int playerid, float x_max, float x_min
   cell retval;
   cell params[6];
   sampgdk_log_debug("SetPlayerWorldBounds(%d, %f, %f, %f, %f)", playerid, x_max, x_min, y_max, y_min);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerWorldBounds");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerWorldBounds", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(x_max);
@@ -5155,9 +5473,7 @@ SAMPGDK_NATIVE(bool, SetPlayerMarkerForPlayer(int playerid, int showplayerid, in
   cell retval;
   cell params[4];
   sampgdk_log_debug("SetPlayerMarkerForPlayer(%d, %d, %d)", playerid, showplayerid, color);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerMarkerForPlayer");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerMarkerForPlayer", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)showplayerid;
@@ -5171,9 +5487,7 @@ SAMPGDK_NATIVE(bool, ShowPlayerNameTagForPlayer(int playerid, int showplayerid, 
   cell retval;
   cell params[4];
   sampgdk_log_debug("ShowPlayerNameTagForPlayer(%d, %d, %d)", playerid, showplayerid, show);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ShowPlayerNameTagForPlayer");
-  }
+  native = sampgdk_native_find_flexible("ShowPlayerNameTagForPlayer", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)showplayerid;
@@ -5187,9 +5501,7 @@ SAMPGDK_NATIVE(bool, SetPlayerMapIcon(int playerid, int iconid, float x, float y
   cell retval;
   cell params[9];
   sampgdk_log_debug("SetPlayerMapIcon(%d, %d, %f, %f, %f, %d, %d, %d)", playerid, iconid, x, y, z, markertype, color, style);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerMapIcon");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerMapIcon", native);
   params[0] = 8 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)iconid;
@@ -5208,9 +5520,7 @@ SAMPGDK_NATIVE(bool, RemovePlayerMapIcon(int playerid, int iconid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("RemovePlayerMapIcon(%d, %d)", playerid, iconid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("RemovePlayerMapIcon");
-  }
+  native = sampgdk_native_find_flexible("RemovePlayerMapIcon", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)iconid;
@@ -5223,9 +5533,7 @@ SAMPGDK_NATIVE(bool, AllowPlayerTeleport(int playerid, bool allow)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("AllowPlayerTeleport(%d, %d)", playerid, allow);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AllowPlayerTeleport");
-  }
+  native = sampgdk_native_find_flexible("AllowPlayerTeleport", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)allow;
@@ -5238,9 +5546,7 @@ SAMPGDK_NATIVE(bool, SetPlayerCameraPos(int playerid, float x, float y, float z)
   cell retval;
   cell params[5];
   sampgdk_log_debug("SetPlayerCameraPos(%d, %f, %f, %f)", playerid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerCameraPos");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerCameraPos", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(x);
@@ -5255,9 +5561,7 @@ SAMPGDK_NATIVE(bool, SetPlayerCameraLookAt(int playerid, float x, float y, float
   cell retval;
   cell params[6];
   sampgdk_log_debug("SetPlayerCameraLookAt(%d, %f, %f, %f, %d)", playerid, x, y, z, cut);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerCameraLookAt");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerCameraLookAt", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(x);
@@ -5273,9 +5577,7 @@ SAMPGDK_NATIVE(bool, SetCameraBehindPlayer(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("SetCameraBehindPlayer(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetCameraBehindPlayer");
-  }
+  native = sampgdk_native_find_flexible("SetCameraBehindPlayer", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5290,9 +5592,7 @@ SAMPGDK_NATIVE(bool, GetPlayerCameraPos(int playerid, float * x, float * y, floa
   cell y_;
   cell z_;
   sampgdk_log_debug("GetPlayerCameraPos(%d, %f, %f, %f)", playerid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerCameraPos");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerCameraPos", native);
   sampgdk_fakeamx_push(1, &x_);
   sampgdk_fakeamx_push(1, &y_);
   sampgdk_fakeamx_push(1, &z_);
@@ -5319,9 +5619,7 @@ SAMPGDK_NATIVE(bool, GetPlayerCameraFrontVector(int playerid, float * x, float *
   cell y_;
   cell z_;
   sampgdk_log_debug("GetPlayerCameraFrontVector(%d, %f, %f, %f)", playerid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerCameraFrontVector");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerCameraFrontVector", native);
   sampgdk_fakeamx_push(1, &x_);
   sampgdk_fakeamx_push(1, &y_);
   sampgdk_fakeamx_push(1, &z_);
@@ -5345,9 +5643,68 @@ SAMPGDK_NATIVE(int, GetPlayerCameraMode(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerCameraMode(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerCameraMode");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerCameraMode", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)playerid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, EnablePlayerCameraTarget(int playerid, bool enable)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  sampgdk_log_debug("EnablePlayerCameraTarget(%d, %d)", playerid, enable);
+  native = sampgdk_native_find_flexible("EnablePlayerCameraTarget", native);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)playerid;
+  params[2] = (cell)enable;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(int, GetPlayerCameraTargetObject(int playerid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("GetPlayerCameraTargetObject(%d)", playerid);
+  native = sampgdk_native_find_flexible("GetPlayerCameraTargetObject", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)playerid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(int, GetPlayerCameraTargetVehicle(int playerid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("GetPlayerCameraTargetVehicle(%d)", playerid);
+  native = sampgdk_native_find_flexible("GetPlayerCameraTargetVehicle", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)playerid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(int, GetPlayerCameraTargetPlayer(int playerid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("GetPlayerCameraTargetPlayer(%d)", playerid);
+  native = sampgdk_native_find_flexible("GetPlayerCameraTargetPlayer", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)playerid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(int, GetPlayerCameraTargetActor(int playerid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("GetPlayerCameraTargetActor(%d)", playerid);
+  native = sampgdk_native_find_flexible("GetPlayerCameraTargetActor", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5359,9 +5716,7 @@ SAMPGDK_NATIVE(float, GetPlayerCameraAspectRatio(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerCameraAspectRatio(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerCameraAspectRatio");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerCameraAspectRatio", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5373,9 +5728,7 @@ SAMPGDK_NATIVE(float, GetPlayerCameraZoom(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerCameraZoom(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerCameraZoom");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerCameraZoom", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5387,9 +5740,7 @@ SAMPGDK_NATIVE(bool, AttachCameraToObject(int playerid, int objectid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("AttachCameraToObject(%d, %d)", playerid, objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AttachCameraToObject");
-  }
+  native = sampgdk_native_find_flexible("AttachCameraToObject", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -5402,9 +5753,7 @@ SAMPGDK_NATIVE(bool, AttachCameraToPlayerObject(int playerid, int playerobjectid
   cell retval;
   cell params[3];
   sampgdk_log_debug("AttachCameraToPlayerObject(%d, %d)", playerid, playerobjectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AttachCameraToPlayerObject");
-  }
+  native = sampgdk_native_find_flexible("AttachCameraToPlayerObject", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)playerobjectid;
@@ -5417,9 +5766,7 @@ SAMPGDK_NATIVE(bool, InterpolateCameraPos(int playerid, float FromX, float FromY
   cell retval;
   cell params[10];
   sampgdk_log_debug("InterpolateCameraPos(%d, %f, %f, %f, %f, %f, %f, %d, %d)", playerid, FromX, FromY, FromZ, ToX, ToY, ToZ, time, cut);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("InterpolateCameraPos");
-  }
+  native = sampgdk_native_find_flexible("InterpolateCameraPos", native);
   params[0] = 9 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(FromX);
@@ -5439,9 +5786,7 @@ SAMPGDK_NATIVE(bool, InterpolateCameraLookAt(int playerid, float FromX, float Fr
   cell retval;
   cell params[10];
   sampgdk_log_debug("InterpolateCameraLookAt(%d, %f, %f, %f, %f, %f, %f, %d, %d)", playerid, FromX, FromY, FromZ, ToX, ToY, ToZ, time, cut);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("InterpolateCameraLookAt");
-  }
+  native = sampgdk_native_find_flexible("InterpolateCameraLookAt", native);
   params[0] = 9 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(FromX);
@@ -5461,9 +5806,7 @@ SAMPGDK_NATIVE(bool, IsPlayerConnected(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsPlayerConnected(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerConnected");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerConnected", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5475,9 +5818,7 @@ SAMPGDK_NATIVE(bool, IsPlayerInVehicle(int playerid, int vehicleid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("IsPlayerInVehicle(%d, %d)", playerid, vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerInVehicle");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerInVehicle", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)vehicleid;
@@ -5490,9 +5831,7 @@ SAMPGDK_NATIVE(bool, IsPlayerInAnyVehicle(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsPlayerInAnyVehicle(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerInAnyVehicle");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerInAnyVehicle", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5504,9 +5843,7 @@ SAMPGDK_NATIVE(bool, IsPlayerInCheckpoint(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsPlayerInCheckpoint(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerInCheckpoint");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerInCheckpoint", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5518,9 +5855,7 @@ SAMPGDK_NATIVE(bool, IsPlayerInRaceCheckpoint(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsPlayerInRaceCheckpoint(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerInRaceCheckpoint");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerInRaceCheckpoint", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5532,9 +5867,7 @@ SAMPGDK_NATIVE(bool, SetPlayerVirtualWorld(int playerid, int worldid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetPlayerVirtualWorld(%d, %d)", playerid, worldid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerVirtualWorld");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerVirtualWorld", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)worldid;
@@ -5547,9 +5880,7 @@ SAMPGDK_NATIVE(int, GetPlayerVirtualWorld(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerVirtualWorld(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerVirtualWorld");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerVirtualWorld", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5561,9 +5892,7 @@ SAMPGDK_NATIVE(bool, EnableStuntBonusForPlayer(int playerid, bool enable)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("EnableStuntBonusForPlayer(%d, %d)", playerid, enable);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("EnableStuntBonusForPlayer");
-  }
+  native = sampgdk_native_find_flexible("EnableStuntBonusForPlayer", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)enable;
@@ -5576,9 +5905,7 @@ SAMPGDK_NATIVE(bool, EnableStuntBonusForAll(bool enable)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("EnableStuntBonusForAll(%d)", enable);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("EnableStuntBonusForAll");
-  }
+  native = sampgdk_native_find_flexible("EnableStuntBonusForAll", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)enable;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5590,9 +5917,7 @@ SAMPGDK_NATIVE(bool, TogglePlayerSpectating(int playerid, bool toggle)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TogglePlayerSpectating(%d, %d)", playerid, toggle);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TogglePlayerSpectating");
-  }
+  native = sampgdk_native_find_flexible("TogglePlayerSpectating", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)toggle;
@@ -5605,9 +5930,7 @@ SAMPGDK_NATIVE(bool, PlayerSpectatePlayer(int playerid, int targetplayerid, int 
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerSpectatePlayer(%d, %d, %d)", playerid, targetplayerid, mode);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerSpectatePlayer");
-  }
+  native = sampgdk_native_find_flexible("PlayerSpectatePlayer", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)targetplayerid;
@@ -5621,9 +5944,7 @@ SAMPGDK_NATIVE(bool, PlayerSpectateVehicle(int playerid, int targetvehicleid, in
   cell retval;
   cell params[4];
   sampgdk_log_debug("PlayerSpectateVehicle(%d, %d, %d)", playerid, targetvehicleid, mode);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("PlayerSpectateVehicle");
-  }
+  native = sampgdk_native_find_flexible("PlayerSpectateVehicle", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)targetvehicleid;
@@ -5638,9 +5959,7 @@ SAMPGDK_NATIVE(bool, StartRecordingPlayerData(int playerid, int recordtype, cons
   cell params[4];
   cell recordname_;
   sampgdk_log_debug("StartRecordingPlayerData(%d, %d, \"%s\")", playerid, recordtype, recordname);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("StartRecordingPlayerData");
-  }
+  native = sampgdk_native_find_flexible("StartRecordingPlayerData", native);
   sampgdk_fakeamx_push_string(recordname, NULL, &recordname_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -5656,9 +5975,7 @@ SAMPGDK_NATIVE(bool, StopRecordingPlayerData(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("StopRecordingPlayerData(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("StopRecordingPlayerData");
-  }
+  native = sampgdk_native_find_flexible("StopRecordingPlayerData", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5670,9 +5987,7 @@ SAMPGDK_NATIVE(bool, CreateExplosionForPlayer(int playerid, float X, float Y, fl
   cell retval;
   cell params[7];
   sampgdk_log_debug("CreateExplosionForPlayer(%d, %f, %f, %f, %d, %f)", playerid, X, Y, Z, type, Radius);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CreateExplosionForPlayer");
-  }
+  native = sampgdk_native_find_flexible("CreateExplosionForPlayer", native);
   params[0] = 6 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = amx_ftoc(X);
@@ -5697,7 +6012,266 @@ SAMPGDK_MODULE_CLEANUP(a_players) {
 /* #include "internal/callback.h" */
 /* #include "internal/fakeamx.h" */
 /* #include "internal/init.h" */
-/* #include "internal/likely.h" */
+/* #include "internal/log.h" */
+/* #include "internal/native.h" */
+/* #include "internal/param.h" */
+
+SAMPGDK_NATIVE(int, CreateActor(int modelid, float x, float y, float z, float rotation)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[6];
+  sampgdk_log_debug("CreateActor(%d, %f, %f, %f, %f)", modelid, x, y, z, rotation);
+  native = sampgdk_native_find_flexible("CreateActor", native);
+  params[0] = 5 * sizeof(cell);
+  params[1] = (cell)modelid;
+  params[2] = amx_ftoc(x);
+  params[3] = amx_ftoc(y);
+  params[4] = amx_ftoc(z);
+  params[5] = amx_ftoc(rotation);
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, DestroyActor(int actorid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("DestroyActor(%d)", actorid);
+  native = sampgdk_native_find_flexible("DestroyActor", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)actorid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, IsActorStreamedIn(int actorid, int forplayerid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  sampgdk_log_debug("IsActorStreamedIn(%d, %d)", actorid, forplayerid);
+  native = sampgdk_native_find_flexible("IsActorStreamedIn", native);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)actorid;
+  params[2] = (cell)forplayerid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetActorVirtualWorld(int actorid, int vworld)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  sampgdk_log_debug("SetActorVirtualWorld(%d, %d)", actorid, vworld);
+  native = sampgdk_native_find_flexible("SetActorVirtualWorld", native);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)actorid;
+  params[2] = (cell)vworld;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(int, GetActorVirtualWorld(int actorid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("GetActorVirtualWorld(%d)", actorid);
+  native = sampgdk_native_find_flexible("GetActorVirtualWorld", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)actorid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, ApplyActorAnimation(int actorid, const char * animlib, const char * animname, float fDelta, bool loop, bool lockx, bool locky, bool freeze, int time)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[10];
+  cell animlib_;
+  cell animname_;
+  sampgdk_log_debug("ApplyActorAnimation(%d, \"%s\", \"%s\", %f, %d, %d, %d, %d, %d)", actorid, animlib, animname, fDelta, loop, lockx, locky, freeze, time);
+  native = sampgdk_native_find_flexible("ApplyActorAnimation", native);
+  sampgdk_fakeamx_push_string(animlib, NULL, &animlib_);
+  sampgdk_fakeamx_push_string(animname, NULL, &animname_);
+  params[0] = 9 * sizeof(cell);
+  params[1] = (cell)actorid;
+  params[2] = animlib_;
+  params[3] = animname_;
+  params[4] = amx_ftoc(fDelta);
+  params[5] = (cell)loop;
+  params[6] = (cell)lockx;
+  params[7] = (cell)locky;
+  params[8] = (cell)freeze;
+  params[9] = (cell)time;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(animname_);
+  sampgdk_fakeamx_pop(animlib_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, ClearActorAnimations(int actorid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("ClearActorAnimations(%d)", actorid);
+  native = sampgdk_native_find_flexible("ClearActorAnimations", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)actorid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetActorPos(int actorid, float x, float y, float z)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[5];
+  sampgdk_log_debug("SetActorPos(%d, %f, %f, %f)", actorid, x, y, z);
+  native = sampgdk_native_find_flexible("SetActorPos", native);
+  params[0] = 4 * sizeof(cell);
+  params[1] = (cell)actorid;
+  params[2] = amx_ftoc(x);
+  params[3] = amx_ftoc(y);
+  params[4] = amx_ftoc(z);
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetActorPos(int actorid, float * x, float * y, float * z)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[5];
+  cell x_;
+  cell y_;
+  cell z_;
+  sampgdk_log_debug("GetActorPos(%d, %f, %f, %f)", actorid, x, y, z);
+  native = sampgdk_native_find_flexible("GetActorPos", native);
+  sampgdk_fakeamx_push(1, &x_);
+  sampgdk_fakeamx_push(1, &y_);
+  sampgdk_fakeamx_push(1, &z_);
+  params[0] = 4 * sizeof(cell);
+  params[1] = (cell)actorid;
+  params[2] = x_;
+  params[3] = y_;
+  params[4] = z_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_float(x_, x);
+  sampgdk_fakeamx_get_float(y_, y);
+  sampgdk_fakeamx_get_float(z_, z);
+  sampgdk_fakeamx_pop(z_);
+  sampgdk_fakeamx_pop(y_);
+  sampgdk_fakeamx_pop(x_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetActorFacingAngle(int actorid, float angle)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  sampgdk_log_debug("SetActorFacingAngle(%d, %f)", actorid, angle);
+  native = sampgdk_native_find_flexible("SetActorFacingAngle", native);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)actorid;
+  params[2] = amx_ftoc(angle);
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetActorFacingAngle(int actorid, float * angle)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  cell angle_;
+  sampgdk_log_debug("GetActorFacingAngle(%d, %f)", actorid, angle);
+  native = sampgdk_native_find_flexible("GetActorFacingAngle", native);
+  sampgdk_fakeamx_push(1, &angle_);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)actorid;
+  params[2] = angle_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_float(angle_, angle);
+  sampgdk_fakeamx_pop(angle_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetActorHealth(int actorid, float health)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  sampgdk_log_debug("SetActorHealth(%d, %f)", actorid, health);
+  native = sampgdk_native_find_flexible("SetActorHealth", native);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)actorid;
+  params[2] = amx_ftoc(health);
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetActorHealth(int actorid, float * health)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  cell health_;
+  sampgdk_log_debug("GetActorHealth(%d, %f)", actorid, health);
+  native = sampgdk_native_find_flexible("GetActorHealth", native);
+  sampgdk_fakeamx_push(1, &health_);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)actorid;
+  params[2] = health_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_float(health_, health);
+  sampgdk_fakeamx_pop(health_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetActorInvulnerable(int actorid, bool invulnerable)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  sampgdk_log_debug("SetActorInvulnerable(%d, %d)", actorid, invulnerable);
+  native = sampgdk_native_find_flexible("SetActorInvulnerable", native);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)actorid;
+  params[2] = (cell)invulnerable;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, IsActorInvulnerable(int actorid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("IsActorInvulnerable(%d)", actorid);
+  native = sampgdk_native_find_flexible("IsActorInvulnerable", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)actorid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, IsValidActor(int actorid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("IsValidActor(%d)", actorid);
+  native = sampgdk_native_find_flexible("IsValidActor", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)actorid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_MODULE_INIT(a_actor) {
+  return 0;
+}
+
+SAMPGDK_MODULE_CLEANUP(a_actor) {
+}
+
+
+#include "sampgdk.h"
+
+/* #include "internal/callback.h" */
+/* #include "internal/fakeamx.h" */
+/* #include "internal/init.h" */
 /* #include "internal/log.h" */
 /* #include "internal/native.h" */
 /* #include "internal/param.h" */
@@ -5710,9 +6284,7 @@ SAMPGDK_NATIVE(bool, HTTP(int index, int type, const char * url, const char * da
   cell data_;
   cell callback_;
   sampgdk_log_debug("HTTP(%d, %d, \"%s\", \"%s\", \"%s\")", index, type, url, data);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("HTTP");
-  }
+  native = sampgdk_native_find_flexible("HTTP", native);
   sampgdk_fakeamx_push_string(url, NULL, &url_);
   sampgdk_fakeamx_push_string(data, NULL, &data_);
   sampgdk_fakeamx_push_string("OnHTTPResponse", NULL, &callback_);
@@ -5761,7 +6333,6 @@ SAMPGDK_MODULE_CLEANUP(a_http) {
 /* #include "internal/callback.h" */
 /* #include "internal/fakeamx.h" */
 /* #include "internal/init.h" */
-/* #include "internal/likely.h" */
 /* #include "internal/log.h" */
 /* #include "internal/native.h" */
 /* #include "internal/param.h" */
@@ -5771,9 +6342,7 @@ SAMPGDK_NATIVE(bool, IsValidVehicle(int vehicleid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsValidVehicle(%d)", vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsValidVehicle");
-  }
+  native = sampgdk_native_find_flexible("IsValidVehicle", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)vehicleid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5785,9 +6354,7 @@ SAMPGDK_NATIVE(float, GetVehicleDistanceFromPoint(int vehicleid, float x, float 
   cell retval;
   cell params[5];
   sampgdk_log_debug("GetVehicleDistanceFromPoint(%d, %f, %f, %f)", vehicleid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleDistanceFromPoint");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleDistanceFromPoint", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = amx_ftoc(x);
@@ -5797,15 +6364,13 @@ SAMPGDK_NATIVE(float, GetVehicleDistanceFromPoint(int vehicleid, float x, float 
   return amx_ctof(retval);
 }
 
-SAMPGDK_NATIVE(int, CreateVehicle(int vehicletype, float x, float y, float z, float rotation, int color1, int color2, int respawn_delay)) {
+SAMPGDK_NATIVE(int, CreateVehicle(int vehicletype, float x, float y, float z, float rotation, int color1, int color2, int respawn_delay, bool addsiren)) {
   static AMX_NATIVE native;
   cell retval;
-  cell params[9];
-  sampgdk_log_debug("CreateVehicle(%d, %f, %f, %f, %f, %d, %d, %d)", vehicletype, x, y, z, rotation, color1, color2, respawn_delay);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CreateVehicle");
-  }
-  params[0] = 8 * sizeof(cell);
+  cell params[10];
+  sampgdk_log_debug("CreateVehicle(%d, %f, %f, %f, %f, %d, %d, %d, %d)", vehicletype, x, y, z, rotation, color1, color2, respawn_delay, addsiren);
+  native = sampgdk_native_find_flexible("CreateVehicle", native);
+  params[0] = 9 * sizeof(cell);
   params[1] = (cell)vehicletype;
   params[2] = amx_ftoc(x);
   params[3] = amx_ftoc(y);
@@ -5814,6 +6379,7 @@ SAMPGDK_NATIVE(int, CreateVehicle(int vehicletype, float x, float y, float z, fl
   params[6] = (cell)color1;
   params[7] = (cell)color2;
   params[8] = (cell)respawn_delay;
+  params[9] = (cell)addsiren;
   retval = native(sampgdk_fakeamx_amx(), params);
   return (int)(retval);
 }
@@ -5823,9 +6389,7 @@ SAMPGDK_NATIVE(bool, DestroyVehicle(int vehicleid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("DestroyVehicle(%d)", vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DestroyVehicle");
-  }
+  native = sampgdk_native_find_flexible("DestroyVehicle", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)vehicleid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -5837,9 +6401,7 @@ SAMPGDK_NATIVE(bool, IsVehicleStreamedIn(int vehicleid, int forplayerid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("IsVehicleStreamedIn(%d, %d)", vehicleid, forplayerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsVehicleStreamedIn");
-  }
+  native = sampgdk_native_find_flexible("IsVehicleStreamedIn", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)forplayerid;
@@ -5855,9 +6417,7 @@ SAMPGDK_NATIVE(bool, GetVehiclePos(int vehicleid, float * x, float * y, float * 
   cell y_;
   cell z_;
   sampgdk_log_debug("GetVehiclePos(%d, %f, %f, %f)", vehicleid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehiclePos");
-  }
+  native = sampgdk_native_find_flexible("GetVehiclePos", native);
   sampgdk_fakeamx_push(1, &x_);
   sampgdk_fakeamx_push(1, &y_);
   sampgdk_fakeamx_push(1, &z_);
@@ -5881,9 +6441,7 @@ SAMPGDK_NATIVE(bool, SetVehiclePos(int vehicleid, float x, float y, float z)) {
   cell retval;
   cell params[5];
   sampgdk_log_debug("SetVehiclePos(%d, %f, %f, %f)", vehicleid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetVehiclePos");
-  }
+  native = sampgdk_native_find_flexible("SetVehiclePos", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = amx_ftoc(x);
@@ -5899,9 +6457,7 @@ SAMPGDK_NATIVE(bool, GetVehicleZAngle(int vehicleid, float * z_angle)) {
   cell params[3];
   cell z_angle_;
   sampgdk_log_debug("GetVehicleZAngle(%d, %f)", vehicleid, z_angle);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleZAngle");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleZAngle", native);
   sampgdk_fakeamx_push(1, &z_angle_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
@@ -5921,9 +6477,7 @@ SAMPGDK_NATIVE(bool, GetVehicleRotationQuat(int vehicleid, float * w, float * x,
   cell y_;
   cell z_;
   sampgdk_log_debug("GetVehicleRotationQuat(%d, %f, %f, %f, %f)", vehicleid, w, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleRotationQuat");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleRotationQuat", native);
   sampgdk_fakeamx_push(1, &w_);
   sampgdk_fakeamx_push(1, &x_);
   sampgdk_fakeamx_push(1, &y_);
@@ -5951,9 +6505,7 @@ SAMPGDK_NATIVE(bool, SetVehicleZAngle(int vehicleid, float z_angle)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetVehicleZAngle(%d, %f)", vehicleid, z_angle);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetVehicleZAngle");
-  }
+  native = sampgdk_native_find_flexible("SetVehicleZAngle", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = amx_ftoc(z_angle);
@@ -5961,14 +6513,12 @@ SAMPGDK_NATIVE(bool, SetVehicleZAngle(int vehicleid, float z_angle)) {
   return !!(retval);
 }
 
-SAMPGDK_NATIVE(bool, SetVehicleParamsForPlayer(int vehicleid, int playerid, bool objective, bool doorslocked)) {
+SAMPGDK_NATIVE(bool, SetVehicleParamsForPlayer(int vehicleid, int playerid, int objective, int doorslocked)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[5];
   sampgdk_log_debug("SetVehicleParamsForPlayer(%d, %d, %d, %d)", vehicleid, playerid, objective, doorslocked);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetVehicleParamsForPlayer");
-  }
+  native = sampgdk_native_find_flexible("SetVehicleParamsForPlayer", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)playerid;
@@ -5982,21 +6532,17 @@ SAMPGDK_NATIVE(bool, ManualVehicleEngineAndLights()) {
   static AMX_NATIVE native;
   cell retval;
   sampgdk_log_debug("ManualVehicleEngineAndLights()");
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ManualVehicleEngineAndLights");
-  }
+  native = sampgdk_native_find_flexible("ManualVehicleEngineAndLights", native);
   retval = native(sampgdk_fakeamx_amx(), NULL);
   return !!(retval);
 }
 
-SAMPGDK_NATIVE(bool, SetVehicleParamsEx(int vehicleid, bool engine, bool lights, bool alarm, bool doors, bool bonnet, bool boot, bool objective)) {
+SAMPGDK_NATIVE(bool, SetVehicleParamsEx(int vehicleid, int engine, int lights, int alarm, int doors, int bonnet, int boot, int objective)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[9];
   sampgdk_log_debug("SetVehicleParamsEx(%d, %d, %d, %d, %d, %d, %d, %d)", vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetVehicleParamsEx");
-  }
+  native = sampgdk_native_find_flexible("SetVehicleParamsEx", native);
   params[0] = 8 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)engine;
@@ -6010,7 +6556,7 @@ SAMPGDK_NATIVE(bool, SetVehicleParamsEx(int vehicleid, bool engine, bool lights,
   return !!(retval);
 }
 
-SAMPGDK_NATIVE(bool, GetVehicleParamsEx(int vehicleid, bool * engine, bool * lights, bool * alarm, bool * doors, bool * bonnet, bool * boot, bool * objective)) {
+SAMPGDK_NATIVE(bool, GetVehicleParamsEx(int vehicleid, int * engine, int * lights, int * alarm, int * doors, int * bonnet, int * boot, int * objective)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[9];
@@ -6022,9 +6568,7 @@ SAMPGDK_NATIVE(bool, GetVehicleParamsEx(int vehicleid, bool * engine, bool * lig
   cell boot_;
   cell objective_;
   sampgdk_log_debug("GetVehicleParamsEx(%d, %d, %d, %d, %d, %d, %d, %d)", vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleParamsEx");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleParamsEx", native);
   sampgdk_fakeamx_push(1, &engine_);
   sampgdk_fakeamx_push(1, &lights_);
   sampgdk_fakeamx_push(1, &alarm_);
@@ -6042,13 +6586,13 @@ SAMPGDK_NATIVE(bool, GetVehicleParamsEx(int vehicleid, bool * engine, bool * lig
   params[7] = boot_;
   params[8] = objective_;
   retval = native(sampgdk_fakeamx_amx(), params);
-  sampgdk_fakeamx_get_bool(engine_, engine);
-  sampgdk_fakeamx_get_bool(lights_, lights);
-  sampgdk_fakeamx_get_bool(alarm_, alarm);
-  sampgdk_fakeamx_get_bool(doors_, doors);
-  sampgdk_fakeamx_get_bool(bonnet_, bonnet);
-  sampgdk_fakeamx_get_bool(boot_, boot);
-  sampgdk_fakeamx_get_bool(objective_, objective);
+  sampgdk_fakeamx_get_cell(engine_, engine);
+  sampgdk_fakeamx_get_cell(lights_, lights);
+  sampgdk_fakeamx_get_cell(alarm_, alarm);
+  sampgdk_fakeamx_get_cell(doors_, doors);
+  sampgdk_fakeamx_get_cell(bonnet_, bonnet);
+  sampgdk_fakeamx_get_cell(boot_, boot);
+  sampgdk_fakeamx_get_cell(objective_, objective);
   sampgdk_fakeamx_pop(objective_);
   sampgdk_fakeamx_pop(boot_);
   sampgdk_fakeamx_pop(bonnet_);
@@ -6059,14 +6603,120 @@ SAMPGDK_NATIVE(bool, GetVehicleParamsEx(int vehicleid, bool * engine, bool * lig
   return !!(retval);
 }
 
+SAMPGDK_NATIVE(int, GetVehicleParamsSirenState(int vehicleid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("GetVehicleParamsSirenState(%d)", vehicleid);
+  native = sampgdk_native_find_flexible("GetVehicleParamsSirenState", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)vehicleid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetVehicleParamsCarDoors(int vehicleid, int driver, int passenger, int backleft, int backright)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[6];
+  sampgdk_log_debug("SetVehicleParamsCarDoors(%d, %d, %d, %d, %d)", vehicleid, driver, passenger, backleft, backright);
+  native = sampgdk_native_find_flexible("SetVehicleParamsCarDoors", native);
+  params[0] = 5 * sizeof(cell);
+  params[1] = (cell)vehicleid;
+  params[2] = (cell)driver;
+  params[3] = (cell)passenger;
+  params[4] = (cell)backleft;
+  params[5] = (cell)backright;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetVehicleParamsCarDoors(int vehicleid, int * driver, int * passenger, int * backleft, int * backright)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[6];
+  cell driver_;
+  cell passenger_;
+  cell backleft_;
+  cell backright_;
+  sampgdk_log_debug("GetVehicleParamsCarDoors(%d, %d, %d, %d, %d)", vehicleid, driver, passenger, backleft, backright);
+  native = sampgdk_native_find_flexible("GetVehicleParamsCarDoors", native);
+  sampgdk_fakeamx_push(1, &driver_);
+  sampgdk_fakeamx_push(1, &passenger_);
+  sampgdk_fakeamx_push(1, &backleft_);
+  sampgdk_fakeamx_push(1, &backright_);
+  params[0] = 5 * sizeof(cell);
+  params[1] = (cell)vehicleid;
+  params[2] = driver_;
+  params[3] = passenger_;
+  params[4] = backleft_;
+  params[5] = backright_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_cell(driver_, driver);
+  sampgdk_fakeamx_get_cell(passenger_, passenger);
+  sampgdk_fakeamx_get_cell(backleft_, backleft);
+  sampgdk_fakeamx_get_cell(backright_, backright);
+  sampgdk_fakeamx_pop(backright_);
+  sampgdk_fakeamx_pop(backleft_);
+  sampgdk_fakeamx_pop(passenger_);
+  sampgdk_fakeamx_pop(driver_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetVehicleParamsCarWindows(int vehicleid, int driver, int passenger, int backleft, int backright)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[6];
+  sampgdk_log_debug("SetVehicleParamsCarWindows(%d, %d, %d, %d, %d)", vehicleid, driver, passenger, backleft, backright);
+  native = sampgdk_native_find_flexible("SetVehicleParamsCarWindows", native);
+  params[0] = 5 * sizeof(cell);
+  params[1] = (cell)vehicleid;
+  params[2] = (cell)driver;
+  params[3] = (cell)passenger;
+  params[4] = (cell)backleft;
+  params[5] = (cell)backright;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetVehicleParamsCarWindows(int vehicleid, int * driver, int * passenger, int * backleft, int * backright)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[6];
+  cell driver_;
+  cell passenger_;
+  cell backleft_;
+  cell backright_;
+  sampgdk_log_debug("GetVehicleParamsCarWindows(%d, %d, %d, %d, %d)", vehicleid, driver, passenger, backleft, backright);
+  native = sampgdk_native_find_flexible("GetVehicleParamsCarWindows", native);
+  sampgdk_fakeamx_push(1, &driver_);
+  sampgdk_fakeamx_push(1, &passenger_);
+  sampgdk_fakeamx_push(1, &backleft_);
+  sampgdk_fakeamx_push(1, &backright_);
+  params[0] = 5 * sizeof(cell);
+  params[1] = (cell)vehicleid;
+  params[2] = driver_;
+  params[3] = passenger_;
+  params[4] = backleft_;
+  params[5] = backright_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_cell(driver_, driver);
+  sampgdk_fakeamx_get_cell(passenger_, passenger);
+  sampgdk_fakeamx_get_cell(backleft_, backleft);
+  sampgdk_fakeamx_get_cell(backright_, backright);
+  sampgdk_fakeamx_pop(backright_);
+  sampgdk_fakeamx_pop(backleft_);
+  sampgdk_fakeamx_pop(passenger_);
+  sampgdk_fakeamx_pop(driver_);
+  return !!(retval);
+}
+
 SAMPGDK_NATIVE(bool, SetVehicleToRespawn(int vehicleid)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[2];
   sampgdk_log_debug("SetVehicleToRespawn(%d)", vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetVehicleToRespawn");
-  }
+  native = sampgdk_native_find_flexible("SetVehicleToRespawn", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)vehicleid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6078,9 +6728,7 @@ SAMPGDK_NATIVE(bool, LinkVehicleToInterior(int vehicleid, int interiorid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("LinkVehicleToInterior(%d, %d)", vehicleid, interiorid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("LinkVehicleToInterior");
-  }
+  native = sampgdk_native_find_flexible("LinkVehicleToInterior", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)interiorid;
@@ -6093,9 +6741,7 @@ SAMPGDK_NATIVE(bool, AddVehicleComponent(int vehicleid, int componentid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("AddVehicleComponent(%d, %d)", vehicleid, componentid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AddVehicleComponent");
-  }
+  native = sampgdk_native_find_flexible("AddVehicleComponent", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)componentid;
@@ -6108,9 +6754,7 @@ SAMPGDK_NATIVE(bool, RemoveVehicleComponent(int vehicleid, int componentid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("RemoveVehicleComponent(%d, %d)", vehicleid, componentid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("RemoveVehicleComponent");
-  }
+  native = sampgdk_native_find_flexible("RemoveVehicleComponent", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)componentid;
@@ -6123,9 +6767,7 @@ SAMPGDK_NATIVE(bool, ChangeVehicleColor(int vehicleid, int color1, int color2)) 
   cell retval;
   cell params[4];
   sampgdk_log_debug("ChangeVehicleColor(%d, %d, %d)", vehicleid, color1, color2);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ChangeVehicleColor");
-  }
+  native = sampgdk_native_find_flexible("ChangeVehicleColor", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)color1;
@@ -6139,9 +6781,7 @@ SAMPGDK_NATIVE(bool, ChangeVehiclePaintjob(int vehicleid, int paintjobid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("ChangeVehiclePaintjob(%d, %d)", vehicleid, paintjobid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ChangeVehiclePaintjob");
-  }
+  native = sampgdk_native_find_flexible("ChangeVehiclePaintjob", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)paintjobid;
@@ -6154,9 +6794,7 @@ SAMPGDK_NATIVE(bool, SetVehicleHealth(int vehicleid, float health)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetVehicleHealth(%d, %f)", vehicleid, health);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetVehicleHealth");
-  }
+  native = sampgdk_native_find_flexible("SetVehicleHealth", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = amx_ftoc(health);
@@ -6170,9 +6808,7 @@ SAMPGDK_NATIVE(bool, GetVehicleHealth(int vehicleid, float * health)) {
   cell params[3];
   cell health_;
   sampgdk_log_debug("GetVehicleHealth(%d, %f)", vehicleid, health);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleHealth");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleHealth", native);
   sampgdk_fakeamx_push(1, &health_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
@@ -6188,9 +6824,7 @@ SAMPGDK_NATIVE(bool, AttachTrailerToVehicle(int trailerid, int vehicleid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("AttachTrailerToVehicle(%d, %d)", trailerid, vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AttachTrailerToVehicle");
-  }
+  native = sampgdk_native_find_flexible("AttachTrailerToVehicle", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)trailerid;
   params[2] = (cell)vehicleid;
@@ -6203,9 +6837,7 @@ SAMPGDK_NATIVE(bool, DetachTrailerFromVehicle(int vehicleid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("DetachTrailerFromVehicle(%d)", vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DetachTrailerFromVehicle");
-  }
+  native = sampgdk_native_find_flexible("DetachTrailerFromVehicle", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)vehicleid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6217,9 +6849,7 @@ SAMPGDK_NATIVE(bool, IsTrailerAttachedToVehicle(int vehicleid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsTrailerAttachedToVehicle(%d)", vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsTrailerAttachedToVehicle");
-  }
+  native = sampgdk_native_find_flexible("IsTrailerAttachedToVehicle", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)vehicleid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6231,9 +6861,7 @@ SAMPGDK_NATIVE(int, GetVehicleTrailer(int vehicleid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetVehicleTrailer(%d)", vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleTrailer");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleTrailer", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)vehicleid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6246,9 +6874,7 @@ SAMPGDK_NATIVE(bool, SetVehicleNumberPlate(int vehicleid, const char * numberpla
   cell params[3];
   cell numberplate_;
   sampgdk_log_debug("SetVehicleNumberPlate(%d, \"%s\")", vehicleid, numberplate);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetVehicleNumberPlate");
-  }
+  native = sampgdk_native_find_flexible("SetVehicleNumberPlate", native);
   sampgdk_fakeamx_push_string(numberplate, NULL, &numberplate_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
@@ -6263,9 +6889,7 @@ SAMPGDK_NATIVE(int, GetVehicleModel(int vehicleid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetVehicleModel(%d)", vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleModel");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleModel", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)vehicleid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6277,9 +6901,7 @@ SAMPGDK_NATIVE(int, GetVehicleComponentInSlot(int vehicleid, int slot)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("GetVehicleComponentInSlot(%d, %d)", vehicleid, slot);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleComponentInSlot");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleComponentInSlot", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)slot;
@@ -6292,9 +6914,7 @@ SAMPGDK_NATIVE(int, GetVehicleComponentType(int component)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetVehicleComponentType(%d)", component);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleComponentType");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleComponentType", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)component;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6306,9 +6926,7 @@ SAMPGDK_NATIVE(bool, RepairVehicle(int vehicleid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("RepairVehicle(%d)", vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("RepairVehicle");
-  }
+  native = sampgdk_native_find_flexible("RepairVehicle", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)vehicleid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6323,9 +6941,7 @@ SAMPGDK_NATIVE(bool, GetVehicleVelocity(int vehicleid, float * X, float * Y, flo
   cell Y_;
   cell Z_;
   sampgdk_log_debug("GetVehicleVelocity(%d, %f, %f, %f)", vehicleid, X, Y, Z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleVelocity");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleVelocity", native);
   sampgdk_fakeamx_push(1, &X_);
   sampgdk_fakeamx_push(1, &Y_);
   sampgdk_fakeamx_push(1, &Z_);
@@ -6349,9 +6965,7 @@ SAMPGDK_NATIVE(bool, SetVehicleVelocity(int vehicleid, float X, float Y, float Z
   cell retval;
   cell params[5];
   sampgdk_log_debug("SetVehicleVelocity(%d, %f, %f, %f)", vehicleid, X, Y, Z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetVehicleVelocity");
-  }
+  native = sampgdk_native_find_flexible("SetVehicleVelocity", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = amx_ftoc(X);
@@ -6366,9 +6980,7 @@ SAMPGDK_NATIVE(bool, SetVehicleAngularVelocity(int vehicleid, float X, float Y, 
   cell retval;
   cell params[5];
   sampgdk_log_debug("SetVehicleAngularVelocity(%d, %f, %f, %f)", vehicleid, X, Y, Z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetVehicleAngularVelocity");
-  }
+  native = sampgdk_native_find_flexible("SetVehicleAngularVelocity", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = amx_ftoc(X);
@@ -6387,9 +6999,7 @@ SAMPGDK_NATIVE(bool, GetVehicleDamageStatus(int vehicleid, int * panels, int * d
   cell lights_;
   cell tires_;
   sampgdk_log_debug("GetVehicleDamageStatus(%d, %d, %d, %d, %d)", vehicleid, panels, doors, lights, tires);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleDamageStatus");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleDamageStatus", native);
   sampgdk_fakeamx_push(1, &panels_);
   sampgdk_fakeamx_push(1, &doors_);
   sampgdk_fakeamx_push(1, &lights_);
@@ -6417,9 +7027,7 @@ SAMPGDK_NATIVE(bool, UpdateVehicleDamageStatus(int vehicleid, int panels, int do
   cell retval;
   cell params[6];
   sampgdk_log_debug("UpdateVehicleDamageStatus(%d, %d, %d, %d, %d)", vehicleid, panels, doors, lights, tires);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("UpdateVehicleDamageStatus");
-  }
+  native = sampgdk_native_find_flexible("UpdateVehicleDamageStatus", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)panels;
@@ -6435,9 +7043,7 @@ SAMPGDK_NATIVE(bool, SetVehicleVirtualWorld(int vehicleid, int worldid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SetVehicleVirtualWorld(%d, %d)", vehicleid, worldid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetVehicleVirtualWorld");
-  }
+  native = sampgdk_native_find_flexible("SetVehicleVirtualWorld", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)vehicleid;
   params[2] = (cell)worldid;
@@ -6450,9 +7056,7 @@ SAMPGDK_NATIVE(int, GetVehicleVirtualWorld(int vehicleid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetVehicleVirtualWorld(%d)", vehicleid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleVirtualWorld");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleVirtualWorld", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)vehicleid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6467,9 +7071,7 @@ SAMPGDK_NATIVE(bool, GetVehicleModelInfo(int model, int infotype, float * X, flo
   cell Y_;
   cell Z_;
   sampgdk_log_debug("GetVehicleModelInfo(%d, %d, %f, %f, %f)", model, infotype, X, Y, Z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetVehicleModelInfo");
-  }
+  native = sampgdk_native_find_flexible("GetVehicleModelInfo", native);
   sampgdk_fakeamx_push(1, &X_);
   sampgdk_fakeamx_push(1, &Y_);
   sampgdk_fakeamx_push(1, &Z_);
@@ -6502,7 +7104,6 @@ SAMPGDK_MODULE_CLEANUP(a_vehicles) {
 /* #include "internal/callback.h" */
 /* #include "internal/fakeamx.h" */
 /* #include "internal/init.h" */
-/* #include "internal/likely.h" */
 /* #include "internal/log.h" */
 /* #include "internal/native.h" */
 /* #include "internal/param.h" */
@@ -6512,9 +7113,7 @@ SAMPGDK_NATIVE(int, CreateObject(int modelid, float x, float y, float z, float r
   cell retval;
   cell params[9];
   sampgdk_log_debug("CreateObject(%d, %f, %f, %f, %f, %f, %f, %f)", modelid, x, y, z, rX, rY, rZ, DrawDistance);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CreateObject");
-  }
+  native = sampgdk_native_find_flexible("CreateObject", native);
   params[0] = 8 * sizeof(cell);
   params[1] = (cell)modelid;
   params[2] = amx_ftoc(x);
@@ -6533,9 +7132,7 @@ SAMPGDK_NATIVE(bool, AttachObjectToVehicle(int objectid, int vehicleid, float fO
   cell retval;
   cell params[9];
   sampgdk_log_debug("AttachObjectToVehicle(%d, %d, %f, %f, %f, %f, %f, %f)", objectid, vehicleid, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AttachObjectToVehicle");
-  }
+  native = sampgdk_native_find_flexible("AttachObjectToVehicle", native);
   params[0] = 8 * sizeof(cell);
   params[1] = (cell)objectid;
   params[2] = (cell)vehicleid;
@@ -6554,9 +7151,7 @@ SAMPGDK_NATIVE(bool, AttachObjectToObject(int objectid, int attachtoid, float fO
   cell retval;
   cell params[10];
   sampgdk_log_debug("AttachObjectToObject(%d, %d, %f, %f, %f, %f, %f, %f, %d)", objectid, attachtoid, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ, SyncRotation);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AttachObjectToObject");
-  }
+  native = sampgdk_native_find_flexible("AttachObjectToObject", native);
   params[0] = 9 * sizeof(cell);
   params[1] = (cell)objectid;
   params[2] = (cell)attachtoid;
@@ -6576,9 +7171,7 @@ SAMPGDK_NATIVE(bool, AttachObjectToPlayer(int objectid, int playerid, float fOff
   cell retval;
   cell params[9];
   sampgdk_log_debug("AttachObjectToPlayer(%d, %d, %f, %f, %f, %f, %f, %f)", objectid, playerid, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AttachObjectToPlayer");
-  }
+  native = sampgdk_native_find_flexible("AttachObjectToPlayer", native);
   params[0] = 8 * sizeof(cell);
   params[1] = (cell)objectid;
   params[2] = (cell)playerid;
@@ -6597,9 +7190,7 @@ SAMPGDK_NATIVE(bool, SetObjectPos(int objectid, float x, float y, float z)) {
   cell retval;
   cell params[5];
   sampgdk_log_debug("SetObjectPos(%d, %f, %f, %f)", objectid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetObjectPos");
-  }
+  native = sampgdk_native_find_flexible("SetObjectPos", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)objectid;
   params[2] = amx_ftoc(x);
@@ -6617,9 +7208,7 @@ SAMPGDK_NATIVE(bool, GetObjectPos(int objectid, float * x, float * y, float * z)
   cell y_;
   cell z_;
   sampgdk_log_debug("GetObjectPos(%d, %f, %f, %f)", objectid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetObjectPos");
-  }
+  native = sampgdk_native_find_flexible("GetObjectPos", native);
   sampgdk_fakeamx_push(1, &x_);
   sampgdk_fakeamx_push(1, &y_);
   sampgdk_fakeamx_push(1, &z_);
@@ -6643,9 +7232,7 @@ SAMPGDK_NATIVE(bool, SetObjectRot(int objectid, float rotX, float rotY, float ro
   cell retval;
   cell params[5];
   sampgdk_log_debug("SetObjectRot(%d, %f, %f, %f)", objectid, rotX, rotY, rotZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetObjectRot");
-  }
+  native = sampgdk_native_find_flexible("SetObjectRot", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)objectid;
   params[2] = amx_ftoc(rotX);
@@ -6663,9 +7250,7 @@ SAMPGDK_NATIVE(bool, GetObjectRot(int objectid, float * rotX, float * rotY, floa
   cell rotY_;
   cell rotZ_;
   sampgdk_log_debug("GetObjectRot(%d, %f, %f, %f)", objectid, rotX, rotY, rotZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetObjectRot");
-  }
+  native = sampgdk_native_find_flexible("GetObjectRot", native);
   sampgdk_fakeamx_push(1, &rotX_);
   sampgdk_fakeamx_push(1, &rotY_);
   sampgdk_fakeamx_push(1, &rotZ_);
@@ -6684,14 +7269,36 @@ SAMPGDK_NATIVE(bool, GetObjectRot(int objectid, float * rotX, float * rotY, floa
   return !!(retval);
 }
 
+SAMPGDK_NATIVE(int, GetObjectModel(int objectid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("GetObjectModel(%d)", objectid);
+  native = sampgdk_native_find_flexible("GetObjectModel", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)objectid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetObjectNoCameraCol(int objectid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("SetObjectNoCameraCol(%d)", objectid);
+  native = sampgdk_native_find_flexible("SetObjectNoCameraCol", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)objectid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
 SAMPGDK_NATIVE(bool, IsValidObject(int objectid)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsValidObject(%d)", objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsValidObject");
-  }
+  native = sampgdk_native_find_flexible("IsValidObject", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)objectid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6703,9 +7310,7 @@ SAMPGDK_NATIVE(bool, DestroyObject(int objectid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("DestroyObject(%d)", objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DestroyObject");
-  }
+  native = sampgdk_native_find_flexible("DestroyObject", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)objectid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6717,9 +7322,7 @@ SAMPGDK_NATIVE(int, MoveObject(int objectid, float X, float Y, float Z, float Sp
   cell retval;
   cell params[9];
   sampgdk_log_debug("MoveObject(%d, %f, %f, %f, %f, %f, %f, %f)", objectid, X, Y, Z, Speed, RotX, RotY, RotZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("MoveObject");
-  }
+  native = sampgdk_native_find_flexible("MoveObject", native);
   params[0] = 8 * sizeof(cell);
   params[1] = (cell)objectid;
   params[2] = amx_ftoc(X);
@@ -6738,9 +7341,7 @@ SAMPGDK_NATIVE(bool, StopObject(int objectid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("StopObject(%d)", objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("StopObject");
-  }
+  native = sampgdk_native_find_flexible("StopObject", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)objectid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6752,9 +7353,7 @@ SAMPGDK_NATIVE(bool, IsObjectMoving(int objectid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsObjectMoving(%d)", objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsObjectMoving");
-  }
+  native = sampgdk_native_find_flexible("IsObjectMoving", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)objectid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6766,9 +7365,7 @@ SAMPGDK_NATIVE(bool, EditObject(int playerid, int objectid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("EditObject(%d, %d)", playerid, objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("EditObject");
-  }
+  native = sampgdk_native_find_flexible("EditObject", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -6781,9 +7378,7 @@ SAMPGDK_NATIVE(bool, EditPlayerObject(int playerid, int objectid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("EditPlayerObject(%d, %d)", playerid, objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("EditPlayerObject");
-  }
+  native = sampgdk_native_find_flexible("EditPlayerObject", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -6796,9 +7391,7 @@ SAMPGDK_NATIVE(bool, SelectObject(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("SelectObject(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SelectObject");
-  }
+  native = sampgdk_native_find_flexible("SelectObject", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6810,9 +7403,7 @@ SAMPGDK_NATIVE(bool, CancelEdit(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("CancelEdit(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CancelEdit");
-  }
+  native = sampgdk_native_find_flexible("CancelEdit", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -6824,9 +7415,7 @@ SAMPGDK_NATIVE(int, CreatePlayerObject(int playerid, int modelid, float x, float
   cell retval;
   cell params[10];
   sampgdk_log_debug("CreatePlayerObject(%d, %d, %f, %f, %f, %f, %f, %f, %f)", playerid, modelid, x, y, z, rX, rY, rZ, DrawDistance);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CreatePlayerObject");
-  }
+  native = sampgdk_native_find_flexible("CreatePlayerObject", native);
   params[0] = 9 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)modelid;
@@ -6846,9 +7435,7 @@ SAMPGDK_NATIVE(bool, AttachPlayerObjectToPlayer(int objectplayer, int objectid, 
   cell retval;
   cell params[10];
   sampgdk_log_debug("AttachPlayerObjectToPlayer(%d, %d, %d, %f, %f, %f, %f, %f, %f)", objectplayer, objectid, attachplayer, OffsetX, OffsetY, OffsetZ, rX, rY, rZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AttachPlayerObjectToPlayer");
-  }
+  native = sampgdk_native_find_flexible("AttachPlayerObjectToPlayer", native);
   params[0] = 9 * sizeof(cell);
   params[1] = (cell)objectplayer;
   params[2] = (cell)objectid;
@@ -6868,9 +7455,7 @@ SAMPGDK_NATIVE(bool, AttachPlayerObjectToVehicle(int playerid, int objectid, int
   cell retval;
   cell params[10];
   sampgdk_log_debug("AttachPlayerObjectToVehicle(%d, %d, %d, %f, %f, %f, %f, %f, %f)", playerid, objectid, vehicleid, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, RotZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AttachPlayerObjectToVehicle");
-  }
+  native = sampgdk_native_find_flexible("AttachPlayerObjectToVehicle", native);
   params[0] = 9 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -6890,9 +7475,7 @@ SAMPGDK_NATIVE(bool, SetPlayerObjectPos(int playerid, int objectid, float x, flo
   cell retval;
   cell params[6];
   sampgdk_log_debug("SetPlayerObjectPos(%d, %d, %f, %f, %f)", playerid, objectid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerObjectPos");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerObjectPos", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -6911,9 +7494,7 @@ SAMPGDK_NATIVE(bool, GetPlayerObjectPos(int playerid, int objectid, float * x, f
   cell y_;
   cell z_;
   sampgdk_log_debug("GetPlayerObjectPos(%d, %d, %f, %f, %f)", playerid, objectid, x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerObjectPos");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerObjectPos", native);
   sampgdk_fakeamx_push(1, &x_);
   sampgdk_fakeamx_push(1, &y_);
   sampgdk_fakeamx_push(1, &z_);
@@ -6938,9 +7519,7 @@ SAMPGDK_NATIVE(bool, SetPlayerObjectRot(int playerid, int objectid, float rotX, 
   cell retval;
   cell params[6];
   sampgdk_log_debug("SetPlayerObjectRot(%d, %d, %f, %f, %f)", playerid, objectid, rotX, rotY, rotZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerObjectRot");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerObjectRot", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -6959,9 +7538,7 @@ SAMPGDK_NATIVE(bool, GetPlayerObjectRot(int playerid, int objectid, float * rotX
   cell rotY_;
   cell rotZ_;
   sampgdk_log_debug("GetPlayerObjectRot(%d, %d, %f, %f, %f)", playerid, objectid, rotX, rotY, rotZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerObjectRot");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerObjectRot", native);
   sampgdk_fakeamx_push(1, &rotX_);
   sampgdk_fakeamx_push(1, &rotY_);
   sampgdk_fakeamx_push(1, &rotZ_);
@@ -6981,14 +7558,38 @@ SAMPGDK_NATIVE(bool, GetPlayerObjectRot(int playerid, int objectid, float * rotX
   return !!(retval);
 }
 
+SAMPGDK_NATIVE(int, GetPlayerObjectModel(int playerid, int objectid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  sampgdk_log_debug("GetPlayerObjectModel(%d, %d)", playerid, objectid);
+  native = sampgdk_native_find_flexible("GetPlayerObjectModel", native);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)playerid;
+  params[2] = (cell)objectid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetPlayerObjectNoCameraCol(int playerid, int objectid)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  sampgdk_log_debug("SetPlayerObjectNoCameraCol(%d, %d)", playerid, objectid);
+  native = sampgdk_native_find_flexible("SetPlayerObjectNoCameraCol", native);
+  params[0] = 2 * sizeof(cell);
+  params[1] = (cell)playerid;
+  params[2] = (cell)objectid;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
 SAMPGDK_NATIVE(bool, IsValidPlayerObject(int playerid, int objectid)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[3];
   sampgdk_log_debug("IsValidPlayerObject(%d, %d)", playerid, objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsValidPlayerObject");
-  }
+  native = sampgdk_native_find_flexible("IsValidPlayerObject", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -7001,9 +7602,7 @@ SAMPGDK_NATIVE(bool, DestroyPlayerObject(int playerid, int objectid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("DestroyPlayerObject(%d, %d)", playerid, objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DestroyPlayerObject");
-  }
+  native = sampgdk_native_find_flexible("DestroyPlayerObject", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -7016,9 +7615,7 @@ SAMPGDK_NATIVE(int, MovePlayerObject(int playerid, int objectid, float x, float 
   cell retval;
   cell params[10];
   sampgdk_log_debug("MovePlayerObject(%d, %d, %f, %f, %f, %f, %f, %f, %f)", playerid, objectid, x, y, z, Speed, RotX, RotY, RotZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("MovePlayerObject");
-  }
+  native = sampgdk_native_find_flexible("MovePlayerObject", native);
   params[0] = 9 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -7038,9 +7635,7 @@ SAMPGDK_NATIVE(bool, StopPlayerObject(int playerid, int objectid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("StopPlayerObject(%d, %d)", playerid, objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("StopPlayerObject");
-  }
+  native = sampgdk_native_find_flexible("StopPlayerObject", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -7053,9 +7648,7 @@ SAMPGDK_NATIVE(bool, IsPlayerObjectMoving(int playerid, int objectid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("IsPlayerObjectMoving(%d, %d)", playerid, objectid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerObjectMoving");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerObjectMoving", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)objectid;
@@ -7070,9 +7663,7 @@ SAMPGDK_NATIVE(bool, SetObjectMaterial(int objectid, int materialindex, int mode
   cell txdname_;
   cell texturename_;
   sampgdk_log_debug("SetObjectMaterial(%d, %d, %d, \"%s\", \"%s\", %d)", objectid, materialindex, modelid, txdname, texturename, materialcolor);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetObjectMaterial");
-  }
+  native = sampgdk_native_find_flexible("SetObjectMaterial", native);
   sampgdk_fakeamx_push_string(txdname, NULL, &txdname_);
   sampgdk_fakeamx_push_string(texturename, NULL, &texturename_);
   params[0] = 6 * sizeof(cell);
@@ -7095,9 +7686,7 @@ SAMPGDK_NATIVE(bool, SetPlayerObjectMaterial(int playerid, int objectid, int mat
   cell txdname_;
   cell texturename_;
   sampgdk_log_debug("SetPlayerObjectMaterial(%d, %d, %d, %d, \"%s\", \"%s\", %d)", playerid, objectid, materialindex, modelid, txdname, texturename, materialcolor);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerObjectMaterial");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerObjectMaterial", native);
   sampgdk_fakeamx_push_string(txdname, NULL, &txdname_);
   sampgdk_fakeamx_push_string(texturename, NULL, &texturename_);
   params[0] = 7 * sizeof(cell);
@@ -7121,9 +7710,7 @@ SAMPGDK_NATIVE(bool, SetObjectMaterialText(int objectid, const char * text, int 
   cell text_;
   cell fontface_;
   sampgdk_log_debug("SetObjectMaterialText(%d, \"%s\", %d, %d, \"%s\", %d, %d, %d, %d, %d)", objectid, text, materialindex, materialsize, fontface, fontsize, bold, fontcolor, backcolor, textalignment);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetObjectMaterialText");
-  }
+  native = sampgdk_native_find_flexible("SetObjectMaterialText", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   sampgdk_fakeamx_push_string(fontface, NULL, &fontface_);
   params[0] = 10 * sizeof(cell);
@@ -7150,9 +7737,7 @@ SAMPGDK_NATIVE(bool, SetPlayerObjectMaterialText(int playerid, int objectid, con
   cell text_;
   cell fontface_;
   sampgdk_log_debug("SetPlayerObjectMaterialText(%d, %d, \"%s\", %d, %d, \"%s\", %d, %d, %d, %d, %d)", playerid, objectid, text, materialindex, materialsize, fontface, fontsize, bold, fontcolor, backcolor, textalignment);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetPlayerObjectMaterialText");
-  }
+  native = sampgdk_native_find_flexible("SetPlayerObjectMaterialText", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   sampgdk_fakeamx_push_string(fontface, NULL, &fontface_);
   params[0] = 11 * sizeof(cell);
@@ -7173,6 +7758,18 @@ SAMPGDK_NATIVE(bool, SetPlayerObjectMaterialText(int playerid, int objectid, con
   return !!(retval);
 }
 
+SAMPGDK_NATIVE(bool, SetObjectsDefaultCameraCol(bool disable)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  sampgdk_log_debug("SetObjectsDefaultCameraCol(%d)", disable);
+  native = sampgdk_native_find_flexible("SetObjectsDefaultCameraCol", native);
+  params[0] = 1 * sizeof(cell);
+  params[1] = (cell)disable;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  return !!(retval);
+}
+
 SAMPGDK_MODULE_INIT(a_objects) {
   return 0;
 }
@@ -7181,7 +7778,7 @@ SAMPGDK_MODULE_CLEANUP(a_objects) {
 }
 
 
-/* Copyright (C) 2012-2014 Zeex
+/* Copyright (C) 2012-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -7214,7 +7811,6 @@ SAMPGDK_NATIVE(bool, KillTimer(int timerid)) {
 /* #include "internal/callback.h" */
 /* #include "internal/fakeamx.h" */
 /* #include "internal/init.h" */
-/* #include "internal/likely.h" */
 /* #include "internal/log.h" */
 /* #include "internal/native.h" */
 /* #include "internal/param.h" */
@@ -7225,9 +7821,7 @@ SAMPGDK_NATIVE(bool, SendClientMessage(int playerid, int color, const char * mes
   cell params[4];
   cell message_;
   sampgdk_log_debug("SendClientMessage(%d, %d, \"%s\")", playerid, color, message);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SendClientMessage");
-  }
+  native = sampgdk_native_find_flexible("SendClientMessage", native);
   sampgdk_fakeamx_push_string(message, NULL, &message_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -7244,9 +7838,7 @@ SAMPGDK_NATIVE(bool, SendClientMessageToAll(int color, const char * message)) {
   cell params[3];
   cell message_;
   sampgdk_log_debug("SendClientMessageToAll(%d, \"%s\")", color, message);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SendClientMessageToAll");
-  }
+  native = sampgdk_native_find_flexible("SendClientMessageToAll", native);
   sampgdk_fakeamx_push_string(message, NULL, &message_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)color;
@@ -7262,9 +7854,7 @@ SAMPGDK_NATIVE(bool, SendPlayerMessageToPlayer(int playerid, int senderid, const
   cell params[4];
   cell message_;
   sampgdk_log_debug("SendPlayerMessageToPlayer(%d, %d, \"%s\")", playerid, senderid, message);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SendPlayerMessageToPlayer");
-  }
+  native = sampgdk_native_find_flexible("SendPlayerMessageToPlayer", native);
   sampgdk_fakeamx_push_string(message, NULL, &message_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -7281,9 +7871,7 @@ SAMPGDK_NATIVE(bool, SendPlayerMessageToAll(int senderid, const char * message))
   cell params[3];
   cell message_;
   sampgdk_log_debug("SendPlayerMessageToAll(%d, \"%s\")", senderid, message);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SendPlayerMessageToAll");
-  }
+  native = sampgdk_native_find_flexible("SendPlayerMessageToAll", native);
   sampgdk_fakeamx_push_string(message, NULL, &message_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)senderid;
@@ -7298,9 +7886,7 @@ SAMPGDK_NATIVE(bool, SendDeathMessage(int killer, int killee, int weapon)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("SendDeathMessage(%d, %d, %d)", killer, killee, weapon);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SendDeathMessage");
-  }
+  native = sampgdk_native_find_flexible("SendDeathMessage", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)killer;
   params[2] = (cell)killee;
@@ -7314,9 +7900,7 @@ SAMPGDK_NATIVE(bool, SendDeathMessageToPlayer(int playerid, int killer, int kill
   cell retval;
   cell params[5];
   sampgdk_log_debug("SendDeathMessageToPlayer(%d, %d, %d, %d)", playerid, killer, killee, weapon);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SendDeathMessageToPlayer");
-  }
+  native = sampgdk_native_find_flexible("SendDeathMessageToPlayer", native);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)killer;
@@ -7332,9 +7916,7 @@ SAMPGDK_NATIVE(bool, GameTextForAll(const char * text, int time, int style)) {
   cell params[4];
   cell text_;
   sampgdk_log_debug("GameTextForAll(\"%s\", %d, %d)", text, time, style);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GameTextForAll");
-  }
+  native = sampgdk_native_find_flexible("GameTextForAll", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   params[0] = 3 * sizeof(cell);
   params[1] = text_;
@@ -7351,9 +7933,7 @@ SAMPGDK_NATIVE(bool, GameTextForPlayer(int playerid, const char * text, int time
   cell params[5];
   cell text_;
   sampgdk_log_debug("GameTextForPlayer(%d, \"%s\", %d, %d)", playerid, text, time, style);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GameTextForPlayer");
-  }
+  native = sampgdk_native_find_flexible("GameTextForPlayer", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -7369,9 +7949,7 @@ SAMPGDK_NATIVE(int, GetTickCount()) {
   static AMX_NATIVE native;
   cell retval;
   sampgdk_log_debug("GetTickCount()");
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetTickCount");
-  }
+  native = sampgdk_native_find_flexible("GetTickCount", native);
   retval = native(sampgdk_fakeamx_amx(), NULL);
   return (int)(retval);
 }
@@ -7380,9 +7958,7 @@ SAMPGDK_NATIVE(int, GetMaxPlayers()) {
   static AMX_NATIVE native;
   cell retval;
   sampgdk_log_debug("GetMaxPlayers()");
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetMaxPlayers");
-  }
+  native = sampgdk_native_find_flexible("GetMaxPlayers", native);
   retval = native(sampgdk_fakeamx_amx(), NULL);
   return (int)(retval);
 }
@@ -7392,9 +7968,7 @@ SAMPGDK_NATIVE(float, VectorSize(float x, float y, float z)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("VectorSize(%f, %f, %f)", x, y, z);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("VectorSize");
-  }
+  native = sampgdk_native_find_flexible("VectorSize", native);
   params[0] = 3 * sizeof(cell);
   params[1] = amx_ftoc(x);
   params[2] = amx_ftoc(y);
@@ -7403,15 +7977,224 @@ SAMPGDK_NATIVE(float, VectorSize(float x, float y, float z)) {
   return amx_ctof(retval);
 }
 
+SAMPGDK_NATIVE(int, GetPlayerPoolSize()) {
+  static AMX_NATIVE native;
+  cell retval;
+  sampgdk_log_debug("GetPlayerPoolSize()");
+  native = sampgdk_native_find_flexible("GetPlayerPoolSize", native);
+  retval = native(sampgdk_fakeamx_amx(), NULL);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(int, GetVehiclePoolSize()) {
+  static AMX_NATIVE native;
+  cell retval;
+  sampgdk_log_debug("GetVehiclePoolSize()");
+  native = sampgdk_native_find_flexible("GetVehiclePoolSize", native);
+  retval = native(sampgdk_fakeamx_amx(), NULL);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(int, GetActorPoolSize()) {
+  static AMX_NATIVE native;
+  cell retval;
+  sampgdk_log_debug("GetActorPoolSize()");
+  native = sampgdk_native_find_flexible("GetActorPoolSize", native);
+  retval = native(sampgdk_fakeamx_amx(), NULL);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, SHA256_PassHash(const char * password, const char * salt, char * ret_hash, int ret_hash_len)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[5];
+  cell password_;
+  cell salt_;
+  cell ret_hash_;
+  sampgdk_log_debug("SHA256_PassHash(\"%s\", \"%s\", \"%s\", %d)", password, salt, ret_hash, ret_hash_len);
+  native = sampgdk_native_find_flexible("SHA256_PassHash", native);
+  sampgdk_fakeamx_push_string(password, NULL, &password_);
+  sampgdk_fakeamx_push_string(salt, NULL, &salt_);
+  sampgdk_fakeamx_push(ret_hash_len, &ret_hash_);
+  params[0] = 4 * sizeof(cell);
+  params[1] = password_;
+  params[2] = salt_;
+  params[3] = ret_hash_;
+  params[4] = (cell)ret_hash_len;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(ret_hash_, ret_hash, ret_hash_len);
+  sampgdk_fakeamx_pop(ret_hash_);
+  sampgdk_fakeamx_pop(salt_);
+  sampgdk_fakeamx_pop(password_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetSVarInt(const char * varname, int int_value)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  cell varname_;
+  sampgdk_log_debug("SetSVarInt(\"%s\", %d)", varname, int_value);
+  native = sampgdk_native_find_flexible("SetSVarInt", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 2 * sizeof(cell);
+  params[1] = varname_;
+  params[2] = (cell)int_value;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(int, GetSVarInt(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetSVarInt(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetSVarInt", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetSVarString(const char * varname, const char * string_value)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  cell varname_;
+  cell string_value_;
+  sampgdk_log_debug("SetSVarString(\"%s\", \"%s\")", varname, string_value);
+  native = sampgdk_native_find_flexible("SetSVarString", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  sampgdk_fakeamx_push_string(string_value, NULL, &string_value_);
+  params[0] = 2 * sizeof(cell);
+  params[1] = varname_;
+  params[2] = string_value_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(string_value_);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetSVarString(const char * varname, char * string_return, int len)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[4];
+  cell varname_;
+  cell string_return_;
+  sampgdk_log_debug("GetSVarString(\"%s\", \"%s\", %d)", varname, string_return, len);
+  native = sampgdk_native_find_flexible("GetSVarString", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  sampgdk_fakeamx_push(len, &string_return_);
+  params[0] = 3 * sizeof(cell);
+  params[1] = varname_;
+  params[2] = string_return_;
+  params[3] = (cell)len;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(string_return_, string_return, len);
+  sampgdk_fakeamx_pop(string_return_);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetSVarFloat(const char * varname, float float_value)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  cell varname_;
+  sampgdk_log_debug("SetSVarFloat(\"%s\", %f)", varname, float_value);
+  native = sampgdk_native_find_flexible("SetSVarFloat", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 2 * sizeof(cell);
+  params[1] = varname_;
+  params[2] = amx_ftoc(float_value);
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(float, GetSVarFloat(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetSVarFloat(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetSVarFloat", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return amx_ctof(retval);
+}
+
+SAMPGDK_NATIVE(bool, DeleteSVar(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("DeleteSVar(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("DeleteSVar", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(int, GetSVarsUpperIndex()) {
+  static AMX_NATIVE native;
+  cell retval;
+  sampgdk_log_debug("GetSVarsUpperIndex()");
+  native = sampgdk_native_find_flexible("GetSVarsUpperIndex", native);
+  retval = native(sampgdk_fakeamx_amx(), NULL);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetSVarNameAtIndex(int index, char * ret_varname, int ret_len)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[4];
+  cell ret_varname_;
+  sampgdk_log_debug("GetSVarNameAtIndex(%d, \"%s\", %d)", index, ret_varname, ret_len);
+  native = sampgdk_native_find_flexible("GetSVarNameAtIndex", native);
+  sampgdk_fakeamx_push(ret_len, &ret_varname_);
+  params[0] = 3 * sizeof(cell);
+  params[1] = (cell)index;
+  params[2] = ret_varname_;
+  params[3] = (cell)ret_len;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(ret_varname_, ret_varname, ret_len);
+  sampgdk_fakeamx_pop(ret_varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(int, GetSVarType(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetSVarType(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetSVarType", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return (int)(retval);
+}
+
 SAMPGDK_NATIVE(bool, SetGameModeText(const char * text)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[2];
   cell text_;
   sampgdk_log_debug("SetGameModeText(\"%s\")", text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetGameModeText");
-  }
+  native = sampgdk_native_find_flexible("SetGameModeText", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   params[0] = 1 * sizeof(cell);
   params[1] = text_;
@@ -7425,9 +8208,7 @@ SAMPGDK_NATIVE(bool, SetTeamCount(int count)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("SetTeamCount(%d)", count);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetTeamCount");
-  }
+  native = sampgdk_native_find_flexible("SetTeamCount", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)count;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7439,9 +8220,7 @@ SAMPGDK_NATIVE(int, AddPlayerClass(int modelid, float spawn_x, float spawn_y, fl
   cell retval;
   cell params[12];
   sampgdk_log_debug("AddPlayerClass(%d, %f, %f, %f, %f, %d, %d, %d, %d, %d, %d)", modelid, spawn_x, spawn_y, spawn_z, z_angle, weapon1, weapon1_ammo, weapon2, weapon2_ammo, weapon3, weapon3_ammo);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AddPlayerClass");
-  }
+  native = sampgdk_native_find_flexible("AddPlayerClass", native);
   params[0] = 11 * sizeof(cell);
   params[1] = (cell)modelid;
   params[2] = amx_ftoc(spawn_x);
@@ -7463,9 +8242,7 @@ SAMPGDK_NATIVE(int, AddPlayerClassEx(int teamid, int modelid, float spawn_x, flo
   cell retval;
   cell params[13];
   sampgdk_log_debug("AddPlayerClassEx(%d, %d, %f, %f, %f, %f, %d, %d, %d, %d, %d, %d)", teamid, modelid, spawn_x, spawn_y, spawn_z, z_angle, weapon1, weapon1_ammo, weapon2, weapon2_ammo, weapon3, weapon3_ammo);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AddPlayerClassEx");
-  }
+  native = sampgdk_native_find_flexible("AddPlayerClassEx", native);
   params[0] = 12 * sizeof(cell);
   params[1] = (cell)teamid;
   params[2] = (cell)modelid;
@@ -7488,9 +8265,7 @@ SAMPGDK_NATIVE(int, AddStaticVehicle(int modelid, float spawn_x, float spawn_y, 
   cell retval;
   cell params[8];
   sampgdk_log_debug("AddStaticVehicle(%d, %f, %f, %f, %f, %d, %d)", modelid, spawn_x, spawn_y, spawn_z, z_angle, color1, color2);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AddStaticVehicle");
-  }
+  native = sampgdk_native_find_flexible("AddStaticVehicle", native);
   params[0] = 7 * sizeof(cell);
   params[1] = (cell)modelid;
   params[2] = amx_ftoc(spawn_x);
@@ -7503,15 +8278,13 @@ SAMPGDK_NATIVE(int, AddStaticVehicle(int modelid, float spawn_x, float spawn_y, 
   return (int)(retval);
 }
 
-SAMPGDK_NATIVE(int, AddStaticVehicleEx(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int color1, int color2, int respawn_delay)) {
+SAMPGDK_NATIVE(int, AddStaticVehicleEx(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int color1, int color2, int respawn_delay, bool addsiren)) {
   static AMX_NATIVE native;
   cell retval;
-  cell params[9];
-  sampgdk_log_debug("AddStaticVehicleEx(%d, %f, %f, %f, %f, %d, %d, %d)", modelid, spawn_x, spawn_y, spawn_z, z_angle, color1, color2, respawn_delay);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AddStaticVehicleEx");
-  }
-  params[0] = 8 * sizeof(cell);
+  cell params[10];
+  sampgdk_log_debug("AddStaticVehicleEx(%d, %f, %f, %f, %f, %d, %d, %d, %d)", modelid, spawn_x, spawn_y, spawn_z, z_angle, color1, color2, respawn_delay, addsiren);
+  native = sampgdk_native_find_flexible("AddStaticVehicleEx", native);
+  params[0] = 9 * sizeof(cell);
   params[1] = (cell)modelid;
   params[2] = amx_ftoc(spawn_x);
   params[3] = amx_ftoc(spawn_y);
@@ -7520,6 +8293,7 @@ SAMPGDK_NATIVE(int, AddStaticVehicleEx(int modelid, float spawn_x, float spawn_y
   params[6] = (cell)color1;
   params[7] = (cell)color2;
   params[8] = (cell)respawn_delay;
+  params[9] = (cell)addsiren;
   retval = native(sampgdk_fakeamx_amx(), params);
   return (int)(retval);
 }
@@ -7529,9 +8303,7 @@ SAMPGDK_NATIVE(int, AddStaticPickup(int model, int type, float x, float y, float
   cell retval;
   cell params[7];
   sampgdk_log_debug("AddStaticPickup(%d, %d, %f, %f, %f, %d)", model, type, x, y, z, virtualworld);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AddStaticPickup");
-  }
+  native = sampgdk_native_find_flexible("AddStaticPickup", native);
   params[0] = 6 * sizeof(cell);
   params[1] = (cell)model;
   params[2] = (cell)type;
@@ -7548,9 +8320,7 @@ SAMPGDK_NATIVE(int, CreatePickup(int model, int type, float x, float y, float z,
   cell retval;
   cell params[7];
   sampgdk_log_debug("CreatePickup(%d, %d, %f, %f, %f, %d)", model, type, x, y, z, virtualworld);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CreatePickup");
-  }
+  native = sampgdk_native_find_flexible("CreatePickup", native);
   params[0] = 6 * sizeof(cell);
   params[1] = (cell)model;
   params[2] = (cell)type;
@@ -7567,9 +8337,7 @@ SAMPGDK_NATIVE(bool, DestroyPickup(int pickup)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("DestroyPickup(%d)", pickup);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DestroyPickup");
-  }
+  native = sampgdk_native_find_flexible("DestroyPickup", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)pickup;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7581,9 +8349,7 @@ SAMPGDK_NATIVE(bool, ShowNameTags(bool show)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("ShowNameTags(%d)", show);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ShowNameTags");
-  }
+  native = sampgdk_native_find_flexible("ShowNameTags", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)show;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7595,9 +8361,7 @@ SAMPGDK_NATIVE(bool, ShowPlayerMarkers(int mode)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("ShowPlayerMarkers(%d)", mode);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ShowPlayerMarkers");
-  }
+  native = sampgdk_native_find_flexible("ShowPlayerMarkers", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)mode;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7608,9 +8372,7 @@ SAMPGDK_NATIVE(bool, GameModeExit()) {
   static AMX_NATIVE native;
   cell retval;
   sampgdk_log_debug("GameModeExit()");
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GameModeExit");
-  }
+  native = sampgdk_native_find_flexible("GameModeExit", native);
   retval = native(sampgdk_fakeamx_amx(), NULL);
   return !!(retval);
 }
@@ -7620,9 +8382,7 @@ SAMPGDK_NATIVE(bool, SetWorldTime(int hour)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("SetWorldTime(%d)", hour);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetWorldTime");
-  }
+  native = sampgdk_native_find_flexible("SetWorldTime", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)hour;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7635,9 +8395,7 @@ SAMPGDK_NATIVE(bool, GetWeaponName(int weaponid, char * name, int size)) {
   cell params[4];
   cell name_;
   sampgdk_log_debug("GetWeaponName(%d, \"%s\", %d)", weaponid, name, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetWeaponName");
-  }
+  native = sampgdk_native_find_flexible("GetWeaponName", native);
   sampgdk_fakeamx_push(size, &name_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)weaponid;
@@ -7654,9 +8412,7 @@ SAMPGDK_NATIVE(bool, EnableTirePopping(bool enable)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("EnableTirePopping(%d)", enable);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("EnableTirePopping");
-  }
+  native = sampgdk_native_find_flexible("EnableTirePopping", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)enable;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7667,9 +8423,7 @@ SAMPGDK_NATIVE(bool, EnableVehicleFriendlyFire()) {
   static AMX_NATIVE native;
   cell retval;
   sampgdk_log_debug("EnableVehicleFriendlyFire()");
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("EnableVehicleFriendlyFire");
-  }
+  native = sampgdk_native_find_flexible("EnableVehicleFriendlyFire", native);
   retval = native(sampgdk_fakeamx_amx(), NULL);
   return !!(retval);
 }
@@ -7679,9 +8433,7 @@ SAMPGDK_NATIVE(bool, AllowInteriorWeapons(bool allow)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("AllowInteriorWeapons(%d)", allow);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AllowInteriorWeapons");
-  }
+  native = sampgdk_native_find_flexible("AllowInteriorWeapons", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)allow;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7693,9 +8445,7 @@ SAMPGDK_NATIVE(bool, SetWeather(int weatherid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("SetWeather(%d)", weatherid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetWeather");
-  }
+  native = sampgdk_native_find_flexible("SetWeather", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)weatherid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7707,13 +8457,20 @@ SAMPGDK_NATIVE(bool, SetGravity(float gravity)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("SetGravity(%f)", gravity);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetGravity");
-  }
+  native = sampgdk_native_find_flexible("SetGravity", native);
   params[0] = 1 * sizeof(cell);
   params[1] = amx_ftoc(gravity);
   retval = native(sampgdk_fakeamx_amx(), params);
   return !!(retval);
+}
+
+SAMPGDK_NATIVE(float, GetGravity()) {
+  static AMX_NATIVE native;
+  cell retval;
+  sampgdk_log_debug("GetGravity()");
+  native = sampgdk_native_find_flexible("GetGravity", native);
+  retval = native(sampgdk_fakeamx_amx(), NULL);
+  return amx_ctof(retval);
 }
 
 SAMPGDK_NATIVE(bool, AllowAdminTeleport(bool allow)) {
@@ -7721,9 +8478,7 @@ SAMPGDK_NATIVE(bool, AllowAdminTeleport(bool allow)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("AllowAdminTeleport(%d)", allow);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AllowAdminTeleport");
-  }
+  native = sampgdk_native_find_flexible("AllowAdminTeleport", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)allow;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7735,9 +8490,7 @@ SAMPGDK_NATIVE(bool, SetDeathDropAmount(int amount)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("SetDeathDropAmount(%d)", amount);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetDeathDropAmount");
-  }
+  native = sampgdk_native_find_flexible("SetDeathDropAmount", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)amount;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7749,9 +8502,7 @@ SAMPGDK_NATIVE(bool, CreateExplosion(float x, float y, float z, int type, float 
   cell retval;
   cell params[6];
   sampgdk_log_debug("CreateExplosion(%f, %f, %f, %d, %f)", x, y, z, type, radius);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CreateExplosion");
-  }
+  native = sampgdk_native_find_flexible("CreateExplosion", native);
   params[0] = 5 * sizeof(cell);
   params[1] = amx_ftoc(x);
   params[2] = amx_ftoc(y);
@@ -7767,9 +8518,7 @@ SAMPGDK_NATIVE(bool, EnableZoneNames(bool enable)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("EnableZoneNames(%d)", enable);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("EnableZoneNames");
-  }
+  native = sampgdk_native_find_flexible("EnableZoneNames", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)enable;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7780,9 +8529,7 @@ SAMPGDK_NATIVE(bool, UsePlayerPedAnims()) {
   static AMX_NATIVE native;
   cell retval;
   sampgdk_log_debug("UsePlayerPedAnims()");
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("UsePlayerPedAnims");
-  }
+  native = sampgdk_native_find_flexible("UsePlayerPedAnims", native);
   retval = native(sampgdk_fakeamx_amx(), NULL);
   return !!(retval);
 }
@@ -7791,9 +8538,7 @@ SAMPGDK_NATIVE(bool, DisableInteriorEnterExits()) {
   static AMX_NATIVE native;
   cell retval;
   sampgdk_log_debug("DisableInteriorEnterExits()");
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DisableInteriorEnterExits");
-  }
+  native = sampgdk_native_find_flexible("DisableInteriorEnterExits", native);
   retval = native(sampgdk_fakeamx_amx(), NULL);
   return !!(retval);
 }
@@ -7803,9 +8548,7 @@ SAMPGDK_NATIVE(bool, SetNameTagDrawDistance(float distance)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("SetNameTagDrawDistance(%f)", distance);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetNameTagDrawDistance");
-  }
+  native = sampgdk_native_find_flexible("SetNameTagDrawDistance", native);
   params[0] = 1 * sizeof(cell);
   params[1] = amx_ftoc(distance);
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7816,9 +8559,7 @@ SAMPGDK_NATIVE(bool, DisableNameTagLOS()) {
   static AMX_NATIVE native;
   cell retval;
   sampgdk_log_debug("DisableNameTagLOS()");
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DisableNameTagLOS");
-  }
+  native = sampgdk_native_find_flexible("DisableNameTagLOS", native);
   retval = native(sampgdk_fakeamx_amx(), NULL);
   return !!(retval);
 }
@@ -7828,9 +8569,7 @@ SAMPGDK_NATIVE(bool, LimitGlobalChatRadius(float chat_radius)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("LimitGlobalChatRadius(%f)", chat_radius);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("LimitGlobalChatRadius");
-  }
+  native = sampgdk_native_find_flexible("LimitGlobalChatRadius", native);
   params[0] = 1 * sizeof(cell);
   params[1] = amx_ftoc(chat_radius);
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7842,9 +8581,7 @@ SAMPGDK_NATIVE(bool, LimitPlayerMarkerRadius(float marker_radius)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("LimitPlayerMarkerRadius(%f)", marker_radius);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("LimitPlayerMarkerRadius");
-  }
+  native = sampgdk_native_find_flexible("LimitPlayerMarkerRadius", native);
   params[0] = 1 * sizeof(cell);
   params[1] = amx_ftoc(marker_radius);
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7858,9 +8595,7 @@ SAMPGDK_NATIVE(bool, ConnectNPC(const char * name, const char * script)) {
   cell name_;
   cell script_;
   sampgdk_log_debug("ConnectNPC(\"%s\", \"%s\")", name, script);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ConnectNPC");
-  }
+  native = sampgdk_native_find_flexible("ConnectNPC", native);
   sampgdk_fakeamx_push_string(name, NULL, &name_);
   sampgdk_fakeamx_push_string(script, NULL, &script_);
   params[0] = 2 * sizeof(cell);
@@ -7877,9 +8612,7 @@ SAMPGDK_NATIVE(bool, IsPlayerNPC(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsPlayerNPC(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerNPC");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerNPC", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7891,9 +8624,7 @@ SAMPGDK_NATIVE(bool, IsPlayerAdmin(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsPlayerAdmin(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsPlayerAdmin");
-  }
+  native = sampgdk_native_find_flexible("IsPlayerAdmin", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7905,9 +8636,7 @@ SAMPGDK_NATIVE(bool, Kick(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("Kick(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("Kick");
-  }
+  native = sampgdk_native_find_flexible("Kick", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7919,9 +8648,7 @@ SAMPGDK_NATIVE(bool, Ban(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("Ban(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("Ban");
-  }
+  native = sampgdk_native_find_flexible("Ban", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -7934,9 +8661,7 @@ SAMPGDK_NATIVE(bool, BanEx(int playerid, const char * reason)) {
   cell params[3];
   cell reason_;
   sampgdk_log_debug("BanEx(%d, \"%s\")", playerid, reason);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("BanEx");
-  }
+  native = sampgdk_native_find_flexible("BanEx", native);
   sampgdk_fakeamx_push_string(reason, NULL, &reason_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -7952,14 +8677,96 @@ SAMPGDK_NATIVE(bool, SendRconCommand(const char * command)) {
   cell params[2];
   cell command_;
   sampgdk_log_debug("SendRconCommand(\"%s\")", command);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SendRconCommand");
-  }
+  native = sampgdk_native_find_flexible("SendRconCommand", native);
   sampgdk_fakeamx_push_string(command, NULL, &command_);
   params[0] = 1 * sizeof(cell);
   params[1] = command_;
   retval = native(sampgdk_fakeamx_amx(), params);
   sampgdk_fakeamx_pop(command_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetPlayerNetworkStats(int playerid, char * retstr, int size)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[4];
+  cell retstr_;
+  sampgdk_log_debug("GetPlayerNetworkStats(%d, \"%s\", %d)", playerid, retstr, size);
+  native = sampgdk_native_find_flexible("GetPlayerNetworkStats", native);
+  sampgdk_fakeamx_push(size, &retstr_);
+  params[0] = 3 * sizeof(cell);
+  params[1] = (cell)playerid;
+  params[2] = retstr_;
+  params[3] = (cell)size;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(retstr_, retstr, size);
+  sampgdk_fakeamx_pop(retstr_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetNetworkStats(char * retstr, int size)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  cell retstr_;
+  sampgdk_log_debug("GetNetworkStats(\"%s\", %d)", retstr, size);
+  native = sampgdk_native_find_flexible("GetNetworkStats", native);
+  sampgdk_fakeamx_push(size, &retstr_);
+  params[0] = 2 * sizeof(cell);
+  params[1] = retstr_;
+  params[2] = (cell)size;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(retstr_, retstr, size);
+  sampgdk_fakeamx_pop(retstr_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetPlayerVersion(int playerid, char * version, int len)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[4];
+  cell version_;
+  sampgdk_log_debug("GetPlayerVersion(%d, \"%s\", %d)", playerid, version, len);
+  native = sampgdk_native_find_flexible("GetPlayerVersion", native);
+  sampgdk_fakeamx_push(len, &version_);
+  params[0] = 3 * sizeof(cell);
+  params[1] = (cell)playerid;
+  params[2] = version_;
+  params[3] = (cell)len;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(version_, version, len);
+  sampgdk_fakeamx_pop(version_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, BlockIpAddress(const char * ip_address, int timems)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  cell ip_address_;
+  sampgdk_log_debug("BlockIpAddress(\"%s\", %d)", ip_address, timems);
+  native = sampgdk_native_find_flexible("BlockIpAddress", native);
+  sampgdk_fakeamx_push_string(ip_address, NULL, &ip_address_);
+  params[0] = 2 * sizeof(cell);
+  params[1] = ip_address_;
+  params[2] = (cell)timems;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(ip_address_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, UnBlockIpAddress(const char * ip_address)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell ip_address_;
+  sampgdk_log_debug("UnBlockIpAddress(\"%s\")", ip_address);
+  native = sampgdk_native_find_flexible("UnBlockIpAddress", native);
+  sampgdk_fakeamx_push_string(ip_address, NULL, &ip_address_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = ip_address_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(ip_address_);
   return !!(retval);
 }
 
@@ -7970,9 +8777,7 @@ SAMPGDK_NATIVE(bool, GetServerVarAsString(const char * varname, char * value, in
   cell varname_;
   cell value_;
   sampgdk_log_debug("GetServerVarAsString(\"%s\", \"%s\", %d)", varname, value, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetServerVarAsString");
-  }
+  native = sampgdk_native_find_flexible("GetServerVarAsString", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   sampgdk_fakeamx_push(size, &value_);
   params[0] = 3 * sizeof(cell);
@@ -7992,9 +8797,7 @@ SAMPGDK_NATIVE(int, GetServerVarAsInt(const char * varname)) {
   cell params[2];
   cell varname_;
   sampgdk_log_debug("GetServerVarAsInt(\"%s\")", varname);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetServerVarAsInt");
-  }
+  native = sampgdk_native_find_flexible("GetServerVarAsInt", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   params[0] = 1 * sizeof(cell);
   params[1] = varname_;
@@ -8009,9 +8812,7 @@ SAMPGDK_NATIVE(bool, GetServerVarAsBool(const char * varname)) {
   cell params[2];
   cell varname_;
   sampgdk_log_debug("GetServerVarAsBool(\"%s\")", varname);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetServerVarAsBool");
-  }
+  native = sampgdk_native_find_flexible("GetServerVarAsBool", native);
   sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   params[0] = 1 * sizeof(cell);
   params[1] = varname_;
@@ -8020,97 +8821,54 @@ SAMPGDK_NATIVE(bool, GetServerVarAsBool(const char * varname)) {
   return !!(retval);
 }
 
-SAMPGDK_NATIVE(bool, GetPlayerNetworkStats(int playerid, char * retstr, int size)) {
+SAMPGDK_NATIVE(bool, GetConsoleVarAsString(const char * varname, char * buffer, int len)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[4];
-  cell retstr_;
-  sampgdk_log_debug("GetPlayerNetworkStats(%d, \"%s\", %d)", playerid, retstr, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerNetworkStats");
-  }
-  sampgdk_fakeamx_push(size, &retstr_);
+  cell varname_;
+  cell buffer_;
+  sampgdk_log_debug("GetConsoleVarAsString(\"%s\", \"%s\", %d)", varname, buffer, len);
+  native = sampgdk_native_find_flexible("GetConsoleVarAsString", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  sampgdk_fakeamx_push(len, &buffer_);
   params[0] = 3 * sizeof(cell);
-  params[1] = (cell)playerid;
-  params[2] = retstr_;
-  params[3] = (cell)size;
-  retval = native(sampgdk_fakeamx_amx(), params);
-  sampgdk_fakeamx_get_string(retstr_, retstr, size);
-  sampgdk_fakeamx_pop(retstr_);
-  return !!(retval);
-}
-
-SAMPGDK_NATIVE(bool, GetNetworkStats(char * retstr, int size)) {
-  static AMX_NATIVE native;
-  cell retval;
-  cell params[3];
-  cell retstr_;
-  sampgdk_log_debug("GetNetworkStats(\"%s\", %d)", retstr, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetNetworkStats");
-  }
-  sampgdk_fakeamx_push(size, &retstr_);
-  params[0] = 2 * sizeof(cell);
-  params[1] = retstr_;
-  params[2] = (cell)size;
-  retval = native(sampgdk_fakeamx_amx(), params);
-  sampgdk_fakeamx_get_string(retstr_, retstr, size);
-  sampgdk_fakeamx_pop(retstr_);
-  return !!(retval);
-}
-
-SAMPGDK_NATIVE(bool, GetPlayerVersion(int playerid, char * version, int len)) {
-  static AMX_NATIVE native;
-  cell retval;
-  cell params[4];
-  cell version_;
-  sampgdk_log_debug("GetPlayerVersion(%d, \"%s\", %d)", playerid, version, len);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerVersion");
-  }
-  sampgdk_fakeamx_push(len, &version_);
-  params[0] = 3 * sizeof(cell);
-  params[1] = (cell)playerid;
-  params[2] = version_;
+  params[1] = varname_;
+  params[2] = buffer_;
   params[3] = (cell)len;
   retval = native(sampgdk_fakeamx_amx(), params);
-  sampgdk_fakeamx_get_string(version_, version, len);
-  sampgdk_fakeamx_pop(version_);
+  sampgdk_fakeamx_get_string(buffer_, buffer, len);
+  sampgdk_fakeamx_pop(buffer_);
+  sampgdk_fakeamx_pop(varname_);
   return !!(retval);
 }
 
-SAMPGDK_NATIVE(bool, BlockIpAddress(const char * ip_address, int timems)) {
-  static AMX_NATIVE native;
-  cell retval;
-  cell params[3];
-  cell ip_address_;
-  sampgdk_log_debug("BlockIpAddress(\"%s\", %d)", ip_address, timems);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("BlockIpAddress");
-  }
-  sampgdk_fakeamx_push_string(ip_address, NULL, &ip_address_);
-  params[0] = 2 * sizeof(cell);
-  params[1] = ip_address_;
-  params[2] = (cell)timems;
-  retval = native(sampgdk_fakeamx_amx(), params);
-  sampgdk_fakeamx_pop(ip_address_);
-  return !!(retval);
-}
-
-SAMPGDK_NATIVE(bool, UnBlockIpAddress(const char * ip_address)) {
+SAMPGDK_NATIVE(int, GetConsoleVarAsInt(const char * varname)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[2];
-  cell ip_address_;
-  sampgdk_log_debug("UnBlockIpAddress(\"%s\")", ip_address);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("UnBlockIpAddress");
-  }
-  sampgdk_fakeamx_push_string(ip_address, NULL, &ip_address_);
+  cell varname_;
+  sampgdk_log_debug("GetConsoleVarAsInt(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetConsoleVarAsInt", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
   params[0] = 1 * sizeof(cell);
-  params[1] = ip_address_;
+  params[1] = varname_;
   retval = native(sampgdk_fakeamx_amx(), params);
-  sampgdk_fakeamx_pop(ip_address_);
+  sampgdk_fakeamx_pop(varname_);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetConsoleVarAsBool(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetConsoleVarAsBool(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetConsoleVarAsBool", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
   return !!(retval);
 }
 
@@ -8118,9 +8876,7 @@ SAMPGDK_NATIVE(int, GetServerTickRate()) {
   static AMX_NATIVE native;
   cell retval;
   sampgdk_log_debug("GetServerTickRate()");
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetServerTickRate");
-  }
+  native = sampgdk_native_find_flexible("GetServerTickRate", native);
   retval = native(sampgdk_fakeamx_amx(), NULL);
   return (int)(retval);
 }
@@ -8130,9 +8886,7 @@ SAMPGDK_NATIVE(int, NetStats_GetConnectedTime(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("NetStats_GetConnectedTime(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("NetStats_GetConnectedTime");
-  }
+  native = sampgdk_native_find_flexible("NetStats_GetConnectedTime", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8144,9 +8898,7 @@ SAMPGDK_NATIVE(int, NetStats_MessagesReceived(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("NetStats_MessagesReceived(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("NetStats_MessagesReceived");
-  }
+  native = sampgdk_native_find_flexible("NetStats_MessagesReceived", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8158,9 +8910,7 @@ SAMPGDK_NATIVE(int, NetStats_BytesReceived(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("NetStats_BytesReceived(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("NetStats_BytesReceived");
-  }
+  native = sampgdk_native_find_flexible("NetStats_BytesReceived", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8172,9 +8922,7 @@ SAMPGDK_NATIVE(int, NetStats_MessagesSent(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("NetStats_MessagesSent(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("NetStats_MessagesSent");
-  }
+  native = sampgdk_native_find_flexible("NetStats_MessagesSent", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8186,9 +8934,7 @@ SAMPGDK_NATIVE(int, NetStats_BytesSent(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("NetStats_BytesSent(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("NetStats_BytesSent");
-  }
+  native = sampgdk_native_find_flexible("NetStats_BytesSent", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8200,9 +8946,7 @@ SAMPGDK_NATIVE(int, NetStats_MessagesRecvPerSecond(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("NetStats_MessagesRecvPerSecond(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("NetStats_MessagesRecvPerSecond");
-  }
+  native = sampgdk_native_find_flexible("NetStats_MessagesRecvPerSecond", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8214,9 +8958,7 @@ SAMPGDK_NATIVE(float, NetStats_PacketLossPercent(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("NetStats_PacketLossPercent(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("NetStats_PacketLossPercent");
-  }
+  native = sampgdk_native_find_flexible("NetStats_PacketLossPercent", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8228,9 +8970,7 @@ SAMPGDK_NATIVE(int, NetStats_ConnectionStatus(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("NetStats_ConnectionStatus(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("NetStats_ConnectionStatus");
-  }
+  native = sampgdk_native_find_flexible("NetStats_ConnectionStatus", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8243,9 +8983,7 @@ SAMPGDK_NATIVE(bool, NetStats_GetIpPort(int playerid, char * ip_port, int ip_por
   cell params[4];
   cell ip_port_;
   sampgdk_log_debug("NetStats_GetIpPort(%d, \"%s\", %d)", playerid, ip_port, ip_port_len);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("NetStats_GetIpPort");
-  }
+  native = sampgdk_native_find_flexible("NetStats_GetIpPort", native);
   sampgdk_fakeamx_push(ip_port_len, &ip_port_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -8263,9 +9001,7 @@ SAMPGDK_NATIVE(int, CreateMenu(const char * title, int columns, float x, float y
   cell params[7];
   cell title_;
   sampgdk_log_debug("CreateMenu(\"%s\", %d, %f, %f, %f, %f)", title, columns, x, y, col1width, col2width);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CreateMenu");
-  }
+  native = sampgdk_native_find_flexible("CreateMenu", native);
   sampgdk_fakeamx_push_string(title, NULL, &title_);
   params[0] = 6 * sizeof(cell);
   params[1] = title_;
@@ -8284,9 +9020,7 @@ SAMPGDK_NATIVE(bool, DestroyMenu(int menuid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("DestroyMenu(%d)", menuid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DestroyMenu");
-  }
+  native = sampgdk_native_find_flexible("DestroyMenu", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)menuid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8299,9 +9033,7 @@ SAMPGDK_NATIVE(int, AddMenuItem(int menuid, int column, const char * menutext)) 
   cell params[4];
   cell menutext_;
   sampgdk_log_debug("AddMenuItem(%d, %d, \"%s\")", menuid, column, menutext);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("AddMenuItem");
-  }
+  native = sampgdk_native_find_flexible("AddMenuItem", native);
   sampgdk_fakeamx_push_string(menutext, NULL, &menutext_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)menuid;
@@ -8318,9 +9050,7 @@ SAMPGDK_NATIVE(bool, SetMenuColumnHeader(int menuid, int column, const char * co
   cell params[4];
   cell columnheader_;
   sampgdk_log_debug("SetMenuColumnHeader(%d, %d, \"%s\")", menuid, column, columnheader);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SetMenuColumnHeader");
-  }
+  native = sampgdk_native_find_flexible("SetMenuColumnHeader", native);
   sampgdk_fakeamx_push_string(columnheader, NULL, &columnheader_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)menuid;
@@ -8336,9 +9066,7 @@ SAMPGDK_NATIVE(bool, ShowMenuForPlayer(int menuid, int playerid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("ShowMenuForPlayer(%d, %d)", menuid, playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ShowMenuForPlayer");
-  }
+  native = sampgdk_native_find_flexible("ShowMenuForPlayer", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)menuid;
   params[2] = (cell)playerid;
@@ -8351,9 +9079,7 @@ SAMPGDK_NATIVE(bool, HideMenuForPlayer(int menuid, int playerid)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("HideMenuForPlayer(%d, %d)", menuid, playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("HideMenuForPlayer");
-  }
+  native = sampgdk_native_find_flexible("HideMenuForPlayer", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)menuid;
   params[2] = (cell)playerid;
@@ -8366,9 +9092,7 @@ SAMPGDK_NATIVE(bool, IsValidMenu(int menuid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("IsValidMenu(%d)", menuid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("IsValidMenu");
-  }
+  native = sampgdk_native_find_flexible("IsValidMenu", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)menuid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8380,9 +9104,7 @@ SAMPGDK_NATIVE(bool, DisableMenu(int menuid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("DisableMenu(%d)", menuid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DisableMenu");
-  }
+  native = sampgdk_native_find_flexible("DisableMenu", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)menuid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8394,9 +9116,7 @@ SAMPGDK_NATIVE(bool, DisableMenuRow(int menuid, int row)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("DisableMenuRow(%d, %d)", menuid, row);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DisableMenuRow");
-  }
+  native = sampgdk_native_find_flexible("DisableMenuRow", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)menuid;
   params[2] = (cell)row;
@@ -8409,9 +9129,7 @@ SAMPGDK_NATIVE(int, GetPlayerMenu(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GetPlayerMenu(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GetPlayerMenu");
-  }
+  native = sampgdk_native_find_flexible("GetPlayerMenu", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8424,9 +9142,7 @@ SAMPGDK_NATIVE(int, TextDrawCreate(float x, float y, const char * text)) {
   cell params[4];
   cell text_;
   sampgdk_log_debug("TextDrawCreate(%f, %f, \"%s\")", x, y, text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawCreate");
-  }
+  native = sampgdk_native_find_flexible("TextDrawCreate", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   params[0] = 3 * sizeof(cell);
   params[1] = amx_ftoc(x);
@@ -8442,9 +9158,7 @@ SAMPGDK_NATIVE(bool, TextDrawDestroy(int text)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("TextDrawDestroy(%d)", text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawDestroy");
-  }
+  native = sampgdk_native_find_flexible("TextDrawDestroy", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)text;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8456,9 +9170,7 @@ SAMPGDK_NATIVE(bool, TextDrawLetterSize(int text, float x, float y)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("TextDrawLetterSize(%d, %f, %f)", text, x, y);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawLetterSize");
-  }
+  native = sampgdk_native_find_flexible("TextDrawLetterSize", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = amx_ftoc(x);
@@ -8472,9 +9184,7 @@ SAMPGDK_NATIVE(bool, TextDrawTextSize(int text, float x, float y)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("TextDrawTextSize(%d, %f, %f)", text, x, y);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawTextSize");
-  }
+  native = sampgdk_native_find_flexible("TextDrawTextSize", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = amx_ftoc(x);
@@ -8488,9 +9198,7 @@ SAMPGDK_NATIVE(bool, TextDrawAlignment(int text, int alignment)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawAlignment(%d, %d)", text, alignment);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawAlignment");
-  }
+  native = sampgdk_native_find_flexible("TextDrawAlignment", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)alignment;
@@ -8503,9 +9211,7 @@ SAMPGDK_NATIVE(bool, TextDrawColor(int text, int color)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawColor(%d, %d)", text, color);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawColor");
-  }
+  native = sampgdk_native_find_flexible("TextDrawColor", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)color;
@@ -8518,9 +9224,7 @@ SAMPGDK_NATIVE(bool, TextDrawUseBox(int text, bool use)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawUseBox(%d, %d)", text, use);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawUseBox");
-  }
+  native = sampgdk_native_find_flexible("TextDrawUseBox", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)use;
@@ -8533,9 +9237,7 @@ SAMPGDK_NATIVE(bool, TextDrawBoxColor(int text, int color)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawBoxColor(%d, %d)", text, color);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawBoxColor");
-  }
+  native = sampgdk_native_find_flexible("TextDrawBoxColor", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)color;
@@ -8548,9 +9250,7 @@ SAMPGDK_NATIVE(bool, TextDrawSetShadow(int text, int size)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawSetShadow(%d, %d)", text, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawSetShadow");
-  }
+  native = sampgdk_native_find_flexible("TextDrawSetShadow", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)size;
@@ -8563,9 +9263,7 @@ SAMPGDK_NATIVE(bool, TextDrawSetOutline(int text, int size)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawSetOutline(%d, %d)", text, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawSetOutline");
-  }
+  native = sampgdk_native_find_flexible("TextDrawSetOutline", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)size;
@@ -8578,9 +9276,7 @@ SAMPGDK_NATIVE(bool, TextDrawBackgroundColor(int text, int color)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawBackgroundColor(%d, %d)", text, color);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawBackgroundColor");
-  }
+  native = sampgdk_native_find_flexible("TextDrawBackgroundColor", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)color;
@@ -8593,9 +9289,7 @@ SAMPGDK_NATIVE(bool, TextDrawFont(int text, int font)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawFont(%d, %d)", text, font);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawFont");
-  }
+  native = sampgdk_native_find_flexible("TextDrawFont", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)font;
@@ -8608,9 +9302,7 @@ SAMPGDK_NATIVE(bool, TextDrawSetProportional(int text, bool set)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawSetProportional(%d, %d)", text, set);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawSetProportional");
-  }
+  native = sampgdk_native_find_flexible("TextDrawSetProportional", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)set;
@@ -8623,9 +9315,7 @@ SAMPGDK_NATIVE(bool, TextDrawSetSelectable(int text, bool set)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawSetSelectable(%d, %d)", text, set);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawSetSelectable");
-  }
+  native = sampgdk_native_find_flexible("TextDrawSetSelectable", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)set;
@@ -8638,9 +9328,7 @@ SAMPGDK_NATIVE(bool, TextDrawShowForPlayer(int playerid, int text)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawShowForPlayer(%d, %d)", playerid, text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawShowForPlayer");
-  }
+  native = sampgdk_native_find_flexible("TextDrawShowForPlayer", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -8653,9 +9341,7 @@ SAMPGDK_NATIVE(bool, TextDrawHideForPlayer(int playerid, int text)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawHideForPlayer(%d, %d)", playerid, text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawHideForPlayer");
-  }
+  native = sampgdk_native_find_flexible("TextDrawHideForPlayer", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)text;
@@ -8668,9 +9354,7 @@ SAMPGDK_NATIVE(bool, TextDrawShowForAll(int text)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("TextDrawShowForAll(%d)", text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawShowForAll");
-  }
+  native = sampgdk_native_find_flexible("TextDrawShowForAll", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)text;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8682,9 +9366,7 @@ SAMPGDK_NATIVE(bool, TextDrawHideForAll(int text)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("TextDrawHideForAll(%d)", text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawHideForAll");
-  }
+  native = sampgdk_native_find_flexible("TextDrawHideForAll", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)text;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8697,9 +9379,7 @@ SAMPGDK_NATIVE(bool, TextDrawSetString(int text, const char * string)) {
   cell params[3];
   cell string_;
   sampgdk_log_debug("TextDrawSetString(%d, \"%s\")", text, string);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawSetString");
-  }
+  native = sampgdk_native_find_flexible("TextDrawSetString", native);
   sampgdk_fakeamx_push_string(string, NULL, &string_);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
@@ -8714,9 +9394,7 @@ SAMPGDK_NATIVE(bool, TextDrawSetPreviewModel(int text, int modelindex)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("TextDrawSetPreviewModel(%d, %d)", text, modelindex);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawSetPreviewModel");
-  }
+  native = sampgdk_native_find_flexible("TextDrawSetPreviewModel", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)modelindex;
@@ -8729,9 +9407,7 @@ SAMPGDK_NATIVE(bool, TextDrawSetPreviewRot(int text, float fRotX, float fRotY, f
   cell retval;
   cell params[6];
   sampgdk_log_debug("TextDrawSetPreviewRot(%d, %f, %f, %f, %f)", text, fRotX, fRotY, fRotZ, fZoom);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawSetPreviewRot");
-  }
+  native = sampgdk_native_find_flexible("TextDrawSetPreviewRot", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = amx_ftoc(fRotX);
@@ -8747,9 +9423,7 @@ SAMPGDK_NATIVE(bool, TextDrawSetPreviewVehCol(int text, int color1, int color2))
   cell retval;
   cell params[4];
   sampgdk_log_debug("TextDrawSetPreviewVehCol(%d, %d, %d)", text, color1, color2);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("TextDrawSetPreviewVehCol");
-  }
+  native = sampgdk_native_find_flexible("TextDrawSetPreviewVehCol", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)text;
   params[2] = (cell)color1;
@@ -8763,9 +9437,7 @@ SAMPGDK_NATIVE(bool, SelectTextDraw(int playerid, int hovercolor)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("SelectTextDraw(%d, %d)", playerid, hovercolor);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("SelectTextDraw");
-  }
+  native = sampgdk_native_find_flexible("SelectTextDraw", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)hovercolor;
@@ -8778,9 +9450,7 @@ SAMPGDK_NATIVE(bool, CancelSelectTextDraw(int playerid)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("CancelSelectTextDraw(%d)", playerid);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CancelSelectTextDraw");
-  }
+  native = sampgdk_native_find_flexible("CancelSelectTextDraw", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)playerid;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8792,9 +9462,7 @@ SAMPGDK_NATIVE(int, GangZoneCreate(float minx, float miny, float maxx, float max
   cell retval;
   cell params[5];
   sampgdk_log_debug("GangZoneCreate(%f, %f, %f, %f)", minx, miny, maxx, maxy);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GangZoneCreate");
-  }
+  native = sampgdk_native_find_flexible("GangZoneCreate", native);
   params[0] = 4 * sizeof(cell);
   params[1] = amx_ftoc(minx);
   params[2] = amx_ftoc(miny);
@@ -8809,9 +9477,7 @@ SAMPGDK_NATIVE(bool, GangZoneDestroy(int zone)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GangZoneDestroy(%d)", zone);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GangZoneDestroy");
-  }
+  native = sampgdk_native_find_flexible("GangZoneDestroy", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)zone;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8823,9 +9489,7 @@ SAMPGDK_NATIVE(bool, GangZoneShowForPlayer(int playerid, int zone, int color)) {
   cell retval;
   cell params[4];
   sampgdk_log_debug("GangZoneShowForPlayer(%d, %d, %d)", playerid, zone, color);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GangZoneShowForPlayer");
-  }
+  native = sampgdk_native_find_flexible("GangZoneShowForPlayer", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)zone;
@@ -8839,9 +9503,7 @@ SAMPGDK_NATIVE(bool, GangZoneShowForAll(int zone, int color)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("GangZoneShowForAll(%d, %d)", zone, color);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GangZoneShowForAll");
-  }
+  native = sampgdk_native_find_flexible("GangZoneShowForAll", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)zone;
   params[2] = (cell)color;
@@ -8854,9 +9516,7 @@ SAMPGDK_NATIVE(bool, GangZoneHideForPlayer(int playerid, int zone)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("GangZoneHideForPlayer(%d, %d)", playerid, zone);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GangZoneHideForPlayer");
-  }
+  native = sampgdk_native_find_flexible("GangZoneHideForPlayer", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)zone;
@@ -8869,9 +9529,7 @@ SAMPGDK_NATIVE(bool, GangZoneHideForAll(int zone)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GangZoneHideForAll(%d)", zone);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GangZoneHideForAll");
-  }
+  native = sampgdk_native_find_flexible("GangZoneHideForAll", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)zone;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8883,9 +9541,7 @@ SAMPGDK_NATIVE(bool, GangZoneFlashForPlayer(int playerid, int zone, int flashcol
   cell retval;
   cell params[4];
   sampgdk_log_debug("GangZoneFlashForPlayer(%d, %d, %d)", playerid, zone, flashcolor);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GangZoneFlashForPlayer");
-  }
+  native = sampgdk_native_find_flexible("GangZoneFlashForPlayer", native);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)zone;
@@ -8899,9 +9555,7 @@ SAMPGDK_NATIVE(bool, GangZoneFlashForAll(int zone, int flashcolor)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("GangZoneFlashForAll(%d, %d)", zone, flashcolor);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GangZoneFlashForAll");
-  }
+  native = sampgdk_native_find_flexible("GangZoneFlashForAll", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)zone;
   params[2] = (cell)flashcolor;
@@ -8914,9 +9568,7 @@ SAMPGDK_NATIVE(bool, GangZoneStopFlashForPlayer(int playerid, int zone)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("GangZoneStopFlashForPlayer(%d, %d)", playerid, zone);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GangZoneStopFlashForPlayer");
-  }
+  native = sampgdk_native_find_flexible("GangZoneStopFlashForPlayer", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)zone;
@@ -8929,9 +9581,7 @@ SAMPGDK_NATIVE(bool, GangZoneStopFlashForAll(int zone)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("GangZoneStopFlashForAll(%d)", zone);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("GangZoneStopFlashForAll");
-  }
+  native = sampgdk_native_find_flexible("GangZoneStopFlashForAll", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)zone;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8944,9 +9594,7 @@ SAMPGDK_NATIVE(int, Create3DTextLabel(const char * text, int color, float x, flo
   cell params[9];
   cell text_;
   sampgdk_log_debug("Create3DTextLabel(\"%s\", %d, %f, %f, %f, %f, %d, %d)", text, color, x, y, z, DrawDistance, virtualworld, testLOS);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("Create3DTextLabel");
-  }
+  native = sampgdk_native_find_flexible("Create3DTextLabel", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   params[0] = 8 * sizeof(cell);
   params[1] = text_;
@@ -8967,9 +9615,7 @@ SAMPGDK_NATIVE(bool, Delete3DTextLabel(int id)) {
   cell retval;
   cell params[2];
   sampgdk_log_debug("Delete3DTextLabel(%d)", id);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("Delete3DTextLabel");
-  }
+  native = sampgdk_native_find_flexible("Delete3DTextLabel", native);
   params[0] = 1 * sizeof(cell);
   params[1] = (cell)id;
   retval = native(sampgdk_fakeamx_amx(), params);
@@ -8981,9 +9627,7 @@ SAMPGDK_NATIVE(bool, Attach3DTextLabelToPlayer(int id, int playerid, float Offse
   cell retval;
   cell params[6];
   sampgdk_log_debug("Attach3DTextLabelToPlayer(%d, %d, %f, %f, %f)", id, playerid, OffsetX, OffsetY, OffsetZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("Attach3DTextLabelToPlayer");
-  }
+  native = sampgdk_native_find_flexible("Attach3DTextLabelToPlayer", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)id;
   params[2] = (cell)playerid;
@@ -8999,9 +9643,7 @@ SAMPGDK_NATIVE(bool, Attach3DTextLabelToVehicle(int id, int vehicleid, float Off
   cell retval;
   cell params[6];
   sampgdk_log_debug("Attach3DTextLabelToVehicle(%d, %d, %f, %f, %f)", id, vehicleid, OffsetX, OffsetY, OffsetZ);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("Attach3DTextLabelToVehicle");
-  }
+  native = sampgdk_native_find_flexible("Attach3DTextLabelToVehicle", native);
   params[0] = 5 * sizeof(cell);
   params[1] = (cell)id;
   params[2] = (cell)vehicleid;
@@ -9018,9 +9660,7 @@ SAMPGDK_NATIVE(bool, Update3DTextLabelText(int id, int color, const char * text)
   cell params[4];
   cell text_;
   sampgdk_log_debug("Update3DTextLabelText(%d, %d, \"%s\")", id, color, text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("Update3DTextLabelText");
-  }
+  native = sampgdk_native_find_flexible("Update3DTextLabelText", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)id;
@@ -9037,9 +9677,7 @@ SAMPGDK_NATIVE(int, CreatePlayer3DTextLabel(int playerid, const char * text, int
   cell params[11];
   cell text_;
   sampgdk_log_debug("CreatePlayer3DTextLabel(%d, \"%s\", %d, %f, %f, %f, %f, %d, %d, %d)", playerid, text, color, x, y, z, DrawDistance, attachedplayer, attachedvehicle, testLOS);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("CreatePlayer3DTextLabel");
-  }
+  native = sampgdk_native_find_flexible("CreatePlayer3DTextLabel", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   params[0] = 10 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -9062,9 +9700,7 @@ SAMPGDK_NATIVE(bool, DeletePlayer3DTextLabel(int playerid, int id)) {
   cell retval;
   cell params[3];
   sampgdk_log_debug("DeletePlayer3DTextLabel(%d, %d)", playerid, id);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("DeletePlayer3DTextLabel");
-  }
+  native = sampgdk_native_find_flexible("DeletePlayer3DTextLabel", native);
   params[0] = 2 * sizeof(cell);
   params[1] = (cell)playerid;
   params[2] = (cell)id;
@@ -9078,9 +9714,7 @@ SAMPGDK_NATIVE(bool, UpdatePlayer3DTextLabelText(int playerid, int id, int color
   cell params[5];
   cell text_;
   sampgdk_log_debug("UpdatePlayer3DTextLabelText(%d, %d, %d, \"%s\")", playerid, id, color, text);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("UpdatePlayer3DTextLabelText");
-  }
+  native = sampgdk_native_find_flexible("UpdatePlayer3DTextLabelText", native);
   sampgdk_fakeamx_push_string(text, NULL, &text_);
   params[0] = 4 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -9101,9 +9735,7 @@ SAMPGDK_NATIVE(bool, ShowPlayerDialog(int playerid, int dialogid, int style, con
   cell button1_;
   cell button2_;
   sampgdk_log_debug("ShowPlayerDialog(%d, %d, %d, \"%s\", \"%s\", \"%s\", \"%s\")", playerid, dialogid, style, caption, info, button1, button2);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("ShowPlayerDialog");
-  }
+  native = sampgdk_native_find_flexible("ShowPlayerDialog", native);
   sampgdk_fakeamx_push_string(caption, NULL, &caption_);
   sampgdk_fakeamx_push_string(info, NULL, &info_);
   sampgdk_fakeamx_push_string(button1, NULL, &button1_);
@@ -9130,9 +9762,7 @@ SAMPGDK_NATIVE(bool, gpci(int playerid, char * buffer, int size)) {
   cell params[4];
   cell buffer_;
   sampgdk_log_debug("gpci(%d, \"%s\", %d)", playerid, buffer, size);
-  if (unlikely(native == NULL)) {
-    native = sampgdk_native_find_warn_stub("gpci");
-  }
+  native = sampgdk_native_find_flexible("gpci", native);
   sampgdk_fakeamx_push(size, &buffer_);
   params[0] = 3 * sizeof(cell);
   params[1] = (cell)playerid;
@@ -9168,7 +9798,7 @@ static bool _OnPlayerConnect(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != false);
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerDisconnect_callback)(int playerid, int reason);
@@ -9183,7 +9813,7 @@ static bool _OnPlayerDisconnect(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != false);
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerSpawn_callback)(int playerid);
@@ -9196,11 +9826,12 @@ static bool _OnPlayerSpawn(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != false);
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerDeath_callback)(int playerid, int killerid, int reason);
 static bool _OnPlayerDeath(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int playerid;
   int killerid;
   int reason;
@@ -9208,17 +9839,24 @@ static bool _OnPlayerDeath(AMX *amx, void *callback, cell *retval) {
   sampgdk_param_get_cell(amx, 1, (void *)&killerid);
   sampgdk_param_get_cell(amx, 2, (void *)&reason);
   sampgdk_log_debug("OnPlayerDeath(%d, %d, %d)", playerid, killerid, reason);
-  ((OnPlayerDeath_callback)callback)(playerid, killerid, reason);
-  return true;
+  retval_ = ((OnPlayerDeath_callback)callback)(playerid, killerid, reason);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnVehicleSpawn_callback)(int vehicleid);
 static bool _OnVehicleSpawn(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int vehicleid;
   sampgdk_param_get_cell(amx, 0, (void *)&vehicleid);
   sampgdk_log_debug("OnVehicleSpawn(%d)", vehicleid);
-  ((OnVehicleSpawn_callback)callback)(vehicleid);
-  return true;
+  retval_ = ((OnVehicleSpawn_callback)callback)(vehicleid);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnVehicleDeath_callback)(int vehicleid, int killerid);
@@ -9245,7 +9883,7 @@ static bool _OnPlayerText(AMX *amx, void *callback, cell *retval) {
     *retval = (cell)retval_;
   }
   free((void *)text);
-  return (retval_ != false);
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerCommandText_callback)(int playerid, const char * cmdtext);
@@ -9261,22 +9899,18 @@ static bool _OnPlayerCommandText(AMX *amx, void *callback, cell *retval) {
     *retval = (cell)retval_;
   }
   free((void *)cmdtext);
-  return (retval_ != true);
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerRequestClass_callback)(int playerid, int classid);
 static bool _OnPlayerRequestClass(AMX *amx, void *callback, cell *retval) {
-  bool retval_;
   int playerid;
   int classid;
   sampgdk_param_get_cell(amx, 0, (void *)&playerid);
   sampgdk_param_get_cell(amx, 1, (void *)&classid);
   sampgdk_log_debug("OnPlayerRequestClass(%d, %d)", playerid, classid);
-  retval_ = ((OnPlayerRequestClass_callback)callback)(playerid, classid);
-  if (retval != NULL) {
-    *retval = (cell)retval_;
-  }
-  return (retval_ != false);
+  ((OnPlayerRequestClass_callback)callback)(playerid, classid);
+  return true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerEnterVehicle_callback)(int playerid, int vehicleid, bool ispassenger);
@@ -9318,15 +9952,11 @@ static bool _OnPlayerStateChange(AMX *amx, void *callback, cell *retval) {
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerEnterCheckpoint_callback)(int playerid);
 static bool _OnPlayerEnterCheckpoint(AMX *amx, void *callback, cell *retval) {
-  bool retval_;
   int playerid;
   sampgdk_param_get_cell(amx, 0, (void *)&playerid);
   sampgdk_log_debug("OnPlayerEnterCheckpoint(%d)", playerid);
-  retval_ = ((OnPlayerEnterCheckpoint_callback)callback)(playerid);
-  if (retval != NULL) {
-    *retval = (cell)retval_;
-  }
-  return (retval_ != false);
+  ((OnPlayerEnterCheckpoint_callback)callback)(playerid);
+  return true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerLeaveCheckpoint_callback)(int playerid);
@@ -9340,15 +9970,11 @@ static bool _OnPlayerLeaveCheckpoint(AMX *amx, void *callback, cell *retval) {
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerEnterRaceCheckpoint_callback)(int playerid);
 static bool _OnPlayerEnterRaceCheckpoint(AMX *amx, void *callback, cell *retval) {
-  bool retval_;
   int playerid;
   sampgdk_param_get_cell(amx, 0, (void *)&playerid);
   sampgdk_log_debug("OnPlayerEnterRaceCheckpoint(%d)", playerid);
-  retval_ = ((OnPlayerEnterRaceCheckpoint_callback)callback)(playerid);
-  if (retval != NULL) {
-    *retval = (cell)retval_;
-  }
-  return (retval_ != false);
+  ((OnPlayerEnterRaceCheckpoint_callback)callback)(playerid);
+  return true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerLeaveRaceCheckpoint_callback)(int playerid);
@@ -9371,7 +9997,7 @@ static bool _OnRconCommand(AMX *amx, void *callback, cell *retval) {
     *retval = (cell)retval_;
   }
   free((void *)cmd);
-  return (retval_ != true);
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerRequestSpawn_callback)(int playerid);
@@ -9384,7 +10010,7 @@ static bool _OnPlayerRequestSpawn(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != false);
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnObjectMoved_callback)(int objectid);
@@ -9432,7 +10058,7 @@ static bool _OnVehicleMod(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != false);
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnEnterExitModShop_callback)(int playerid, int enterexit, int interiorid);
@@ -9450,6 +10076,7 @@ static bool _OnEnterExitModShop(AMX *amx, void *callback, cell *retval) {
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnVehiclePaintjob_callback)(int playerid, int vehicleid, int paintjobid);
 static bool _OnVehiclePaintjob(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int playerid;
   int vehicleid;
   int paintjobid;
@@ -9457,8 +10084,11 @@ static bool _OnVehiclePaintjob(AMX *amx, void *callback, cell *retval) {
   sampgdk_param_get_cell(amx, 1, (void *)&vehicleid);
   sampgdk_param_get_cell(amx, 2, (void *)&paintjobid);
   sampgdk_log_debug("OnVehiclePaintjob(%d, %d, %d)", playerid, vehicleid, paintjobid);
-  ((OnVehiclePaintjob_callback)callback)(playerid, vehicleid, paintjobid);
-  return true;
+  retval_ = ((OnVehiclePaintjob_callback)callback)(playerid, vehicleid, paintjobid);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnVehicleRespray_callback)(int playerid, int vehicleid, int color1, int color2);
@@ -9478,13 +10108,17 @@ static bool _OnVehicleRespray(AMX *amx, void *callback, cell *retval) {
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnVehicleDamageStatusUpdate_callback)(int vehicleid, int playerid);
 static bool _OnVehicleDamageStatusUpdate(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int vehicleid;
   int playerid;
   sampgdk_param_get_cell(amx, 0, (void *)&vehicleid);
   sampgdk_param_get_cell(amx, 1, (void *)&playerid);
   sampgdk_log_debug("OnVehicleDamageStatusUpdate(%d, %d)", vehicleid, playerid);
-  ((OnVehicleDamageStatusUpdate_callback)callback)(vehicleid, playerid);
-  return true;
+  retval_ = ((OnVehicleDamageStatusUpdate_callback)callback)(vehicleid, playerid);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnUnoccupiedVehicleUpdate_callback)(int vehicleid, int playerid, int passenger_seat, float new_x, float new_y, float new_z, float vel_x, float vel_y, float vel_z);
@@ -9513,7 +10147,7 @@ static bool _OnUnoccupiedVehicleUpdate(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != false);
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerSelectedMenuRow_callback)(int playerid, int row);
@@ -9551,7 +10185,6 @@ static bool _OnPlayerInteriorChange(AMX *amx, void *callback, cell *retval) {
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerKeyStateChange_callback)(int playerid, int newkeys, int oldkeys);
 static bool _OnPlayerKeyStateChange(AMX *amx, void *callback, cell *retval) {
-  bool retval_;
   int playerid;
   int newkeys;
   int oldkeys;
@@ -9559,11 +10192,8 @@ static bool _OnPlayerKeyStateChange(AMX *amx, void *callback, cell *retval) {
   sampgdk_param_get_cell(amx, 1, (void *)&newkeys);
   sampgdk_param_get_cell(amx, 2, (void *)&oldkeys);
   sampgdk_log_debug("OnPlayerKeyStateChange(%d, %d, %d)", playerid, newkeys, oldkeys);
-  retval_ = ((OnPlayerKeyStateChange_callback)callback)(playerid, newkeys, oldkeys);
-  if (retval != NULL) {
-    *retval = (cell)retval_;
-  }
-  return (retval_ != false);
+  ((OnPlayerKeyStateChange_callback)callback)(playerid, newkeys, oldkeys);
+  return true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnRconLoginAttempt_callback)(const char * ip, const char * password, bool success);
@@ -9591,7 +10221,7 @@ static bool _OnPlayerUpdate(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != false);
+  return !!retval_ != false;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerStreamIn_callback)(int playerid, int forplayerid);
@@ -9638,6 +10268,28 @@ static bool _OnVehicleStreamOut(AMX *amx, void *callback, cell *retval) {
   return true;
 }
 
+typedef bool (SAMPGDK_CALLBACK_CALL *OnActorStreamIn_callback)(int actorid, int forplayerid);
+static bool _OnActorStreamIn(AMX *amx, void *callback, cell *retval) {
+  int actorid;
+  int forplayerid;
+  sampgdk_param_get_cell(amx, 0, (void *)&actorid);
+  sampgdk_param_get_cell(amx, 1, (void *)&forplayerid);
+  sampgdk_log_debug("OnActorStreamIn(%d, %d)", actorid, forplayerid);
+  ((OnActorStreamIn_callback)callback)(actorid, forplayerid);
+  return true;
+}
+
+typedef bool (SAMPGDK_CALLBACK_CALL *OnActorStreamOut_callback)(int actorid, int forplayerid);
+static bool _OnActorStreamOut(AMX *amx, void *callback, cell *retval) {
+  int actorid;
+  int forplayerid;
+  sampgdk_param_get_cell(amx, 0, (void *)&actorid);
+  sampgdk_param_get_cell(amx, 1, (void *)&forplayerid);
+  sampgdk_log_debug("OnActorStreamOut(%d, %d)", actorid, forplayerid);
+  ((OnActorStreamOut_callback)callback)(actorid, forplayerid);
+  return true;
+}
+
 typedef bool (SAMPGDK_CALLBACK_CALL *OnDialogResponse_callback)(int playerid, int dialogid, int response, int listitem, const char * inputtext);
 static bool _OnDialogResponse(AMX *amx, void *callback, cell *retval) {
   bool retval_;
@@ -9657,7 +10309,7 @@ static bool _OnDialogResponse(AMX *amx, void *callback, cell *retval) {
     *retval = (cell)retval_;
   }
   free((void *)inputtext);
-  return (retval_ != true);
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerTakeDamage_callback)(int playerid, int issuerid, float amount, int weaponid, int bodypart);
@@ -9678,11 +10330,12 @@ static bool _OnPlayerTakeDamage(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != false);
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerGiveDamage_callback)(int playerid, int damagedid, float amount, int weaponid, int bodypart);
 static bool _OnPlayerGiveDamage(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int playerid;
   int damagedid;
   float amount;
@@ -9694,12 +10347,37 @@ static bool _OnPlayerGiveDamage(AMX *amx, void *callback, cell *retval) {
   sampgdk_param_get_cell(amx, 3, (void *)&weaponid);
   sampgdk_param_get_cell(amx, 4, (void *)&bodypart);
   sampgdk_log_debug("OnPlayerGiveDamage(%d, %d, %f, %d, %d)", playerid, damagedid, amount, weaponid, bodypart);
-  ((OnPlayerGiveDamage_callback)callback)(playerid, damagedid, amount, weaponid, bodypart);
-  return true;
+  retval_ = ((OnPlayerGiveDamage_callback)callback)(playerid, damagedid, amount, weaponid, bodypart);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != true;
+}
+
+typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerGiveDamageActor_callback)(int playerid, int damaged_actorid, float amount, int weaponid, int bodypart);
+static bool _OnPlayerGiveDamageActor(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
+  int playerid;
+  int damaged_actorid;
+  float amount;
+  int weaponid;
+  int bodypart;
+  sampgdk_param_get_cell(amx, 0, (void *)&playerid);
+  sampgdk_param_get_cell(amx, 1, (void *)&damaged_actorid);
+  sampgdk_param_get_float(amx, 2, (void *)&amount);
+  sampgdk_param_get_cell(amx, 3, (void *)&weaponid);
+  sampgdk_param_get_cell(amx, 4, (void *)&bodypart);
+  sampgdk_log_debug("OnPlayerGiveDamageActor(%d, %d, %f, %d, %d)", playerid, damaged_actorid, amount, weaponid, bodypart);
+  retval_ = ((OnPlayerGiveDamageActor_callback)callback)(playerid, damaged_actorid, amount, weaponid, bodypart);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerClickMap_callback)(int playerid, float fX, float fY, float fZ);
 static bool _OnPlayerClickMap(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int playerid;
   float fX;
   float fY;
@@ -9709,8 +10387,11 @@ static bool _OnPlayerClickMap(AMX *amx, void *callback, cell *retval) {
   sampgdk_param_get_float(amx, 2, (void *)&fY);
   sampgdk_param_get_float(amx, 3, (void *)&fZ);
   sampgdk_log_debug("OnPlayerClickMap(%d, %f, %f, %f)", playerid, fX, fY, fZ);
-  ((OnPlayerClickMap_callback)callback)(playerid, fX, fY, fZ);
-  return true;
+  retval_ = ((OnPlayerClickMap_callback)callback)(playerid, fX, fY, fZ);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerClickTextDraw_callback)(int playerid, int clickedid);
@@ -9725,7 +10406,7 @@ static bool _OnPlayerClickTextDraw(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != true);
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerClickPlayerTextDraw_callback)(int playerid, int playertextid);
@@ -9740,11 +10421,12 @@ static bool _OnPlayerClickPlayerTextDraw(AMX *amx, void *callback, cell *retval)
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != true);
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnIncomingConnection_callback)(int playerid, const char * ip_address, int port);
 static bool _OnIncomingConnection(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int playerid;
   const char * ip_address;
   int port;
@@ -9752,9 +10434,12 @@ static bool _OnIncomingConnection(AMX *amx, void *callback, cell *retval) {
   sampgdk_param_get_string(amx, 1, (void *)&ip_address);
   sampgdk_param_get_cell(amx, 2, (void *)&port);
   sampgdk_log_debug("OnIncomingConnection(%d, \"%s\", %d)", playerid, ip_address, port);
-  ((OnIncomingConnection_callback)callback)(playerid, ip_address, port);
+  retval_ = ((OnIncomingConnection_callback)callback)(playerid, ip_address, port);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
   free((void *)ip_address);
-  return true;
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnTrailerUpdate_callback)(int playerid, int vehicleid);
@@ -9769,11 +10454,25 @@ static bool _OnTrailerUpdate(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != false);
+  return !!retval_ != false;
+}
+
+typedef bool (SAMPGDK_CALLBACK_CALL *OnVehicleSirenStateChange_callback)(int playerid, int vehicleid, int newstate);
+static bool _OnVehicleSirenStateChange(AMX *amx, void *callback, cell *retval) {
+  int playerid;
+  int vehicleid;
+  int newstate;
+  sampgdk_param_get_cell(amx, 0, (void *)&playerid);
+  sampgdk_param_get_cell(amx, 1, (void *)&vehicleid);
+  sampgdk_param_get_cell(amx, 2, (void *)&newstate);
+  sampgdk_log_debug("OnVehicleSirenStateChange(%d, %d, %d)", playerid, vehicleid, newstate);
+  ((OnVehicleSirenStateChange_callback)callback)(playerid, vehicleid, newstate);
+  return true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerClickPlayer_callback)(int playerid, int clickedplayerid, int source);
 static bool _OnPlayerClickPlayer(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int playerid;
   int clickedplayerid;
   int source;
@@ -9781,12 +10480,16 @@ static bool _OnPlayerClickPlayer(AMX *amx, void *callback, cell *retval) {
   sampgdk_param_get_cell(amx, 1, (void *)&clickedplayerid);
   sampgdk_param_get_cell(amx, 2, (void *)&source);
   sampgdk_log_debug("OnPlayerClickPlayer(%d, %d, %d)", playerid, clickedplayerid, source);
-  ((OnPlayerClickPlayer_callback)callback)(playerid, clickedplayerid, source);
-  return true;
+  retval_ = ((OnPlayerClickPlayer_callback)callback)(playerid, clickedplayerid, source);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerEditObject_callback)(int playerid, bool playerobject, int objectid, int response, float fX, float fY, float fZ, float fRotX, float fRotY, float fRotZ);
 static bool _OnPlayerEditObject(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int playerid;
   bool playerobject;
   int objectid;
@@ -9808,12 +10511,16 @@ static bool _OnPlayerEditObject(AMX *amx, void *callback, cell *retval) {
   sampgdk_param_get_float(amx, 8, (void *)&fRotY);
   sampgdk_param_get_float(amx, 9, (void *)&fRotZ);
   sampgdk_log_debug("OnPlayerEditObject(%d, %d, %d, %d, %f, %f, %f, %f, %f, %f)", playerid, playerobject, objectid, response, fX, fY, fZ, fRotX, fRotY, fRotZ);
-  ((OnPlayerEditObject_callback)callback)(playerid, playerobject, objectid, response, fX, fY, fZ, fRotX, fRotY, fRotZ);
-  return true;
+  retval_ = ((OnPlayerEditObject_callback)callback)(playerid, playerobject, objectid, response, fX, fY, fZ, fRotX, fRotY, fRotZ);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerEditAttachedObject_callback)(int playerid, int response, int index, int modelid, int boneid, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float fRotZ, float fScaleX, float fScaleY, float fScaleZ);
 static bool _OnPlayerEditAttachedObject(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int playerid;
   int response;
   int index;
@@ -9843,12 +10550,16 @@ static bool _OnPlayerEditAttachedObject(AMX *amx, void *callback, cell *retval) 
   sampgdk_param_get_float(amx, 12, (void *)&fScaleY);
   sampgdk_param_get_float(amx, 13, (void *)&fScaleZ);
   sampgdk_log_debug("OnPlayerEditAttachedObject(%d, %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f)", playerid, response, index, modelid, boneid, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ, fScaleX, fScaleY, fScaleZ);
-  ((OnPlayerEditAttachedObject_callback)callback)(playerid, response, index, modelid, boneid, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ, fScaleX, fScaleY, fScaleZ);
-  return true;
+  retval_ = ((OnPlayerEditAttachedObject_callback)callback)(playerid, response, index, modelid, boneid, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ, fScaleX, fScaleY, fScaleZ);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerSelectObject_callback)(int playerid, int type, int objectid, int modelid, float fX, float fY, float fZ);
 static bool _OnPlayerSelectObject(AMX *amx, void *callback, cell *retval) {
+  bool retval_;
   int playerid;
   int type;
   int objectid;
@@ -9864,8 +10575,11 @@ static bool _OnPlayerSelectObject(AMX *amx, void *callback, cell *retval) {
   sampgdk_param_get_float(amx, 5, (void *)&fY);
   sampgdk_param_get_float(amx, 6, (void *)&fZ);
   sampgdk_log_debug("OnPlayerSelectObject(%d, %d, %d, %d, %f, %f, %f)", playerid, type, objectid, modelid, fX, fY, fZ);
-  ((OnPlayerSelectObject_callback)callback)(playerid, type, objectid, modelid, fX, fY, fZ);
-  return true;
+  retval_ = ((OnPlayerSelectObject_callback)callback)(playerid, type, objectid, modelid, fX, fY, fZ);
+  if (retval != NULL) {
+    *retval = (cell)retval_;
+  }
+  return !!retval_ != true;
 }
 
 typedef bool (SAMPGDK_CALLBACK_CALL *OnPlayerWeaponShot_callback)(int playerid, int weaponid, int hittype, int hitid, float fX, float fY, float fZ);
@@ -9890,7 +10604,7 @@ static bool _OnPlayerWeaponShot(AMX *amx, void *callback, cell *retval) {
   if (retval != NULL) {
     *retval = (cell)retval_;
   }
-  return (retval_ != false);
+  return !!retval_ != false;
 }
 
 SAMPGDK_MODULE_INIT(a_samp) {
@@ -9902,6 +10616,9 @@ SAMPGDK_MODULE_INIT(a_samp) {
     return error;
   }
   if ((error = sampgdk_callback_register("OnVehicleSpawn", _OnVehicleSpawn)) < 0) {
+    return error;
+  }
+  if ((error = sampgdk_callback_register("OnVehicleSirenStateChange", _OnVehicleSirenStateChange)) < 0) {
     return error;
   }
   if ((error = sampgdk_callback_register("OnVehicleRespray", _OnVehicleRespray)) < 0) {
@@ -9985,6 +10702,9 @@ SAMPGDK_MODULE_INIT(a_samp) {
   if ((error = sampgdk_callback_register("OnPlayerInteriorChange", _OnPlayerInteriorChange)) < 0) {
     return error;
   }
+  if ((error = sampgdk_callback_register("OnPlayerGiveDamageActor", _OnPlayerGiveDamageActor)) < 0) {
+    return error;
+  }
   if ((error = sampgdk_callback_register("OnPlayerGiveDamage", _OnPlayerGiveDamage)) < 0) {
     return error;
   }
@@ -10051,6 +10771,12 @@ SAMPGDK_MODULE_INIT(a_samp) {
   if ((error = sampgdk_callback_register("OnDialogResponse", _OnDialogResponse)) < 0) {
     return error;
   }
+  if ((error = sampgdk_callback_register("OnActorStreamOut", _OnActorStreamOut)) < 0) {
+    return error;
+  }
+  if ((error = sampgdk_callback_register("OnActorStreamIn", _OnActorStreamIn)) < 0) {
+    return error;
+  }
   return 0;
 }
 
@@ -10058,6 +10784,7 @@ SAMPGDK_MODULE_CLEANUP(a_samp) {
   sampgdk_callback_unregister("OnVehicleStreamOut");
   sampgdk_callback_unregister("OnVehicleStreamIn");
   sampgdk_callback_unregister("OnVehicleSpawn");
+  sampgdk_callback_unregister("OnVehicleSirenStateChange");
   sampgdk_callback_unregister("OnVehicleRespray");
   sampgdk_callback_unregister("OnVehiclePaintjob");
   sampgdk_callback_unregister("OnVehicleMod");
@@ -10085,6 +10812,7 @@ SAMPGDK_MODULE_CLEANUP(a_samp) {
   sampgdk_callback_unregister("OnPlayerLeaveCheckpoint");
   sampgdk_callback_unregister("OnPlayerKeyStateChange");
   sampgdk_callback_unregister("OnPlayerInteriorChange");
+  sampgdk_callback_unregister("OnPlayerGiveDamageActor");
   sampgdk_callback_unregister("OnPlayerGiveDamage");
   sampgdk_callback_unregister("OnPlayerExitedMenu");
   sampgdk_callback_unregister("OnPlayerExitVehicle");
@@ -10107,6 +10835,8 @@ SAMPGDK_MODULE_CLEANUP(a_samp) {
   sampgdk_callback_unregister("OnGameModeExit");
   sampgdk_callback_unregister("OnEnterExitModShop");
   sampgdk_callback_unregister("OnDialogResponse");
+  sampgdk_callback_unregister("OnActorStreamOut");
+  sampgdk_callback_unregister("OnActorStreamIn");
 }
 
 
