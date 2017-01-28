@@ -4,7 +4,7 @@
 #include "../Shared/Network/BitStream.h"
 
 // Time needed to ask players to verify their AC clients again
-#define VERIFY_CLIENTS_INTERVAL 10000
+#define VERIFY_CLIENTS_INTERVAL 180000
 
 #define MAX_UNVERIFIED_CLIENT_WARNINGS	1
 
