@@ -107,6 +107,7 @@
     <ClCompile Include="BanHandler.cpp" />
     <ClCompile Include="subhook\subhook.c" />
     <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="VerifiedPacketChecker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h" />
@@ -135,6 +136,7 @@
     <ClInclude Include="subhook\subhook.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Utility.h" />
+    <ClInclude Include="VerifiedPacketChecker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="plugin.def" />

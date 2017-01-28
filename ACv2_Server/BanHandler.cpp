@@ -41,11 +41,16 @@ namespace BanHandler
 		int server_port;
 		server_port = GetServerVarAsInt("port");
 
+		Utility::Printf("DEBUG: Create thread 'addCheaterThread' start");
+		int benchStart = sampgdk_GetTickCount();
 		boost::thread addCheaterThread(&BanHandler::Thread_AddCheater, playerid, reason, hwid, std::string(name), std::string(ip), std::string(server_name), server_port);
+		Utility::Printf("DEBUG: Create thread 'addCheaterThread' finish: %d", sampgdk_GetTickCount() - benchStart);
 	}
 
 	void Thread_AddCheater(unsigned int playerid, std::string reason, std::string hwid, std::string name, std::string ip, std::string server_name, int server_port)
 	{
+		Utility::Printf("DEBUG: Thread_AddCheater start");
+		int benchStart = sampgdk_GetTickCount();
 		// Completely prepared now. Let's send data to the web server (which takes it to database)!
 		CURL *curl;
 
@@ -122,6 +127,7 @@ namespace BanHandler
 		{
 			Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
 		}
+		Utility::Printf("DEBUG: Thread_AddCheater end: %d", sampgdk_GetTickCount() - benchStart);
 	}
 
 	void CheckCheater(unsigned int playerid)
@@ -142,11 +148,16 @@ namespace BanHandler
 		std::string hwid = "";
 		hwid = ac->GetPlayerHardwareID();
 
+		Utility::Printf("DEBUG: Create thread 'checkCheaterThread' start");
+		int benchStart = sampgdk_GetTickCount();
 		boost::thread checkCheaterThread(&BanHandler::CheckCheater_Thread, playerid, hwid, std::string(ip));
+		Utility::Printf("DEBUG: Create thread 'checkCheaterThread' finish: %d", sampgdk_GetTickCount() - benchStart);
 	}
 
 	void CheckCheater_Thread(unsigned int playerid, std::string hwid, std::string ip)
 	{
+		Utility::Printf("DEBUG: CheckCheater_Thread start");
+		int benchStart = sampgdk_GetTickCount();
 		// Create this variable which holds info whether this player is a cheater or not.
 		bool ischeater = false;
 
@@ -211,11 +222,15 @@ namespace BanHandler
 		{
 			Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
 		}
+		Utility::Printf("DEBUG: CheckCheater_Thread end: %d", sampgdk_GetTickCount() - benchStart);
 
+		Utility::Printf("DEBUG: Create OnCheaterCheckResponse start");
+		benchStart = sampgdk_GetTickCount();
 		// Return whether this is a cheater or not
 		CThreadSync::OnCheaterCheckResponse__parameters *param = new CThreadSync::OnCheaterCheckResponse__parameters;
 		param->playerid = playerid;
 		param->ischeater = ischeater;
 		pMainThreadSync->AddCallbackToQueue(&CThreadSync::OnCheaterCheckResponse, param);
+		Utility::Printf("DEBUG: Create OnCheaterCheckResponse finish: %d", sampgdk_GetTickCount() - benchStart);
 	}
 }

@@ -96,6 +96,9 @@
     <ClCompile Include="CThreadSync.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VerifiedPacketChecker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SDK\samp-sdk\plugincommon.h">
@@ -174,6 +177,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CThreadSync.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VerifiedPacketChecker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
