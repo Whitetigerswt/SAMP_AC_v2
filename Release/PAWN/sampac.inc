@@ -309,7 +309,7 @@ forward AC_OnScreenshotTaken(playerid);
 // len				- The length of the hardware ID.
 //
 // Returns: irrelevant
-forward AC_OnHardwareIDCalculated(playerid, hwid[], len = sizeof(hwid));
+forward AC_OnHardwareIDCalculated(playerid, hwid[], len);
 
 // PURPOSE: Callback for when a player's ban status is retrieved.
 // REQUIRES: The player is using AC.
