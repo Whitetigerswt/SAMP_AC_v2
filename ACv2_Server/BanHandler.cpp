@@ -89,7 +89,7 @@ namespace BanHandler
 			{
 				// Format POST data
 				char str[400];
-				snprintf(str, sizeof str, "Cheater=%s&CheaterIP=%s&Hardware=%s&Reason=%s(%s)&ServerName=%s&Port=%d",
+				snprintf(str, sizeof str, "Cheater=%s&CheaterIP=%s&Hardware=%s&Reason=%s&MD5=%s&ServerName=%s&Port=%d",
 					escaped_name, ip.c_str(), hwid.c_str(), escaped_ban_reason, md5.c_str(), escaped_server_name, server_port);
 
 				// Set POST data
