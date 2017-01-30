@@ -11,14 +11,14 @@
 namespace BanHandler
 {
 
-	void AddCheater(unsigned int playerid, std::string reason)
+	void AddCheater(unsigned int playerid, std::string reason, std::string md5)
 	{
 		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
 		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
 		if (ac == NULL)
 		{
 			// error?
-			Utility::Printf("failed to add player %d to ban list due to CAntiCheat class error.", playerid);
+			//Utility::Printf("failed to add player %d to ban list due to CAntiCheat class error.", playerid);
 			return;
 		}
 
@@ -41,10 +41,10 @@ namespace BanHandler
 		int server_port;
 		server_port = GetServerVarAsInt("port");
 
-		boost::thread addCheaterThread(&BanHandler::Thread_AddCheater, playerid, reason, hwid, std::string(name), std::string(ip), std::string(server_name), server_port);
+		boost::thread addCheaterThread(&BanHandler::Thread_AddCheater, playerid, reason, md5, hwid, std::string(name), std::string(ip), std::string(server_name), server_port);
 	}
 
-	void Thread_AddCheater(unsigned int playerid, std::string reason, std::string hwid, std::string name, std::string ip, std::string server_name, int server_port)
+	void Thread_AddCheater(unsigned int playerid, std::string reason, std::string md5, std::string hwid, std::string name, std::string ip, std::string server_name, int server_port)
 	{
 		// Completely prepared now. Let's send data to the web server (which takes it to database)!
 		CURL *curl;
@@ -89,8 +89,8 @@ namespace BanHandler
 			{
 				// Format POST data
 				char str[400];
-				snprintf(str, sizeof str, "Cheater=%s&CheaterIP=%s&Hardware=%s&Reason=%s&ServerName=%s&Port=%d",
-					escaped_name, ip.c_str(), hwid.c_str(), escaped_ban_reason, escaped_server_name, server_port);
+				snprintf(str, sizeof str, "Cheater=%s&CheaterIP=%s&Hardware=%s&Reason=%s(%s)&ServerName=%s&Port=%d",
+					escaped_name, ip.c_str(), hwid.c_str(), escaped_ban_reason, md5.c_str(), escaped_server_name, server_port);
 
 				// Set POST data
 				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str);
@@ -103,12 +103,12 @@ namespace BanHandler
 				// Handle possible errors
 				if (res != CURLE_OK)
 				{
-					Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
+					//Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
 				}
 			}
 			else
 			{
-				Utility::Printf("curl_easy_escape() failed while trying to add player %d to ban list.", playerid);
+				//Utility::Printf("curl_easy_escape() failed while trying to add player %d to ban list.", playerid);
 			}
 
 
@@ -120,7 +120,7 @@ namespace BanHandler
 		}
 		else
 		{
-			Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
+			//Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
 		}
 	}
 
@@ -131,7 +131,8 @@ namespace BanHandler
 		if (ac == NULL)
 		{
 			// error?
-			Utility::Printf("failed while checking if player %d is in ban list due to CAntiCheat class error.", playerid);
+			//Utility::Printf("failed while checking if player %d is in ban list due to CAntiCheat class error.", playerid);
+			return;
 		}
 
 		// Get the player's IP
@@ -180,7 +181,7 @@ namespace BanHandler
 			// Handle possible errors
 			if (res != CURLE_OK)
 			{
-				Utility::Printf("curl_easy_perform() failed: %s while checking if player %d is in ban list.", curl_easy_strerror(res), playerid);
+				//Utility::Printf("curl_easy_perform() failed: %s while checking if player %d is in ban list.", curl_easy_strerror(res), playerid);
 			}
 			else // success
 			{
@@ -209,7 +210,7 @@ namespace BanHandler
 		}
 		else
 		{
-			Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
+			//Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
 		}
 
 		// Return whether this is a cheater or not
