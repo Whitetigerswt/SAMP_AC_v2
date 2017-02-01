@@ -1,5 +1,5 @@
 #include "CDirectoryScanner.h"
-#include <boost/network/protocol/http/client.hpp>
+#include <boost\algorithm\string.hpp>
 #include "IMG.h"
 #include <md5.h>
 #include "../Shared/Network/BitStream.h"
@@ -10,7 +10,7 @@
 #include "Addresses.h"
 #include "Network\CRakClientHandler.h"
 
-#include <Boost\filesystem.hpp>
+#include <boost\filesystem.hpp>
 
 CDirectoryScanner::CDirectoryScanner()
 {

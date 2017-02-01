@@ -1,5 +1,4 @@
 #include "Cmd5Info.h"
-#include <boost/network/protocol/http/client.hpp>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -9,12 +8,11 @@
 #include <ostream>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/stream.hpp>
+#include <boost/algorithm/string.hpp>
 
 #ifndef WIN32
 #define MAX_PATH 260
 #endif
-
-using namespace boost::network;
 
 std::map<std::string, std::string> Cmd5Info::GetIMGMD5s()
 {

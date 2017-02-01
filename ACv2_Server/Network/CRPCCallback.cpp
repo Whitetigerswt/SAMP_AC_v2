@@ -56,15 +56,10 @@ RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra
 RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
 {
 	// Calculate verified packet
-	int benchStart = sampgdk_GetTickCount();
-	Utility::Printf("DEBUG: OnClientVerified callback start");
-
 	if (VerifiedPacketChecker::IsVerified(iExtra, bsData))
 	{
-		VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, benchStart);
+		VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, sampgdk_GetTickCount());
 	}
-
-	Utility::Printf("DEBUG: OnClientVerified callback end: %d", sampgdk_GetTickCount() - benchStart);
 }
 
 RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
@@ -247,11 +242,9 @@ void SAMPGDK_CALL KickUnverifiedClient(int timerid, void *params)
 
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
-	Utility::Printf("DEBUG: CRPCCallback > OnIntialInfoGotten start");
-	int benchStart = sampgdk_GetTickCount();
 	CAntiCheatHandler::Init(iExtra);
 
-	VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, benchStart);
+	VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, sampgdk_GetTickCount());
 
 	// Create a big variable to hold hardware ID.
 	float version;
@@ -282,7 +275,6 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 			ac->CheckVersionCompatible(version);
 		}
 	}
-	Utility::Printf("DEBUG: CRPCCallback > OnIntialInfoGotten end: %d", sampgdk_GetTickCount() - benchStart);
 }
 
 RPC_CALLBACK CRPCCallback::OnTamperAttempt(RakNet::BitStream &bsData, int iExtra)

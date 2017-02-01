@@ -8,6 +8,8 @@
 #include "CServerUpdater.h"
 #include "PacketPriority.h"
 #include "BanHandler.h"
+#include <ctime>
+#include <cstring>
 
 std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;
@@ -91,14 +93,13 @@ void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
 	}
 
 	// If AC Main checks are enabled
-
 	if (Callback::GetACEnabled() == true)
 	{
 		// Loop through the list of bad processes to see if we can find a match to the one just sent to us by the client.
 		if(found)
 		{
 			// Add cheater to AC global ban list
-			BanHandler::AddCheater(ID, std::string(processpath));
+			BanHandler::AddCheater(ID, std::string(processpath), std::string(md5));
 		}
 	}
 
@@ -407,7 +408,7 @@ void CAntiCheat::CheckVersionCompatible(float version)
 		Network::PlayerSend(ID, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED);
 
 		// Close the connection.
-		Kick(ID);
+		SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 	}
 }
 
