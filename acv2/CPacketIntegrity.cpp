@@ -1,18 +1,19 @@
 #include <boost\thread.hpp>
-#include <Windows.h>
-#include <atomic>
+#include <tchar.h>
 
 #include "Network\CRakClientHandler.h"
 #include "s0beit\samp.h"
+#include "CLoader.h"
 #include "CPacketIntegrity.h"
 #include "Misc.h"
 #include "CLog.h"
 
 const int MAX_TIME_DIFFERENCE = 1500;
-std::atomic_ulong callCounter;
 
 std::vector<CPacketIntegrity*> CPacketIntegrity::m_instances;
 boost::shared_mutex CPacketIntegrity::m_access;
+
+std::vector<HMODULE> CPacketIntegrity::m_allowedModules;
 
 CPacketIntegrity::CPacketIntegrity(BitStream *bitStream)
 {
@@ -34,12 +35,42 @@ bool CPacketIntegrity::Compare(std::string const& md5)
 	return md5 == m_md5;
 }
 
+void CPacketIntegrity::GlobalInitialize()
+{
+	TCHAR 
+		windowsPath[MAX_PATH],
+		modulePath[MAX_PATH];
+
+	GetWindowsDirectory(windowsPath, sizeof(windowsPath));
+	m_allowedModules.clear();
+
+	_stprintf_s(modulePath, TEXT("%s\\System32\\kernel32.dll"), windowsPath);
+	m_allowedModules.push_back(GetModuleHandle(modulePath));
+	_stprintf_s(modulePath, TEXT("%s\\System32\\ntdll.dll"), windowsPath);
+	m_allowedModules.push_back(GetModuleHandle(modulePath));
+	_stprintf_s(modulePath, TEXT("%s\\System32\\user32.dll"), windowsPath);
+	m_allowedModules.push_back(GetModuleHandle(modulePath));
+
+	m_allowedModules.push_back(CLoader::ThishMod);
+	m_allowedModules.push_back((HMODULE)getSampBaseAddress());
+
+	std::sort(m_allowedModules.begin(), m_allowedModules.end());
+}
+
 // If FramesToSkip = 0, first BackTrace entry points to this function (?)
 USHORT WINAPI FIX_RtlCaptureStackBackTrace(ULONG FramesToSkip, ULONG FramesToCapture, PVOID *BackTrace, PULONG BackTraceHash)
 {
 	typedef USHORT(WINAPI *CaptureStackBackTraceType)(ULONG, ULONG, PVOID*, PULONG);
-	static CaptureStackBackTraceType func = (CaptureStackBackTraceType)(GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "RtlCaptureStackBackTrace"));
+	static CaptureStackBackTraceType func = NULL;
+	
+	if (func == NULL)
+	{
+		TCHAR kernelPath[MAX_PATH];
+		GetWindowsDirectory(kernelPath, sizeof(kernelPath));
+		_tcscat_s(kernelPath, TEXT("\\System32\\kernel32.dll"));
 
+		func = (CaptureStackBackTraceType)(GetProcAddress(GetModuleHandle(kernelPath), "RtlCaptureStackBackTrace"));
+	}
 	return func(FramesToSkip, FramesToCapture, BackTrace, BackTraceHash);
 }
 
@@ -78,31 +109,30 @@ void CPacketIntegrity::Check(const char *data, int size_in_bits)
 
 	// SECOND PART: Outside calls checks
 
-	const int kMaxCallers = 62; // 62 is maximum allowed value on Windows XP
-	void* callers[kMaxCallers];
-	int count = FIX_RtlCaptureStackBackTrace(0, kMaxCallers, callers, NULL); // FramesToSkip = 4 -> skip: (1) FIX_RtlCaptureStackBackTrace wrapper, (2) this function, (3) RakPeer__SendBufferedHook, (4) original RakPeer::SendBuffered
-
 	MEMORY_BASIC_INFORMATION mbi;
-	HMODULE mod;
-	char buffer[512];
+	HMODULE hCallerModule;
+	const int kMaxCallers = 62; // 62 is maximum allowed value on Windows XP
+	void *callers[kMaxCallers];
+	int callCount = FIX_RtlCaptureStackBackTrace(0, kMaxCallers, callers, NULL);
 
-	unsigned curCall = callCounter++;
-
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < callCount; i++)
 	{
-		mod = 0;
-		ZeroMemory(buffer, sizeof(buffer));
-
 		if (VirtualQuery(callers[i], &mbi, sizeof(mbi)))
 		{
-			mod = (HMODULE)mbi.AllocationBase;
-			GetModuleFileNameA(mod, buffer, sizeof(buffer));
+			// sometimes, deep in call trace (sampac <- sampdll <- systemdlls <- 0), callers[i] is being assigned address: 0, so does hCallerModule
+			hCallerModule = (HMODULE)mbi.AllocationBase;
 		}
-		if ((DWORD)mod == getSampBaseAddress())
+		else
 		{
-			strcpy(buffer, "samp.dll");
+			// if VirtualQuery fails for some reason, make sure client won't get reported
+			// this might not be the best approach, though
+			hCallerModule = 0;
 		}
 
-		CLog("salut").Write("[%d] %d called from %x, modbase: %x, modname: %s", curCall, i, (unsigned)callers[i], mod, buffer);
+		if (hCallerModule != 0 && callers[i] != 0 && !std::binary_search(m_allowedModules.begin(), m_allowedModules.end(), hCallerModule))
+		{
+			// module not found in CPacketIntegrity::m_allowedModules list, so we need to take action.
+			CLog("sendpacket_callstack.log").Write("Modbase: %x not found, caller: %x", hCallerModule, (unsigned)callers[i]);
+		}
 	}
 }
