@@ -32,4 +32,5 @@ private:
 	static boost::shared_mutex m_access;
 
 	static std::vector<HMODULE> m_allowedModules;
+	static DWORD m_tlsSkipModuleCheck;
 };

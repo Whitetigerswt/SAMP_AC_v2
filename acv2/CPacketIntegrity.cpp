@@ -2,6 +2,8 @@
 #include <tchar.h>
 
 #include "Network\CRakClientHandler.h"
+#include "..\Shared\Network\CRPC.h"
+#include "..\Shared\Network\Network.h"
 #include "s0beit\samp.h"
 #include "CLoader.h"
 #include "CPacketIntegrity.h"
@@ -14,6 +16,7 @@ std::vector<CPacketIntegrity*> CPacketIntegrity::m_instances;
 boost::shared_mutex CPacketIntegrity::m_access;
 
 std::vector<HMODULE> CPacketIntegrity::m_allowedModules;
+DWORD CPacketIntegrity::m_tlsSkipModuleCheck;
 
 CPacketIntegrity::CPacketIntegrity(BitStream *bitStream)
 {
@@ -56,6 +59,8 @@ void CPacketIntegrity::GlobalInitialize()
 	m_allowedModules.push_back(GetModuleHandle(NULL)); // add gta_sa.exe to allowed modules.. but this might be a bad move
 
 	std::sort(m_allowedModules.begin(), m_allowedModules.end());
+	
+	m_tlsSkipModuleCheck = TlsAlloc();
 }
 
 // If FramesToSkip = 0, first BackTrace entry points to this function (?)
@@ -109,35 +114,69 @@ bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 	}
 
 	// SECOND PART: Outside calls checks
-
-	MEMORY_BASIC_INFORMATION mbi;
-	HMODULE hCallerModule;
-	const int kMaxCallers = 62; // 62 is maximum allowed value on Windows XP
-	void *callers[kMaxCallers];
-	int callCount = FIX_RtlCaptureStackBackTrace(0, kMaxCallers, callers, NULL);
-
-	for (int i = 0; i < callCount; i++)
+	if (TlsGetValue(m_tlsSkipModuleCheck))
 	{
-		if (VirtualQuery(callers[i], &mbi, sizeof(mbi)))
-		{
-			// sometimes, deep in call trace (sampac <- sampdll <- systemdlls <- 0), callers[i] is being assigned address: 0, so does hCallerModule
-			hCallerModule = (HMODULE)mbi.AllocationBase;
-		}
-		else
-		{
-			// if VirtualQuery fails for some reason, make sure client won't get reported
-			// this might not be the best approach, though
-			hCallerModule = 0;
-		}
+		TlsSetValue(m_tlsSkipModuleCheck, 0);
+	}
+	else
+	{
+		MEMORY_BASIC_INFORMATION mbi;
+		HMODULE hCallerModule;
+		const int kMaxCallers = 62; // 62 is maximum allowed value on Windows XP
+		void *callers[kMaxCallers];
+		int callCount = FIX_RtlCaptureStackBackTrace(0, kMaxCallers, callers, NULL);
 
-		if (hCallerModule != 0 && callers[i] != 0 && !std::binary_search(m_allowedModules.begin(), m_allowedModules.end(), hCallerModule))
+		for (int i = 0; i < callCount; i++)
 		{
-			// module not found in CPacketIntegrity::m_allowedModules list, so we need to take action.
-			
-			CLog("sendpacket_callstack.log").Write("Modbase: %x not found, caller: %x", hCallerModule, (unsigned)callers[i]);
-			return 0; // don't send!
+			if (VirtualQuery(callers[i], &mbi, sizeof(mbi)))
+			{
+				// sometimes, deep in call trace (sampac <- sampdll <- systemdlls <- 0), callers[i] is being assigned address: 0, so does hCallerModule
+				hCallerModule = (HMODULE)mbi.AllocationBase;
+			}
+			else
+			{
+				// if VirtualQuery fails for some reason, make sure client won't get reported
+				// this might not be the best approach, though
+				hCallerModule = 0;
+			}
+
+			if (hCallerModule != 0 && callers[i] != 0 && !std::binary_search(m_allowedModules.begin(), m_allowedModules.end(), hCallerModule))
+			{
+				// module not found in CPacketIntegrity::m_allowedModules list, so we need to take action.
+				TlsSetValue(m_tlsSkipModuleCheck, (void*)1);
+
+				wchar_t fileName[MAX_PATH];
+				GetModuleFileNameW(hCallerModule, fileName, sizeof(fileName));
+				std::string md5 = CLoader::GtaDirectory.MD5_Specific_File(std::wstring(fileName));
+				BYTE digest;
+
+				RakNet::BitStream bitStream;
+				bitStream.Write((unsigned char)PACKET_RPC);
+				bitStream.Write(ON_UNKNOWN_SENDPACKET_CALLER_FOUND);
+				bitStream.Write((unsigned short)wcslen(fileName));
+				bitStream.Write(Misc::utf8_encode(fileName).c_str(), wcslen(fileName));
+				if (strcmp(md5.c_str(), "NULL"))
+				{
+					for (int i = 0; i < 16; ++i)
+					{
+						std::string bt = md5.substr(i * 2, 2);
+						digest = static_cast<BYTE>(strtoul(bt.c_str(), NULL, 16));
+						bitStream.Write(digest);
+					}
+				}
+				else
+				{
+					for (int i = 0; i < 16; ++i)
+					{
+						digest = NULL;
+						bitStream.Write(digest);
+					}
+				}
+				CRakClientHandler::CustomSend(&bitStream, LOW_PRIORITY);
+				CLog("sendpacket_callstack.log").Write("Modbase: %x not found, caller: %x", hCallerModule, (unsigned)callers[i]);
+				return 0; // don't send!
+			}
 		}
 	}
-
 	return 1;
 }
