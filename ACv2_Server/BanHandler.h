@@ -20,5 +20,5 @@ namespace BanHandler
 
 	// PURPOSE: Request information regarding playerid cheater status from webserver (in another thread)
 	// NOTES: The result is given in CThreadSync::OnCheaterCheckResponse
-	void CheckCheater_Thread(unsigned int playerid, std::string hwid, std::string ip);
+	void CheckCheater_Thread(unsigned int playerid, std::string name, std::string hwid, std::string ip);
 }
