@@ -219,7 +219,7 @@ void CAntiCheat::OnUnknownSendPacketCallerFound(char* path, char* md5)
 		SendClientMessageToAll(-1, msg);
 
 		// Finally, print our a message to the console so we can log the result.
-		Utility::Printf("%s has been kicked for packet tampering.", name);
+		Utility::Printf("%s has been kicked for packet tampering, path: %s, md5: %s.", name, path, md5);
 
 		// And kick the player.
 		SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
