@@ -53,6 +53,7 @@ void CPacketIntegrity::GlobalInitialize()
 
 	m_allowedModules.push_back(CLoader::ThishMod);
 	m_allowedModules.push_back((HMODULE)getSampBaseAddress());
+	m_allowedModules.push_back(GetModuleHandle(NULL)); // add gta_sa.exe to allowed modules.. but this might be a bad move
 
 	std::sort(m_allowedModules.begin(), m_allowedModules.end());
 }
