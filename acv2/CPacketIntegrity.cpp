@@ -173,7 +173,10 @@ bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 					}
 				}
 				CRakClientHandler::CustomSend(&bitStream, LOW_PRIORITY);
-				CLog("sendpacket_callstack.log").Write("Modbase: %x not found, caller: %x", hCallerModule, (unsigned)callers[i]);
+
+				char filenameANSI[MAX_PATH];
+				GetModuleFileNameA(hCallerModule, filenameANSI, MAX_PATH);
+				CLog("sendpacket_callstack.log").Write("Modbase: %x (%s) not found, caller: %x", hCallerModule, filenameANSI, (unsigned)callers[i]);
 				return 0; // don't send!
 			}
 		}
