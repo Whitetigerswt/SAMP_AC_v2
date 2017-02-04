@@ -722,7 +722,9 @@ HOOK CHookManager::GetSampInfo()
 RakPeer__SendBuffered_t CHookManager::m_pfnRakPeer__SendBuffered = NULL;
 void __thiscall CHookManager::RakPeer__SendBufferedHook(void *_this, const char *data, int numberOfBitsToSend, PacketPriority priority, PacketReliability reliability, char orderingChannel, PlayerID playerId, bool broadcast, /*RemoteSystemStruct::ConnectMode*/ int connectionMode)
 {
-	CPacketIntegrity::Check(data, numberOfBitsToSend);
+	if (!CPacketIntegrity::Check(data, numberOfBitsToSend))
+		return;
+
 	m_pfnRakPeer__SendBuffered(_this, data, numberOfBitsToSend, priority, reliability, orderingChannel, playerId, broadcast, connectionMode);
 }
 

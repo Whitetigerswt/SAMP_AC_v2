@@ -22,7 +22,7 @@ public:
 	// PURPOSE: 1) Look for lost packets.
 	// PURPOSE: 2) Clean memory.
 	// PURPOSE: 3) Validate RakPeer::SendBuffered calltrace
-	static void Check(const char *data, int size_in_bits);
+	static bool Check(const char *data, int size_in_bits);
 
 private:
 	std::string m_md5;

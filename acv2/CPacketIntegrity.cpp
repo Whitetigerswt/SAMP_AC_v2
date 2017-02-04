@@ -74,7 +74,7 @@ USHORT WINAPI FIX_RtlCaptureStackBackTrace(ULONG FramesToSkip, ULONG FramesToCap
 	return func(FramesToSkip, FramesToCapture, BackTrace, BackTraceHash);
 }
 
-void CPacketIntegrity::Check(const char *data, int size_in_bits)
+bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 {
 	// FIRST PART: Packet integrity checks
 
@@ -132,7 +132,11 @@ void CPacketIntegrity::Check(const char *data, int size_in_bits)
 		if (hCallerModule != 0 && callers[i] != 0 && !std::binary_search(m_allowedModules.begin(), m_allowedModules.end(), hCallerModule))
 		{
 			// module not found in CPacketIntegrity::m_allowedModules list, so we need to take action.
+			
 			CLog("sendpacket_callstack.log").Write("Modbase: %x not found, caller: %x", hCallerModule, (unsigned)callers[i]);
+			return 0; // don't send!
 		}
 	}
+
+	return 1;
 }
