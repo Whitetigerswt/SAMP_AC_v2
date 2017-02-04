@@ -135,6 +135,10 @@ namespace BanHandler
 			return;
 		}
 
+		// Get the player's name
+		char name[MAX_PLAYER_NAME];
+		GetPlayerName(playerid, name, sizeof name);
+
 		// Get the player's IP
 		char ip[16];
 		GetPlayerIp(playerid, ip, sizeof ip);
@@ -143,10 +147,10 @@ namespace BanHandler
 		std::string hwid = "";
 		hwid = ac->GetPlayerHardwareID();
 
-		boost::thread checkCheaterThread(&BanHandler::CheckCheater_Thread, playerid, hwid, std::string(ip));
+		boost::thread checkCheaterThread(&BanHandler::CheckCheater_Thread, playerid, std::string(name), hwid, std::string(ip));
 	}
 
-	void CheckCheater_Thread(unsigned int playerid, std::string hwid, std::string ip)
+	void CheckCheater_Thread(unsigned int playerid, std::string name, std::string hwid, std::string ip)
 	{
 		// Create this variable which holds info whether this player is a cheater or not.
 		bool ischeater = false;
@@ -159,53 +163,60 @@ namespace BanHandler
 			// Set URL to receive POST data
 			curl_easy_setopt(curl, CURLOPT_URL, AC_BAN_HANDLER_CHECK);
 
+			// Host & Peer Verification
 			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
-
-
 			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
 
 			// Adds user agent to request
 			curl_easy_setopt(curl, CURLOPT_USERAGENT, HTTP_REQUEST_USER_AGENT);
 
-			// Format POST data with player's hardware ID.
-			char str[64];
-			snprintf(str, sizeof str, "Hardware=%s&IP=%s", hwid.c_str(), ip.c_str());
+			// Escape name
+			char *escaped_name = curl_easy_escape(curl, name.c_str(), 0);
 
-			// Set POST data
-			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str);
-
-			// Send the request and store result into "res" variable
-			CURLcode res;
-			res = curl_easy_perform(curl);
-
-			// Handle possible errors
-			if (res != CURLE_OK)
+			if (escaped_name)
 			{
-				//Utility::Printf("curl_easy_perform() failed: %s while checking if player %d is in ban list.", curl_easy_strerror(res), playerid);
-			}
-			else // success
-			{
-				// Now let's handle response codes
-				long response_code;
-				curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+				// Format POST data.
+				char str[100];
+				snprintf(str, sizeof str, "Name=%s&Hardware=%s&IP=%s", escaped_name, hwid.c_str(), ip.c_str());
 
-				switch (response_code)
+				// Set POST data
+				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str);
+
+				// Send the request and store result into "res" variable
+				CURLcode res;
+				res = curl_easy_perform(curl);
+
+				// Handle possible errors
+				if (res != CURLE_OK)
 				{
-				case 508:
-				{
-					// Found in ban list.
-					ischeater = true;
-					break;
+					//Utility::Printf("curl_easy_perform() failed: %s while checking if player %d is in ban list.", curl_easy_strerror(res), playerid);
 				}
-				default:
+				else // success
 				{
-					// Was not found in ban list.
-					ischeater = false;
-					break;
-				}
+					// Now let's handle response codes
+					long response_code;
+					curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+
+					switch (response_code)
+					{
+						case 508:
+						{
+							// Found in ban list.
+							ischeater = true;
+							break;
+						}
+						default:
+						{
+							// Was not found in ban list.
+							ischeater = false;
+							break;
+						}
+					}
 				}
 			}
+			
 			// Clean up
+			curl_free(escaped_name);
 			curl_easy_cleanup(curl);
 		}
 		else
