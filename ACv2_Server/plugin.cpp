@@ -397,7 +397,7 @@ void WorkThread()
 		param->ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
 		pMainThreadSync->AddCallbackToQueue(&CThreadSync::OnCheatsUpdate, param);
 
-		Sleep(21600*1000);
+		boost::this_thread::sleep_for(boost::chrono::hours(6));
 	}
 }
 
