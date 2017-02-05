@@ -138,6 +138,10 @@ public:
 	// REQUIRES: NULL
 	int GetID() { return ID; }
 
+	// PURPOSE: Fetch information about cheats on server startup.
+	// REQUIRES: NULL
+	static void UpdateCheatDatabase();
+
 	static std::vector<std::string> GetScannedFilenames() { return m_FileNames; }
 	static void SetScannedFilenames(std::vector<std::string> filenames) { m_FileNames = filenames; }
 

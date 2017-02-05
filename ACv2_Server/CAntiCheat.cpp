@@ -525,3 +525,10 @@ void CAntiCheat::OnScreenshotTaken()
 	// Let PAWN scripts know.
 	Callback::Execute("AC_OnScreenshotTaken", "i", ID);
 }
+
+void CAntiCheat::UpdateCheatDatabase()
+{
+	m_FileNames = Cmd5Info::GetGtaDirectoryFilesNames();
+	m_MD5s = Cmd5Info::GetGtaDirectoryFilesMd5();
+	m_ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
+}

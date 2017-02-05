@@ -388,16 +388,15 @@ void WorkThread()
 {
 	while (1)
 	{
+		boost::this_thread::sleep_for(boost::chrono::hours(6));
+		
 		// Cheats update!
-
 		// If the list hasn't been updated in 6 hours...
 		CThreadSync::OnCheatsUpdate__parameters *param = new CThreadSync::OnCheatsUpdate__parameters;
 		param->FileNames = Cmd5Info::GetGtaDirectoryFilesNames();
 		param->MD5s = Cmd5Info::GetGtaDirectoryFilesMd5();
 		param->ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
 		pMainThreadSync->AddCallbackToQueue(&CThreadSync::OnCheatsUpdate, param);
-
-		boost::this_thread::sleep_for(boost::chrono::hours(6));
 	}
 }
 
@@ -417,6 +416,9 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 
 	// Initialize work thread
 	boost::thread workThread(&WorkThread);
+
+	// Initialize cheat database (first time we do it non threaded)
+	CAntiCheat::UpdateCheatDatabase();
 
 	// hook amx_register
 	InstallAmxHooks();
