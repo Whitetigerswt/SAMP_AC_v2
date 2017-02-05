@@ -138,6 +138,15 @@ public:
 	// REQUIRES: NULL
 	int GetID() { return ID; }
 
+	static std::vector<std::string> GetScannedFilenames() { return m_FileNames; }
+	static void SetScannedFilenames(std::vector<std::string> filenames) { m_FileNames = filenames; }
+
+	static std::vector<std::string> GetScannedFilesMD5s() { return m_MD5s; }
+	static void SetScannedFilesMD5s(std::vector<std::string> md5s) { m_MD5s = md5s; }
+
+	static std::vector<std::string> GetScannedProcessesMD5s() { return m_ProcessMD5s; }
+	static void SetScannedProcessesMD5s(std::vector<std::string> processesmd5s) { m_ProcessMD5s = processesmd5s; }
+
 private:
 
 	// PURPOSE: Remember the player's playerID.
@@ -181,10 +190,4 @@ private:
 
 	// PURPOSE: A list of processes that are not allowed to be used while the AC is enabled.
 	static std::vector<std::string> m_ProcessMD5s;
-
-	int m_LastCheatUpdate;
-
-	// PURPOSE: Update the list of cheats if it's needed.
-	// REQUIRES: NULL
-	void UpdateCheatList();
 };

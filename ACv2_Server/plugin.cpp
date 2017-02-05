@@ -2,6 +2,7 @@
 #include "plugin.h"
 #include "Utility.h"
 #include "Network/BitStream.h"
+#include "../Shared/MD5_Info/Cmd5Info.h"
 #include "../Shared/Network/CRPC.h"
 #include "GDK/sampgdk.h"
 #include "GDK/sampgdk.h"
@@ -383,6 +384,23 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 	return sampgdk::ProcessTick();
 }
 
+void WorkThread()
+{
+	while (1)
+	{
+		// Cheats update!
+
+		// If the list hasn't been updated in 6 hours...
+		CThreadSync::OnCheatsUpdate__parameters *param = new CThreadSync::OnCheatsUpdate__parameters;
+		param->FileNames = Cmd5Info::GetGtaDirectoryFilesNames();
+		param->MD5s = Cmd5Info::GetGtaDirectoryFilesMd5();
+		param->ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
+		pMainThreadSync->AddCallbackToQueue(&CThreadSync::OnCheatsUpdate, param);
+
+		Sleep(21600*1000);
+	}
+}
+
 PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	// Load SampGDK
@@ -394,14 +412,17 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Initialize cURL
 	curl_global_init(CURL_GLOBAL_ALL);
 
+	// Initialize main thread sync
+	pMainThreadSync = new CThreadSync();
+
+	// Initialize work thread
+	boost::thread workThread(&WorkThread);
+
 	// hook amx_register
 	InstallAmxHooks();
 
 	// Find addresses to hook
 	FindAddresses();
-
-	// Initialize main thread sync
-	pMainThreadSync = new CThreadSync();
 
 	PluginData = ppData;
 

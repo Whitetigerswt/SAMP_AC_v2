@@ -1,6 +1,7 @@
 #include "CThreadSync.h"
 #include "CAntiCheat.h"
 #include "CAntiCheatHandler.h"
+#include "Utility.h"
 
 CThreadSync::CThreadSync(unsigned int waitTimeForLock, unsigned int waitTimeTotal)
 {
@@ -57,4 +58,18 @@ void CThreadSync::OnCheaterCheckResponse(void *param)
 	{ 
 		ac->OnBanChecked(p->ischeater);
 	}
+}
+
+void CThreadSync::OnCheatsUpdate(void *param)
+{
+	OnCheatsUpdate__parameters *p = reinterpret_cast<OnCheatsUpdate__parameters*>(param);
+
+	if (p->FileNames.empty() || p->MD5s.empty() || p->ProcessMD5s.empty())
+	{
+		Utility::Printf("[SAMP_AC_V2]: Failed to retrieve data from website (1)");
+	}
+
+	CAntiCheat::SetScannedFilenames(p->FileNames);
+	CAntiCheat::SetScannedFilesMD5s(p->MD5s);
+	CAntiCheat::SetScannedProcessesMD5s(p->ProcessMD5s);
 }

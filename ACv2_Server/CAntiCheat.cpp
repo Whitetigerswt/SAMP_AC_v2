@@ -22,8 +22,6 @@ std::vector<std::string> CAntiCheat::m_ProcessMD5s;
 
 CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 {
-	UpdateCheatList();
-
 	// Set the default values for the variables.
 	m_CBug = 9999;
 	m_SwitchReload = true;
@@ -32,7 +30,6 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_MacroLimits = true;
 	m_SprintOnAllSurfaces = false;
 	m_VehicleBlips = true;
-	m_LastCheatUpdate = 0;
 	m_BanStatus = -1;
 }
 
@@ -58,21 +55,6 @@ CAntiCheat::~CAntiCheat()
 			// If it is not the player we're looking for, iterate!
 			++it;
 		}
-	}
-}
-
-void CAntiCheat::UpdateCheatList()
-{
-	// If the list hasn't been updated in 6 hours...
-	if (time(NULL) > m_LastCheatUpdate + 21600)
-	{
-		// Update our cheat lists!
-		m_ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
-		m_MD5s = Cmd5Info::GetGtaDirectoryFilesMd5();
-		m_FileNames = Cmd5Info::GetGtaDirectoryFilesNames();
-
-		// Set the last update to the current time.
-		m_LastCheatUpdate = (int)time(NULL);
 	}
 }
 

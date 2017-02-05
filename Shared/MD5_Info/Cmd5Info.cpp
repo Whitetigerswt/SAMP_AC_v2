@@ -193,7 +193,6 @@ std::string Cmd5Info::GetWebsiteText(std::string url)
 			curl_easy_cleanup(curl);
 			return data;
 		}
-		printf("[SAMP_AC_V2]: GetWebsiteText: failure. cURL handle returned NULL\n");
 		return "";
 	}
 	catch (std::exception &e)
