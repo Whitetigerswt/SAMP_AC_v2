@@ -25,5 +25,6 @@ namespace VerifiedPacketChecker
 	void SetLastTimeVerifiedClient(unsigned int playerid, unsigned int time);
 	void WarnUnverifiedClient(unsigned int playerid);
 	void StartVerifiedPacketChecker();
+	void VerifyClient(unsigned int playerid);
 	bool IsVerified(unsigned int playerid, RakNet::BitStream &bs);
 }

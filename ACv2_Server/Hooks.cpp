@@ -3,6 +3,7 @@
 #include "plugin.h"
 #include "Structs.h"
 #include "Network/CRPCCallback.h"
+#include "CAntiCheatHandler.h"
 
 #include "../Shared/Network/Network.h"
 #include "../Shared/Network/CRPC.h"
@@ -104,48 +105,58 @@ static BYTE HOOK_GetPacketID(Packet *p)
 
 	BYTE packetId = GetPacketID(p);
 
-	// Check for invalid packets
-	if (packetId == 0xFF) {
-		return 0xFF;
-	}
-
-	// If packetId is our custom RPC sending function
-	if (packetId == PACKET_RPC)
+	switch (packetId)
 	{
-		// Read the data sent
-		RakNet::BitStream bsData(&p->data[1], p->length - 1, false);
-		unsigned short usRpcId;
-
-		if (bsData.Read(usRpcId))
-		{
-			// Process the RPC
-			CRPC::Process(usRpcId, bsData, p->playerIndex);
-		}
-
-		// return invalid packet (so SA-MP doesn't process it)
-		if (GetPacketID_hook.GetTrampoline() == 0)
+		case 0xFF:
 		{
 			return 0xFF;
 		}
-	}
-
-	if (packetId == ID_PLAYER_SYNC)
-	{
-		CSyncData *pSyncData = (CSyncData*)(&p->data[1]);
-
-		// Fix, yet another, slide issue (punch, switch to any bullet weapon). might be temporary,
-		// though it's sooo much easier to just leave this here than look for an asm hook
-		if (pSyncData->wKeys & KEY_FIRE && pSyncData->byteWeapon < 15)
+		case 0: // to be modified
 		{
-			LastTicks[p->playerIndex] = Utility::getTickCount() + 350;
+			CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(p->playerIndex);
+			if (ac && !ac->IsCreationTickValid())
+			{
+				CAntiCheatHandler::Remove(p->playerIndex);
+			}
+			break;
 		}
-
-		if (LastTicks[p->playerIndex] > Utility::getTickCount() && pSyncData->byteWeapon > 15)
+		case PACKET_RPC:
 		{
-			pSyncData->byteWeapon = 0;
+			// Read the data sent
+			RakNet::BitStream bsData(&p->data[1], p->length - 1, false);
+			unsigned short usRpcId;
+
+			if (bsData.Read(usRpcId))
+			{
+				// Process the RPC
+				CRPC::Process(usRpcId, bsData, p->playerIndex);
+			}
+
+			// return invalid packet (so SA-MP doesn't process it)
+			if (GetPacketID_hook.GetTrampoline() == 0)
+			{
+				return 0xFF;
+			}
+			break;
+		}
+		case ID_PLAYER_SYNC:
+		{
+			CSyncData *pSyncData = (CSyncData*)(&p->data[1]);
+
+			// Fix, yet another, slide issue (punch, switch to any bullet weapon). might be temporary,
+			// though it's sooo much easier to just leave this here than look for an asm hook
+			if (pSyncData->wKeys & KEY_FIRE && pSyncData->byteWeapon < 15)
+			{
+				LastTicks[p->playerIndex] = Utility::getTickCount() + 350;
+			}
+
+			if (LastTicks[p->playerIndex] > Utility::getTickCount() && pSyncData->byteWeapon > 15)
+			{
+				pSyncData->byteWeapon = 0;
+			}
+			break;
 		}
 	}
-
 	// for some reason GetTrampoline only returns a useful value if YSF is loaded. (and crashes otherwise)
 
 	// if YSF is not loaded
