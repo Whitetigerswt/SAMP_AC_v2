@@ -66,7 +66,7 @@ namespace BanHandler
 			* default bundle, then the CURLOPT_CAPATH option might come handy for
 			* you.
 			*/
-			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
 			/*
 			* If the site you're connecting to uses a different host name that what
@@ -74,7 +74,7 @@ namespace BanHandler
 			* subjectAltName) fields, libcurl will refuse to connect. You can skip
 			* this check, but this will make the connection less secure.
 			*/
-			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
 			// Adds user agent to request
 			curl_easy_setopt(curl, CURLOPT_USERAGENT, HTTP_REQUEST_USER_AGENT);
@@ -164,8 +164,8 @@ namespace BanHandler
 			curl_easy_setopt(curl, CURLOPT_URL, AC_BAN_HANDLER_CHECK);
 
 			// Host & Peer Verification
-			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
-			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
 			// Adds user agent to request
 			curl_easy_setopt(curl, CURLOPT_USERAGENT, HTTP_REQUEST_USER_AGENT);
