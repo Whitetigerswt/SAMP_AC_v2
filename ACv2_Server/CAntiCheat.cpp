@@ -581,6 +581,6 @@ void CAntiCheat::UpdateCheatDatabase()
 
 	if (m_FileNames.empty() || m_MD5s.empty() || m_ProcessMD5s.empty())
 	{
-		Utility::Printf("[SAMP_AC_V2]: Failed to retrieve data from website (2)");
+		Utility::Printf("Failed to retrieve data from website (2)");
 	}
 }
