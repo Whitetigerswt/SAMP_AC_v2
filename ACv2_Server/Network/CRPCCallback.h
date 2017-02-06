@@ -52,5 +52,9 @@ private:
 	// REQUIRES: NULL
 	static RPC_CALLBACK OnTakeScreenshot(RPC_ARGS);
 
+	// PURPOSE: RPC Callback for eRPC::ON_UNKNOWN_SENDPACKET_CALLER_FOUND
+	// REQUIRES: NULL
+	static RPC_CALLBACK OnUnknownSendPacketCallerFound(RPC_ARGS);
+
 	static RPC_CALLBACK VersionIncompat(RPC_ARGS);
 };

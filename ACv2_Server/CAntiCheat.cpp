@@ -1,4 +1,5 @@
 #include "CAntiCheat.h"
+#include "CAntiCheatHandler.h"
 #include "Utility.h"
 #include "GDK/sampgdk.h"
 #include "Network/Network.h"
@@ -10,6 +11,7 @@
 #include "BanHandler.h"
 #include <ctime>
 #include <cstring>
+#include <boost/thread.hpp>
 
 std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;
@@ -22,8 +24,6 @@ std::vector<std::string> CAntiCheat::m_ProcessMD5s;
 
 CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 {
-	UpdateCheatList();
-
 	// Set the default values for the variables.
 	m_CBug = 9999;
 	m_SwitchReload = true;
@@ -32,7 +32,6 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_MacroLimits = true;
 	m_SprintOnAllSurfaces = false;
 	m_VehicleBlips = true;
-	m_LastCheatUpdate = 0;
 	m_BanStatus = -1;
 }
 
@@ -58,21 +57,6 @@ CAntiCheat::~CAntiCheat()
 			// If it is not the player we're looking for, iterate!
 			++it;
 		}
-	}
-}
-
-void CAntiCheat::UpdateCheatList()
-{
-	// If the list hasn't been updated in 6 hours...
-	if (time(NULL) > m_LastCheatUpdate + 21600)
-	{
-		// Update our cheat lists!
-		m_ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
-		m_MD5s = Cmd5Info::GetGtaDirectoryFilesMd5();
-		m_FileNames = Cmd5Info::GetGtaDirectoryFilesNames();
-
-		// Set the last update to the current time.
-		m_LastCheatUpdate = (int)time(NULL);
 	}
 }
 
@@ -122,16 +106,16 @@ void CAntiCheat::OnMD5Calculated(int address, int size, char* md5)
 				char msg[144], name[MAX_PLAYER_NAME];
 
 				// Get the player name and store it in the name variable.
-				GetPlayerName(ID, name, sizeof(name));
+				sampgdk::GetPlayerName(ID, name, sizeof(name));
 
 				// Format a new message that tells what happened.
 				snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has modified weapon.dat info", name);
 
 				// Send the result to everyone on the server.
-				SendClientMessageToAll(-1, msg);
+				sampgdk::SendClientMessageToAll(-1, msg);
 
 				// And kick the player.
-				SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+				sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 			}
 		}
 	}
@@ -167,31 +151,66 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 			snprintf(msg, sizeof(msg), "{FF0000}Error: {FFFFFF}You've been kicked from this server for having ({FF0000}%s{FFFFFF}) modified.", Utility::GetSafeFilePath(path));
 
 			// Send the formatted message to the player.
-			SendClientMessage(ID, -1, msg);
+			sampgdk::SendClientMessage(ID, -1, msg);
 
 			// Now, we need to send a message to the whole server saying someone was kicked, and we need to include their name
 			// So create a variable that can hold their name.
 			char name[MAX_PLAYER_NAME];
 
 			// Find their name.
-			GetPlayerName(ID, name, sizeof(name));
+			sampgdk::GetPlayerName(ID, name, sizeof(name));
 
 			// Format the string telling all the users this player has been kicked.
 			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for having ({FF0000}%s{FFFFFF}) modified.", name, path);
 
 			// Send it to everyone
-			SendClientMessageToAll(-1, msg);
+			sampgdk::SendClientMessageToAll(-1, msg);
 
 			// Finally, print our a message to the console so we can log the result.
 			Utility::Printf("%s has been kicked for modifying %s", name, path);
 
 			// And kick the player.
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+			sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 		}
 	}
 	
 	// Execute PAWN callback.
 	Callback::Execute("AC_OnFileCalculated", "issi", isModified, md5, path, ID);
+}
+
+void CAntiCheat::OnUnknownSendPacketCallerFound(char* path, char* md5)
+{
+	// If AC Main checks are enabled
+	if (Callback::GetACEnabled() == true)
+	{
+		// Create a new variable holding a string that will be formatted to let the player know he's been kicked.
+		char msg[160];
+
+		// Send the formatted message to the player.
+		sampgdk::SendClientMessage(ID, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for packet tampering.");
+
+		// Now, we need to send a message to the whole server saying someone was kicked, and we need to include their name
+		// So create a variable that can hold their name.
+		char name[MAX_PLAYER_NAME];
+
+		// Find their name.
+		sampgdk::GetPlayerName(ID, name, sizeof(name));
+
+		// Format the string telling all the users this player has been kicked.
+		snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for packet tampering.", name);
+
+		// Send it to everyone
+		sampgdk::SendClientMessageToAll(-1, msg);
+
+		// Finally, print our a message to the console so we can log the result.
+		Utility::Printf("%s has been kicked for packet tampering, path: %s, md5: %s.", name, path, md5);
+
+		// And kick the player.
+		sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+	}
+
+	// Execute PAWN callback.
+	Callback::Execute("AC_OnPacketTampering", "i", ID);
 }
 
 void CAntiCheat::OnImgFileModified(char* filename, char* md5)
@@ -204,16 +223,16 @@ void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 		char name[MAX_PLAYER_NAME], msg[144];
 
 		// Get the player name and store it in the variable we just created.
-		GetPlayerName(ID, name, sizeof(name));
+		sampgdk::GetPlayerName(ID, name, sizeof(name));
 
 		// Format the message to send to all players.
 		snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for having ({FF0000}%s{FFFFFF}) modified.", name, Utility::GetSafeFilePath(filename));
 
 		// Send the message to all players connected to the server.
-		SendClientMessageToAll(-1, msg);
+		sampgdk::SendClientMessageToAll(-1, msg);
 
 		// Kick the player who has the modified file.
-		SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+		sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 	}
 
 	// Execute the PAWN callback.
@@ -265,11 +284,14 @@ void CAntiCheat::ToggleCanEnableAC(int playerid, bool toggle)
 	}
 }
 
-void CAntiCheat::CheckGTAFiles(int playerid)
+void CAntiCheat::Thread_CheckGTAFiles(int playerid)
 {
 	// Loop through the files we need to send to the client for him/her to check.
 	for (std::vector<std::string>::iterator it = m_FileNames.begin(); it != m_FileNames.end(); ++it)
 	{
+		if (!CAntiCheatHandler::IsConnected(playerid))
+			break; // Player disconnected, so stop sending packets
+
 		// Create a new string that will hold the final file value, preceeded by the macro $(GtaDirectory)
 		std::string szFile("$(GtaDirectory)/");
 
@@ -289,7 +311,14 @@ void CAntiCheat::CheckGTAFiles(int playerid)
 
 		// Send the data to the client and have them calculate the md5 of that file.
 		Network::PlayerSend(playerid, &bsData, LOW_PRIORITY, RELIABLE);
+	
+		boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
 	}
+}
+
+void CAntiCheat::CheckGTAFiles()
+{
+	boost::thread SendThread(&Thread_CheckGTAFiles, ID);
 }
 
 void CAntiCheat::OnMacroDetected(int vKey)
@@ -298,13 +327,13 @@ void CAntiCheat::OnMacroDetected(int vKey)
 	char name[MAX_PLAYER_NAME], msg[144];
 
 	// Get the player name and store it in the name variable
-	GetPlayerName(ID, name, sizeof(name));
+	sampgdk::GetPlayerName(ID, name, sizeof(name));
 
 	// Format the string telling all the users what happened.
 	snprintf(msg, sizeof(msg), "[TEST] %s is using a macro? (vKey=0x%x)", name, vKey);
 
 	// Send the message to all connected players
-	SendClientMessageToAll(-1, msg);
+	sampgdk::SendClientMessageToAll(-1, msg);
 }
 
 void CAntiCheat::OnHardwareCalculated(char* hwid)
@@ -324,19 +353,19 @@ void CAntiCheat::OnTamperAttempt()
 	char name[MAX_PLAYER_NAME], msg[144];
 
 	// Get the player name and store it in the name variable.
-	GetPlayerName(ID, name, sizeof(name));
+	sampgdk::GetPlayerName(ID, name, sizeof(name));
 
 	// Format the message that will be sent to everyone on the server.
 	snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} is trying to tamper with the AC mod.", name);
 
 	// Send the message to everyone on the server.
-	SendClientMessageToAll(-1, msg);
+	sampgdk::SendClientMessageToAll(-1, msg);
 
 	// Print the message to the console as well
 	Utility::Printf(msg);
 
 	// Kick the player.
-	SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+	sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 }
 
 void CAntiCheat::OnBanChecked(bool status)
@@ -357,16 +386,16 @@ void CAntiCheat::OnBanChecked(bool status)
 
 			// Tell the player
 			snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
-			SendClientMessage(this->GetID(), -1, msg);
+			sampgdk::SendClientMessage(this->GetID(), -1, msg);
 			char name[MAX_PLAYER_NAME];
-			GetPlayerName(this->GetID(), name, sizeof name);
+			sampgdk::GetPlayerName(this->GetID(), name, sizeof name);
 
 			// Tell other players connected
 			snprintf(msg, sizeof msg, "{FFFFFF}%s {FF0000}has been kicked for being banned from AC servers.", name);
-			SendClientMessageToAll(-1, msg);
+			sampgdk::SendClientMessageToAll(-1, msg);
 
 			// Kick the player from the server
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)this->GetID());
+			sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)this->GetID());
 		}
 		else
 		{
@@ -375,13 +404,13 @@ void CAntiCheat::OnBanChecked(bool status)
 
 			// Tell the player
 			snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
-			SendClientMessage(this->GetID(), -1, msg);
+			sampgdk::SendClientMessage(this->GetID(), -1, msg);
 			char name[MAX_PLAYER_NAME];
-			GetPlayerName(this->GetID(), name, sizeof name);
+			sampgdk::GetPlayerName(this->GetID(), name, sizeof name);
 
 			// Tell other players connected
 			snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned from AC servers. Know more: %s", name, AC_WEBSITE);
-			SendClientMessageToAll(-1, msg);
+			sampgdk::SendClientMessageToAll(-1, msg);
 		}
 	}
 }
@@ -398,7 +427,7 @@ void CAntiCheat::CheckVersionCompatible(float version)
 		snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
 
 		// Send the message to the user.
-		SendClientMessage(ID, -1, msg);
+		sampgdk::SendClientMessage(ID, -1, msg);
 
 		RakNet::BitStream bsData;
 		bsData.Write((unsigned char)PACKET_RPC);
@@ -408,7 +437,7 @@ void CAntiCheat::CheckVersionCompatible(float version)
 		Network::PlayerSend(ID, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED);
 
 		// Close the connection.
-		SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+		sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 	}
 }
 
@@ -542,4 +571,11 @@ void CAntiCheat::OnScreenshotTaken()
 {
 	// Let PAWN scripts know.
 	Callback::Execute("AC_OnScreenshotTaken", "i", ID);
+}
+
+void CAntiCheat::UpdateCheatDatabase()
+{
+	m_FileNames = Cmd5Info::GetGtaDirectoryFilesNames();
+	m_MD5s = Cmd5Info::GetGtaDirectoryFilesMd5();
+	m_ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
 }

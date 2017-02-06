@@ -36,6 +36,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(TOGGLE_PAUSE, OnPauseToggled);
 	CRPC::Add(TAKE_SCREENSHOT, OnTakeScreenshot);
 	CRPC::Add(VERSION_INCOMPAT2, VersionIncompat);
+	CRPC::Add(ON_UNKNOWN_SENDPACKET_CALLER_FOUND, OnUnknownSendPacketCallerFound);
 }
 
 RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra)
@@ -47,10 +48,10 @@ RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra
 	snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
 
 	// Send the message to the user.
-	SendClientMessage(iExtra, -1, msg);
+	sampgdk::SendClientMessage(iExtra, -1, msg);
 
 	// Close the connection.
-	SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
+	sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
 }
 
 RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtra)
@@ -58,7 +59,7 @@ RPC_CALLBACK CRPCCallback::OnClientVerified(RakNet::BitStream &bsData, int iExtr
 	// Calculate verified packet
 	if (VerifiedPacketChecker::IsVerified(iExtra, bsData))
 	{
-		VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, sampgdk_GetTickCount());
+		VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, Utility::getTickCount());
 	}
 }
 
@@ -99,7 +100,7 @@ RPC_CALLBACK CRPCCallback::OnFileExecuted(RakNet::BitStream& bsData, int iExtra)
 
 		char str[128];
 		snprintf(str, sizeof(str), "(1) AC Error: playerid: %d sent invalid string length to the server. You should report this problem.", iExtra);
-		SendClientMessage(iExtra, -1, str);
+		sampgdk::SendClientMessage(iExtra, -1, str);
 	}
 }
 
@@ -173,7 +174,7 @@ RPC_CALLBACK CRPCCallback::OnFileCalculated(RakNet::BitStream &bsData, int iExtr
 
 		char str[128];
 		snprintf(str, sizeof(str), "(2) AC Error: playerid: %d sent invalid string length to the server. You should report this problem.", iExtra);
-		SendClientMessage(iExtra, -1, str);
+		sampgdk::SendClientMessage(iExtra, -1, str);
 	}
 }
 
@@ -227,16 +228,16 @@ void SAMPGDK_CALL KickUnverifiedClient(int timerid, void *params)
 {
 	// Make sure the player is connected.
 	int playerid = (int)params;
-	if (IsPlayerConnected(playerid))
+	if (sampgdk::IsPlayerConnected(playerid))
 	{
 		char kickmsg[144], name[MAX_PLAYER_NAME];
-		GetPlayerName(playerid, name, sizeof name);
+		sampgdk::GetPlayerName(playerid, name, sizeof name);
 		snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client properly.", name, playerid);
 
-		SendClientMessageToAll(0xFF0000FF, kickmsg);
+		sampgdk::SendClientMessageToAll(0xFF0000FF, kickmsg);
 		Utility::Printf(kickmsg);
 
-		SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+		sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 	}
 }
 
@@ -244,7 +245,7 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 {
 	CAntiCheatHandler::Init(iExtra);
 
-	VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, sampgdk_GetTickCount());
+	VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, Utility::getTickCount());
 
 	// Create a big variable to hold hardware ID.
 	float version;
@@ -321,5 +322,37 @@ RPC_CALLBACK CRPCCallback::OnTakeScreenshot(RakNet::BitStream &bsData, int iExtr
 	if (ac)
 	{
 		ac->OnScreenshotTaken();
+	}
+}
+
+RPC_CALLBACK CRPCCallback::OnUnknownSendPacketCallerFound(RakNet::BitStream &bsData, int iExtra)
+{
+	unsigned char path[MAX_PATH + 1];
+	BYTE md5[16];
+
+	// Reset memory.
+	memset(path, 0, sizeof(path));
+	memset(md5, 0, sizeof(md5));
+
+	// Read the data the client sent us.
+	if (bsData.ReadString(path))
+	{
+		// Convert the md5 from bytes to char
+		char digestChars[33];
+		for (int i = 0; i < 16; ++i)
+		{
+			bsData.Read(md5[i]);
+			sprintf(digestChars + (i * 2), "%02X", md5[i]);
+		}
+
+		// lower case
+		boost::algorithm::to_lower(digestChars);
+
+		// Check the CAntiCheat pointer is valid.
+		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
+		if (ac)
+		{
+			ac->OnUnknownSendPacketCallerFound((char*)path, digestChars);
+		}
 	}
 }
