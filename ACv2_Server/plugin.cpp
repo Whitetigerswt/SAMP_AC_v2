@@ -2,6 +2,7 @@
 #include "plugin.h"
 #include "Utility.h"
 #include "Network/BitStream.h"
+#include "../Shared/MD5_Info/Cmd5Info.h"
 #include "../Shared/Network/CRPC.h"
 #include "GDK/sampgdk.h"
 #include "GDK/sampgdk.h"
@@ -21,7 +22,7 @@ cell AMX_NATIVE_CALL IsPlayerUsingSAMPACProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(1, "IsPlayerUsingSampAC");
 
 	// Make sure the player is connected
-	if (!IsPlayerConnected(pParams[1])) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1])) return 0;
 
 	// Return the result if the player is connected to AC or not.
 	return CAntiCheatHandler::IsConnected(pParams[1]);
@@ -33,7 +34,7 @@ cell AMX_NATIVE_CALL MD5_MemoryProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(3, "MD5_Memory");
 
 	// Make sure the player is connected
-	if (!IsPlayerConnected(pParams[1])) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1])) return 0;
 
 	// pParams[1] = playerid
 	// pParams[2] = address
@@ -60,7 +61,7 @@ cell AMX_NATIVE_CALL SetPlayerCanEnableACProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(2, "SetPlayerCanEnableAC");
 
 	// Make sure the player is connected
-	if (!IsPlayerConnected(pParams[1])) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1])) return 0;
 
 	// Toggle if the player can enable AC or not.
 	CAntiCheat::ToggleCanEnableAC(pParams[1], !!pParams[2]);
@@ -74,7 +75,7 @@ cell AMX_NATIVE_CALL CanPlayerEnableACProc(AMX* pAmx, cell* pParams)
 	CHECK_PARAMS(1, "CanPlayerEnableAC");
 
 	// Make sure the player is connected
-	if (!IsPlayerConnected(pParams[1])) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1])) return 0;
 
 	// Return if the player can enable AC or not.
 	return CAntiCheat::CanEnableAC(pParams[1]);
@@ -95,7 +96,7 @@ cell AMX_NATIVE_CALL GetPlayerHardwareIDProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	// Get the address of the variable in the 2nd parameter.
 	cell* cVarAddress = NULL;
@@ -114,7 +115,7 @@ cell AMX_NATIVE_CALL TogglePlayerSwitchReloadProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	ac->ToggleSwitchReload(!!pParams[2]);
 
@@ -130,7 +131,7 @@ cell AMX_NATIVE_CALL SetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected and the frame limit isn't 0
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL || pParams[2] == 0) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL || pParams[2] == 0) return 0;
 
 	// Set our internal recorder of the player's FPS limit.
 	ac->SetFPSLimit(pParams[2]);
@@ -157,7 +158,7 @@ cell AMX_NATIVE_CALL GetPlayerFPSLimitProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected and connected to AC
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	// return the player's frame limit.
 	return ac->GetFPSLimit();
@@ -172,7 +173,7 @@ cell AMX_NATIVE_CALL SetPlayerCrouchBugProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	ac->ToggleCrouchBug(pParams[2]);
 
@@ -201,7 +202,7 @@ cell AMX_NATIVE_CALL GetPlayerCrouchBugProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	return ac->GetCrouchBug();
 }
@@ -216,7 +217,7 @@ cell AMX_NATIVE_CALL GetPlayerSwitchReloadProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	return ac->GetSwitchReload();
 }
@@ -230,7 +231,7 @@ cell AMX_NATIVE_CALL TogglePlayerUnlimitedSprintProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	ac->ToggleUnlimitedSprint(!!pParams[2]);
 
@@ -246,7 +247,7 @@ cell AMX_NATIVE_CALL GetPlayerUnlimitedSprintProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	return ac->GetUnlimitedSprint();
 }
@@ -260,7 +261,7 @@ cell AMX_NATIVE_CALL TogglePlayerMacroLimitsProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	ac->ToggleMacroLimitations(!!pParams[2]);
 
@@ -276,7 +277,7 @@ cell AMX_NATIVE_CALL GetPlayerMacroLimitsProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	return ac->GetMacroLimitations();
 }
@@ -290,7 +291,7 @@ cell AMX_NATIVE_CALL TogglePlayerSprintOnAllSurfacesProc(AMX* pAmx, cell* pParam
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	ac->ToggleSprintOnAllSurfaces(!!pParams[2]);
 
@@ -306,7 +307,7 @@ cell AMX_NATIVE_CALL GetPlayerSprintOnAllSurfacesProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	return ac->GetSprintOnAllSurfaces();
 }
@@ -320,7 +321,7 @@ cell AMX_NATIVE_CALL TogglePlayerVehicleBlipsProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	ac->ToggleVehicleBlips(!!pParams[2]);
 
@@ -336,7 +337,7 @@ cell AMX_NATIVE_CALL GetPlayerVehicleBlipsProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	return ac->GetVehicleBlips();
 }
@@ -350,7 +351,7 @@ cell AMX_NATIVE_CALL AC_IsPlayerBannedProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	return ac->AC_IsBanned();
 }
@@ -364,7 +365,7 @@ cell AMX_NATIVE_CALL AC_GetPlayerBanStatusProc(AMX* pAmx, cell* pParams)
 	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
 
 	// Make sure the player is connected 
-	if (!IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
 
 	return ac->AC_GetBanStatus();
 }
@@ -383,6 +384,22 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 	return sampgdk::ProcessTick();
 }
 
+void WorkThread()
+{
+	while (1)
+	{
+		boost::this_thread::sleep_for(boost::chrono::hours(6));
+		
+		// Cheats update!
+		// If the list hasn't been updated in 6 hours...
+		CThreadSync::OnCheatsUpdate__parameters *param = new CThreadSync::OnCheatsUpdate__parameters;
+		param->FileNames = Cmd5Info::GetGtaDirectoryFilesNames();
+		param->MD5s = Cmd5Info::GetGtaDirectoryFilesMd5();
+		param->ProcessMD5s = Cmd5Info::GetBadExecutableFiles();
+		pMainThreadSync->AddCallbackToQueue(&CThreadSync::OnCheatsUpdate, param);
+	}
+}
+
 PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	// Load SampGDK
@@ -394,14 +411,20 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Initialize cURL
 	curl_global_init(CURL_GLOBAL_ALL);
 
+	// Initialize main thread sync
+	pMainThreadSync = new CThreadSync();
+
+	// Initialize work thread
+	boost::thread workThread(&WorkThread);
+
+	// Initialize cheat database (first time we do it non threaded)
+	CAntiCheat::UpdateCheatDatabase();
+
 	// hook amx_register
 	InstallAmxHooks();
 
 	// Find addresses to hook
 	FindAddresses();
-
-	// Initialize main thread sync
-	pMainThreadSync = new CThreadSync();
 
 	PluginData = ppData;
 
