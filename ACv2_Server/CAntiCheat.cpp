@@ -187,26 +187,26 @@ void CAntiCheat::OnUnknownSendPacketCallerFound(char* path, char* md5)
 		char msg[160];
 
 		// Send the formatted message to the player.
-		SendClientMessage(ID, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for packet tampering.");
+		sampgdk::SendClientMessage(ID, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for packet tampering.");
 
 		// Now, we need to send a message to the whole server saying someone was kicked, and we need to include their name
 		// So create a variable that can hold their name.
 		char name[MAX_PLAYER_NAME];
 
 		// Find their name.
-		GetPlayerName(ID, name, sizeof(name));
+		sampgdk::GetPlayerName(ID, name, sizeof(name));
 
 		// Format the string telling all the users this player has been kicked.
 		snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for packet tampering.", name);
 
 		// Send it to everyone
-		SendClientMessageToAll(-1, msg);
+		sampgdk::SendClientMessageToAll(-1, msg);
 
 		// Finally, print our a message to the console so we can log the result.
 		Utility::Printf("%s has been kicked for packet tampering, path: %s, md5: %s.", name, path, md5);
 
 		// And kick the player.
-		SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+		sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 	}
 
 	// Execute PAWN callback.
