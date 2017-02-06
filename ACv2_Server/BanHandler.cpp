@@ -30,16 +30,16 @@ namespace BanHandler
 		char name[MAX_PLAYER_NAME], ip[16];
 
 		// Get the player's name
-		GetPlayerName(playerid, name, sizeof(name));
+		sampgdk::GetPlayerName(playerid, name, sizeof(name));
 
 		// Get the player's IP
-		GetPlayerIp(playerid, ip, sizeof ip);
+		sampgdk::GetPlayerIp(playerid, ip, sizeof ip);
 
 		// Get server info: hostname and port
 		char server_name[64];
-		GetServerVarAsString("hostname", server_name, sizeof server_name);
+		sampgdk::GetServerVarAsString("hostname", server_name, sizeof server_name);
 		int server_port;
-		server_port = GetServerVarAsInt("port");
+		server_port = sampgdk::GetServerVarAsInt("port");
 
 		boost::thread addCheaterThread(&BanHandler::Thread_AddCheater, playerid, reason, md5, hwid, std::string(name), std::string(ip), std::string(server_name), server_port);
 	}
@@ -137,11 +137,11 @@ namespace BanHandler
 
 		// Get the player's name
 		char name[MAX_PLAYER_NAME];
-		GetPlayerName(playerid, name, sizeof name);
+		sampgdk::GetPlayerName(playerid, name, sizeof name);
 
 		// Get the player's IP
 		char ip[16];
-		GetPlayerIp(playerid, ip, sizeof ip);
+		sampgdk::GetPlayerIp(playerid, ip, sizeof ip);
 
 		// Get the player's Hardware ID.
 		std::string hwid = "";
