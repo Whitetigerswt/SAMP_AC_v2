@@ -22,6 +22,10 @@ public:
 	// REQUIRES: The client is using AC.
 	void OnFileCalculated(char* path, char* md5);
 
+	// PURPOSE: Callback for when an unknown module is detected sending a packet to server.
+	// REQUIRES: The client is using AC.
+	void OnUnknownSendPacketCallerFound(char* path, char* md5);
+
 	// PURPOSE: Callback for when a file in gta3.img is modified.
 	// REQUIRES: The client is using AC.
 	void OnImgFileModified(char* filename, char* md5);

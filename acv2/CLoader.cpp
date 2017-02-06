@@ -15,6 +15,7 @@
 #include "ManualInjection.h"
 #include "s0beit\samp.h"
 #include "BugSplat.h"
+#include "CPacketIntegrity.h"
 
 #include <map>
 #include <Aclapi.h>
@@ -118,6 +119,8 @@ void CLoader::Initialize(HMODULE hMod)
 		CDirectX::HookD3DFunctions();
 
 		CModuleSecurity::AddAllowedModules();
+
+		CPacketIntegrity::GlobalInitialize();
 
 		// Make sure we're using the latest version of this mod.
 		CClientUpdater::CheckForUpdate(hMod);

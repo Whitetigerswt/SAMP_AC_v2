@@ -36,6 +36,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(TOGGLE_PAUSE, OnPauseToggled);
 	CRPC::Add(TAKE_SCREENSHOT, OnTakeScreenshot);
 	CRPC::Add(VERSION_INCOMPAT2, VersionIncompat);
+	CRPC::Add(ON_UNKNOWN_SENDPACKET_CALLER_FOUND, OnUnknownSendPacketCallerFound);
 }
 
 RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra)
@@ -321,5 +322,37 @@ RPC_CALLBACK CRPCCallback::OnTakeScreenshot(RakNet::BitStream &bsData, int iExtr
 	if (ac)
 	{
 		ac->OnScreenshotTaken();
+	}
+}
+
+RPC_CALLBACK CRPCCallback::OnUnknownSendPacketCallerFound(RakNet::BitStream &bsData, int iExtra)
+{
+	unsigned char path[MAX_PATH + 1];
+	BYTE md5[16];
+
+	// Reset memory.
+	memset(path, 0, sizeof(path));
+	memset(md5, 0, sizeof(md5));
+
+	// Read the data the client sent us.
+	if (bsData.ReadString(path))
+	{
+		// Convert the md5 from bytes to char
+		char digestChars[33];
+		for (int i = 0; i < 16; ++i)
+		{
+			bsData.Read(md5[i]);
+			sprintf(digestChars + (i * 2), "%02X", md5[i]);
+		}
+
+		// lower case
+		boost::algorithm::to_lower(digestChars);
+
+		// Check the CAntiCheat pointer is valid.
+		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
+		if (ac)
+		{
+			ac->OnUnknownSendPacketCallerFound((char*)path, digestChars);
+		}
 	}
 }

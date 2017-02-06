@@ -252,6 +252,15 @@ forward AC_OnMD5Calculated(playerid, address, size, md5[]);
 // Returns: irrelevant
 forward AC_OnFileExecuted(playerid, module[], md5[]);
 
+// PURPOSE: Callback for when a client is trying to do packet tampering.
+// REQUIRES: The player is using AC.
+//
+// Params:
+// playerid     	- Player whom a new file was executed
+//
+// Returns: irrelevant
+forward AC_OnPacketTampering(playerid);
+
 // PURPOSE: Callback for when the AC has detected there is a file inside gta3.img that is modifed that is also on the list of bad gta3.img files. (Files that can't be modified in gta3.img)
 // REQUIRES: The player is using AC.
 //
