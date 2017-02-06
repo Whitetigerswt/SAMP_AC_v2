@@ -190,7 +190,7 @@ namespace Callback
 				}
 
 				// Send the client the files we need them to return md5's to.
-				ac->CheckGTAFiles(playerid);
+				ac->CheckGTAFiles();
 
 				// Set defaults
 				ac->ToggleUnlimitedSprint(Callback::Default_InfSprint);

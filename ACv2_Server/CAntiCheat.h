@@ -32,7 +32,8 @@ public:
 
 	// PURPOSE: Send an RPC to client to md5 files.
 	// REQUIRES: The client is using AC.
-	void CheckGTAFiles(int playerid);
+	static void Thread_CheckGTAFiles(int playerid);
+	void CheckGTAFiles();
 
 	// PURPOSE: Callback for when a player has sent their hardwareID to the server.
 	// REQUIRES: The client is using AC.

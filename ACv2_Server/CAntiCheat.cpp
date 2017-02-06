@@ -1,4 +1,5 @@
 #include "CAntiCheat.h"
+#include "CAntiCheatHandler.h"
 #include "Utility.h"
 #include "GDK/sampgdk.h"
 #include "Network/Network.h"
@@ -10,6 +11,7 @@
 #include "BanHandler.h"
 #include <ctime>
 #include <cstring>
+#include <boost/thread.hpp>
 
 std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;
@@ -247,11 +249,14 @@ void CAntiCheat::ToggleCanEnableAC(int playerid, bool toggle)
 	}
 }
 
-void CAntiCheat::CheckGTAFiles(int playerid)
+void CAntiCheat::Thread_CheckGTAFiles(int playerid)
 {
 	// Loop through the files we need to send to the client for him/her to check.
 	for (std::vector<std::string>::iterator it = m_FileNames.begin(); it != m_FileNames.end(); ++it)
 	{
+		if (!CAntiCheatHandler::IsConnected(playerid))
+			break; // Player disconnected, so stop sending packets
+
 		// Create a new string that will hold the final file value, preceeded by the macro $(GtaDirectory)
 		std::string szFile("$(GtaDirectory)/");
 
@@ -271,7 +276,14 @@ void CAntiCheat::CheckGTAFiles(int playerid)
 
 		// Send the data to the client and have them calculate the md5 of that file.
 		Network::PlayerSend(playerid, &bsData, LOW_PRIORITY, RELIABLE);
+	
+		boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
 	}
+}
+
+void CAntiCheat::CheckGTAFiles()
+{
+	boost::thread SendThread(&Thread_CheckGTAFiles, ID);
 }
 
 void CAntiCheat::OnMacroDetected(int vKey)
