@@ -5,6 +5,7 @@ EXPORTS
 	Unload
 	AmxLoad
 	AmxUnload
+	OnPublicCall
 	OnPlayerConnect
 	OnPlayerDisconnect
 	OnGameModeInit

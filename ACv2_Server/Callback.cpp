@@ -159,6 +159,20 @@ namespace Callback
 		return ACToggle;
 	}
 
+	PLUGIN_EXPORT bool PLUGIN_CALL OnPublicCall(AMX *amx, const char *name, cell *params, cell *retval)
+	{
+		if (!strcmp(name, "OnPlayerConnect"))
+		{
+			int playerid = params[1];
+			CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(playerid);
+			if (ac && !ac->IsCreationTickValid())
+			{
+				CAntiCheatHandler::Remove(playerid);
+			}
+		}
+		return 1;
+	}
+
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
 		// Make sure the new connected user isn't an NPC.
