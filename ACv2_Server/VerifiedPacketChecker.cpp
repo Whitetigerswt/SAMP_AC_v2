@@ -93,7 +93,7 @@ namespace VerifiedPacketChecker
 		bsData.Write((unsigned char)PACKET_RPC);
 		bsData.Write(VERIFY_CLIENT);
 		bsData.Write((char*)&sendArray, nBytes + 2);
-		Network::PlayerSend(playerid, &bsData, HIGH_PRIORITY, RELIABLE);
+		Network::PlayerSend(playerid, &bsData, MEDIUM_PRIORITY, RELIABLE);
 
 		bsData.SetReadOffset(BYTES_TO_BITS((sizeof(unsigned char) + sizeof(eRPC)))); // skip header
 		ACVerifiedPacket::Verify(bsData, ClientVerification[playerid].ToVerify, ClientVerification[playerid].ToVerifySize);
