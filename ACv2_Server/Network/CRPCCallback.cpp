@@ -226,10 +226,6 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
-	CAntiCheatHandler::Init(iExtra);
-
-	VerifiedPacketChecker::SetLastTimeVerifiedClient(iExtra, Utility::getTickCount());
-
 	// Create a big variable to hold hardware ID.
 	float version;
 
@@ -248,6 +244,7 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	// Read the hardware ID from the client.
 	if (bsData.Read(version))
 	{
+		CAntiCheatHandler::Init(iExtra);
 		// Make sure AC pointer is valid
 		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
 		if (ac)
@@ -257,6 +254,9 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 
 			// Check the version compatiblity.
 			ac->CheckVersionCompatible(version);
+
+			// Check if client is authentic
+			ac->SendVerificationPacket();
 		}
 	}
 }

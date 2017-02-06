@@ -68,31 +68,35 @@ namespace VerifiedPacketChecker
 				else
 				{
 					// Request verified packet from client
-
-					RakNet::BitStream bsData;
-
-					unsigned char nBytes = ACVerifiedPacket::MIN_ARRAY_SIZE + rand() % (ACVerifiedPacket::MAX_ARRAY_SIZE - ACVerifiedPacket::MIN_ARRAY_SIZE + 1); // [8 .. 16]
-					unsigned char keyByte = rand() % nBytes; // [0 .. nBytes]
-					unsigned char sendArray[ACVerifiedPacket::MAX_ARRAY_SIZE+2]; // this array size must be at least (nBytes+2)
-					for (int j = 0; j < nBytes; ++j)
-						sendArray[j] = rand() % 256;
-
-					sendArray[nBytes] = sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE];
-					sendArray[nBytes+1] = sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE + 1];
-
-					sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE] = keyByte;
-					sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE + 1] = nBytes;
-
-					bsData.Write((unsigned char)PACKET_RPC);
-					bsData.Write(VERIFY_CLIENT);
-					bsData.Write((char*)&sendArray, nBytes + 2);
-					Network::PlayerSend(i, &bsData, HIGH_PRIORITY, RELIABLE);
-
-					bsData.SetReadOffset(BYTES_TO_BITS((sizeof(unsigned char) + sizeof(eRPC)))); // skip header
-					ACVerifiedPacket::Verify(bsData, ClientVerification[i].ToVerify, ClientVerification[i].ToVerifySize);
+					VerifyClient(i);
 				}
 			}
 		}
+	}
+
+	void VerifyClient(unsigned int playerid)
+	{
+		RakNet::BitStream bsData;
+
+		unsigned char nBytes = ACVerifiedPacket::MIN_ARRAY_SIZE + rand() % (ACVerifiedPacket::MAX_ARRAY_SIZE - ACVerifiedPacket::MIN_ARRAY_SIZE + 1); // [8 .. 16]
+		unsigned char keyByte = rand() % nBytes; // [0 .. nBytes]
+		unsigned char sendArray[ACVerifiedPacket::MAX_ARRAY_SIZE + 2]; // this array size must be at least (nBytes+2)
+		for (int j = 0; j < nBytes; ++j)
+			sendArray[j] = rand() % 256;
+
+		sendArray[nBytes] = sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE];
+		sendArray[nBytes + 1] = sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE + 1];
+
+		sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE] = keyByte;
+		sendArray[ACVerifiedPacket::MIN_ARRAY_SIZE + 1] = nBytes;
+
+		bsData.Write((unsigned char)PACKET_RPC);
+		bsData.Write(VERIFY_CLIENT);
+		bsData.Write((char*)&sendArray, nBytes + 2);
+		Network::PlayerSend(playerid, &bsData, MEDIUM_PRIORITY, RELIABLE);
+
+		bsData.SetReadOffset(BYTES_TO_BITS((sizeof(unsigned char) + sizeof(eRPC)))); // skip header
+		ACVerifiedPacket::Verify(bsData, ClientVerification[playerid].ToVerify, ClientVerification[playerid].ToVerifySize);
 	}
 
 	void StartVerifiedPacketChecker()
