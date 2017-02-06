@@ -15,6 +15,7 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 // PURPOSE: Check if the player is using samp AC and return the result
 // REQUIRES: NULL
 // NOTES: This function might return incorrect values when called at OnPlayerConnect in filterscripts. 
+// NOTES: For a workaround, see OnPlayerConnect in sample scripts.
 //
 // Params:
 // playerid - Player to check
