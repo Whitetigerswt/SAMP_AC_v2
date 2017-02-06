@@ -159,20 +159,6 @@ namespace Callback
 		return ACToggle;
 	}
 
-	PLUGIN_EXPORT bool PLUGIN_CALL OnPublicCall(AMX *amx, const char *name, cell *params, cell *retval)
-	{
-		if (!strcmp(name, "OnPlayerConnect"))
-		{
-			int playerid = params[1];
-			CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(playerid);
-			if (ac && !ac->IsCreationTickValid())
-			{
-				CAntiCheatHandler::Remove(playerid);
-			}
-		}
-		return 1;
-	}
-
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
 		// Make sure the new connected user isn't an NPC.
@@ -181,39 +167,39 @@ namespace Callback
 			// Return
 			return true;
 		}
-
-		if (CAntiCheatHandler::IsConnected(playerid))
+		
+		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(playerid);
+		if (ac && !ac->IsCreationTickValid())
 		{
-			// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
-			CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
+			CAntiCheatHandler::Remove(playerid);
+			ac = NULL;
+		}
 
+		if (ac != NULL)
+		{
 			std::string hwid = "";
+			// Request player's ban status
+			BanHandler::CheckCheater(playerid);
 
-			if (ac != NULL)
+			// Get the player's Hardware ID.
+			hwid = ac->GetPlayerHardwareID();
+
+			if (ACToggle)
 			{
-				// Request player's ban status
-				BanHandler::CheckCheater(playerid);
-
-				// Get the player's Hardware ID.
-				hwid = ac->GetPlayerHardwareID();
-
-				if (ACToggle)
-				{
-					// Tell the player we're using the AC on this server.
-					sampgdk::SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
-				}
-
-				// Send the client the files we need them to return md5's to.
-				ac->CheckGTAFiles();
-
-				// Set defaults
-				ac->ToggleUnlimitedSprint(Callback::Default_InfSprint);
-				ac->ToggleSprintOnAllSurfaces(Callback::Default_SprintOnAllSurfaces);
-				ac->ToggleMacroLimitations(Callback::Default_MacroLimits);
-				ac->ToggleSwitchReload(Callback::Default_SwitchReload);
-				ac->ToggleCrouchBug(Callback::Default_CrouchBug);
-				ac->ToggleVehicleBlips(Callback::Default_VehicleBlips);
+				// Tell the player we're using the AC on this server.
+				sampgdk::SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
 			}
+
+			// Send the client the files we need them to return md5's to.
+			ac->CheckGTAFiles();
+
+			// Set defaults
+			ac->ToggleUnlimitedSprint(Callback::Default_InfSprint);
+			ac->ToggleSprintOnAllSurfaces(Callback::Default_SprintOnAllSurfaces);
+			ac->ToggleMacroLimitations(Callback::Default_MacroLimits);
+			ac->ToggleSwitchReload(Callback::Default_SwitchReload);
+			ac->ToggleCrouchBug(Callback::Default_CrouchBug);
+			ac->ToggleVehicleBlips(Callback::Default_VehicleBlips);
 
 			// Check if it's an empty string
 			if (hwid.empty())
