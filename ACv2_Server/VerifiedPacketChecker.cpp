@@ -25,16 +25,16 @@ namespace VerifiedPacketChecker
 		if (ClientVerification[playerid].UnverifiedClientWarnings == MAX_UNVERIFIED_CLIENT_WARNINGS)
 		{
 			char msg[144], name[MAX_PLAYER_NAME];
-			GetPlayerName(playerid, name, sizeof name);
+			sampgdk::GetPlayerName(playerid, name, sizeof name);
 			snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client in time.", name);
-			SendClientMessageToAll(0xFF0000FF, msg);
+			sampgdk::SendClientMessageToAll(0xFF0000FF, msg);
 			Utility::Printf(msg);
 
 			// Kick the player from the server
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+			sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 			return;
 		}
-		ClientVerification[playerid].LastTimeVerifiedClient = sampgdk_GetTickCount();
+		ClientVerification[playerid].LastTimeVerifiedClient = Utility::getTickCount();
 		ClientVerification[playerid].UnverifiedClientWarnings ++;
 	}
 
@@ -58,10 +58,10 @@ namespace VerifiedPacketChecker
 		for (int i = 0; i < MAX_PLAYERS; ++i)
 		{
 			// Make sure the player is connected to the AC and the server.
-			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
+			if (sampgdk::IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
 			{
 				// See if they haven't verified their client in a while
-				if (GetTickCount() - ClientVerification[i].LastTimeVerifiedClient > VERIFY_CLIENTS_INTERVAL)
+				if (Utility::getTickCount() - ClientVerification[i].LastTimeVerifiedClient > VERIFY_CLIENTS_INTERVAL)
 				{
 					WarnUnverifiedClient(i);
 				}
@@ -101,6 +101,6 @@ namespace VerifiedPacketChecker
 
 	void StartVerifiedPacketChecker()
 	{
-		SetTimer(VERIFY_CLIENTS_INTERVAL, true, VerifyClients, NULL);
+		sampgdk::SetTimer(VERIFY_CLIENTS_INTERVAL, true, VerifyClients, NULL);
 	}
 }

@@ -22,6 +22,10 @@ public:
 	// REQUIRES: The client is using AC.
 	void OnFileCalculated(char* path, char* md5);
 
+	// PURPOSE: Callback for when an unknown module is detected sending a packet to server.
+	// REQUIRES: The client is using AC.
+	void OnUnknownSendPacketCallerFound(char* path, char* md5);
+
 	// PURPOSE: Callback for when a file in gta3.img is modified.
 	// REQUIRES: The client is using AC.
 	void OnImgFileModified(char* filename, char* md5);
@@ -32,7 +36,8 @@ public:
 
 	// PURPOSE: Send an RPC to client to md5 files.
 	// REQUIRES: The client is using AC.
-	void CheckGTAFiles(int playerid);
+	static void Thread_CheckGTAFiles(int playerid);
+	void CheckGTAFiles();
 
 	// PURPOSE: Callback for when a player has sent their hardwareID to the server.
 	// REQUIRES: The client is using AC.
@@ -146,6 +151,19 @@ public:
 	// REQUIRES: NULL
 	bool IsCreationTickValid();
 
+	// PURPOSE: Fetch information about cheats on server startup.
+	// REQUIRES: NULL
+	static void UpdateCheatDatabase();
+
+	static std::vector<std::string> GetScannedFilenames() { return m_FileNames; }
+	static void SetScannedFilenames(std::vector<std::string> filenames) { m_FileNames = filenames; }
+
+	static std::vector<std::string> GetScannedFilesMD5s() { return m_MD5s; }
+	static void SetScannedFilesMD5s(std::vector<std::string> md5s) { m_MD5s = md5s; }
+
+	static std::vector<std::string> GetScannedProcessesMD5s() { return m_ProcessMD5s; }
+	static void SetScannedProcessesMD5s(std::vector<std::string> processesmd5s) { m_ProcessMD5s = processesmd5s; }
+
 private:
 
 	// PURPOSE: Remember the player's playerID.
@@ -193,10 +211,4 @@ private:
 
 	// PURPOSE: A list of processes that are not allowed to be used while the AC is enabled.
 	static std::vector<std::string> m_ProcessMD5s;
-
-	int m_LastCheatUpdate;
-
-	// PURPOSE: Update the list of cheats if it's needed.
-	// REQUIRES: NULL
-	void UpdateCheatList();
 };

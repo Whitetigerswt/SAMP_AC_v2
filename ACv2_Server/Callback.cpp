@@ -103,10 +103,10 @@ namespace Callback
 	void SAMPGDK_CALL KickPlayer(int timerid, void *params)
 	{
 		// Make sure the player is connected.
-		if (IsPlayerConnected((int)params))
+		if (sampgdk::IsPlayerConnected((int)params))
 		{
 			// Kick the player from the server.
-			Kick((int)params);
+			sampgdk::Kick((int)params);
 		}
 	}
 
@@ -116,7 +116,7 @@ namespace Callback
 		int playerid = (int)params;
 
 		// Make sure the player is still connected to the server.
-		if (!IsPlayerConnected(playerid))
+		if (!sampgdk::IsPlayerConnected(playerid))
 		{
 			// Return
 			return;
@@ -129,7 +129,7 @@ namespace Callback
 		for (int i = 0; i < MAX_PLAYERS; ++i)
 		{
 			// Make sure the player is connected to the AC and the server.
-			if (IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
+			if (sampgdk::IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
 			{
 				// Verify the players weapon.dat values.
 				RakNet::BitStream bsData;
@@ -176,7 +176,7 @@ namespace Callback
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
 		// Make sure the new connected user isn't an NPC.
-		if (IsPlayerNPC(playerid))
+		if (sampgdk::IsPlayerNPC(playerid))
 		{
 			// Return
 			return true;
@@ -200,11 +200,11 @@ namespace Callback
 				if (ACToggle)
 				{
 					// Tell the player we're using the AC on this server.
-					SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
+					sampgdk::SendClientMessage(playerid, -1, "{FF0000}Warning: {FFFFFF}This server has Anti-Cheat (v2) enabled.");
 				}
 
 				// Send the client the files we need them to return md5's to.
-				ac->CheckGTAFiles(playerid);
+				ac->CheckGTAFiles();
 
 				// Set defaults
 				ac->ToggleUnlimitedSprint(Callback::Default_InfSprint);
@@ -224,16 +224,16 @@ namespace Callback
 					char msg[144], name[MAX_PLAYER_NAME];
 
 					// Get the player's name
-					GetPlayerName(playerid, name, sizeof(name));
+					sampgdk::GetPlayerName(playerid, name, sizeof(name));
 
 					// Format the main string we'll send to the players on the server.
 					snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF}'s AC did not respond in time.", name);
 
 					// Send the message to the server
-					SendClientMessageToAll(-1, msg);
+					sampgdk::SendClientMessageToAll(-1, msg);
 
 					// Kick the player from the server.
-					SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+					sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 				}
 
 			}
@@ -242,25 +242,25 @@ namespace Callback
 		else if (ACToggle)
 		{
 			// Notify them that this isn't allowed.
-			SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for not running Whitetiger's Anti-Cheat (v2)");
+			sampgdk::SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for not running Whitetiger's Anti-Cheat (v2)");
 
 			char msg[160], name[MAX_PLAYER_NAME];
 
 			// Get the player name and store it in the name variable.
-			GetPlayerName(playerid, name, sizeof(name));
+			sampgdk::GetPlayerName(playerid, name, sizeof(name));
 			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for not running Whitetiger's Anti-Cheat (v2)", name);
 
 			// Send them the formatted message.
-			SendClientMessageToAll(-1, msg);
+			sampgdk::SendClientMessageToAll(-1, msg);
 
 			// Tell them where to get the AC and install it.
 			snprintf(msg, sizeof msg, "{FFFFFF}You can download the latest version of Whitetiger's Anti-Cheat at: {FF0000}%s", AC_WEBSITE);
-			SendClientMessage(playerid, -1, msg);
+			sampgdk::SendClientMessage(playerid, -1, msg);
 
 			Utility::Printf("%s has been kicked from the server for not connecting with AC while AC is on.", name);
 
 			// Finally, kick the player.
-			SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+			sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
 
 			return true;
 		}
@@ -288,7 +288,7 @@ namespace Callback
 			return true;
 
 		// Check memory pretty frequently in a new timer.
-		SetTimer(60000, true, CheckPlayersMemory, NULL);
+		sampgdk::SetTimer(60000, true, CheckPlayersMemory, NULL);
 
 		// Request client verification in a repeated timer
 		VerifiedPacketChecker::StartVerifiedPacketChecker();
@@ -344,13 +344,13 @@ namespace Callback
 			char str[144], name[MAX_PLAYER_NAME];
 
 			// Get the player name
-			GetPlayerName(playerid, name, sizeof(name));
+			sampgdk::GetPlayerName(playerid, name, sizeof(name));
 
 			// Format the message telling all the users that AC is now on.
 			snprintf(str, sizeof(str), "{FF0000}%s{0000FF} has {FFFFFF}%s{0000FF} SAMP_AC_v2.", name, ACToggle == true ? "Enabled" : "Disabled");
 
 			// Send the message to everyone on the server.
-			SendClientMessageToAll(-1, str);
+			sampgdk::SendClientMessageToAll(-1, str);
 
 			// If the AC was turned on
 			if (ACToggle)
@@ -362,14 +362,14 @@ namespace Callback
 				for (int i = 0; i < MAX_PLAYERS; ++i)
 				{
 					// If they're not connected to the server, we skip this index.
-					if (!IsPlayerConnected(i) || IsPlayerNPC(i))
+					if (!sampgdk::IsPlayerConnected(i) || sampgdk::IsPlayerNPC(i))
 						continue;
 					
 					// If they are not connected to the AC
 					if (!CAntiCheatHandler::IsConnected(i))
 					{
 						// Kick them from the server!
-						SetTimer(1000, 0, Callback::KickPlayer, (void*)i);
+						sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)i);
 					}
 					else // they are connected to the AC
 					{
@@ -383,7 +383,7 @@ namespace Callback
 							if (ac->AC_IsBanned())
 							{
 								// Kick the banned player from the server
-								Kick(i);
+								sampgdk::Kick(i);
 							}
 						}
 					}
@@ -404,13 +404,13 @@ namespace Callback
 		for (int i = 0; i < MAX_PLAYERS; ++i)
 		{
 			// If the player is connected.
-			if (IsPlayerConnected(i))
+			if (sampgdk::IsPlayerConnected(i))
 			{
 				// Create a variable to store the player's IP.
 				char IP[MAX_PLAYER_NAME];
 
 				// Get the player's IP and store it in the variable we just created.
-				GetPlayerIp(i, IP, sizeof(IP));
+				sampgdk::GetPlayerIp(i, IP, sizeof(IP));
 
 				// Compare the IP to the IP that tried to do that rcon login
 				if (!strcmp(ip, IP))

@@ -87,7 +87,8 @@ enum eRPC : unsigned short
 	// Called when a player takes a screenshot
 	TAKE_SCREENSHOT,
 
-
+	// Called when CPacketIntegrity::Check finds suspicious activity
+	ON_UNKNOWN_SENDPACKET_CALLER_FOUND
 };
 
 class CRPC
