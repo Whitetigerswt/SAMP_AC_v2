@@ -65,7 +65,7 @@ void CRPCCallback::VerifyClient(RakNet::BitStream &bsData, int iExtra)
 	bitStream.Write((char*)&preparedData, preparedDataSize);
 
 	// Send the RPC to the server.
-	CRakClientHandler::CustomSend(&bitStream, HIGH_PRIORITY, RELIABLE);
+	CRakClientHandler::CustomSend(&bitStream, MEDIUM_PRIORITY, RELIABLE);
 }
 
 void CRPCCallback::MD5_Memory_Region(RakNet::BitStream &bsData, int iExtra)

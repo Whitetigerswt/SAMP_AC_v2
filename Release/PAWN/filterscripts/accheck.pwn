@@ -100,6 +100,16 @@ public OnFilterScriptExit()
 
 public OnPlayerConnect(playerid)
 {
+    // IsPlayerUsingSampAC might return incorrect values when called at OnPlayerConnect in filterscripts. 
+    // So, we'll use SetTimerEx for a dirty fix.
+    // See "Running code just after a function finishes" paragraph: http://forum.sa-mp.com/showpost.php?p=1037822
+    SetTimerEx("FIX_OnPlayerConnect", 0, false, "d", playerid);
+    return 1;
+}
+
+forward FIX_OnPlayerConnect(playerid);
+public FIX_OnPlayerConnect(playerid)
+{
 	// Get the player's IP
 	new IP[16];
 	GetPlayerIp(playerid, IP, sizeof(IP));

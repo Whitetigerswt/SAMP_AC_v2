@@ -143,6 +143,14 @@ public:
 	// REQUIRES: NULL
 	int GetID() { return ID; }
 
+	// PURPOSE: Verify if client is authentic.
+	// REQUIRES: NULL
+	void SendVerificationPacket();
+
+	// PURPOSE: Check whether connection tick is valid or not.
+	// REQUIRES: NULL
+	bool IsCreationTickValid();
+
 	// PURPOSE: Fetch information about cheats on server startup.
 	// REQUIRES: NULL
 	static void UpdateCheatDatabase();
@@ -184,6 +192,10 @@ private:
 
 	// PURPOSE: Keep track of player's ban status on Anti-Cheat.
 	short m_BanStatus;
+
+	// PURPOSE: Used to validate connection
+	unsigned int m_CreationTick;
+	static unsigned int m_MaxCreationTickDifference;
 
 	// PURPOSE: Store the player's hardware ID.
 	std::string m_HardwareID;

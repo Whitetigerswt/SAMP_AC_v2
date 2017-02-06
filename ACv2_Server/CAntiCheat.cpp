@@ -9,6 +9,7 @@
 #include "CServerUpdater.h"
 #include "PacketPriority.h"
 #include "BanHandler.h"
+#include "VerifiedPacketChecker.h"
 #include <ctime>
 #include <cstring>
 #include <boost/thread.hpp>
@@ -17,6 +18,7 @@ std::vector<int> CAntiCheat::m_Admins;
 std::vector<std::string> CAntiCheat::m_FileNames;
 std::vector<std::string> CAntiCheat::m_MD5s;
 std::vector<std::string> CAntiCheat::m_ProcessMD5s;
+unsigned int CAntiCheat::m_MaxCreationTickDifference = 2000;
 
 #ifdef WIN32
 #define snprintf sprintf_s
@@ -33,6 +35,7 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_SprintOnAllSurfaces = false;
 	m_VehicleBlips = true;
 	m_BanStatus = -1;
+	m_CreationTick = Utility::getTickCount();
 }
 
 CAntiCheat::~CAntiCheat()
@@ -571,6 +574,16 @@ void CAntiCheat::OnScreenshotTaken()
 {
 	// Let PAWN scripts know.
 	Callback::Execute("AC_OnScreenshotTaken", "i", ID);
+}
+
+void CAntiCheat::SendVerificationPacket()
+{
+	VerifiedPacketChecker::VerifyClient(ID);
+}
+
+bool CAntiCheat::IsCreationTickValid()
+{
+	return Utility::getTickCount() - m_CreationTick < m_MaxCreationTickDifference;
 }
 
 void CAntiCheat::UpdateCheatDatabase()
