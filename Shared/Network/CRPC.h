@@ -49,6 +49,9 @@ enum eRPC : unsigned short
 	// Called when the server wants to turn on or off macro limitations.
 	TOGGLE_MACRO_LIMITS,
 
+	// Called when the server wants to set the sprint speed limit.
+	SET_SPRINT_LIMIT,
+
 	// Called when the server wants to turn on or off sprinting on all surfaces
 	TOGGLE_SPRINT_ALL_SURFACES,
 

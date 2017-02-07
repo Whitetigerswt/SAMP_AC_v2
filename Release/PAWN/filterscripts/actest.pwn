@@ -87,6 +87,26 @@ CMD:setmyfps(playerid, params[])
 	return 1;
 }
 
+CMD:sprintlimit(playerid, params[])
+{
+	if(!IsACPluginLoaded())
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}AC v2 plugin is not loaded.");
+
+	if(!IsPlayerUsingSampAC(playerid))
+		return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}You're not running SA-MP AC.");
+	
+	SetPlayerSprintLimit(playerid, strval(params));
+
+	new str[128];
+	format(str, sizeof(str), "Set sprint speed limit to: %d", strval(params));
+	SendClientMessage(playerid, -1, str);
+	
+	if(!GetPlayerMacroLimits(playerid))
+	    SendClientMessage(playerid, -1, "WARNING: You won't be able to see the effect since macro limitation is currently disabled.");
+
+	return 1;
+}
+
 CMD:vehblips(playerid, params[])
 {
 	if(!IsACPluginLoaded())

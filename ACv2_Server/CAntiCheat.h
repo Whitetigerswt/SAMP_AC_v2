@@ -107,6 +107,10 @@ public:
 	// REQUIRES: NULL
 	bool GetMacroLimitations() { return m_MacroLimits; }
 
+	// PURPOSE: Set the player's sprint speed limit.
+	// REQUIRES: The client is using AC.
+	void SetSprintLimit(float speed);
+
 	// PURPOSE: Set the players macro limitations.
 	// REQUIRES: The client is using AC.
 	void ToggleSprintOnAllSurfaces(bool toggle);
@@ -183,6 +187,9 @@ private:
 	
 	// PURPOSE: Keep track of the player's macro limits.
 	bool m_MacroLimits;
+
+	// PURPOSE: Keep track of the player's sprint speed limit.
+	float m_SprintLimit;
 
 	// PURPOSE: Keep track of the player's status sprinting on all surfaces.
 	bool m_SprintOnAllSurfaces;

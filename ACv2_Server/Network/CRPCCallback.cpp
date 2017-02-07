@@ -224,23 +224,6 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 	}
 }
 
-void SAMPGDK_CALL KickUnverifiedClient(int timerid, void *params)
-{
-	// Make sure the player is connected.
-	int playerid = (int)params;
-	if (sampgdk::IsPlayerConnected(playerid))
-	{
-		char kickmsg[144], name[MAX_PLAYER_NAME];
-		sampgdk::GetPlayerName(playerid, name, sizeof name);
-		snprintf(kickmsg, sizeof(kickmsg), "Kicking %s (%d) for not verifying anti-cheat client properly.", name, playerid);
-
-		sampgdk::SendClientMessageToAll(0xFF0000FF, kickmsg);
-		Utility::Printf(kickmsg);
-
-		sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
-	}
-}
-
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
 	// Create a big variable to hold hardware ID.

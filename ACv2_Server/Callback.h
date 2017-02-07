@@ -36,8 +36,6 @@ namespace Callback
 	// REQUIRES: Nothing.
 	void KickPlayer(int timerid, void* params);
 
-	extern bool ACToggle;
-
 	static bool Default_InfSprint = false;
 	static bool Default_SprintOnAllSurfaces = false;
 	static bool Default_MacroLimits = false;
@@ -46,6 +44,7 @@ namespace Callback
 	static bool Default_LiteFoot = true;
 	static int Default_CrouchBug = 9999;
 	static int Default_FrameLimit = 9999;
+	static float Default_SprintLimit = 8.5f;
 
 	bool GetACEnabled();
 }

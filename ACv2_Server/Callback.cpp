@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -27,7 +28,12 @@ namespace Callback
 	{
 		return amxPointers;
 	}
-	bool ACToggle = true; // initialization
+
+	// AC Config property tree, must be global, used for writing to or modifying ac_config.ini
+	static boost::property_tree::ptree ac_config_ptree;
+
+	// Initialization, AC is enabled
+	static bool ACToggle = true;
 
 	cell Execute(const char* szFunction, const char* szFormat, ...)
 	{
@@ -199,6 +205,7 @@ namespace Callback
 			ac->ToggleMacroLimitations(Callback::Default_MacroLimits);
 			ac->ToggleSwitchReload(Callback::Default_SwitchReload);
 			ac->ToggleCrouchBug(Callback::Default_CrouchBug);
+			ac->SetSprintLimit(Callback::Default_SprintLimit);
 			ac->ToggleVehicleBlips(Callback::Default_VehicleBlips);
 
 			// Check if it's an empty string
@@ -284,8 +291,6 @@ namespace Callback
 
 		if (!boost::filesystem::exists("ac_config.ini"))
 		{
-			Utility::Printf("Warning: ac_config.ini is missing, loading default AC values.");
-
 			ACToggle = true;
 			Default_InfSprint = true;
 			Default_SprintOnAllSurfaces = true;
@@ -295,22 +300,38 @@ namespace Callback
 
 			Default_CrouchBug = 9999;
 			Default_FrameLimit = 9999;
+			Default_SprintLimit = 8.5f;
+
+			ac_config_ptree.put("defaults.main_ac_checks", (ACToggle == true) ? 1 : 0);
+			ac_config_ptree.put("defaults.inf_sprint", (Default_InfSprint == true) ? 1 : 0);
+			ac_config_ptree.put("defaults.sprint_all_surfaces", (Default_SprintOnAllSurfaces == true) ? 1 : 0);
+			ac_config_ptree.put("defaults.macro_limits", (Default_MacroLimits == true) ? 1 : 0);
+			ac_config_ptree.put("defaults.vehicle_blips", (Default_VehicleBlips == true) ? 1 : 0);
+			ac_config_ptree.put("defaults.switch_reload", (Default_SwitchReload == true) ? 1 : 0);
+			ac_config_ptree.put("defaults.crouch_bug", Default_CrouchBug);
+			ac_config_ptree.put("defaults.frame_limit", Default_FrameLimit);
+			ac_config_ptree.put("defaults.sprint_speed_limit", static_cast<int>(Default_SprintLimit * 10.0f));
+
+
+			boost::property_tree::ini_parser::write_ini("ac_config.ini", ac_config_ptree);
+
+			Utility::Printf("Notice: ac_config.ini was missing, we've created one with default AC values.");
 		}
 		else
 		{
 			// Load config.
-			boost::property_tree::ptree pt;
-			boost::property_tree::ini_parser::read_ini("ac_config.ini", pt);
+			boost::property_tree::ini_parser::read_ini("ac_config.ini", ac_config_ptree);
 
 			// Load default values from file.
-			ACToggle = pt.get<bool>("defaults.main_ac_checks");
-			Default_InfSprint = pt.get<bool>("defaults.inf_sprint");
-			Default_SprintOnAllSurfaces = pt.get<bool>("defaults.sprint_all_surfaces");
-			Default_MacroLimits = pt.get<bool>("defaults.macro_limits");
-			Default_SwitchReload = pt.get<bool>("defaults.switch_reload");
-			Default_CrouchBug = pt.get<int>("defaults.crouch_bug");
-			Default_FrameLimit = pt.get<int>("defaults.frame_limit");
-			Default_VehicleBlips = pt.get<bool>("defaults.vehicle_blips");
+			ACToggle = ac_config_ptree.get<bool>("defaults.main_ac_checks");
+			Default_InfSprint = ac_config_ptree.get<bool>("defaults.inf_sprint");
+			Default_SprintOnAllSurfaces = ac_config_ptree.get<bool>("defaults.sprint_all_surfaces");
+			Default_MacroLimits = ac_config_ptree.get<bool>("defaults.macro_limits");
+			Default_SprintLimit = static_cast<float>(ac_config_ptree.get<int>("defaults.sprint_speed_limit")) / 10.0f;
+			Default_SwitchReload = ac_config_ptree.get<bool>("defaults.switch_reload");
+			Default_CrouchBug = ac_config_ptree.get<int>("defaults.crouch_bug");
+			Default_FrameLimit = ac_config_ptree.get<int>("defaults.frame_limit");
+			Default_VehicleBlips = ac_config_ptree.get<bool>("defaults.vehicle_blips");
 		}
 
 		onGameModeInitCalled = true;
@@ -325,6 +346,12 @@ namespace Callback
 			// Set ACToggle to whatever it wasn't previously.
 			ACToggle = !ACToggle;
 
+			// Update property tree with the new value
+			ac_config_ptree.put("defaults.main_ac_checks", (ACToggle == true) ? 1 : 0);
+			
+			// Write to ini file
+			boost::property_tree::ini_parser::write_ini("ac_config.ini", ac_config_ptree);
+
 			// Create 2 variables, one to hold the player name who just enabled/disabled AC, and one to send a formatted message
 			// telling all the users on the server that the AC is now on and they will be kicked if they're not using it.
 			char str[144], name[MAX_PLAYER_NAME];
@@ -333,7 +360,7 @@ namespace Callback
 			sampgdk::GetPlayerName(playerid, name, sizeof(name));
 
 			// Format the message telling all the users that AC is now on.
-			snprintf(str, sizeof(str), "{FF0000}%s{0000FF} has {FFFFFF}%s{0000FF} SAMP_AC_v2.", name, ACToggle == true ? "Enabled" : "Disabled");
+			snprintf(str, sizeof(str), "{FFFFFF}%s has %s{FFFFFF} SAMP_AC_v2.", name, ACToggle == true ? "{35B863}enabled" : "{DE4545}disabled");
 
 			// Send the message to everyone on the server.
 			sampgdk::SendClientMessageToAll(-1, str);
