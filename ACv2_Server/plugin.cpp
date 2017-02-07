@@ -84,7 +84,7 @@ cell AMX_NATIVE_CALL CanPlayerEnableACProc(AMX* pAmx, cell* pParams)
 cell AMX_NATIVE_CALL IsACEnabledProc(AMX* pAmx, cell* pParams)
 {
 	// Return if AC is on or not
-	return Callback::ACToggle;
+	return Callback::GetACEnabled();
 }
 
 cell AMX_NATIVE_CALL GetPlayerHardwareIDProc(AMX* pAmx, cell* pParams)
@@ -206,7 +206,6 @@ cell AMX_NATIVE_CALL GetPlayerCrouchBugProc(AMX* pAmx, cell* pParams)
 
 	return ac->GetCrouchBug();
 }
-
 
 cell AMX_NATIVE_CALL GetPlayerSwitchReloadProc(AMX* pAmx, cell* pParams)
 {
