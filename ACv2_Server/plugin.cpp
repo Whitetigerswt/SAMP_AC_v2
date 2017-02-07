@@ -282,6 +282,22 @@ cell AMX_NATIVE_CALL GetPlayerMacroLimitsProc(AMX* pAmx, cell* pParams)
 	return ac->GetMacroLimitations();
 }
 
+cell AMX_NATIVE_CALL SetPlayerSprintLimitProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(2, "SetPlayerSprintLimit");
+
+	// Get CAntiCheat pointer.
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL || pParams[2] < 0) return 0;
+
+	ac->SetSprintLimit(static_cast<float>(pParams[2]) / 10.0f);
+
+	return 1;
+}
+
 cell AMX_NATIVE_CALL TogglePlayerSprintOnAllSurfacesProc(AMX* pAmx, cell* pParams)
 {
 	// Make sure the parameter count is correct.
@@ -466,6 +482,7 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "GetPlayerUnlimitedSprint", GetPlayerUnlimitedSprintProc },
 	{ "TogglePlayerMacroLimits", TogglePlayerMacroLimitsProc },
 	{ "GetPlayerMacroLimits", GetPlayerMacroLimitsProc },
+	{ "SetPlayerSprintLimit", SetPlayerSprintLimitProc },
 	{ "TogglePlayerSprintOnAllSurfaces", TogglePlayerSprintOnAllSurfacesProc },
 	{ "GetPlayerSprintOnAllSurfaces", GetPlayerSprintOnAllSurfacesProc },
 	{ "TogglePlayerVehicleBlips", TogglePlayerVehicleBlipsProc },

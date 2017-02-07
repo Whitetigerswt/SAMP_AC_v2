@@ -199,6 +199,7 @@ namespace Callback
 			ac->ToggleMacroLimitations(Callback::Default_MacroLimits);
 			ac->ToggleSwitchReload(Callback::Default_SwitchReload);
 			ac->ToggleCrouchBug(Callback::Default_CrouchBug);
+			ac->SetSprintLimit(Callback::Default_SprintLimit);
 			ac->ToggleVehicleBlips(Callback::Default_VehicleBlips);
 
 			// Check if it's an empty string
@@ -295,6 +296,7 @@ namespace Callback
 
 			Default_CrouchBug = 9999;
 			Default_FrameLimit = 9999;
+			Default_SprintLimit = 8.5f;
 		}
 		else
 		{
@@ -307,6 +309,7 @@ namespace Callback
 			Default_InfSprint = pt.get<bool>("defaults.inf_sprint");
 			Default_SprintOnAllSurfaces = pt.get<bool>("defaults.sprint_all_surfaces");
 			Default_MacroLimits = pt.get<bool>("defaults.macro_limits");
+			Default_SprintLimit = static_cast<float>(pt.get<int>("defaults.sprint_speed_limit")) / 10.0f;
 			Default_SwitchReload = pt.get<bool>("defaults.switch_reload");
 			Default_CrouchBug = pt.get<int>("defaults.crouch_bug");
 			Default_FrameLimit = pt.get<int>("defaults.frame_limit");

@@ -36,6 +36,14 @@ namespace Misc
 	// REQUIRES: NULL
 	bool GetMacroLocks();
 
+	// PURPOSE: Set the player's sprint speed limit.
+	// REQUIRES: NULL
+	void SetSprintLimit(float speed);
+
+	// PURPOSE: Get the sprint speed limit.
+	// REQUIRES: NULL
+	float GetSprintLimit();
+
 	// PURPOSE: Set the sprinting on all surfaces status.
 	// REQUIRES: NULL
 	void SetSprintOnAllSurfaces(bool toggle);

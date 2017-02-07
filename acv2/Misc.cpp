@@ -83,6 +83,18 @@ namespace Misc
 		return MacroLocks;
 	}
 
+	float SprintSpeed = 8.5f;
+
+	void SetSprintLimit(float speed)
+	{
+		SprintSpeed = speed;
+	}
+
+	float GetSprintLimit()
+	{
+		return SprintSpeed;
+	}
+
 	bool SprintOnAllSurfaces = false;
 
 	void SetSprintOnAllSurfaces(bool toggle)

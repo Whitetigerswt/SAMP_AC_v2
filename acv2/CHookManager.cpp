@@ -173,8 +173,6 @@ DWORD NameTag_je1;
 DWORD NameTag_je2;
 DWORD NameTagHookJmpBack;
 
-#define MAX_SPRINT_SPEED 8.5f
-
 void CHookManager::Load()
 {
 	DWORD dwOldProt;
@@ -916,8 +914,8 @@ HOOK CHookManager::KeyPress()
 		// If not in a vehicle and macro locks is off.
 		if (VAR_CURRENT_VEHICLE == 0 && Misc::GetMacroLocks() == true)
 		{
-			// Set the sprint speed 
-			VAR_SPRINT_SPEED = MAX_SPRINT_SPEED;
+			// Set the player's sprint speed to whatever the limit is
+			VAR_SPRINT_SPEED = Misc::GetSprintLimit();
 		}
 	}
 	// Sprint key is NOT pressed

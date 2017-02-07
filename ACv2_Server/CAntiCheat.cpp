@@ -34,6 +34,7 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_MacroLimits = true;
 	m_SprintOnAllSurfaces = false;
 	m_VehicleBlips = true;
+	m_SprintLimit = 8.5f;
 	m_BanStatus = -1;
 	m_CreationTick = Utility::getTickCount();
 }
@@ -543,6 +544,25 @@ void CAntiCheat::ToggleSprintOnAllSurfaces(bool toggle)
 
 	// Set the crouch bug variable to true.
 	m_SprintOnAllSurfaces = toggle;
+}
+
+void CAntiCheat::SetSprintLimit(float speed)
+{
+	// Prepare to send RPC to client.
+	RakNet::BitStream bsData;
+
+	// Write header to packet
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(SET_SPRINT_LIMIT);
+
+	// Main data
+	bsData.Write(speed);
+
+	// Send RPC to player.
+	Network::PlayerSend(ID, &bsData, LOW_PRIORITY, RELIABLE_ORDERED);
+
+	// Set the crouch bug variable to true.
+	m_SprintLimit = speed;
 }
 
 void CAntiCheat::ToggleVehicleBlips(bool toggle)

@@ -160,6 +160,18 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 // Returns: bool - True if macro limits are enabled, else false.
 #define GetPlayerMacroLimits(%0) ac_gateway_param1("GetPlayerMacroLimits", %0)
 
+// PURPOSE: Set a player's sprint speed limit.
+// REQUIRES: The player is using AC.
+// NOTES: This will have effect only if macro limits option is enabled (See TogglePlayerMacroLimits and GetPlayerMacroLimits)
+// NOTES: (speed = 85) is a good sprint speed limit.
+//
+// Params:
+// playerid	- Player to set new sprint speed limit
+// speed	- the new sprint speed limit
+//
+// Returns: int - 1 if action was sent to the client.
+#define SetPlayerSprintLimit(%0) ac_gateway_param2("SetPlayerSprintLimit", %0)
+
 // PURPOSE: Toggle the player's ability to sprint on all surfaces.
 // REQUIRES: The player is using AC.
 //

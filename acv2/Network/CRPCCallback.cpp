@@ -3,7 +3,6 @@
 #include "../CLoader.h"
 #include "../CLog.h"
 #include "../Misc.h"
-#include "../Misc.h"
 #include "../Addresses.h"
 #include "../CHookManager.h"
 #include "../CMem.h"
@@ -27,6 +26,7 @@ void CRPCCallback::Initialize()
 	CRPC::Add(TOGGLE_MACRO_LIMITS, ToggleMacroLimits);
 	CRPC::Add(TOGGLE_SPRINT_ALL_SURFACES, ToggleSprintOnAllSurfaces);
 	CRPC::Add(TOGGLE_VEHICLE_BLIPS, ToggleVehicleBlips);
+	CRPC::Add(SET_SPRINT_LIMIT, SetSprintLimit);
 
 	boost::thread connectThread(&OnConnect);
 }
@@ -269,6 +269,19 @@ void CRPCCallback::ToggleMacroLimits(RakNet::BitStream &bsData, int iExtra)
 	{
 		// Set the value the server sent.
 		Misc::SetMacroLocks(toggle);
+	}
+}
+
+void CRPCCallback::SetSprintLimit(RakNet::BitStream &bsData, int iExtra)
+{
+	// Create a new variable to hold the value the server sent.
+	float speed;
+
+	// Read the value the server sent us.
+	if (bsData.Read(speed))
+	{
+		// Set the crouch bug status to the one sent to us by the server.
+		Misc::SetSprintLimit(speed);
 	}
 }
 
