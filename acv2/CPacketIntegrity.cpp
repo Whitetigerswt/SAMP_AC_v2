@@ -106,6 +106,7 @@ bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 	{
 		if (p.second)
 		{
+			CLog("packetloss.log").Write("lost");
 			// PACKET LOST!
 			// Force crash?
 		}
