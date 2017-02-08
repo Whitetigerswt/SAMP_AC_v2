@@ -444,7 +444,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	PluginData = ppData;
 
 	// Print out that we've loaded successfully.
-	Utility::Printf("SA-MP Anti-Cheat v%0.2f Has loaded successfully.", CURRENT_VERSION);
+	Utility::Printf("SA-MP Anti-Cheat v%0.2f has loaded successfully.", CURRENT_VERSION);
 
 	// return SampGDK load value
 	return load;

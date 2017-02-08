@@ -98,7 +98,6 @@ BYTE GetPacketID(Packet *p)
 }
 
 unsigned int LastTicks[MAX_PLAYERS];
-unsigned int startConnTick[MAX_PLAYERS];
 static BYTE HOOK_GetPacketID(Packet *p)
 {
 	SubHook::ScopedRemove remove(&GetPacketID_hook);
@@ -108,16 +107,6 @@ static BYTE HOOK_GetPacketID(Packet *p)
 	// Check for invalid packets
 	if (packetId == 0xFF) {
 		return 0xFF;
-	}
-
-	if (packetId == 24) /* ID_OPEN_CONNECTION_REQUEST */
-	{
-		startConnTick[p->playerIndex] = Utility::getTickCount();
-	}
-	if (packetId >= 200 && startConnTick[p->playerIndex] != 0) /* SA-MP ID_*_SYNC packet */
-	{
-		Utility::Printf("Playerid %d connection took: %d ms", p->playerIndex, Utility::getTickCount() - startConnTick[p->playerIndex]);
-		startConnTick[p->playerIndex] = 0;
 	}
 
 	// If packetId is our custom RPC sending function

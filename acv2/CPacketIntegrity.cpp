@@ -8,7 +8,6 @@
 #include "CLoader.h"
 #include "CPacketIntegrity.h"
 #include "Misc.h"
-#include "CLog.h"
 
 const int MAX_TIME_DIFFERENCE = 1500;
 const int MAX_LOST_PACKETS = 3;
@@ -181,10 +180,6 @@ bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 					}
 				}
 				CRakClientHandler::CustomSend(&bitStream, LOW_PRIORITY);
-
-				char filenameANSI[MAX_PATH];
-				GetModuleFileNameA(hCallerModule, filenameANSI, MAX_PATH);
-				CLog("sendpacket_callstack.log").Write("Modbase: %x (%s) not found, caller: %x", hCallerModule, filenameANSI, (unsigned)callers[i]);
 				return 0; // don't send!
 			}
 		}
