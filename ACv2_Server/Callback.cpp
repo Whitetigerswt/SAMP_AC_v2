@@ -273,8 +273,33 @@ namespace Callback
 		return true;
 	}
 
-	bool onGameModeInitCalled = false; // if OnGameModeInit has been called at least once
+	void WriteAndLoadDefaultConfig()
+	{
+		ACToggle = true;
+		Default_InfSprint = true;
+		Default_SprintOnAllSurfaces = true;
+		Default_MacroLimits = true;
+		Default_VehicleBlips = true;
+		Default_SwitchReload = true;
 
+		Default_CrouchBug = 9999;
+		Default_FrameLimit = 9999;
+		Default_SprintLimit = 8.5f;
+
+		ac_config_ptree.put("defaults.main_ac_checks", (ACToggle == true) ? 1 : 0);
+		ac_config_ptree.put("defaults.inf_sprint", (Default_InfSprint == true) ? 1 : 0);
+		ac_config_ptree.put("defaults.sprint_all_surfaces", (Default_SprintOnAllSurfaces == true) ? 1 : 0);
+		ac_config_ptree.put("defaults.macro_limits", (Default_MacroLimits == true) ? 1 : 0);
+		ac_config_ptree.put("defaults.vehicle_blips", (Default_VehicleBlips == true) ? 1 : 0);
+		ac_config_ptree.put("defaults.switch_reload", (Default_SwitchReload == true) ? 1 : 0);
+		ac_config_ptree.put("defaults.crouch_bug", Default_CrouchBug);
+		ac_config_ptree.put("defaults.frame_limit", Default_FrameLimit);
+		ac_config_ptree.put("defaults.sprint_speed_limit", static_cast<int>(Default_SprintLimit * 10.0f));
+
+		boost::property_tree::ini_parser::write_ini("ac_config.ini", ac_config_ptree);
+	}
+
+	bool onGameModeInitCalled = false; // if OnGameModeInit has been called at least once
 	PLUGIN_EXPORT bool PLUGIN_CALL OnGameModeInit()
 	{
 		if (onGameModeInitCalled)
@@ -291,47 +316,34 @@ namespace Callback
 
 		if (!boost::filesystem::exists("ac_config.ini"))
 		{
-			ACToggle = true;
-			Default_InfSprint = true;
-			Default_SprintOnAllSurfaces = true;
-			Default_MacroLimits = true;
-			Default_VehicleBlips = true;
-			Default_SwitchReload = true;
-
-			Default_CrouchBug = 9999;
-			Default_FrameLimit = 9999;
-			Default_SprintLimit = 8.5f;
-
-			ac_config_ptree.put("defaults.main_ac_checks", (ACToggle == true) ? 1 : 0);
-			ac_config_ptree.put("defaults.inf_sprint", (Default_InfSprint == true) ? 1 : 0);
-			ac_config_ptree.put("defaults.sprint_all_surfaces", (Default_SprintOnAllSurfaces == true) ? 1 : 0);
-			ac_config_ptree.put("defaults.macro_limits", (Default_MacroLimits == true) ? 1 : 0);
-			ac_config_ptree.put("defaults.vehicle_blips", (Default_VehicleBlips == true) ? 1 : 0);
-			ac_config_ptree.put("defaults.switch_reload", (Default_SwitchReload == true) ? 1 : 0);
-			ac_config_ptree.put("defaults.crouch_bug", Default_CrouchBug);
-			ac_config_ptree.put("defaults.frame_limit", Default_FrameLimit);
-			ac_config_ptree.put("defaults.sprint_speed_limit", static_cast<int>(Default_SprintLimit * 10.0f));
-
-
-			boost::property_tree::ini_parser::write_ini("ac_config.ini", ac_config_ptree);
-
+			WriteAndLoadDefaultConfig();
 			Utility::Printf("Notice: ac_config.ini was missing, we've created one with default AC values.");
 		}
 		else
 		{
-			// Load config.
-			boost::property_tree::ini_parser::read_ini("ac_config.ini", ac_config_ptree);
+			try 
+			{
+				// Load config.
+				boost::property_tree::ini_parser::read_ini("ac_config.ini", ac_config_ptree);
 
-			// Load default values from file.
-			ACToggle = ac_config_ptree.get<bool>("defaults.main_ac_checks");
-			Default_InfSprint = ac_config_ptree.get<bool>("defaults.inf_sprint");
-			Default_SprintOnAllSurfaces = ac_config_ptree.get<bool>("defaults.sprint_all_surfaces");
-			Default_MacroLimits = ac_config_ptree.get<bool>("defaults.macro_limits");
-			Default_SprintLimit = static_cast<float>(ac_config_ptree.get<int>("defaults.sprint_speed_limit")) / 10.0f;
-			Default_SwitchReload = ac_config_ptree.get<bool>("defaults.switch_reload");
-			Default_CrouchBug = ac_config_ptree.get<int>("defaults.crouch_bug");
-			Default_FrameLimit = ac_config_ptree.get<int>("defaults.frame_limit");
-			Default_VehicleBlips = ac_config_ptree.get<bool>("defaults.vehicle_blips");
+				// Load default values from file.
+				ACToggle = ac_config_ptree.get<bool>("defaults.main_ac_checks");
+				Default_InfSprint = ac_config_ptree.get<bool>("defaults.inf_sprint");
+				Default_SprintOnAllSurfaces = ac_config_ptree.get<bool>("defaults.sprint_all_surfaces");
+				Default_MacroLimits = ac_config_ptree.get<bool>("defaults.macro_limits");
+				Default_SprintLimit = static_cast<float>(ac_config_ptree.get<int>("defaults.sprint_speed_limit")) / 10.0f;
+				Default_SwitchReload = ac_config_ptree.get<bool>("defaults.switch_reload");
+				Default_CrouchBug = ac_config_ptree.get<int>("defaults.crouch_bug");
+				Default_FrameLimit = ac_config_ptree.get<int>("defaults.frame_limit");
+				Default_VehicleBlips = ac_config_ptree.get<bool>("defaults.vehicle_blips");
+			}
+			catch (const boost::property_tree::ptree_error &e)
+			{
+				Utility::Printf("Notice: An error occured while loading configuration file: \"%s\"", e.what());
+				Utility::Printf("Notice: ac_config.ini was reinitialized with default AC values.");
+				boost::filesystem::remove("ac_config.ini");
+				WriteAndLoadDefaultConfig();
+			}
 		}
 
 		onGameModeInitCalled = true;
