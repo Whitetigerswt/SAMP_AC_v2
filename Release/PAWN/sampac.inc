@@ -164,6 +164,7 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 // REQUIRES: The player is using AC.
 // NOTES: This will have effect only if macro limits option is enabled (See TogglePlayerMacroLimits and GetPlayerMacroLimits)
 // NOTES: (speed = 85) is a good sprint speed limit.
+// NOTES: If (speed = 0), default GTA speed limit will be used.
 //
 // Params:
 // playerid	- Player to set new sprint speed limit
@@ -171,6 +172,15 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 //
 // Returns: int - 1 if action was sent to the client.
 #define SetPlayerSprintLimit(%0) ac_gateway_param2("SetPlayerSprintLimit", %0)
+
+// PURPOSE: Get a player's sprint speed limit.
+// REQUIRES: The player is using AC.
+//
+// Params:
+// playerid	- Player to get sprint speed limit
+//
+// Returns: int - Player's sprint speed limit.
+#define GetPlayerSprintLimit(%0) ac_gateway_param1("GetPlayerSprintLimit", %0)
 
 // PURPOSE: Toggle the player's ability to sprint on all surfaces.
 // REQUIRES: The player is using AC.
