@@ -1,3 +1,4 @@
+#include <queue>
 #include "BanHandler.h"
 #include "GDK/sampgdk.h"
 #include "CAntiCheat.h"
@@ -8,44 +9,86 @@
 #include "plugin.h"
 #include "CServerUpdater.h"
 
-namespace BanHandler
+namespace Thread_BanHandler
 {
+	bool AddCheater(std::string reason, std::string md5, std::string hwid, std::string name, std::string ip, std::string server_name, int server_port, bool queue);
+	void CheckCheater(unsigned int playerid, std::string name, std::string hwid, std::string ip);
+}
 
-	void AddCheater(unsigned int playerid, std::string reason, std::string md5)
+namespace Queue_BanHandler
+{
+	struct queued_bans_struct
 	{
-		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
-		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
-		if (ac == NULL)
-		{
-			// error?
-			//Utility::Printf("failed to add player %d to ban list due to CAntiCheat class error.", playerid);
-			return;
-		}
-
-		// Get the player's Hardware ID.
-		std::string hwid = "";
-		hwid = ac->GetPlayerHardwareID();
-
-		// Delcare 2 variables for player's name and IP
-		char name[MAX_PLAYER_NAME], ip[16];
-
-		// Get the player's name
-		sampgdk::GetPlayerName(playerid, name, sizeof(name));
-
-		// Get the player's IP
-		sampgdk::GetPlayerIp(playerid, ip, sizeof ip);
-
-		// Get server info: hostname and port
-		char server_name[64];
-		sampgdk::GetServerVarAsString("hostname", server_name, sizeof server_name);
+		std::string name;
+		std::string ip;
+		std::string reason;
+		std::string md5;
+		std::string hwid;
+		std::string server_name;
 		int server_port;
-		server_port = sampgdk::GetServerVarAsInt("port");
+		queued_bans_struct(std::string arg_name, std::string arg_ip, std::string arg_reason,
+			std::string arg_md5, std::string arg_hwid,
+			std::string arg_server_name, int arg_server_port) : name(arg_name), ip(arg_ip), reason(arg_reason), md5(arg_md5), hwid(arg_hwid), server_name(arg_server_name), server_port(arg_server_port) {}
+	};
 
-		boost::thread addCheaterThread(&BanHandler::Thread_AddCheater, playerid, reason, md5, hwid, std::string(name), std::string(ip), std::string(server_name), server_port);
+	std::queue<queued_bans_struct> queued_bans;
+
+	void AddBanToQueue(std::string name, std::string ip, std::string reason, std::string md5, std::string hwid, std::string server_name, int server_port)
+	{
+		if (hwid.compare(queued_bans.back().hwid) != 0)
+		{
+			queued_bans.push(queued_bans_struct(name, ip, reason, md5, hwid, server_name, server_port));
+		}
 	}
 
-	void Thread_AddCheater(unsigned int playerid, std::string reason, std::string md5, std::string hwid, std::string name, std::string ip, std::string server_name, int server_port)
+	void ReapplyQueuedBan()
 	{
+		bool success = Thread_BanHandler::AddCheater(queued_bans.front().reason, queued_bans.front().md5, queued_bans.front().hwid, queued_bans.front().name,
+			queued_bans.front().ip, queued_bans.front().server_name, queued_bans.front().server_port, false);
+
+		if (success)
+		{
+			queued_bans.pop();
+			if (queued_bans.empty())
+			{
+				CAntiCheat* ac;
+
+				for (int i = 0; i < MAX_PLAYERS; ++i)
+				{
+					if (!sampgdk::IsPlayerConnected(i) || sampgdk::IsPlayerNPC(i))
+						continue;
+
+					if (CAntiCheatHandler::IsConnected(i))
+					{
+						ac = CAntiCheatHandler::GetAntiCheat(i);
+						if (ac != NULL)
+						{
+							BanHandler::CheckCheater(i);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void SAMPGDK_CALL CheckQueuedBans(int timerid, void *params)
+	{
+		if (!queued_bans.empty())
+		{
+			boost::thread ReapplyQueuedBan_Thread(&ReapplyQueuedBan);
+		}
+	}
+}
+
+namespace Thread_BanHandler
+{
+	// Ban functions, call them in a separate thread because they get/send data from/to the web server which takes notable time to finish.
+
+	bool AddCheater(std::string reason, std::string md5, std::string hwid, std::string name, std::string ip, std::string server_name, int server_port, bool queue)
+	{
+		// Suppose the ban will succeed
+		bool ban_status = true;
+
 		// Completely prepared now. Let's send data to the web server (which takes it to database)!
 		CURL *curl;
 
@@ -104,11 +147,21 @@ namespace BanHandler
 				if (res != CURLE_OK)
 				{
 					//Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
+					ban_status = false;
+					if (queue)
+					{
+						Queue_BanHandler::AddBanToQueue(name, ip, reason, md5, hwid, server_name, server_port);
+					}
 				}
 			}
 			else
 			{
 				//Utility::Printf("curl_easy_escape() failed while trying to add player %d to ban list.", playerid);
+				ban_status = false;
+				if (queue)
+				{
+					Queue_BanHandler::AddBanToQueue(name, ip, reason, md5, hwid, server_name, server_port);
+				}
 			}
 
 
@@ -121,36 +174,16 @@ namespace BanHandler
 		else
 		{
 			//Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
+			ban_status = false;
+			if (queue)
+			{
+				Queue_BanHandler::AddBanToQueue(name, ip, reason, md5, hwid, server_name, server_port);
+			}
 		}
+		return ban_status;
 	}
 
-	void CheckCheater(unsigned int playerid)
-	{
-		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
-		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
-		if (ac == NULL)
-		{
-			// error?
-			//Utility::Printf("failed while checking if player %d is in ban list due to CAntiCheat class error.", playerid);
-			return;
-		}
-
-		// Get the player's name
-		char name[MAX_PLAYER_NAME];
-		sampgdk::GetPlayerName(playerid, name, sizeof name);
-
-		// Get the player's IP
-		char ip[16];
-		sampgdk::GetPlayerIp(playerid, ip, sizeof ip);
-
-		// Get the player's Hardware ID.
-		std::string hwid = "";
-		hwid = ac->GetPlayerHardwareID();
-
-		boost::thread checkCheaterThread(&BanHandler::CheckCheater_Thread, playerid, std::string(name), hwid, std::string(ip));
-	}
-
-	void CheckCheater_Thread(unsigned int playerid, std::string name, std::string hwid, std::string ip)
+	void CheckCheater(unsigned int playerid, std::string name, std::string hwid, std::string ip)
 	{
 		// Create this variable which holds info whether this player is a cheater or not.
 		bool ischeater = false;
@@ -214,7 +247,7 @@ namespace BanHandler
 					}
 				}
 			}
-			
+
 			// Clean up
 			curl_free(escaped_name);
 			curl_easy_cleanup(curl);
@@ -229,5 +262,73 @@ namespace BanHandler
 		param->playerid = playerid;
 		param->ischeater = ischeater;
 		pMainThreadSync->AddCallbackToQueue(&CThreadSync::OnCheaterCheckResponse, param);
+	}
+}
+
+namespace BanHandler
+{
+
+	void AddCheater(unsigned int playerid, std::string reason, std::string md5)
+	{
+		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
+		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
+		if (ac == NULL)
+		{
+			// error?
+			//Utility::Printf("failed to add player %d to ban list due to CAntiCheat class error.", playerid);
+			return;
+		}
+
+		// Get the player's Hardware ID.
+		std::string hwid = "";
+		hwid = ac->GetPlayerHardwareID();
+
+		// Delcare 2 variables for player's name and IP
+		char name[MAX_PLAYER_NAME], ip[16];
+
+		// Get the player's name
+		sampgdk::GetPlayerName(playerid, name, sizeof(name));
+
+		// Get the player's IP
+		sampgdk::GetPlayerIp(playerid, ip, sizeof ip);
+
+		// Get server info: hostname and port
+		char server_name[64];
+		sampgdk::GetServerVarAsString("hostname", server_name, sizeof server_name);
+		int server_port;
+		server_port = sampgdk::GetServerVarAsInt("port");
+
+		boost::thread addCheaterThread(&Thread_BanHandler::AddCheater, reason, md5, hwid, std::string(name), std::string(ip), std::string(server_name), server_port, true);
+	}
+
+	void CheckCheater(unsigned int playerid)
+	{
+		// Find a CAntiCheat class associated with this player (this was created in Network::HandleConnection earlier in this function)
+		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
+		if (ac == NULL)
+		{
+			// error?
+			//Utility::Printf("failed while checking if player %d is in ban list due to CAntiCheat class error.", playerid);
+			return;
+		}
+
+		// Get the player's name
+		char name[MAX_PLAYER_NAME];
+		sampgdk::GetPlayerName(playerid, name, sizeof name);
+
+		// Get the player's IP
+		char ip[16];
+		sampgdk::GetPlayerIp(playerid, ip, sizeof ip);
+
+		// Get the player's Hardware ID.
+		std::string hwid = "";
+		hwid = ac->GetPlayerHardwareID();
+
+		boost::thread checkCheaterThread(&Thread_BanHandler::CheckCheater, playerid, std::string(name), hwid, std::string(ip));
+	}
+
+	void StartQueuedBansChecker()
+	{
+		sampgdk::SetTimer(60000, true, Queue_BanHandler::CheckQueuedBans, NULL);
 	}
 }

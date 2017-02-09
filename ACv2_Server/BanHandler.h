@@ -11,14 +11,10 @@ namespace BanHandler
 	// NOTES: "reason" must contain the name of cheat used and any extra info (e.g. reason = "modified FILE_NAME")
 	void AddCheater(unsigned int playerid, std::string reason, std::string md5);
 
-	// PURPOSE: POST data (in another thread)
-	void Thread_AddCheater(unsigned int playerid, std::string reason, std::string md5, std::string hwid, std::string name, std::string ip, std::string server_name, int server_port);
-
 	// PURPOSE: Check whether a player is in the global banlist or not.
 	// NOTES: The result is given in CThreadSync::OnCheaterCheckResponse
 	void CheckCheater(unsigned int playerid);
 
-	// PURPOSE: Request information regarding playerid cheater status from webserver (in another thread)
-	// NOTES: The result is given in CThreadSync::OnCheaterCheckResponse
-	void CheckCheater_Thread(unsigned int playerid, std::string name, std::string hwid, std::string ip);
+	// PURPOSE: Keep trying to re-apply queued/failed bans
+	void StartQueuedBansChecker();
 }

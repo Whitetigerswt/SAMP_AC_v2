@@ -280,7 +280,7 @@ void CRPCCallback::SetSprintLimit(RakNet::BitStream &bsData, int iExtra)
 	// Read the value the server sent us.
 	if (bsData.Read(speed))
 	{
-		// Set the crouch bug status to the one sent to us by the server.
+		// Set the sprint speed limit to the one sent to us by the server.
 		Misc::SetSprintLimit(speed);
 	}
 }
