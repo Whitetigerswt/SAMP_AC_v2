@@ -108,8 +108,13 @@ public:
 	bool GetMacroLimitations() { return m_MacroLimits; }
 
 	// PURPOSE: Set the player's sprint speed limit.
+	// NOTES: Speed hook is disabled if speed = 0.
 	// REQUIRES: The client is using AC.
 	void SetSprintLimit(float speed);
+
+	// PURPOSE: Get the player's sprint speed limit.
+	// REQUIRES: The client is using AC.
+	float GetSprintLimit() { return m_SprintLimit; }
 
 	// PURPOSE: Set the players macro limitations.
 	// REQUIRES: The client is using AC.

@@ -29,7 +29,9 @@ private:
 	unsigned int m_time;
 
 	static std::vector<CPacketIntegrity*> m_instances;
-	static boost::shared_mutex m_access;
+	static boost::shared_mutex m_instancesAccess;
+	static boost::shared_mutex m_lostAccess;
+	static int m_lostPackets;
 
 	static std::vector<HMODULE> m_allowedModules;
 	static DWORD m_tlsSkipModuleCheck;

@@ -66,7 +66,7 @@ void CThreadSync::OnCheatsUpdate(void *param)
 
 	if (p->FileNames.empty() || p->MD5s.empty() || p->ProcessMD5s.empty())
 	{
-		Utility::Printf("[SAMP_AC_V2]: Failed to retrieve data from website (1)");
+		Utility::Printf("Failed to retrieve data from website (1)");
 	}
 
 	CAntiCheat::SetScannedFilenames(p->FileNames);

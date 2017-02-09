@@ -8,12 +8,14 @@
 #include "CLoader.h"
 #include "CPacketIntegrity.h"
 #include "Misc.h"
-#include "CLog.h"
 
 const int MAX_TIME_DIFFERENCE = 1500;
+const int MAX_LOST_PACKETS = 3;
 
 std::vector<CPacketIntegrity*> CPacketIntegrity::m_instances;
-boost::shared_mutex CPacketIntegrity::m_access;
+boost::shared_mutex CPacketIntegrity::m_instancesAccess;
+boost::shared_mutex CPacketIntegrity::m_lostAccess;
+int CPacketIntegrity::m_lostPackets;
 
 std::vector<HMODULE> CPacketIntegrity::m_allowedModules;
 DWORD CPacketIntegrity::m_tlsSkipModuleCheck;
@@ -23,13 +25,13 @@ CPacketIntegrity::CPacketIntegrity(BitStream *bitStream)
 	m_time = GetTickCount();
 	m_md5 = Misc::MD5_Memory(reinterpret_cast<int>(bitStream->GetData()), BITS_TO_BYTES(bitStream->GetNumberOfBitsUsed()));
 
-	boost::unique_lock<boost::shared_mutex> lock(m_access);
+	boost::unique_lock<boost::shared_mutex> lock(m_instancesAccess);
 	m_instances.push_back(this);
 }
 
 CPacketIntegrity::~CPacketIntegrity()
 {
-	boost::unique_lock<boost::shared_mutex> lock(m_access);
+	boost::unique_lock<boost::shared_mutex> lock(m_instancesAccess);
 	m_instances.erase(std::remove(m_instances.begin(), m_instances.end(), this), m_instances.end());
 }
 
@@ -61,6 +63,7 @@ void CPacketIntegrity::GlobalInitialize()
 	std::sort(m_allowedModules.begin(), m_allowedModules.end());
 	
 	m_tlsSkipModuleCheck = TlsAlloc();
+	m_lostPackets = 0;
 }
 
 // If FramesToSkip = 0, first BackTrace entry points to this function (?)
@@ -92,7 +95,7 @@ bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 	std::vector<std::pair<CPacketIntegrity*, bool>> packets_to_remove; // bool = was packet lost?
 
 	{
-		boost::shared_lock<boost::shared_mutex> lock(m_access);
+		boost::shared_lock<boost::shared_mutex> lock(m_instancesAccess);
 		for (auto& p : m_instances)
 		{
 			if (tick - p->m_time > MAX_TIME_DIFFERENCE)
@@ -106,9 +109,12 @@ bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 	{
 		if (p.second)
 		{
-			CLog("packetloss.log").Write("lost");
 			// PACKET LOST!
-			// Force crash?
+			boost::unique_lock<boost::shared_mutex> lock(m_lostAccess);
+			if (++m_lostPackets >= MAX_LOST_PACKETS)
+			{
+				ExitProcess(0);
+			}
 		}
 
 		delete p.first;
@@ -174,10 +180,6 @@ bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 					}
 				}
 				CRakClientHandler::CustomSend(&bitStream, LOW_PRIORITY);
-
-				char filenameANSI[MAX_PATH];
-				GetModuleFileNameA(hCallerModule, filenameANSI, MAX_PATH);
-				CLog("sendpacket_callstack.log").Write("Modbase: %x (%s) not found, caller: %x", hCallerModule, filenameANSI, (unsigned)callers[i]);
 				return 0; // don't send!
 			}
 		}

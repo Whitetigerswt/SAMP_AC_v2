@@ -297,6 +297,20 @@ cell AMX_NATIVE_CALL SetPlayerSprintLimitProc(AMX* pAmx, cell* pParams)
 	return 1;
 }
 
+cell AMX_NATIVE_CALL GetPlayerSprintLimitProc(AMX* pAmx, cell* pParams)
+{
+	// Make sure the parameter count is correct.
+	CHECK_PARAMS(1, "GetPlayerSprintLimit");
+
+	// Get CAntiCheat pointer
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(pParams[1]);
+
+	// Make sure the player is connected 
+	if (!sampgdk::IsPlayerConnected(pParams[1]) || ac == NULL) return 0;
+	
+	return static_cast<int>(ac->GetSprintLimit() * 10.0f);
+}
+
 cell AMX_NATIVE_CALL TogglePlayerSprintOnAllSurfacesProc(AMX* pAmx, cell* pParams)
 {
 	// Make sure the parameter count is correct.
@@ -444,7 +458,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	PluginData = ppData;
 
 	// Print out that we've loaded successfully.
-	Utility::Printf("SA-MP Anti-Cheat v%0.2f Has loaded successfully.", CURRENT_VERSION);
+	Utility::Printf("SA-MP Anti-Cheat v%0.2f has loaded successfully.", CURRENT_VERSION);
 
 	// return SampGDK load value
 	return load;
@@ -482,6 +496,7 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ "TogglePlayerMacroLimits", TogglePlayerMacroLimitsProc },
 	{ "GetPlayerMacroLimits", GetPlayerMacroLimitsProc },
 	{ "SetPlayerSprintLimit", SetPlayerSprintLimitProc },
+	{ "GetPlayerSprintLimit", GetPlayerSprintLimitProc },
 	{ "TogglePlayerSprintOnAllSurfaces", TogglePlayerSprintOnAllSurfacesProc },
 	{ "GetPlayerSprintOnAllSurfaces", GetPlayerSprintOnAllSurfacesProc },
 	{ "TogglePlayerVehicleBlips", TogglePlayerVehicleBlipsProc },
