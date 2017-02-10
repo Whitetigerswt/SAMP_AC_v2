@@ -17,6 +17,9 @@ namespace Thread_BanHandler
 
 namespace Queue_BanHandler
 {
+	// If the bans queue was ever full and then emptied
+	static bool BansQueueWasEmptied = false;
+
 	struct queued_bans_struct
 	{
 		std::string name;
@@ -51,22 +54,7 @@ namespace Queue_BanHandler
 			queued_bans.pop();
 			if (queued_bans.empty())
 			{
-				CAntiCheat* ac;
-
-				for (int i = 0; i < MAX_PLAYERS; ++i)
-				{
-					if (!sampgdk::IsPlayerConnected(i) || sampgdk::IsPlayerNPC(i))
-						continue;
-
-					if (CAntiCheatHandler::IsConnected(i))
-					{
-						ac = CAntiCheatHandler::GetAntiCheat(i);
-						if (ac != NULL)
-						{
-							BanHandler::CheckCheater(i);
-						}
-					}
-				}
+				BansQueueWasEmptied = true;
 			}
 		}
 	}
@@ -76,6 +64,34 @@ namespace Queue_BanHandler
 		if (!queued_bans.empty())
 		{
 			boost::thread ReapplyQueuedBan_Thread(&ReapplyQueuedBan);
+		}
+		else if (BansQueueWasEmptied)
+		{
+			// The queue had failed bans, but now it is empty.
+			// The reason we will be checking if someone is banned below is because a logical
+			// consequence of addcheater.php failing is checkcheater.php failing as well
+			// which means that some banned players might have bypassed.
+
+			// Reset status
+			BansQueueWasEmptied = false;
+
+			// Check if someone is banned (someone who bypassed checkcheater.php due to web server, firewall or whatever)
+			CAntiCheat* ac;
+
+			for (int i = 0; i < MAX_PLAYERS; ++i)
+			{
+				if (!sampgdk::IsPlayerConnected(i) || sampgdk::IsPlayerNPC(i))
+					continue;
+
+				if (CAntiCheatHandler::IsConnected(i))
+				{
+					ac = CAntiCheatHandler::GetAntiCheat(i);
+					if (ac != NULL)
+					{
+						BanHandler::CheckCheater(i);
+					}
+				}
+			}
 		}
 	}
 }
