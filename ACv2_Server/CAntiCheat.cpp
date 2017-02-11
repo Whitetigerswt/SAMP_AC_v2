@@ -37,10 +37,14 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_SprintLimit = 8.5f;
 	m_BanStatus = -1;
 	m_CreationTick = Utility::getTickCount();
+	m_CheckGTAFilesTimerId = 0;
 }
 
 CAntiCheat::~CAntiCheat()
 {
+	// Kill check timer (if exists)
+	Cleanup_CheckGTAFiles();
+
 	// Loop through the list of admins
 	for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); )
 	{
@@ -288,41 +292,58 @@ void CAntiCheat::ToggleCanEnableAC(int playerid, bool toggle)
 	}
 }
 
-void CAntiCheat::Thread_CheckGTAFiles(int playerid)
+void SAMPGDK_CALL CAntiCheat::Timer_CheckGTAFiles(int timerid, void *params)
 {
-	// Loop through the files we need to send to the client for him/her to check.
-	for (std::vector<std::string>::iterator it = m_FileNames.begin(); it != m_FileNames.end(); ++it)
+	CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(reinterpret_cast<int>(params));
+	if (ac == NULL)
 	{
-		if (!CAntiCheatHandler::IsConnected(playerid))
-			break; // Player disconnected, so stop sending packets
-
-		// Create a new string that will hold the final file value, preceeded by the macro $(GtaDirectory)
-		std::string szFile("$(GtaDirectory)/");
-
-		// Add the file name from the m_FileNames vector (containing all the file names to check in the gta directory).
-		szFile.append(it->c_str());
-
-		// Prepare to send the data to the client.
-		RakNet::BitStream bsData;
-
-		// Write header
-		bsData.Write((unsigned char)PACKET_RPC);
-		bsData.Write(MD5_FILE);
-
-		// Write file to packet
-		bsData.Write((unsigned short)szFile.length());
-		bsData.Write((const char*)szFile.c_str(), szFile.length());
-
-		// Send the data to the client and have them calculate the md5 of that file.
-		Network::PlayerSend(playerid, &bsData, LOW_PRIORITY, RELIABLE);
-	
-		boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
+		sampgdk::KillTimer(timerid);
+		return;
 	}
+	size_t curFileIdx = ac->GetCheckGTAFilesCurrentFileId();
+
+	if (curFileIdx >= m_FileNames.size())
+	{
+		ac->Cleanup_CheckGTAFiles();
+		return;
+	}
+
+	// Create a new string that will hold the final file value, preceeded by the macro $(GtaDirectory)
+	std::string szFile("$(GtaDirectory)/");
+
+	// Add the file name from the m_FileNames vector (containing all the file names to check in the gta directory).
+	szFile.append(m_FileNames[curFileIdx].c_str());
+
+	// Prepare to send the data to the client.
+	RakNet::BitStream bsData;
+
+	// Write header
+	bsData.Write((unsigned char)PACKET_RPC);
+	bsData.Write(MD5_FILE);
+
+	// Write file to packet
+	bsData.Write((unsigned short)szFile.length());
+	bsData.Write((const char*)szFile.c_str(), szFile.length());
+
+	// Send the data to the client and have them calculate the md5 of that file.
+	Network::PlayerSend(ac->ID, &bsData, LOW_PRIORITY, RELIABLE);
+
+	ac->SetCheckGTAFilesCurrentFileId(curFileIdx + 1);
 }
 
 void CAntiCheat::CheckGTAFiles()
 {
-	boost::thread SendThread(&Thread_CheckGTAFiles, ID);
+	// make sure we won't have 2 checks running in parallel
+	Cleanup_CheckGTAFiles();
+
+	SetCheckGTAFilesCurrentFileId(0);
+	m_CheckGTAFilesTimerId = sampgdk::SetTimer(150, true, Timer_CheckGTAFiles, (void*)ID);
+}
+
+void CAntiCheat::Cleanup_CheckGTAFiles()
+{
+	sampgdk::KillTimer(m_CheckGTAFilesTimerId);
+	m_CheckGTAFilesTimerId = 0;
 }
 
 void CAntiCheat::OnMacroDetected(int vKey)
