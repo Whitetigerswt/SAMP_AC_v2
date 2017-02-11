@@ -34,20 +34,56 @@ namespace Queue_BanHandler
 			std::string arg_server_name, int arg_server_port) : name(arg_name), ip(arg_ip), reason(arg_reason), md5(arg_md5), hwid(arg_hwid), server_name(arg_server_name), server_port(arg_server_port) {}
 	};
 
-	std::queue<queued_bans_struct> queued_bans;
+	static std::queue<queued_bans_struct> queued_bans;
+
+	// A mutex for queue processing
+	static boost::mutex qu_bans_mutex;
+
+	// Condition variable to determine if the queue is ready for processing or busy
+	static boost::condition_variable qu_bans_cond;
+	static bool qu_bans_ready = true;
 
 	void AddBanToQueue(std::string name, std::string ip, std::string reason, std::string md5, std::string hwid, std::string server_name, int server_port)
 	{
-		if (hwid.compare(queued_bans.back().hwid) != 0)
-		{
-			queued_bans.push(queued_bans_struct(name, ip, reason, md5, hwid, server_name, server_port));
-		}
+		// Get the lock
+		boost::unique_lock<boost::mutex> lock{ qu_bans_mutex };
+
+		// Keep trying to unlock if the queue is not ready for processing at the moment
+		while (!qu_bans_ready)
+			qu_bans_cond.wait(lock);
+
+		// Set queue condition as not ready for processing
+		qu_bans_ready = false;
+
+		// Push data to the queue
+		queued_bans.push(queued_bans_struct(name, ip, reason, md5, hwid, server_name, server_port));
+
+		// Set queue condition as ready
+		qu_bans_ready = true;
+
+		// Wake up every other thread that has been waiting for this too
+		qu_bans_cond.notify_all();
 	}
 
 	void ReapplyQueuedBan()
 	{
-		bool success = Thread_BanHandler::AddCheater(queued_bans.front().reason, queued_bans.front().md5, queued_bans.front().hwid, queued_bans.front().name,
-			queued_bans.front().ip, queued_bans.front().server_name, queued_bans.front().server_port, false);
+		// Get the lock
+		boost::unique_lock<boost::mutex> lock{qu_bans_mutex};
+		
+		// Keep trying to unlock if the queue is not ready for processing at the moment
+		while(!qu_bans_ready)
+			qu_bans_cond.wait(lock);
+		
+		// Set queue condition as not ready for processing
+		qu_bans_ready = false;
+
+		// A pointer to the oldest node in the queue (oldest failed ban)
+		queued_bans_struct *oldestNode;
+		oldestNode = &queued_bans.front();
+
+		// Reapply and see the result
+		bool success = Thread_BanHandler::AddCheater(oldestNode->reason, oldestNode->md5, oldestNode->hwid, oldestNode->name,
+			oldestNode->ip, oldestNode->server_name, oldestNode->server_port, false);
 
 		if (success)
 		{
@@ -57,12 +93,18 @@ namespace Queue_BanHandler
 				BansQueueWasEmptied = true;
 			}
 		}
+		// Set queue condition as ready
+		qu_bans_ready = true;
+
+		// Wake up every other thread that has been waiting for this too
+		qu_bans_cond.notify_all();
 	}
 
 	void SAMPGDK_CALL CheckQueuedBans(int timerid, void *params)
 	{
 		if (!queued_bans.empty())
 		{
+			// Reapply oldest ban in the queue
 			boost::thread ReapplyQueuedBan_Thread(&ReapplyQueuedBan);
 		}
 		else if (BansQueueWasEmptied)
@@ -162,21 +204,19 @@ namespace Thread_BanHandler
 				// Handle possible errors
 				if (res != CURLE_OK)
 				{
-					//Utility::Printf("curl_easy_perform() failed: %s while trying to add player %d to ban list.", curl_easy_strerror(res), playerid);
 					ban_status = false;
 					if (queue)
 					{
-						Queue_BanHandler::AddBanToQueue(name, ip, reason, md5, hwid, server_name, server_port);
+						boost::thread AddBanToQueue_Thread(&Queue_BanHandler::AddBanToQueue, name, ip, reason, md5, hwid, server_name, server_port);
 					}
 				}
 			}
 			else
 			{
-				//Utility::Printf("curl_easy_escape() failed while trying to add player %d to ban list.", playerid);
 				ban_status = false;
 				if (queue)
 				{
-					Queue_BanHandler::AddBanToQueue(name, ip, reason, md5, hwid, server_name, server_port);
+					boost::thread AddBanToQueue_Thread(&Queue_BanHandler::AddBanToQueue, name, ip, reason, md5, hwid, server_name, server_port);
 				}
 			}
 
@@ -189,11 +229,10 @@ namespace Thread_BanHandler
 		}
 		else
 		{
-			//Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
 			ban_status = false;
 			if (queue)
 			{
-				Queue_BanHandler::AddBanToQueue(name, ip, reason, md5, hwid, server_name, server_port);
+				boost::thread AddBanToQueue_Thread(&Queue_BanHandler::AddBanToQueue, name, ip, reason, md5, hwid, server_name, server_port);
 			}
 		}
 		return ban_status;
@@ -236,11 +275,7 @@ namespace Thread_BanHandler
 				res = curl_easy_perform(curl);
 
 				// Handle possible errors
-				if (res != CURLE_OK)
-				{
-					//Utility::Printf("curl_easy_perform() failed: %s while checking if player %d is in ban list.", curl_easy_strerror(res), playerid);
-				}
-				else // success
+				if (res == CURLE_OK)
 				{
 					// Now let's handle response codes
 					long response_code;
@@ -268,10 +303,6 @@ namespace Thread_BanHandler
 			curl_free(escaped_name);
 			curl_easy_cleanup(curl);
 		}
-		else
-		{
-			//Utility::Printf("failed to initialize curl handle while trying to add player %d to ban list.", playerid);
-		}
 
 		// Return whether this is a cheater or not
 		CThreadSync::OnCheaterCheckResponse__parameters *param = new CThreadSync::OnCheaterCheckResponse__parameters;
@@ -290,8 +321,6 @@ namespace BanHandler
 		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
 		if (ac == NULL)
 		{
-			// error?
-			//Utility::Printf("failed to add player %d to ban list due to CAntiCheat class error.", playerid);
 			return;
 		}
 
@@ -323,8 +352,6 @@ namespace BanHandler
 		CAntiCheat* ac = CAntiCheatHandler::GetAntiCheat(playerid);
 		if (ac == NULL)
 		{
-			// error?
-			//Utility::Printf("failed while checking if player %d is in ban list due to CAntiCheat class error.", playerid);
 			return;
 		}
 
