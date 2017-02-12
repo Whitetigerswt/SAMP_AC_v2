@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include "GDK/sampgdk.h"
 
 
 class CAntiCheat
@@ -36,8 +37,12 @@ public:
 
 	// PURPOSE: Send an RPC to client to md5 files.
 	// REQUIRES: The client is using AC.
-	static void Thread_CheckGTAFiles(int playerid);
+	static void SAMPGDK_CALL Timer_CheckGTAFiles(int timerid, void *params);
 	void CheckGTAFiles();
+
+	// PURPOSE: Do cleanup after all files names have been sent to server or player disconnected while doing so.
+	// REQUIRES: The client is using AC.
+	void Cleanup_CheckGTAFiles();
 
 	// PURPOSE: Callback for when a player has sent their hardwareID to the server.
 	// REQUIRES: The client is using AC.
@@ -164,6 +169,9 @@ public:
 	// REQUIRES: NULL
 	static void UpdateCheatDatabase();
 
+	void SetCheckGTAFilesCurrentFileId(size_t id) { m_CheckGTAFilesCurFileId = id; }
+	size_t GetCheckGTAFilesCurrentFileId() { return m_CheckGTAFilesCurFileId; }
+
 	static std::vector<std::string> GetScannedFilenames() { return m_FileNames; }
 	static void SetScannedFilenames(std::vector<std::string> filenames) { m_FileNames = filenames; }
 
@@ -208,6 +216,12 @@ private:
 	// PURPOSE: Used to validate connection
 	unsigned int m_CreationTick;
 	static unsigned int m_MaxCreationTickDifference;
+
+	// PURPOSE: Store timer id for GTA Files check.
+	int m_CheckGTAFilesTimerId;
+
+	// PURPOSE: Store index of current file (m_FileNames)
+	size_t m_CheckGTAFilesCurFileId;
 
 	// PURPOSE: Store the player's hardware ID.
 	std::string m_HardwareID;
