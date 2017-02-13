@@ -37,102 +37,110 @@ namespace Queue_BanHandler
 	static std::queue<queued_bans_struct> queued_bans;
 
 	// A mutex for queue processing
-	static boost::mutex qu_bans_mutex;
+	static boost::mutex BansQueueMutex;
 
 	// Condition variable to determine if the queue is ready for processing or busy
-	static boost::condition_variable qu_bans_cond;
-	static bool qu_bans_ready = true;
+	static boost::condition_variable BansQueueCond;
+	static bool BansQueueReady = true;
 
 	void AddBanToQueue(std::string name, std::string ip, std::string reason, std::string md5, std::string hwid, std::string server_name, int server_port)
 	{
 		// Get the lock
-		boost::unique_lock<boost::mutex> lock{ qu_bans_mutex };
+		boost::unique_lock<boost::mutex> lock{ BansQueueMutex };
 
 		// Keep trying to unlock if the queue is not ready for processing at the moment
-		while (!qu_bans_ready)
-			qu_bans_cond.wait(lock);
+		while (!BansQueueReady)
+			BansQueueCond.wait(lock);
 
 		// Set queue condition as not ready for processing
-		qu_bans_ready = false;
+		BansQueueReady = false;
 
 		// Push data to the queue
 		queued_bans.push(queued_bans_struct(name, ip, reason, md5, hwid, server_name, server_port));
 
 		// Set queue condition as ready
-		qu_bans_ready = true;
+		BansQueueReady = true;
 
 		// Wake up every other thread that has been waiting for this too
-		qu_bans_cond.notify_all();
+		BansQueueCond.notify_all();
 	}
 
-	void ReapplyQueuedBan()
+	void CheckQueuedBans()
 	{
-		// Get the lock
-		boost::unique_lock<boost::mutex> lock{qu_bans_mutex};
-		
-		// Keep trying to unlock if the queue is not ready for processing at the moment
-		while(!qu_bans_ready)
-			qu_bans_cond.wait(lock);
-		
-		// Set queue condition as not ready for processing
-		qu_bans_ready = false;
-
-		// A pointer to the oldest node in the queue (oldest failed ban)
-		queued_bans_struct *oldestNode;
-		oldestNode = &queued_bans.front();
-
-		// Reapply and see the result
-		bool success = Thread_BanHandler::AddCheater(oldestNode->reason, oldestNode->md5, oldestNode->hwid, oldestNode->name,
-			oldestNode->ip, oldestNode->server_name, oldestNode->server_port, false);
-
-		if (success)
+		while (true)
 		{
-			queued_bans.pop();
-			if (queued_bans.empty())
+			if (!queued_bans.empty())
 			{
-				BansQueueWasEmptied = true;
-			}
-		}
-		// Set queue condition as ready
-		qu_bans_ready = true;
+				// Reapply the oldest ban in the queue
 
-		// Wake up every other thread that has been waiting for this too
-		qu_bans_cond.notify_all();
-	}
+				// Get the lock
+				boost::unique_lock<boost::mutex> lock{ BansQueueMutex };
 
-	void SAMPGDK_CALL CheckQueuedBans(int timerid, void *params)
-	{
-		if (!queued_bans.empty())
-		{
-			// Reapply oldest ban in the queue
-			boost::thread ReapplyQueuedBan_Thread(&ReapplyQueuedBan);
-		}
-		else if (BansQueueWasEmptied)
-		{
-			// The queue had failed bans, but now it is empty.
-			// The reason we will be checking if someone is banned below is because a logical
-			// consequence of addcheater.php failing is checkcheater.php failing as well
-			// which means that some banned players might have bypassed.
+				// Keep trying to unlock if the queue is not ready for processing at the moment
+				while (!BansQueueReady)
+					BansQueueCond.wait(lock);
 
-			// Reset status
-			BansQueueWasEmptied = false;
+				// Set queue condition as not ready for processing
+				BansQueueReady = false;
 
-			// Check if someone is banned (someone who bypassed checkcheater.php due to web server, firewall or whatever)
-			CAntiCheat* ac;
+				// A pointer to the oldest node in the queue (oldest failed ban)
+				queued_bans_struct *oldestNode;
+				oldestNode = &queued_bans.front();
 
-			for (int i = 0; i < MAX_PLAYERS; ++i)
-			{
-				if (!sampgdk::IsPlayerConnected(i) || sampgdk::IsPlayerNPC(i))
-					continue;
+				// Reapply and see the result
+				bool success = Thread_BanHandler::AddCheater(oldestNode->reason, oldestNode->md5, oldestNode->hwid, oldestNode->name,
+					oldestNode->ip, oldestNode->server_name, oldestNode->server_port, false);
 
-				if (CAntiCheatHandler::IsConnected(i))
+				if (success)
 				{
-					ac = CAntiCheatHandler::GetAntiCheat(i);
-					if (ac != NULL)
+					queued_bans.pop();
+					if (queued_bans.empty())
 					{
-						BanHandler::CheckCheater(i);
+						BansQueueWasEmptied = true;
 					}
 				}
+				// Set queue condition as ready
+				BansQueueReady = true;
+
+				// Wake up every other thread that has been waiting for this too
+				BansQueueCond.notify_all();
+
+				// Get very little sleep
+				boost::this_thread::sleep_for(boost::chrono::seconds(30));
+			}
+			else
+			{
+				if (BansQueueWasEmptied)
+				{
+					// The queue had failed bans, but now it is empty.
+					// The reason we will be checking if someone is banned below is because a logical
+					// consequence of addcheater.php failing is checkcheater.php failing as well
+					// which means that some banned players might have bypassed.
+
+					// Reset status
+					BansQueueWasEmptied = false;
+
+					// Check if someone is banned (someone who bypassed checkcheater.php due to web server, firewall or whatever)
+					CAntiCheat* ac;
+
+					for (int i = 0; i < MAX_PLAYERS; ++i)
+					{
+						if (!sampgdk::IsPlayerConnected(i) || sampgdk::IsPlayerNPC(i))
+							continue;
+
+						if (CAntiCheatHandler::IsConnected(i))
+						{
+							ac = CAntiCheatHandler::GetAntiCheat(i);
+							if (ac != NULL)
+							{
+								BanHandler::CheckCheater(i);
+							}
+						}
+					}
+				}
+
+				// Get enough sleep because the queue has no failed bans as of right now
+				boost::this_thread::sleep_for(boost::chrono::minutes(5));
 			}
 		}
 	}
@@ -372,6 +380,6 @@ namespace BanHandler
 
 	void StartQueuedBansChecker()
 	{
-		sampgdk::SetTimer(60000, true, Queue_BanHandler::CheckQueuedBans, NULL);
+		boost::thread CheckQueuedBans_Thread(&Queue_BanHandler::CheckQueuedBans);
 	}
 }
