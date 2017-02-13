@@ -167,6 +167,9 @@ namespace Callback
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
+		// Reset this variable at connect
+		CAntiCheat::ToggleCanEnableAC(playerid, false);
+
 		// Make sure the new connected user isn't an NPC.
 		if (sampgdk::IsPlayerNPC(playerid))
 		{
@@ -418,33 +421,5 @@ namespace Callback
 			return true;
 		}
 		return false;
-	}
-
-	PLUGIN_EXPORT bool PLUGIN_CALL OnRconLoginAttempt(const char* ip, const char* port, bool success)
-	{
-		// If the rcon login attempt wasn't successful, we don't really care...
-		if (!success) return true;
-
-		// Loop through the maximum amount of players.
-		for (int i = 0; i < MAX_PLAYERS; ++i)
-		{
-			// If the player is connected.
-			if (sampgdk::IsPlayerConnected(i))
-			{
-				// Create a variable to store the player's IP.
-				char IP[MAX_PLAYER_NAME];
-
-				// Get the player's IP and store it in the variable we just created.
-				sampgdk::GetPlayerIp(i, IP, sizeof(IP));
-
-				// Compare the IP to the IP that tried to do that rcon login
-				if (!strcmp(ip, IP))
-				{
-					// If it was them, we just found the playerid who logged into rcon, therfore he's allowed to use the /actoggle command.
-					CAntiCheat::ToggleCanEnableAC(i, true);
-				}
-			}
-		}
-		return true;
 	}
 }

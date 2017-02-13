@@ -9,4 +9,3 @@ EXPORTS
 	OnPlayerDisconnect
 	OnGameModeInit
 	OnPlayerCommandText
-	OnRconLoginAttempt
