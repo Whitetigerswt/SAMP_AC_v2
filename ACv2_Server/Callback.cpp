@@ -311,6 +311,9 @@ namespace Callback
 		// Request client verification in a repeated timer
 		VerifiedPacketChecker::StartVerifiedPacketChecker();
 
+		// Run a timer that keeps trying to re-apply failed bans
+		BanHandler::StartQueuedBansChecker();
+
 		// Seed for rand()
 		srand((unsigned int)time(NULL));
 
