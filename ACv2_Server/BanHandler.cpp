@@ -46,7 +46,7 @@ namespace Queue_BanHandler
 	void AddBanToQueue(std::string name, std::string ip, std::string reason, std::string md5, std::string hwid, std::string server_name, int server_port)
 	{
 		// Get the lock
-		boost::unique_lock<boost::mutex> lock{ BansQueueMutex };
+		boost::unique_lock<boost::mutex> lock(BansQueueMutex);
 
 		// Keep trying to unlock if the queue is not ready for processing at the moment
 		while (!BansQueueReady)
@@ -74,7 +74,7 @@ namespace Queue_BanHandler
 				// Reapply the oldest ban in the queue
 
 				// Get the lock
-				boost::unique_lock<boost::mutex> lock{ BansQueueMutex };
+				boost::unique_lock<boost::mutex> lock(BansQueueMutex);
 
 				// Keep trying to unlock if the queue is not ready for processing at the moment
 				while (!BansQueueReady)
