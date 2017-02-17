@@ -312,10 +312,14 @@ RPC_CALLBACK CRPCCallback::OnUnknownSendPacketCallerFound(RakNet::BitStream &bsD
 {
 	unsigned char path[MAX_PATH + 1];
 	BYTE md5[16];
+	DWORD baseaddr, addr;
 
 	// Reset memory.
 	memset(path, 0, sizeof(path));
 	memset(md5, 0, sizeof(md5));
+
+	bsData.Read(baseaddr);
+	bsData.Read(addr);
 
 	// Read the data the client sent us.
 	if (bsData.ReadString(path))
@@ -335,7 +339,7 @@ RPC_CALLBACK CRPCCallback::OnUnknownSendPacketCallerFound(RakNet::BitStream &bsD
 		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
 		if (ac)
 		{
-			ac->OnUnknownSendPacketCallerFound((char*)path, digestChars);
+			ac->OnUnknownSendPacketCallerFound(baseaddr, addr, (char*)path, digestChars);
 		}
 	}
 }

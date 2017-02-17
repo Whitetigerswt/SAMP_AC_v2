@@ -186,7 +186,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 	Callback::Execute("AC_OnFileCalculated", "issi", isModified, md5, path, ID);
 }
 
-void CAntiCheat::OnUnknownSendPacketCallerFound(char* path, char* md5)
+void CAntiCheat::OnUnknownSendPacketCallerFound(DWORD base, DWORD addr, char* path, char* md5)
 {
 	// If AC Main checks are enabled
 	if (Callback::GetACEnabled() == true)
@@ -211,7 +211,7 @@ void CAntiCheat::OnUnknownSendPacketCallerFound(char* path, char* md5)
 		sampgdk::SendClientMessageToAll(-1, msg);
 
 		// Finally, print our a message to the console so we can log the result.
-		Utility::Printf("%s has been kicked for packet tampering, path: %s, md5: %s.", name, path, md5);
+		Utility::Printf("%s has been kicked for packet tampering, base: %x, addr: %x, path: %s, md5: %s.", name, base, addr, path, md5);
 
 		// And kick the player.
 		sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
