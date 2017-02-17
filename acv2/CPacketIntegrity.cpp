@@ -162,6 +162,7 @@ bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 				bitStream.Write(ON_UNKNOWN_SENDPACKET_CALLER_FOUND);
 				bitStream.Write((DWORD)hCallerModule);
 				bitStream.Write((DWORD)callers[i]);
+				bitStream.Write((unsigned char)i);
 				bitStream.Write((unsigned short)wcslen(fileName));
 				bitStream.Write(Misc::utf8_encode(fileName).c_str(), wcslen(fileName));
 				if (strcmp(md5.c_str(), "NULL"))

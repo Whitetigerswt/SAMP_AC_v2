@@ -310,7 +310,7 @@ RPC_CALLBACK CRPCCallback::OnTakeScreenshot(RakNet::BitStream &bsData, int iExtr
 
 RPC_CALLBACK CRPCCallback::OnUnknownSendPacketCallerFound(RakNet::BitStream &bsData, int iExtra)
 {
-	unsigned char path[MAX_PATH + 1];
+	unsigned char path[MAX_PATH + 1], frame;
 	BYTE md5[16];
 	DWORD baseaddr, addr;
 
@@ -320,6 +320,7 @@ RPC_CALLBACK CRPCCallback::OnUnknownSendPacketCallerFound(RakNet::BitStream &bsD
 
 	bsData.Read(baseaddr);
 	bsData.Read(addr);
+	bsData.Read(frame);
 
 	// Read the data the client sent us.
 	if (bsData.ReadString(path))
@@ -339,7 +340,7 @@ RPC_CALLBACK CRPCCallback::OnUnknownSendPacketCallerFound(RakNet::BitStream &bsD
 		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
 		if (ac)
 		{
-			ac->OnUnknownSendPacketCallerFound(baseaddr, addr, (char*)path, digestChars);
+			ac->OnUnknownSendPacketCallerFound(baseaddr, addr, frame, (char*)path, digestChars);
 		}
 	}
 }
