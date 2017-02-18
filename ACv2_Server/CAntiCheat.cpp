@@ -186,7 +186,7 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 	Callback::Execute("AC_OnFileCalculated", "issi", isModified, md5, path, ID);
 }
 
-void CAntiCheat::OnUnknownSendPacketCallerFound(DWORD base, DWORD addr, unsigned char frame, char* path, char* md5)
+void CAntiCheat::OnUnknownSendPacketCallerFound(unsigned int base, unsigned int addr, unsigned char frame, char* path, char* md5)
 {
 	// If AC Main checks are enabled
 	if (Callback::GetACEnabled() == true)

@@ -6,20 +6,13 @@
 #include "../GDK/sampgdk.h"
 #include "../BanHandler.h"
 #include "../VerifiedPacketChecker.h"
+#include "../Types.h"
 
 #include <stdio.h>
 #include <cstring>
 
 #include <boost/thread.hpp>
 #include <boost/algorithm/string.hpp>
-
-#ifndef MAX_PATH
-#define MAX_PATH 260
-#endif
-
-#ifndef WIN32
-typedef unsigned char BYTE;
-#endif
 
 
 void CRPCCallback::Initialize()
