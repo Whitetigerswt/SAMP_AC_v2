@@ -974,17 +974,14 @@ a#imagelightbox-close:hover, a#imagelightbox-close:focus { color: #11ABB0; }
     padding: 1%;
     border-radius: 3px;
     color: #ffffff !important;
-    font-weight: bold;
-
-    -webkit-animation: flickerAnimation 3s infinite;
-   -moz-animation: flickerAnimation 3s infinite;
-   -o-animation: flickerAnimation 3s infinite;
-    animation: flickerAnimation 3s infinite;
+    font-weight: normal;
+    background-color: transparent;
 }
 
 .second_website_button:hover
 {
-    border: thin solid #EEEEEE !important;
+    font-weight: bold;
+    border: thin solid rgba(255, 255, 255, 0.05) !important;
     background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
