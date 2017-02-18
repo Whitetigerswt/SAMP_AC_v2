@@ -985,34 +985,6 @@ a#imagelightbox-close:hover, a#imagelightbox-close:focus { color: #11ABB0; }
     background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-@keyframes flickerAnimation
-{
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
-}
-
-@-o-keyframes flickerAnimation
-{
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
-}
-
-@-moz-keyframes flickerAnimation
-{
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
-}
-
-@-webkit-keyframes flickerAnimation
-{
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
-}
-
 @media only screen and (max-width: 41.250em) { /* 660 */
 
 	#container	{ width: 100%; }
