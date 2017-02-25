@@ -281,6 +281,7 @@ namespace Callback
 		Default_MacroLimits = true;
 		Default_VehicleBlips = true;
 		Default_SwitchReload = true;
+		Default_KickPacketTampering = false;
 
 		Default_CrouchBug = 9999;
 		Default_FrameLimit = 9999;
@@ -295,6 +296,7 @@ namespace Callback
 		ac_config_ptree.put("defaults.crouch_bug", Default_CrouchBug);
 		ac_config_ptree.put("defaults.frame_limit", Default_FrameLimit);
 		ac_config_ptree.put("defaults.sprint_speed_limit", static_cast<int>(Default_SprintLimit * 10.0f));
+		ac_config_ptree.put("defaults.kick_for_packet_tampering", (Default_KickPacketTampering == true) ? 1 : 0);
 
 		boost::property_tree::ini_parser::write_ini("ac_config.ini", ac_config_ptree);
 	}
@@ -339,6 +341,7 @@ namespace Callback
 				Default_CrouchBug = ac_config_ptree.get<int>("defaults.crouch_bug");
 				Default_FrameLimit = ac_config_ptree.get<int>("defaults.frame_limit");
 				Default_VehicleBlips = ac_config_ptree.get<bool>("defaults.vehicle_blips");
+				Default_KickPacketTampering = ac_config_ptree.get<bool>("defaults.kick_for_packet_tampering");
 			}
 			catch (const boost::property_tree::ptree_error &e)
 			{
