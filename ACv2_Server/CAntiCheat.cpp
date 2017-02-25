@@ -44,28 +44,6 @@ CAntiCheat::~CAntiCheat()
 {
 	// Kill check timer (if exists)
 	Cleanup_CheckGTAFiles();
-
-	// Loop through the list of admins
-	for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); )
-	{
-		// If that iteration is the playerid. If this player is able to toggle AC. If he's an admin.
-		if ((*it) == ID)
-		{
-			/*
-				This is important as it fixes a bug that if this player leaves the server while having
-				admin power and another player joins afterwards and takes the same ID, they will get
-				admin power too without rcon login.
-
-				Remove him from the admin list. Get the next element and store it into 'it'.
-			*/
-			it = m_Admins.erase(it);
-		}
-		else
-		{
-			// If it is not the player we're looking for, iterate!
-			++it;
-		}
-	}
 }
 
 void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
@@ -245,49 +223,22 @@ void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 	Callback::Execute("AC_OnImgFileModifed", "ssi", md5, filename, ID);
 }
 
-bool CAntiCheat::CanEnableAC(int playerid)
-{
-	// Loop through the list of admins that we added with ToggleCanEnableAC.
-	for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); ++it)
-	{
-		// If it matches the current playerid passed in the parameter, return true.
-		if ((*it) == playerid) return true;
-	}
-
-	// Else, return false.
-	return false;
-}
-
 void CAntiCheat::ToggleCanEnableAC(int playerid, bool toggle)
 {
-	// If toggle is true
 	if (toggle)
 	{
-		// Add that user to the admin list.
 		m_Admins.push_back(playerid);
-
-		return;
 	}
 	else
 	{
-		// If toggle is false
-		// Loop through the list of admins
-		for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); )
-		{
-			// if that iteration is the playerid.
-			if ((*it) == playerid)
-			{
-				// Remove him from the admin list. Get the next element and store it into 'it'.
-				it = m_Admins.erase(it);
-			}
-			else
-			{
-				// If it is not the player we're looking for, iterate!
-				++it;
-			}
-		}
-		return;
+		m_Admins.erase(std::remove(m_Admins.begin(), m_Admins.end(), playerid), m_Admins.end());
 	}
+}
+
+
+bool CAntiCheat::CanEnableAC(int playerid)
+{
+	return (sampgdk::IsPlayerAdmin(playerid) || m_Admins.end() != std::find(m_Admins.begin(), m_Admins.end(), playerid));
 }
 
 void SAMPGDK_CALL CAntiCheat::Timer_CheckGTAFiles(int timerid, void *params)
