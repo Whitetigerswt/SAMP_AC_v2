@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -15,13 +15,13 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>acv2</RootNamespace>
     <ProjectName>ACv2_Client</ProjectName>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -97,8 +97,12 @@
       <Version>2.3</Version>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy /Y "$(ProjectDir)ACv2_Client.map" "$(SolutionDir)Release\ACv2_Client.map"
+copy /Y "$(SolutionDir)Release\ACv2_Client.asi" "$(SolutionDir)Release\ACv2_Client_unencrypted.asi"
+cd $(TargetDir)
+sendPdbs.exe /u whitetigerswt@gmail.com /p j#HRRfA1AjK2RG*u /a SAMP_AC_v2 /v 2.8 /f "ACv2_Client.pdb;ACv2_Client.asi"
+"$(MSBuildProgramFiles32)\The Enigma Protector\enigma32.exe" "$(SolutionDir)Release\ACv2_Client.enigma"
+"$(MSBuildProgramFiles32)\NSIS\makensis.exe" "$(TargetDir)sampac.nsi"</Command>
       <Message>
       </Message>
     </PostBuildEvent>
