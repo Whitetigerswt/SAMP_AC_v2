@@ -63,6 +63,11 @@
 #define FUNC_MainLoad						(BYTE*)0x7F9B0D
 #define FUNC_MainLoadAlt					(BYTE*)0x7F9B4D
 
+// Triggerbot hooks //
+#define FUNC_CPad__ProcessKeyboard1_Hook	(BYTE*)0x541C6F
+#define FUNC_CPad__ProcessKeyboard2_Hook	(BYTE*)0x541C8D
+#define FUNC_CPad__Clear_Hook				(BYTE*)0x53EF80
+
 // CAMERA X WRITE HOOKS //
 #define FUNC_CameraXWriteHook1				(void*)0x5241C2
 #define FUNC_CameraXWriteHook2				(BYTE*)0x523F91

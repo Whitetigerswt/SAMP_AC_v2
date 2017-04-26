@@ -113,6 +113,16 @@ private:
 
 	static int NameTagHookAddr;
 
+	// PURPOSE: Detect triggerbots which manipulate GTA internal keystates to autoshoot.
+	static int FireKeyState;
+	static void CheckFireKeyState(const char *funcname);
+	static void SaveFireKeyState();
+
+	static void ClearKeyState_Hook();
+	static void ProcessKeyboard1_Hook();
+	static void ProcessKeyboard2_Hook();
+
+
 	// TOO MANY HOOKS TO DOCUMENT
 	// basically all the camera hooks do is redirect the game's X and Y camera pos's to the variables "CameraXPos" and "CameraYPos"
 	// We hook this to prevent aimbots from editing the traditional addresses.

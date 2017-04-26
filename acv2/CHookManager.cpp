@@ -14,6 +14,7 @@
 #include "s0beit\samp.h"
 #include "ManualInjection.h"
 #include "CPacketIntegrity.h"
+#include "CLog.h"
 #include "Detours\detours.h"
 
 // Small children look away, this is gonna get ugly...
@@ -169,6 +170,8 @@ static boolean hooks_install_once = false;
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
 
+int CHookManager::FireKeyState;
+
 DWORD NameTag_je1;
 DWORD NameTag_je2;
 DWORD NameTagHookJmpBack;
@@ -258,6 +261,11 @@ void CHookManager::Load()
 		CMem::ApplyJmp(FUNC_MainLoadAlt, (DWORD)MainLoading, 5);
 		MainLoadingJmpBack = 0x7F9B52;
 	}
+
+	// Triggerbot hooks
+	CMem::ApplyJmp(FUNC_CPad__ProcessKeyboard1_Hook, (DWORD)ProcessKeyboard1_Hook, 0x9);
+	CMem::ApplyJmp(FUNC_CPad__ProcessKeyboard2_Hook, (DWORD)ProcessKeyboard2_Hook, 0x9);
+	CMem::ApplyJmp(FUNC_CPad__Clear_Hook, (DWORD)ClearKeyState_Hook, 0xE2 - 0x80);
 
 	// -------------------------------------------------------------------------
 	// Hook camera position patches below, so aimbots cannot edit the camera position.
@@ -1092,6 +1100,100 @@ HOOK CHookManager::LoadBullet()
 		fld[fDefaultBulletOffset]
 		mov[esp+24h], edx
 		jmp[LoadBulletJmpBack]
+	}
+}
+
+void CHookManager::CheckFireKeyState(const char *funcname)
+{
+	if (FireKeyState != FIRE_KEY && FireKeyState == 0)
+	{
+		CLog("trigger.log").Write("%s: expected: %d, found: %d", funcname, FireKeyState, (DWORD)FIRE_KEY);
+	}
+}
+
+void CHookManager::SaveFireKeyState()
+{
+	FireKeyState = FIRE_KEY;
+}
+
+__declspec(naked) void CHookManager::ClearKeyState_Hook() // this function has been entirely moved inside AC module
+{
+	__asm {
+		push ecx // save _this pointer
+	}
+
+	CheckFireKeyState(__FUNCTION__);
+
+	__asm {
+		pop ecx // restore _this pointer
+
+		xor eax, eax
+		mov[ecx + 0x06], ax
+		mov[ecx + 0x04], ax
+		mov[ecx + 0x02], ax
+		mov[ecx + 0x00], ax
+		mov[ecx + 0x0E], ax
+		mov[ecx + 0x0C], ax
+		mov[ecx + 0x0A], ax
+		mov[ecx + 0x08], ax
+		mov[ecx + 0x16], ax
+		mov[ecx + 0x14], ax
+		mov[ecx + 0x12], ax
+		mov[ecx + 0x10], ax
+		mov[ecx + 0x1A], ax
+		mov[ecx + 0x18], ax
+		mov[ecx + 0x22], ax
+		mov[ecx + 0x20], ax
+		mov[ecx + 0x1E], ax
+		mov[ecx + 0x1C], ax
+		mov[ecx + 0x26], ax
+		mov[ecx + 0x24], ax
+		mov[ecx + 0x28], ax
+		mov[ecx + 0x2A], ax
+		mov[ecx + 0x2C], ax
+		mov[ecx + 0x2E], ax
+	}
+
+	SaveFireKeyState();
+
+	__asm {
+		ret
+	}
+}
+
+DWORD ProcessKeyboard1_JumpBack = 0x541C78;
+__declspec(naked) void CHookManager::ProcessKeyboard1_Hook()
+{
+	CheckFireKeyState(__FUNCTION__);
+
+	__asm {
+		mov ecx, 0xC
+		mov edi, ebx
+		repe movsd
+	}
+
+	SaveFireKeyState();
+
+	__asm {
+		jmp[ProcessKeyboard1_JumpBack]
+	}
+}
+
+DWORD ProcessKeyboard2_JumpBack = 0x541C96;
+__declspec(naked) void CHookManager::ProcessKeyboard2_Hook()
+{
+	CheckFireKeyState(__FUNCTION__);
+
+	__asm {
+		mov ecx, 0xC
+		mov edi, ebx
+		repe movsd
+	}
+
+	SaveFireKeyState();
+
+	__asm {
+		jmp[ProcessKeyboard2_JumpBack]
 	}
 }
 
