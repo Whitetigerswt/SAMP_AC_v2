@@ -137,7 +137,6 @@ void CLoader::Initialize(HMODULE hMod)
 		if (!isGameLoaded && *(bool*)0xA444A0)
 		{
 			isGameLoaded = 1;
-			CHookManager::PostLoad();
 		}
 		
 		// Scan for new processes.
