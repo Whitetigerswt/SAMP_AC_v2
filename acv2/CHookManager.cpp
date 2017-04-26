@@ -15,6 +15,7 @@
 #include "ManualInjection.h"
 #include "CPacketIntegrity.h"
 #include "CLog.h"
+#include "CMemProtect.h"
 #include "Detours\detours.h"
 
 // Small children look away, this is gonna get ugly...
@@ -172,32 +173,14 @@ float CHookManager::CameraYPos = 0.0f;
 
 int CHookManager::FireKeyState;
 
-DWORD NameTagHook_JE;
-DWORD NameTagHookJmpBack;
-
 void CHookManager::Load()
 {
 	DWORD dwOldProt;
-
-	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
 	DWORD samp_base_addr = getSampBaseAddress();
+	DWORD samp;
 
 	if (samp_base_addr)
 	{
-		setSampBaseAddress(samp_base_addr);
-
-		// Add address offset
-		DWORD samp = samp_base_addr + 0x6FCF1;
-
-		NameTagHookJmpBack = samp + 0x8; // samp.dll+6FCF9
-		NameTagHook_JE = samp + 0x179; // samp.dll+6FE6A
-
-		// Unprotect memory.
-		VirtualProtect((void*)samp, 8, PAGE_EXECUTE_READWRITE, &dwOldProt);
-
-		// Install hook
-		CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 8);
-
 		if (!hooks_install_once)
 		{
 			samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx", getSampBaseAddress(), getSampSize());
@@ -218,6 +201,8 @@ void CHookManager::Load()
 
 			samp = samp_base_addr + FUNC_OFFSET_RAKPEER__SENDBUFFERED;
 		    m_pfnRakPeer__SendBuffered = (RakPeer__SendBuffered_t)DetourFunction((PBYTE)samp, (PBYTE)CHookManager::RakPeer__SendBufferedHook);
+
+			FindProtectedMemoryAddresses();
 		}
 	}
 
@@ -435,6 +420,45 @@ void CHookManager::Load()
 
 	// Check data file integrity.
 	VerifyFilePaths();
+}
+
+void CHookManager::FindProtectedMemoryAddresses()
+{
+	DWORD dwSAMPBase = getSampBaseAddress();
+	BYTE *addr;
+
+	// these addresses are NOPped in order to disable LOS and other checks for nametags
+	// many thanks to springfield: http://ugbase.eu/Thread-NameTagHack-0-3-7-CLEO-EXE-ASI
+	
+	addr = (BYTE*)(dwSAMPBase + 0x6FCF3);
+	if (memcmp(addr, "\x0F\x84", 2) != 0)
+		ExitProcess(0);
+	else
+		CMemProtect::Add(addr, NULL, 6);
+
+	addr = (BYTE*)(dwSAMPBase + 0x6FD14);
+	if (memcmp(addr, "\x0F\x8A", 2) != 0)
+		ExitProcess(0);
+	else
+		CMemProtect::Add(addr, NULL, 6);
+	
+	addr = (BYTE*)(dwSAMPBase + 0x70E24);
+	if (memcmp(addr, "\x0F\x8A", 2) != 0)
+		ExitProcess(0);
+	else
+		CMemProtect::Add(addr, NULL, 6);
+
+	addr = (BYTE*)(dwSAMPBase + 0x70F38);
+	if (memcmp(addr, "\x74", 1) != 0)
+		ExitProcess(0);
+	else
+		CMemProtect::Add(addr, NULL, 2);
+
+	addr = (BYTE*)(dwSAMPBase + 0x6FE28);
+	if (memcmp(addr, "\x74", 1) != 0)
+		ExitProcess(0);
+	else
+		CMemProtect::Add(addr, NULL, 2);
 }
 
 void CHookManager::SetConnectPatches()
@@ -683,19 +707,6 @@ void CHookManager::OnPause()
 		pop ebx
 		pop ebp
 		jmp[PauseJmpBack]
-	}
-}
-
-HOOK CHookManager::NameTagHook()
-{
-	__asm
-	{
-		test eax, eax
-		je je_label
-		jmp[NameTagHookJmpBack]
-
-	je_label:
-		jmp[NameTagHook_JE]
 	}
 }
 

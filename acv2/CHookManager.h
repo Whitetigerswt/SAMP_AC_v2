@@ -48,6 +48,8 @@ private:
 	static void LoadShotgunBullet();
 	static void LoadBullet();
 
+	static void FindProtectedMemoryAddresses();
+
 	//static void CPed_Special_Flags();
 
 	// hooks for when pauseing
@@ -59,9 +61,6 @@ private:
 	static void Fatulous1();
 	static void Fatulous2();
 	static void Fatulous3();
-
-	// name tag hack: http://ugbase.eu/releases/)2014(-nametag-distance-los-(0-3z)/
-	static void NameTagHook();
 
 	// Makes widescreen mod crash the game
 	static void WidescreenPatch();
@@ -110,8 +109,6 @@ private:
 
 	static float CameraXPos;
 	static float CameraYPos;
-
-	static int NameTagHookAddr;
 
 	// PURPOSE: Detect triggerbots which manipulate GTA internal keystates to autoshoot.
 	static int FireKeyState;
