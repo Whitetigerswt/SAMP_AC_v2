@@ -54,15 +54,37 @@ LRESULT CALLBACK CMessageProxy::Process(HWND wnd, UINT umsg, WPARAM wparam, LPAR
 			case WM_LBUTTONDOWN:
 			case WM_RBUTTONDOWN:
 			case WM_MBUTTONDOWN:
+			case WM_XBUTTONDOWN:
 			case WM_IME_KEYDOWN:
 			{
+				switch (umsg)
+				{
+					case WM_LBUTTONDOWN:
+						vKey = VK_LBUTTON;
+						break;
+					case WM_RBUTTONDOWN:
+						vKey = VK_RBUTTON;
+						break;
+					case WM_MBUTTONDOWN:
+						vKey = VK_MBUTTON;
+						break;
+					case WM_XBUTTONDOWN:
+						if (HIWORD(wparam) & XBUTTON1)
+							vKey = VK_XBUTTON1;
+						else if (HIWORD(wparam) & XBUTTON2)
+							vKey = VK_XBUTTON2;
+						break;
+				}
 				if ((GetAsyncKeyState(vKey) & 0x8000) || Misc::GetMacroLocks() == false)
 				{
 					return CallWindowProc(CMessageProxy::GetOriginalProcedure(), wnd, umsg, wparam, lparam);
 				}
 				else
 				{
-					return 0;
+					if (umsg == WM_XBUTTONDOWN) // this button is kinda special, see remarks: https://msdn.microsoft.com/en-us/library/windows/desktop/ms646245(v=vs.85).aspx
+						return 1;
+					else
+						return 0;
 				}
 			}
 
