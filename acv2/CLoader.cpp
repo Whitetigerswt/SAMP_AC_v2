@@ -38,6 +38,8 @@ bool CLoader::isLoaded = false;
 BOOL CLoader::isGameLoaded = false;
 HMODULE CLoader::ThishMod = NULL;
 
+// #define DISABLE_EXCEPTION_HANDLER
+// #define DISABLE_WINAPI_PROTECTIONS
 
 #ifndef DISABLE_EXCEPTION_HANDLER
 bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2);
@@ -72,6 +74,7 @@ void CLoader::Initialize(HMODULE hMod)
 			Check https://github.com/Whitetigerswt/SAMP_AC_v2/issues/133 if you wonder why this is necessary!
 		*/
 
+#ifndef DISABLE_WINAPI_PROTECTIONS
 		// Check if Windows version is vista or greater...
 		if (IsWindowsVistaOrGreater())
 		{
@@ -83,6 +86,7 @@ void CLoader::Initialize(HMODULE hMod)
 				return;
 			}
 		}
+#endif
 
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
 		HMODULE L;
@@ -99,12 +103,14 @@ void CLoader::Initialize(HMODULE hMod)
 		setSampBaseAddress((DWORD)mInfo.lpBaseOfDll);
 		setSampSize((DWORD)mInfo.SizeOfImage);
 
+#ifndef DISABLE_WINAPI_PROTECTIONS
 		// Hide samp.dll and this .asi from the loaded module list.
 		PELPEB peb = EL_GetPeb();
 		EL_HideModule(peb, TEXT("samp.dll"));
 		wchar_t path[MAX_PATH];
 		GetModuleFileName(hMod, path, sizeof(path));
 		EL_HideModule(peb, path);
+#endif
 
 		CHookManager::Load();
 
