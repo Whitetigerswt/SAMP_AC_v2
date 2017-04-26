@@ -16,6 +16,7 @@
 #include "s0beit\samp.h"
 #include "BugSplat.h"
 #include "CPacketIntegrity.h"
+#include "CMemProtect.h"
 
 #include <map>
 #include <Aclapi.h>
@@ -150,6 +151,9 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Scan for new injected modules.
 		Modules.Scan();
+
+		// Scan for changes in memory.
+		CMemProtect::Process();
 
 		// Sleep
 		Sleep(1000);

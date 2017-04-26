@@ -125,6 +125,7 @@ del $(TargetFileName)</Command>
     <ClCompile Include="CLoader.cpp" />
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CMem.cpp" />
+    <ClCompile Include="CMemProtect.cpp" />
     <ClCompile Include="CModuleSecurity.cpp" />
     <ClCompile Include="CPacketIntegrity.cpp" />
     <ClCompile Include="CParseCommandLine.cpp" />
@@ -292,6 +293,7 @@ del $(TargetFileName)</Command>
     <ClInclude Include="CLoader.h" />
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CMem.h" />
+    <ClInclude Include="CMemProtect.h" />
     <ClInclude Include="CModuleSecurity.h" />
     <ClInclude Include="CPacketIntegrity.h" />
     <ClInclude Include="CParseCommandLine.h" />
