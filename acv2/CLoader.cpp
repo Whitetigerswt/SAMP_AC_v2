@@ -35,6 +35,7 @@ CProcessList CLoader::Processes = CProcessList();
 CDirectoryScanner CLoader::GtaDirectory = CDirectoryScanner();
 int CLoader::isElevated = false;
 bool CLoader::isLoaded = false;
+BOOL CLoader::isGameLoaded = false;
 HMODULE CLoader::ThishMod = NULL;
 
 bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2);
@@ -128,6 +129,13 @@ void CLoader::Initialize(HMODULE hMod)
 
 	while (true)
 	{
+		// http://ugbase.eu/Thread-Checking-is-game-fully-loaded-or-not
+		if (!isGameLoaded && *(bool*)0xA444A0)
+		{
+			isGameLoaded = 1;
+			CHookManager::PostLoad();
+		}
+		
 		// Scan for new processes.
 		Processes.Scan();
 
@@ -137,6 +145,11 @@ void CLoader::Initialize(HMODULE hMod)
 		// Sleep
 		Sleep(1000);
 	}
+}
+
+BOOL CLoader::IsGameLoaded()
+{
+	return isGameLoaded;
 }
 
 std::wstring CLoader::GetProcessFileName(DWORD processID)
@@ -192,7 +205,6 @@ void CLoader::TerminateOtherProcesses()
 	}
 	CloseHandle(hSnapShot);
 }
-
 
 void CLoader::CheckElevation()
 {
