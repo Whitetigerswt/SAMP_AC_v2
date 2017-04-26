@@ -38,19 +38,23 @@ bool CLoader::isLoaded = false;
 BOOL CLoader::isGameLoaded = false;
 HMODULE CLoader::ThishMod = NULL;
 
-bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2);
 
+#ifndef DISABLE_EXCEPTION_HANDLER
+bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2);
 MiniDmpSender *mpSender;
+#endif
 
 void CLoader::Initialize(HMODULE hMod)
 {
 	boost::this_thread::yield();
 	CHookManager::Load();
 
+#ifndef DISABLE_EXCEPTION_HANDLER
 	wchar_t version[50];
 	swprintf_s(version, TEXT("%f"), CURRENT_VERSION);
 	mpSender = new MiniDmpSender(L"whitetigerswt_gmail_com", L"ACv2_Client", version, NULL);
 	mpSender->setDefaultUserName(GetCommandLine());
+#endif
 
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
@@ -511,6 +515,7 @@ bool CLoader::IsLoaded()
 }
 
 // BugSplat exception callback
+#ifndef DISABLE_EXCEPTION_HANDLER
 bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2)
 {
 
@@ -547,3 +552,4 @@ bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2)
 
 	return false;
 }
+#endif
