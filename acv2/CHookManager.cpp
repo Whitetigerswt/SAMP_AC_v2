@@ -172,8 +172,7 @@ float CHookManager::CameraYPos = 0.0f;
 
 int CHookManager::FireKeyState;
 
-DWORD NameTag_je1;
-DWORD NameTag_je2;
+DWORD NameTagHook_JE;
 DWORD NameTagHookJmpBack;
 
 void CHookManager::Load()
@@ -190,13 +189,14 @@ void CHookManager::Load()
 		// Add address offset
 		DWORD samp = samp_base_addr + 0x6FCF1;
 
-		NameTagHookJmpBack = samp + 0x8;
+		NameTagHookJmpBack = samp + 0x8; // samp.dll+6FCF9
+		NameTagHook_JE = samp + 0x179; // samp.dll+6FE6A
 
 		// Unprotect memory.
-		VirtualProtect((void*)samp, 7, PAGE_EXECUTE_READWRITE, &dwOldProt);
+		VirtualProtect((void*)samp, 8, PAGE_EXECUTE_READWRITE, &dwOldProt);
 
 		// Install hook
-		CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 7);
+		CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 8);
 
 		if (!hooks_install_once)
 		{
@@ -691,15 +691,11 @@ HOOK CHookManager::NameTagHook()
 	__asm
 	{
 		test eax, eax
-		mov eax, 03C0FE6Ah
 		je je_label
-		jmp jmp_label
+		jmp[NameTagHookJmpBack]
 
 	je_label:
-			jmp eax
-
-	jmp_label:
-		jmp[NameTagHookJmpBack]
+		jmp[NameTagHook_JE]
 	}
 }
 
