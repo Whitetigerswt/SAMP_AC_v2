@@ -17,6 +17,7 @@
 #include "BugSplat.h"
 #include "CPacketIntegrity.h"
 #include "CMemProtect.h"
+#include "Network\CPacketQueue.h"
 
 #include <map>
 #include <Aclapi.h>
@@ -154,6 +155,9 @@ void CLoader::Initialize(HMODULE hMod)
 
 		// Scan for changes in memory.
 		CMemProtect::Process();
+
+		// Process queued packets.
+		CPacketQueue::Process();
 
 		// Sleep
 		Sleep(1000);

@@ -13,6 +13,7 @@
 
 #include "CRPCCallback.h"
 #include "CRakClientHandler.h"
+#include "CPacketQueue.h"
 
 static RakClient* client = NULL;
 static stSAMP* samp = NULL;
@@ -44,6 +45,11 @@ void CRakClientHandler::CustomSend(RakNet::BitStream *bs, PacketPriority priorit
 		new CPacketIntegrity(bs);
 
 		client->Send(bs, priority, reliability, orderingChannel);
+	}
+	else
+	{
+		// save the packet and resend it after we connect to the server
+		CPacketQueue::Add(bs, priority, reliability, orderingChannel);
 	}
 }
 

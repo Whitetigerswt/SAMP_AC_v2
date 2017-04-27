@@ -147,6 +147,9 @@
     <ClCompile Include="CMemProtect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Network\CPacketQueue.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\Network\CRPC.h">
@@ -874,6 +877,9 @@
     </ClInclude>
     <ClInclude Include="CMemProtect.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\CPacketQueue.h">
+      <Filter>Source Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
