@@ -11,6 +11,10 @@ native ac_gateway_param4(func[], param1, param2, param3, param4) = GetGravity;
 // For GetPlayerHardwareID
 native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 
+// Used by: AC_OnBanStatusRetrieved and AC_GetPlayerBanStatus
+#define AC_BANSTATUS_UNKNOWN          (-1)
+#define AC_BANSTATUS_NOTBANNED        (0)
+#define AC_BANSTATUS_BANNED           (1)
 
 // PURPOSE: Check if the player is using samp AC and return the result
 // REQUIRES: NULL
@@ -235,7 +239,7 @@ native ac_gateway_param3_str(func[], param1, param2[], param3) = GetGravity;
 // Params:
 // playerid         - Player to check
 //
-// Returns: (-1) = unknown ban status, 0 = not banned, 1 = banned
+// Returns: AC_BANSTATUS_* (see beginning of the file for ban status definitions)
 #define AC_GetPlayerBanStatus(%0) ac_gateway_param1("AC_GetPlayerBanStatus", %0)
 
 // PURPOSE: Check if the AC is enabled via /actoggle
@@ -271,22 +275,23 @@ forward AC_OnMD5Calculated(playerid, address, size, md5[]);
 // playerid     	- Player whom a new file was executed
 // module[]     	- The name of the file (should usually be ignored as people can name it whatever they want)
 // md5[]        	- The file's MD5
-// bool:isCheat   - true if this file is on the AC blacklist.
 //
 // Returns: irrelevant
 forward AC_OnFileExecuted(playerid, module[], md5[]);
 
 // PURPOSE: Callback for when a client is trying to do packet tampering.
 // REQUIRES: The player is using AC.
+// NOTES: If `main_ac_checks` and `kick_for_packet_tampering` are enabled, server will auto-kick the player and send a global message.
 //
 // Params:
-// playerid     	- Player whom a new file was executed
+// playerid     	- Detected player.
 //
 // Returns: irrelevant
 forward AC_OnPacketTampering(playerid);
 
 // PURPOSE: Callback for when the AC has detected there is a file inside gta3.img that is modifed that is also on the list of bad gta3.img files. (Files that can't be modified in gta3.img)
 // REQUIRES: The player is using AC.
+// NOTES: If `main_ac_checks` is enabled, server will auto-kick the player and send a global message.
 //
 // Params:
 // playerid     	- Player who's gta3.img is modified.
@@ -298,15 +303,16 @@ forward AC_OnImgFileModifed(playerid, filename[], md5[]);
 
 // PURPOSE: Callback for when a file (usually) inside the players GTA directory md5 checksum has been calculated.
 // REQUIRES: The player is using AC.
+// NOTES: If `main_ac_checks` is enabled and `isModified` is true, server will auto-kick the player and send a global message.
 //
 // Params:
 // playerid         - Player who's file was calculated
 // filename[]       - The file name of the file that was calculated
 // md5[]            - MD5 of the file
-// bool:isCheat   	- true if the file IS on the AC blacklist
+// bool:isModified  - true if the file IS NOT on the AC whitelist
 //
 // Returns: irrelevant
-forward AC_OnFileCalculated(playerid, filename[], md5[], bool:isCheat);
+forward AC_OnFileCalculated(playerid, filename[], md5[], bool:isModified);
 
 // PURPOSE: Callback for when a player pauses, unpauses, or alt tabs from the game
 // REQUIRES: The player is using AC.
@@ -347,13 +353,24 @@ forward AC_OnHardwareIDCalculated(playerid, hwid[], len);
 // PURPOSE: Callback for when a player's ban status is retrieved.
 // REQUIRES: The player is using AC.
 // NOTES: This callback might never get called.
+// NOTES: If `main_ac_checks` is enabled and `status` is banned, server will auto-kick the player and send a global message.
 //
 // Params:
-// playerid         - Player who just had their hardware id calculated.
+// playerid         - Player who just had their ban status retrieved.
 // status           - (-1) = unknown ban status, 0 = not banned, 1 = banned 
 //
 // Returns: irrelevant
 forward AC_OnBanStatusRetrieved(playerid, status);
+
+// PURPOSE: Callback for when server can't verify client authenticity in time.
+// REQUIRES: The player is using AC.
+// NOTES: If `main_ac_checks` is enabled, server will auto-kick the player and send a global message.
+//
+// Params:
+// playerid         - Player who just failed to authentificate.
+//
+// Returns: irrelevant
+forward AC_OnVerificationFail(playerid);
 
 stock TogglePlayerCrouchBug(playerid, bool:toggle)
 {

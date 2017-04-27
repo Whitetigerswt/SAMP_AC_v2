@@ -34,7 +34,7 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_MacroLimits = true;
 	m_SprintOnAllSurfaces = false;
 	m_VehicleBlips = true;
-	m_SprintLimit = 8.5f;
+	m_SprintLimit = 0.0f;
 	m_BanStatus = -1;
 	m_CreationTick = Utility::getTickCount();
 	m_CheckGTAFilesTimerId = 0;
@@ -370,21 +370,6 @@ void CAntiCheat::OnBanChecked(bool status)
 
 			// Kick the player from the server
 			sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)this->GetID());
-		}
-		else
-		{
-			// AC is not enabled. A quick informing should sufficie.
-			char msg[144];
-
-			// Tell the player
-			snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
-			sampgdk::SendClientMessage(this->GetID(), -1, msg);
-			char name[MAX_PLAYER_NAME];
-			sampgdk::GetPlayerName(this->GetID(), name, sizeof name);
-
-			// Tell other players connected
-			snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned from AC servers. Know more: %s", name, AC_WEBSITE);
-			sampgdk::SendClientMessageToAll(-1, msg);
 		}
 	}
 }

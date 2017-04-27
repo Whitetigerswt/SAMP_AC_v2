@@ -288,7 +288,7 @@ namespace Callback
 
 		Default_CrouchBug = 9999;
 		Default_FrameLimit = 9999;
-		Default_SprintLimit = 8.5f;
+		Default_SprintLimit = 0.0f;
 
 		ac_config_ptree.put("defaults.main_ac_checks", (ACToggle == true) ? 1 : 0);
 		ac_config_ptree.put("defaults.inf_sprint", (Default_InfSprint == true) ? 1 : 0);
