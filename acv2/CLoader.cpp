@@ -471,6 +471,10 @@ void CLoader::RunElevated()
 
 BOOL CLoader::IsProcessElevated()
 {
+#ifdef DISABLE_WINAPI_PROTECTIONS
+	return 1;
+#endif
+
 	if (isElevated) return 1;
 
 	BOOL fIsRunAsAdmin = FALSE;
