@@ -1,6 +1,7 @@
 #include "VersionHelper.h"
 #include "../Shared/SelfUpdater/CSelfUpdater.h"
 
+#include "GDK/sampgdk.h"
 #include "Utility.h"
 
 namespace VersionHelper
@@ -48,9 +49,11 @@ namespace VersionHelper
 			Utility::Printf("You are running the latest version.");
 			return;
 		}
-		Utility::Printf("Update required! AC plugin will attempt to update itself. If you'll get any errors, you will have to update it manually or remove it from the server.cfg and adjust your scripts accordingly.");
-		Utility::Printf("Downloading version v%d.%02d.%d from %s ...", updater.m_newVersion.major, updater.m_newVersion.minor, updater.m_newVersion.patch, updater.m_fileURL);
-		Utility::Printf("Update notes:\n%s", updater.m_additionalInfo);
+		Utility::Printf("Update found! AC plugin will attempt to update itself. If you'll get any errors, you will have to update it manually or remove it from the server.cfg and adjust your scripts accordingly.");
+		if(updater.m_additionalInfo.length() > 1)
+			Utility::Printf("Update notes:\n%s", updater.m_additionalInfo.c_str());
+		Utility::Printf("Downloading version v%d.%02d.%d from %s ...", updater.m_newVersion.major, updater.m_newVersion.minor, updater.m_newVersion.patch, updater.m_fileURL.c_str());
+		Utility::Printf("MD5 hash of new plugin version: %s", updater.m_fileMD5.c_str());
 		if (!updater.DownloadUpdate())
 		{
 			Utility::Printf("ERROR! Couldn't download the updated binary.");
@@ -70,6 +73,6 @@ namespace VersionHelper
 		Utility::Printf("AC server plugin should have been updated to version v%d.%02d.%d!", updater.m_newVersion.major, updater.m_newVersion.minor, updater.m_newVersion.patch);
 		Utility::Printf("Server will now shut down. Please reopen the SA-MP server.");
 		
-		updater.ExitProcess();
+		sampgdk::SendRconCommand("exit");
 	}
 }
