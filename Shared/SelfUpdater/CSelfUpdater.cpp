@@ -20,14 +20,22 @@
 
 #include "CSelfUpdater.h"
 
-// DELETE THE DOWNLOADED FILE IN CASE OF NOO
-
 CSelfUpdater::CSelfUpdater(stVersion currVersion, std::string url)
 {
 	m_currentVersion = currVersion;
 	m_updateInfoURL = url;
 
-	m_updateFilePath = "";
+	GeneratePaths();
+#ifdef WIN32
+	if (boost::filesystem::exists(m_oldVerTempFilePath))
+	{
+		try
+		{
+			boost::filesystem::remove(m_oldVerTempFilePath);
+		}
+		catch (const boost::filesystem::filesystem_error&) {}
+	}
+#endif
 }
 
 CSelfUpdater::~CSelfUpdater()
@@ -94,6 +102,19 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 	return written;
 }
 
+bool CSelfUpdater::GeneratePaths()
+{
+	if (!GetModulePath(m_currentFilePath)) return 0;
+	boost::filesystem::path path(m_currentFilePath);
+
+	if (!path.has_parent_path()) return 0;
+	m_parentPath = path.parent_path().string();
+
+	m_newVerTempFilePath = m_parentPath + "/sampac_new.tmp";
+	m_oldVerTempFilePath = m_parentPath + "/sampac_old.tmp";
+	return 1;
+}
+
 // THIS FUNCTION IS UNTHREADED, SO IT WILL HANG THE THREAD FOR A WHILE!!!
 bool CSelfUpdater::DownloadUpdate()
 {
@@ -102,16 +123,10 @@ bool CSelfUpdater::DownloadUpdate()
 	CURLcode res;
 	const char *url = m_fileURL.c_str();
 
-	if (!GetModulePath(m_currentFilePath)) return 0;
-	boost::filesystem::path path(m_currentFilePath);
-
-	if (!path.has_parent_path()) return 0;
-	m_updateFilePath = path.parent_path().string() + "/ac_update_" + boost::lexical_cast<std::string>(static_cast<int>(m_newVersion.major)) + "_" + boost::lexical_cast<std::string>(static_cast<int>(m_newVersion.minor)) + "_" + boost::lexical_cast<std::string>(static_cast<int>(m_newVersion.patch));
-
 	curl = curl_easy_init();
 	if (!curl) return 0;
 	
-	fp = fopen(m_updateFilePath.c_str(), "wb");
+	fp = fopen(m_newVerTempFilePath.c_str(), "wb");
 	curl_easy_setopt(curl, CURLOPT_URL, url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
@@ -127,7 +142,7 @@ bool CSelfUpdater::DownloadUpdate()
 	{
 		try
 		{
-			boost::filesystem::remove(m_updateFilePath);
+			boost::filesystem::remove(m_newVerTempFilePath);
 		}
 		catch (const boost::filesystem::filesystem_error&) { }
 
@@ -135,12 +150,12 @@ bool CSelfUpdater::DownloadUpdate()
 	}
 
 	MD5 md5;
-	std::string fileMD5 = md5.digestFileChar(m_updateFilePath.c_str());
+	std::string fileMD5 = md5.digestFileChar(m_newVerTempFilePath.c_str());
 	if (!boost::iequals(fileMD5, m_fileMD5))
 	{
 		try
 		{
-			boost::filesystem::remove(m_updateFilePath);
+			boost::filesystem::remove(m_newVerTempFilePath);
 		}
 		catch (const boost::filesystem::filesystem_error&) {}
 	}
@@ -151,28 +166,17 @@ bool CSelfUpdater::DownloadUpdate()
 bool CSelfUpdater::ApplyUpdate()
 {
 #ifdef WIN32
-	std::string tempFilename;
-	tempFilename = m_currentFilePath + "_" + boost::lexical_cast<std::string>(static_cast<int>(m_currentVersion.major)) + "_" + boost::lexical_cast<std::string>(static_cast<int>(m_currentVersion.minor)) + "_" + boost::lexical_cast<std::string>(static_cast<int>(m_currentVersion.patch)) + ".old";
-
-	if (!MoveFileExA(m_currentFilePath.c_str(), tempFilename.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH))
+	if (!MoveFileExA(m_currentFilePath.c_str(), m_oldVerTempFilePath.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH))
 		return 0;
 
-	if (!MoveFileExA(m_updateFilePath.c_str(), m_currentFilePath.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH))
-		return 0;
-
-	if (!MoveFileExA(tempFilename.c_str(), NULL, MOVEFILE_DELAY_UNTIL_REBOOT))
+	if (!MoveFileExA(m_newVerTempFilePath.c_str(), m_currentFilePath.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH))
 		return 0;
 #else
 	if (unlink(m_currentFilePath.c_str()) != 0)
 		return 0;
 
-	if (rename(m_updateFilePath.c_str(), m_currentFilePath.c_str()) != 0)
+	if (rename(m_newVerTempFilePath.c_str(), m_currentFilePath.c_str()) != 0)
 		return 0;
 #endif
 	return 1;
-}
-
-void CSelfUpdater::ExitProcess()
-{
-	exit(0);
 }

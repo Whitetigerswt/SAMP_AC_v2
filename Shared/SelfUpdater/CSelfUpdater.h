@@ -52,18 +52,20 @@ public:
 	bool CheckForNewVersion();
 	bool DownloadUpdate();
 	bool ApplyUpdate();
-	void ExitProcess();
 
 	stVersion m_currentVersion;
 	stVersion m_newVersion;
 	std::string m_fileURL;
+	std::string m_fileMD5;
 	std::string m_additionalInfo;
 
 private:
 	bool GetModulePath(std::string& path);
+	bool GeneratePaths();
 
 	std::string m_updateInfoURL;
-	std::string m_fileMD5;
-	std::string m_updateFilePath;
+	std::string m_newVerTempFilePath;
 	std::string m_currentFilePath;
+	std::string m_oldVerTempFilePath;
+	std::string m_parentPath;
 };
