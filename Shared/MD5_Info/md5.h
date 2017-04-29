@@ -30,8 +30,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <tchar.h>
-
 #pragma region MD5 defines
 // Constants for MD5Transform routine.
 #define S11 7
@@ -339,7 +337,7 @@ public:
 
 	/// Load a file from disk and digest it
 	// Digests a file and returns the result.
-	BYTE* digestFile(wchar_t *filename)
+	BYTE* digestFile(const char *filename)
 	{
 		Init();
 
@@ -348,7 +346,7 @@ public:
 		int len;
 		unsigned char buffer[1024];
 
-		if ((file = _tfopen(filename, L"rb")) == NULL)
+		if ((file = fopen(filename, "rb")) == NULL)
 		{
 		}
 		else
@@ -363,7 +361,7 @@ public:
 		return digestRaw;
 	}
 
-	char* digestFileChar(wchar_t *filename)
+	char* digestFileChar(const char *filename)
 	{
 		Init();
 
@@ -372,7 +370,7 @@ public:
 		int len;
 		unsigned char buffer[1024];
 
-		if ((file = _tfopen(filename, L"rb")) == NULL)
+		if ((file = fopen(filename, "rb")) == NULL)
 		{
 		}
 		else
@@ -386,7 +384,55 @@ public:
 
 		return digestChars;
 	}
+#ifdef WIN32
+	BYTE* digestFile(const wchar_t *filename)
+	{
+		Init();
 
+		FILE *file;
+
+		int len;
+		unsigned char buffer[1024];
+
+		if ((file = _wfopen(filename, L"rb")) == NULL)
+		{
+		}
+		else
+		{
+			while (len = fread(buffer, 1, 1024, file))
+				Update(buffer, len);
+			Final();
+
+			fclose(file);
+		}
+
+		return digestRaw;
+	}
+
+	char* digestFileChar(const wchar_t *filename)
+	{
+		Init();
+
+		FILE *file;
+
+		int len;
+		unsigned char buffer[1024];
+
+		if ((file = _wfopen(filename, L"rb")) == NULL)
+		{
+		}
+		else
+		{
+			while (len = fread(buffer, 1, 1024, file))
+				Update(buffer, len);
+			Final();
+
+			fclose(file);
+		}
+
+		return digestChars;
+	}
+#endif
 	/// Digests a byte-array already in memory
 	char* digestMemory(BYTE *memchunk, int len)
 	{

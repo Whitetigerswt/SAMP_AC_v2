@@ -7,6 +7,7 @@
 #include "../BanHandler.h"
 #include "../VerifiedPacketChecker.h"
 #include "../Types.h"
+#include "../VersionHelper.h"
 
 #include <stdio.h>
 #include <cstring>
@@ -32,16 +33,11 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_UNKNOWN_SENDPACKET_CALLER_FOUND, OnUnknownSendPacketCallerFound);
 }
 
+// This RPC is for old AC builds.
 RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra)
 {
 	// Inform the player there version of AC is not compatible with the server.
-	char msg[150];
-
-	// Format the message letting the user know their AC version will not work on this server.
-	snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
-
-	// Send the message to the user.
-	sampgdk::SendClientMessage(iExtra, -1, msg);
+	sampgdk::SendClientMessage(iExtra, 0xFF0000FF, "Fatal Error:{FFFFFF} The server's anti-cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
 
 	// Close the connection.
 	sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
@@ -220,7 +216,7 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
 	// Create a big variable to hold hardware ID.
-	float version;
+	CSelfUpdater::stVersion version;
 
 	// Convert the md5 from bytes to char
 	char digestChars[33];
@@ -235,7 +231,7 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	boost::algorithm::to_lower(digestChars);
 
 	// Read the hardware ID from the client.
-	if (bsData.Read(version))
+	if (bsData.Read((char*)&version, sizeof(CSelfUpdater::stVersion)))
 	{
 		CAntiCheatHandler::Init(iExtra);
 		// Make sure AC pointer is valid

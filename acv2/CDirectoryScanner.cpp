@@ -1,7 +1,7 @@
 #include "CDirectoryScanner.h"
 #include <boost\algorithm\string.hpp>
 #include "IMG.h"
-#include <md5.h>
+#include "../Shared/MD5_Info/md5.h"
 #include "../Shared/Network/BitStream.h"
 #include "Network\Network.h"
 #include "../Shared/Network/CRPC.h"
@@ -11,6 +11,7 @@
 #include "Network\CRakClientHandler.h"
 
 #include <boost\filesystem.hpp>
+#include <tchar.h>
 
 CDirectoryScanner::CDirectoryScanner()
 {
@@ -52,7 +53,7 @@ std::string CDirectoryScanner::MD5_Specific_File(std::wstring path)
 	if (boost::filesystem::exists(path))
 	{
 		// Calculate the MD5 of the file and store it in a C-style char value.
-		CStyleMD5 = md5obj.digestFileChar((wchar_t*)path.c_str());
+		CStyleMD5 = md5obj.digestFileChar(path.c_str());
 	}
 
 	// Convert the result to an std::string

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "GDK/sampgdk.h"
+#include "VersionHelper.h"
 
 
 class CAntiCheat
@@ -58,7 +59,7 @@ public:
 
 	// PURPOSE: Check if the player's client version of AC is compatible with the server's version.
 	// REQUIRES: The client is using AC.
-	void CheckVersionCompatible(float version);
+	void CheckVersionCompatible(CSelfUpdater::stVersion);
 
 	// PURPOSE: Toggles whether the player can turn AC on or off
 	// REQUIRES: NULL

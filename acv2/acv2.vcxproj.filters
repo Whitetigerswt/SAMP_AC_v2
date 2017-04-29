@@ -46,6 +46,9 @@
     <Filter Include="Header Files\Enigma">
       <UniqueIdentifier>{2c29f211-032a-41c2-9445-7f1e4aaed63f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shared\SelfUpdater">
+      <UniqueIdentifier>{31dc9a9b-a691-4bda-ab39-1addf74e4754}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -85,9 +88,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Misc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CClientUpdater.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CDirectoryScanner.cpp">
@@ -149,6 +149,12 @@
     </ClCompile>
     <ClCompile Include="Network\CPacketQueue.cpp">
       <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="VersionHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\SelfUpdater\CSelfUpdater.cpp">
+      <Filter>Source Files\Shared\SelfUpdater</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -782,9 +788,6 @@
     <ClInclude Include="CProcessList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="md5.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CInjectedLibraries.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -792,9 +795,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Misc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CClientUpdater.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CDirectoryScanner.h">
@@ -821,13 +821,7 @@
     <ClInclude Include="Hooks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VersionHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CModuleSecurity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PatternScan.h">
@@ -880,6 +874,21 @@
     </ClInclude>
     <ClInclude Include="Network\CPacketQueue.h">
       <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\SelfUpdater\CSelfUpdater.h">
+      <Filter>Source Files\Shared\SelfUpdater</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\MD5_Info\md5.h">
+      <Filter>Source Files\Shared\MD5 Info</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

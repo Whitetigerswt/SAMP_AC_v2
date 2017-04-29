@@ -7,7 +7,7 @@
 #include <curl/curl.h>
 #include "Utility.h"
 #include "plugin.h"
-#include "CServerUpdater.h"
+#include "VersionHelper.h"
 
 namespace Thread_BanHandler
 {
@@ -186,7 +186,7 @@ namespace Thread_BanHandler
 			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
 			// Adds user agent to request
-			curl_easy_setopt(curl, CURLOPT_USERAGENT, HTTP_REQUEST_USER_AGENT);
+			curl_easy_setopt(curl, CURLOPT_USERAGENT, VersionHelper::HTTP_REQUEST_USER_AGENT);
 
 			// Escape some parameters
 			char
@@ -264,7 +264,7 @@ namespace Thread_BanHandler
 			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
 			// Adds user agent to request
-			curl_easy_setopt(curl, CURLOPT_USERAGENT, HTTP_REQUEST_USER_AGENT);
+			curl_easy_setopt(curl, CURLOPT_USERAGENT, VersionHelper::HTTP_REQUEST_USER_AGENT);
 
 			// Escape name
 			char *escaped_name = curl_easy_escape(curl, name.c_str(), 0);

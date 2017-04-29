@@ -6,7 +6,6 @@
 #include "Callback.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "../Shared/Network/CRPC.h"
-#include "CServerUpdater.h"
 #include "PacketPriority.h"
 #include "BanHandler.h"
 #include "VerifiedPacketChecker.h"
@@ -374,19 +373,17 @@ void CAntiCheat::OnBanChecked(bool status)
 	}
 }
 
-void CAntiCheat::CheckVersionCompatible(float version)
+void CAntiCheat::CheckVersionCompatible(CSelfUpdater::stVersion version)
 {
 	// Check if the version is incompatible with the server version.
-	if (version != CURRENT_MAJOR_VERSION)
+	if (!VersionHelper::IsClientCompatible(version))
 	{
 		// Inform the player there version of AC is not compatible with the server.
-		char msg[150];
+		char msg[144];
 
-		// Format the message letting the user know their AC version will not work on this server.
-		snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
-
-		// Send the message to the user.
-		sampgdk::SendClientMessage(ID, -1, msg);
+		sampgdk::SendClientMessage(ID, 0xFF0000FF, "Fatal Error:{FFFFFF} The server's anti-cheat plugin is not compatible with your version.");
+		snprintf(msg, sizeof(msg), "Fatal Error:{FFFFFF} Server version: v%d.%02d, your client version: v%d.%02d. You must update your anti-cheat at samp-ac.com", VersionHelper::AC_SERVER_VERSION.major, VersionHelper::AC_SERVER_VERSION.minor, version.major, version.minor);
+		sampgdk::SendClientMessage(ID, 0xFF0000FF, msg);
 
 		RakNet::BitStream bsData;
 		bsData.Write((unsigned char)PACKET_RPC);

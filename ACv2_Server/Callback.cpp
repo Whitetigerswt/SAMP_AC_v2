@@ -4,7 +4,7 @@
 #include "GDK/sampgdk.h"
 #include "CAntiCheat.h"
 #include "../Shared/Network/CRPC.h"
-#include "CServerUpdater.h"
+#include "VersionHelper.h"
 #include "CAntiCheatHandler.h"
 #include "PacketPriority.h"
 #include "BanHandler.h"

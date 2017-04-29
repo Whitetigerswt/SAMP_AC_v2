@@ -1,5 +1,5 @@
 #include "Misc.h"
-#include "md5.h"
+#include "../Shared/MD5_Info/md5.h"
 #include "Addresses.h"
 
 #include <winternl.h>

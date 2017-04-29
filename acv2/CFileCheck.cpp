@@ -1,11 +1,12 @@
 #include "CFileCheck.h"
-#include "md5.h"
+#include "../Shared/MD5_Info/md5.h"
 #include "../Shared/Network/CRPC.h"
 #include "Network\Network.h"
 #include "Network\CRakClientHandler.h"
 #include "Misc.h"
 
 #include <Windows.h>
+#include <tchar.h>
 #include <string>
 
 CFileCheck::CFileCheck()
@@ -34,7 +35,7 @@ BYTE* CFileCheck::GetFileMD5(std::wstring file)
 		BYTE* md5 = new BYTE[16];
 
 		// Calculate the file path.
-		objmd5.digestFile((wchar_t*)file.c_str());
+		objmd5.digestFile(file.c_str());
 
 		for (int i = 0; i < 16; ++i)
 		{
@@ -55,7 +56,7 @@ std::string CFileCheck::GetFileMD5Chars(std::wstring file)
 		MD5 objmd5 = MD5();
 
 		// Calculate the file path.
-		std::string md5 = objmd5.digestFileChar((wchar_t*)file.c_str());
+		std::string md5 = objmd5.digestFileChar(file.c_str());
 
 		return md5;
 	}

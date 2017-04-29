@@ -8,8 +8,8 @@
 #include "../../Shared/Network/ACVerifiedPacket.h"
 #include "CRakClientHandler.h"
 #include "../s0beit/samp.h"
-#include "../CClientUpdater.h"
-#include "../md5.h"
+#include "../VersionHelper.h"
+#include "../../Shared/MD5_Info/md5.h"
 #include "../Misc.h"
 
 #include <Windows.h>
@@ -104,7 +104,7 @@ void HookedRakClientInterface::SendInitialInfo()
 	}
 
 	// Write the user's AC version to the packet.
-	bsData.Write(CURRENT_MAJOR_VERSION);
+	bsData.Write((char*)&VersionHelper::AC_CLIENT_VERSION, sizeof(CSelfUpdater::stVersion));
 
 	// Send the info to the server.
 	Send(&bsData, HIGH_PRIORITY, RELIABLE_ORDERED, 0);

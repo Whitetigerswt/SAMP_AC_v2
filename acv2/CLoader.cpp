@@ -2,7 +2,7 @@
 #include "../Shared/Network/Network.h"
 #include "CParseCommandLine.h"
 #include "Addresses.h"
-#include "CClientUpdater.h"
+#include "VersionHelper.h"
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "Network\CRakClientHandler.h"
@@ -51,12 +51,12 @@ MiniDmpSender *mpSender;
 void CLoader::Initialize(HMODULE hMod)
 {
 	boost::this_thread::yield();
+
+	VersionHelper::Initialize();
 	CHookManager::Load();
 
 #ifndef DISABLE_EXCEPTION_HANDLER
-	wchar_t version[50];
-	swprintf_s(version, TEXT("%f"), CURRENT_VERSION);
-	mpSender = new MiniDmpSender(L"whitetigerswt_gmail_com", L"ACv2_Client", version, NULL);
+	mpSender = new MiniDmpSender(L"whitetigerswt_gmail_com", L"ACv2_Client", VersionHelper::AC_CLIENT_VERSION_STRING, NULL);
 	mpSender->setDefaultUserName(GetCommandLine());
 #endif
 
@@ -136,7 +136,7 @@ void CLoader::Initialize(HMODULE hMod)
 		CPacketIntegrity::GlobalInitialize();
 
 		// Make sure we're using the latest version of this mod.
-		CClientUpdater::CheckForUpdate(hMod);
+		VersionHelper::CheckForUpdate();
 	}
 
 	while (true)
