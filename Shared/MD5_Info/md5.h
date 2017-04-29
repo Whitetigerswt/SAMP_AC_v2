@@ -30,6 +30,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#if defined WIN32 && !defined snprintf
+	#define snprintf sprintf_s
+#endif
+
 #pragma region MD5 defines
 // Constants for MD5Transform routine.
 #define S11 7
@@ -323,7 +327,7 @@ public:
 		int pos;
 
 		for (pos = 0; pos < 16; pos++)
-			sprintf_s(digestChars + (pos * 2), sizeof(digestChars), "%02x", digestRaw[pos]);
+			snprintf(digestChars + (pos * 2), sizeof(digestChars), "%02x", digestRaw[pos]);
 	}
 
 

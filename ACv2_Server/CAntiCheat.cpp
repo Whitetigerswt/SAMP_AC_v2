@@ -11,6 +11,7 @@
 #include "VerifiedPacketChecker.h"
 #include <ctime>
 #include <cstring>
+#include <stdio.h>
 #include <boost/thread.hpp>
 
 std::vector<int> CAntiCheat::m_Admins;

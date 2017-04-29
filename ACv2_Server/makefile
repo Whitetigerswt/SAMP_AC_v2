@@ -36,6 +36,6 @@ SAMPAC: clean
 	$(GPP) $(SAMPAC) ./Network/*.cpp
 	$(GPP) $(SAMPAC) ../Shared/MD5_Info/*.cpp
 	$(GPP) $(SAMPAC) ../Shared/Network/*.cpp
-    $(GPP) $(SAMPAC) ../Shared/SelfUpdater/*.cpp
+	$(GPP) $(SAMPAC) ../Shared/SelfUpdater/*.cpp
 	mkdir -p "bin"
 	$(GPP) -m32 -O2 -fshort-wchar -static -o $(AC_OUTFILE) *.o $(LDFLAGS) $(LIBS)

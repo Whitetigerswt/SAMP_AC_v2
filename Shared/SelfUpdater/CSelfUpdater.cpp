@@ -82,26 +82,6 @@ bool CSelfUpdater::CheckForNewVersion()
 	return 1;
 }
 
-bool CSelfUpdater::GetModulePath(std::string& path)
-{
-	int retVal;
-#ifdef WIN32
-	char DllPath[MAX_PATH] = { 0 };
-	retVal = GetModuleFileNameA((HINSTANCE)&__ImageBase, DllPath, _countof(DllPath));
-	path = DllPath;
-#else
-	Dl_info dl_info;
-	retVal = dladdr(GetModulePath, &dl_info);
-	path = dl_info.dli_fname;
-#endif
-	return !!retVal;
-}
-
-size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
-	size_t written = fwrite(ptr, size, nmemb, stream);
-	return written;
-}
-
 bool CSelfUpdater::GeneratePaths()
 {
 	if (!GetModulePath(m_currentFilePath)) return 0;
@@ -113,6 +93,11 @@ bool CSelfUpdater::GeneratePaths()
 	m_newVerTempFilePath = m_parentPath + "/sampac_new.tmp";
 	m_oldVerTempFilePath = m_parentPath + "/sampac_old.tmp";
 	return 1;
+}
+
+size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+	size_t written = fwrite(ptr, size, nmemb, stream);
+	return written;
 }
 
 // THIS FUNCTION IS UNTHREADED, SO IT WILL HANG THE THREAD FOR A WHILE!!!
@@ -179,4 +164,19 @@ bool CSelfUpdater::ApplyUpdate()
 		return 0;
 #endif
 	return 1;
+}
+
+bool CSelfUpdater::GetModulePath(std::string& path)
+{
+	int retVal;
+#ifdef WIN32
+	char DllPath[MAX_PATH] = { 0 };
+	retVal = GetModuleFileNameA((HINSTANCE)&__ImageBase, DllPath, _countof(DllPath));
+	path = DllPath;
+#else
+	Dl_info dl_info;
+	retVal = dladdr((const void *)&write_data, &dl_info);
+	path = dl_info.dli_fname;
+#endif
+	return !!retVal;
 }

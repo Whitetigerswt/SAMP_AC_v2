@@ -3,6 +3,7 @@
 
 #include "GDK/sampgdk.h"
 #include "Utility.h"
+#include <stdio.h>
 
 namespace VersionHelper
 {
@@ -29,8 +30,8 @@ namespace VersionHelper
 
 	void Initialize()
 	{
-		sprintf(AC_SERVER_VERSION_STRING, "%d.%02d.%d", AC_SERVER_VERSION.major, AC_SERVER_VERSION.minor, AC_SERVER_VERSION.patch);
-		sprintf(HTTP_REQUEST_USER_AGENT, "ACSVR_%s", AC_SERVER_VERSION_STRING);
+		snprintf(AC_SERVER_VERSION_STRING, sizeof(AC_SERVER_VERSION_STRING), "%d.%02d.%d", AC_SERVER_VERSION.major, AC_SERVER_VERSION.minor, AC_SERVER_VERSION.patch);
+		snprintf(HTTP_REQUEST_USER_AGENT, sizeof(HTTP_REQUEST_USER_AGENT), "ACSVR_%s", AC_SERVER_VERSION_STRING);
 	}
 
 	void CheckForUpdate()
