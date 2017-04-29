@@ -8,9 +8,9 @@
 namespace VersionHelper
 {
 #ifdef WIN32
-	const char* AC_UPDATE_URL = "http://samp-ac.com/API/Updater/Server_Windows.html";
+	const char* AC_UPDATE_URL = "http://samp-ac.com/API/SelfUpdater/Server_Windows.html";
 #else
-	const char* AC_UPDATE_URL = "http://samp-ac.com/API/Updater/Server_Linux.html";
+	const char* AC_UPDATE_URL = "http://samp-ac.com/API/SelfUpdater/Server_Linux.html";
 #endif
 
 	char HTTP_REQUEST_USER_AGENT[32];

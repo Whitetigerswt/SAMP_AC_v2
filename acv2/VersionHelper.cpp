@@ -4,7 +4,7 @@
 
 namespace VersionHelper
 {
-	const char* AC_UPDATE_URL = "http://samp-ac.com/API/Updater/Client.html";
+	const char* AC_UPDATE_URL = "http://samp-ac.com/API/SelfUpdater/Client.html";
 	wchar_t AC_CLIENT_VERSION_STRING[16];
 	CSelfUpdater::stVersion AC_CLIENT_VERSION{ 2, 83, 0 };
 	// Incrementing the version will force the client to update when they run it next.
