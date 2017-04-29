@@ -50,7 +50,7 @@ namespace VersionHelper
 		}
 		Utility::Printf("Update required! AC plugin will attempt to update itself. If you'll get any errors, you will have to update it manually or remove it from the server.cfg and adjust your scripts accordingly.");
 		Utility::Printf("Downloading version v%d.%02d.%d from %s ...", updater.m_newVersion.major, updater.m_newVersion.minor, updater.m_newVersion.patch, updater.m_fileURL);
-		Utility::Printf("Update notes: %s", updater.m_additionalInfo);
+		Utility::Printf("Update notes:\n%s", updater.m_additionalInfo);
 		if (!updater.DownloadUpdate())
 		{
 			Utility::Printf("ERROR! Couldn't download the updated binary.");

@@ -59,9 +59,9 @@ bool CSelfUpdater::CheckForNewVersion()
 	}
 	try 
 	{
-		m_newVersion.major = boost::lexical_cast<uint8_t>(splitVer[0]);
-		m_newVersion.minor = boost::lexical_cast<uint16_t>(splitVer[1]);
-		m_newVersion.patch = boost::lexical_cast<uint8_t>(splitVer[2]);
+		m_newVersion.major = boost::lexical_cast<int>(splitVer[0]);
+		m_newVersion.minor = boost::lexical_cast<int>(splitVer[1]);
+		m_newVersion.patch = boost::lexical_cast<int>(splitVer[2]);
 	}
 	catch (boost::bad_lexical_cast const&) 
 	{
