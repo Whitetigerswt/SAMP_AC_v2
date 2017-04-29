@@ -385,13 +385,6 @@ void CAntiCheat::CheckVersionCompatible(CSelfUpdater::stVersion version)
 		snprintf(msg, sizeof(msg), "Fatal Error:{FFFFFF} Server version: v%d.%02d, your client version: v%d.%02d. You must update your anti-cheat at samp-ac.com", VersionHelper::AC_SERVER_VERSION.major, VersionHelper::AC_SERVER_VERSION.minor, version.major, version.minor);
 		sampgdk::SendClientMessage(ID, 0xFF0000FF, msg);
 
-		RakNet::BitStream bsData;
-		bsData.Write((unsigned char)PACKET_RPC);
-		bsData.Write(VERSION_NOT_COMPATIBLE);
-
-		// And send an RPC telling the client's AC not to continue to monitor things.
-		Network::PlayerSend(ID, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED);
-
 		// Close the connection.
 		sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
 	}
