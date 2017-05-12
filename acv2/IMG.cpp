@@ -1491,5 +1491,5 @@ void IMG_Entry::DebugEntry(int fileID)
 	else
 		printf(" Size in bytes: %d Resource type: %d", this->SizeInBytes, this->ResourceType);
 
-	printf(" Name: %hs", this->Name);
+	printf(" Name: %ls", this->Name);
 }

@@ -69,13 +69,9 @@ namespace Utility
 			// Add NULL character.
 			shortFilePath[MAX_CHEAT_PATH - 1] = '\0';
 			
-			char* ret = shortFilePath;
-			return ret;
+			orginalFilePath = shortFilePath;
 		}
-		else
-		{
-			return orginalFilePath;
-		}
+		return orginalFilePath;
 	}
 
 	unsigned getTickCount()

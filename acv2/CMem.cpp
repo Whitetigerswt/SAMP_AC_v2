@@ -20,10 +20,10 @@ void CMem::ApplyJmp(BYTE* pAddress, DWORD dwProxy, DWORD dwLen)
 
 void CMem::Cpy(void* address, const void* src, int size)
 {
-	CMem::Unprotect(address, size);
-	memcpy(address, src, size);
+	CMem::Unprotect(address, size - 1);
+	memcpy(address, src, size - 1);
 	DWORD dwOldProt = 0;
-	VirtualProtect(address, size, m_dwUnprotectDummy, &dwOldProt);
+	VirtualProtect(address, size - 1, m_dwUnprotectDummy, &dwOldProt);
 }
 
 void CMem::RedirectCall(int address, void *func)
