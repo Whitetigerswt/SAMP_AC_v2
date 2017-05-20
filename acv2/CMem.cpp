@@ -17,14 +17,16 @@ void CMem::ApplyJmp(BYTE* pAddress, DWORD dwProxy, DWORD dwLen)
 	VirtualProtect((void*)pAddress, dwLen, dwOld, &m_dwUnprotectDummy);
 }
 
-
+#pragma warning(push)
+#pragma warning(disable: 4789)
 void CMem::Cpy(void* address, const void* src, int size)
 {
-	CMem::Unprotect(address, size - 1);
-	memcpy(address, src, size - 1);
+	CMem::Unprotect(address, size);
+	memcpy(address, src, size);
 	DWORD dwOldProt = 0;
-	VirtualProtect(address, size - 1, m_dwUnprotectDummy, &dwOldProt);
+	VirtualProtect(address, size, m_dwUnprotectDummy, &dwOldProt);
 }
+#pragma warning(pop)
 
 void CMem::RedirectCall(int address, void *func)
 {
