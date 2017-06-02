@@ -40,6 +40,9 @@
     <Filter Include="Source Files\subhook">
       <UniqueIdentifier>{efb6d013-e5b4-44ba-9113-6de5ebd6a7ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shared\SelfUpdater">
+      <UniqueIdentifier>{0cb03a20-537a-40cf-845a-9519bac1ccc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SDK\samp-sdk\amxplugin.cpp">
@@ -69,9 +72,6 @@
     <ClCompile Include="..\Shared\MD5_Info\Cmd5Info.cpp">
       <Filter>Source Files\Shared\MD5 Info</Filter>
     </ClCompile>
-    <ClCompile Include="CServerUpdater.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GDK\sampgdk.c">
       <Filter>Source Files\SDK\samp-gdk</Filter>
     </ClCompile>
@@ -97,6 +97,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VerifiedPacketChecker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\SelfUpdater\CSelfUpdater.cpp">
+      <Filter>Source Files\Shared\SelfUpdater</Filter>
+    </ClCompile>
+    <ClCompile Include="VersionHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -136,9 +142,6 @@
     </ClInclude>
     <ClInclude Include="..\Shared\MD5_Info\Cmd5Info.h">
       <Filter>Source Files\Shared\MD5 Info</Filter>
-    </ClInclude>
-    <ClInclude Include="CServerUpdater.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GDK\sampgdk.h">
       <Filter>Source Files\SDK\samp-gdk</Filter>
@@ -181,6 +184,15 @@
     </ClInclude>
     <ClInclude Include="VerifiedPacketChecker.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\SelfUpdater\CSelfUpdater.h">
+      <Filter>Source Files\Shared\SelfUpdater</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\MD5_Info\md5.h">
+      <Filter>Source Files\Shared\MD5 Info</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

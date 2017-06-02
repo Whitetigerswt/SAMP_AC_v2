@@ -1193,7 +1193,7 @@ namespace RakNet
 		WriteNormQuat(qw,qx,qy,qz);
 	}
 
-	template <class templateType> // templateType for this function must be a float or double
+	/*template <class templateType> // templateType for this function must be a float or double
 		bool BitStream::ReadNormVector( templateType &x, templateType &y, templateType &z )
 	{
 		//	unsigned short sy, sz;
@@ -1234,7 +1234,7 @@ namespace RakNet
 		if (xNeg)
 			x=-x;
 		return true;
-	}
+	}*/
 
 	template <class templateType> // templateType for this function must be a float or double
 		bool BitStream::ReadVector( templateType &x, templateType &y, templateType &z )

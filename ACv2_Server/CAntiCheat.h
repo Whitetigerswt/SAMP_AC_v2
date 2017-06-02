@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "GDK/sampgdk.h"
+#include "VersionHelper.h"
 
 
 class CAntiCheat
@@ -25,7 +26,7 @@ public:
 
 	// PURPOSE: Callback for when an unknown module is detected sending a packet to server.
 	// REQUIRES: The client is using AC.
-	void OnUnknownSendPacketCallerFound(char* path, char* md5);
+	void OnUnknownSendPacketCallerFound(unsigned int base, unsigned int addr, unsigned char frame, char* path, char* md5);
 
 	// PURPOSE: Callback for when a file in gta3.img is modified.
 	// REQUIRES: The client is using AC.
@@ -58,7 +59,7 @@ public:
 
 	// PURPOSE: Check if the player's client version of AC is compatible with the server's version.
 	// REQUIRES: The client is using AC.
-	void CheckVersionCompatible(float version);
+	void CheckVersionCompatible(CSelfUpdater::stVersion);
 
 	// PURPOSE: Toggles whether the player can turn AC on or off
 	// REQUIRES: NULL

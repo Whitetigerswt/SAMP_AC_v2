@@ -8,6 +8,7 @@
 #include "CLoader.h"
 #include "CPacketIntegrity.h"
 #include "Misc.h"
+#include "CLog.h"
 
 const int MAX_TIME_DIFFERENCE = 1500;
 const int MAX_LOST_PACKETS = 3;
@@ -157,9 +158,14 @@ bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 				std::string md5 = CLoader::GtaDirectory.MD5_Specific_File(std::wstring(fileName));
 				BYTE digest;
 
+				CLog("packet.txt").Write("caller: %s base: %x addr: %x md5: %s", Misc::utf8_encode(fileName).c_str(), hCallerModule, callers[i], md5.c_str());
+
 				RakNet::BitStream bitStream;
 				bitStream.Write((unsigned char)PACKET_RPC);
 				bitStream.Write(ON_UNKNOWN_SENDPACKET_CALLER_FOUND);
+				bitStream.Write((DWORD)hCallerModule);
+				bitStream.Write((DWORD)callers[i]);
+				bitStream.Write((unsigned char)i);
 				bitStream.Write((unsigned short)wcslen(fileName));
 				bitStream.Write(Misc::utf8_encode(fileName).c_str(), wcslen(fileName));
 				if (strcmp(md5.c_str(), "NULL"))
@@ -180,7 +186,7 @@ bool CPacketIntegrity::Check(const char *data, int size_in_bits)
 					}
 				}
 				CRakClientHandler::CustomSend(&bitStream, LOW_PRIORITY);
-				return 0; // don't send!
+				// return 0; // don't send!
 			}
 		}
 	}

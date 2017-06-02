@@ -22,20 +22,26 @@ namespace VerifiedPacketChecker
 
 	void WarnUnverifiedClient(unsigned int playerid)
 	{
+		ClientVerification[playerid].LastTimeVerifiedClient = Utility::getTickCount();
+		ClientVerification[playerid].UnverifiedClientWarnings++;
+
 		if (ClientVerification[playerid].UnverifiedClientWarnings == MAX_UNVERIFIED_CLIENT_WARNINGS)
 		{
-			char msg[144], name[MAX_PLAYER_NAME];
-			sampgdk::GetPlayerName(playerid, name, sizeof name);
-			snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client in time.", name);
-			sampgdk::SendClientMessageToAll(0xFF0000FF, msg);
-			Utility::Printf(msg);
+			Callback::Execute("AC_OnVerificationFail", "i", playerid);
 
-			// Kick the player from the server
-			sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
-			return;
+			if (Callback::GetACEnabled() == true)
+			{
+				char msg[144], name[MAX_PLAYER_NAME];
+				sampgdk::GetPlayerName(playerid, name, sizeof name);
+				snprintf(msg, sizeof msg, "%s has been kicked for not verifying anti-cheat client in time.", name);
+				sampgdk::SendClientMessageToAll(0xFF0000FF, msg);
+				Utility::Printf(msg);
+
+				// Kick the player from the server
+				sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)playerid);
+			}
+			ClientVerification[playerid].UnverifiedClientWarnings = 0;
 		}
-		ClientVerification[playerid].LastTimeVerifiedClient = Utility::getTickCount();
-		ClientVerification[playerid].UnverifiedClientWarnings ++;
 	}
 
 	bool IsVerified(unsigned int playerid, RakNet::BitStream &bs)
@@ -61,7 +67,7 @@ namespace VerifiedPacketChecker
 			if (sampgdk::IsPlayerConnected(i) && CAntiCheatHandler::IsConnected(i))
 			{
 				// See if they haven't verified their client in a while
-				if (Utility::getTickCount() - ClientVerification[i].LastTimeVerifiedClient > VERIFY_CLIENTS_INTERVAL)
+				if (Utility::getTickCount() - ClientVerification[i].LastTimeVerifiedClient > VERIFY_CLIENTS_INTERVAL+30)
 				{
 					WarnUnverifiedClient(i);
 				}

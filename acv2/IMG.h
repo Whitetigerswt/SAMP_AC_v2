@@ -96,8 +96,8 @@ private:
 
 	// In IMG archive
 	DWORD Position;				// In blocks
-	WORD SizeSecondPriority;	// In blocks
-	WORD SizeFirstPriority;		// In blocks
+	size_t SizeSecondPriority;	// In blocks
+	size_t SizeFirstPriority;		// In blocks
 
 	// Version 3
 	DWORD SizeInBytes;
@@ -280,8 +280,8 @@ public:
 	struct IMG_version2_tableItem		// size: 32 bytes
 	{
 		DWORD Position;				// In blocks
-		WORD SizeSecondPriority;	// In blocks
-		WORD SizeFirstPriority;		// In blocks
+		size_t SizeSecondPriority;	// In blocks
+		size_t SizeFirstPriority;		// In blocks
 		char Name[24];				// NULL terminated
 	};
 #pragma pack(pop)

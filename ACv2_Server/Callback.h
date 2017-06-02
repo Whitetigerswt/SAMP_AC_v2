@@ -44,7 +44,8 @@ namespace Callback
 	static bool Default_LiteFoot = true;
 	static int Default_CrouchBug = 9999;
 	static int Default_FrameLimit = 9999;
-	static float Default_SprintLimit = 8.5f;
+	static float Default_SprintLimit = 0.0f;
+	static bool Default_KickPacketTampering = false;
 
 	bool GetACEnabled();
 }

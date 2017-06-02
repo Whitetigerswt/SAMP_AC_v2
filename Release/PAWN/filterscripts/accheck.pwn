@@ -278,14 +278,40 @@ public AC_OnImgFileModifed(playerid, filename[], md5[])
 	return 1;
 }
 
-public AC_OnFileCalculated(playerid, filename[], md5[], bool:isCheat)
+public AC_OnFileCalculated(playerid, filename[], md5[], bool:isModified)
 {
     // If it's a modified file, ac is not enabled and this player has got ac-checked enabled on them
-    if(isCheat && !IsACEnabled() && PlayerACCheck[playerid] == true)
+    if(isModified && !IsACEnabled() && PlayerACCheck[playerid] == true)
 	{
 	    // Report it to other players
 		new str[144];
 		format(str, sizeof str, "{FF0000}[AC] {FFFFFF}File calculation report from {FF0000}%s {FFFFFF}file: %s / blacklisted: Yes", ReturnPlayerName(playerid), filename);
+		SendClientMessageToAll(-1, str);
+	}
+	return 1;
+}
+
+public AC_OnBanStatusRetrieved(playerid, status)
+{
+    // If player is banned, ac is not enabled and this player has got ac-checked enabled on them
+    if(status == AC_BANSTATUS_BANNED && !IsACEnabled() && PlayerACCheck[playerid] == true)
+	{
+	    // Report it to other players
+		new str[144];
+		format(str, sizeof str, "{FF0000}[AC] {FFFFFF}%s is banned from AC servers.", ReturnPlayerName(playerid));
+		SendClientMessageToAll(-1, str);
+	}
+	return 1;
+}
+
+public AC_OnVerificationFail(playerid)
+{
+    // If player failed to authentificate, ac is not enabled and this player has got ac-checked enabled on them
+    if(!IsACEnabled() && PlayerACCheck[playerid] == true)
+	{
+	    // Report it to other players
+		new str[144];
+		format(str, sizeof str, "{FF0000}[AC] {FFFFFF}%s failed to verify AC client in time.", ReturnPlayerName(playerid));
 		SendClientMessageToAll(-1, str);
 	}
 	return 1;

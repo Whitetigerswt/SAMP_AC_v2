@@ -36,6 +36,10 @@ public:
 	// REQUIRES: NULL
 	static BOOL IsProcessElevated();
 
+	// PURPOSE: Determine if the game is fully loaded (past loading screen)
+	// REQUIRES: NULL
+	static BOOL IsGameLoaded();
+
 	static CInjectedLibraries Modules;
 	static CProcessList Processes;
 	static CDirectoryScanner GtaDirectory;
@@ -51,6 +55,7 @@ private:
 	static DWORD ProtectProcess();
 
 	static bool isLoaded;
+	static BOOL isGameLoaded;
 
 	static int isElevated;
 

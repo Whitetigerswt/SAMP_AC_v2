@@ -2,7 +2,7 @@
 #include "../Shared/Network/Network.h"
 #include "CParseCommandLine.h"
 #include "Addresses.h"
-#include "CClientUpdater.h"
+#include "VersionHelper.h"
 #include "Misc.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "Network\CRakClientHandler.h"
@@ -16,6 +16,8 @@
 #include "s0beit\samp.h"
 #include "BugSplat.h"
 #include "CPacketIntegrity.h"
+#include "CMemProtect.h"
+#include "Network\CPacketQueue.h"
 
 #include <map>
 #include <Aclapi.h>
@@ -35,21 +37,28 @@ CProcessList CLoader::Processes = CProcessList();
 CDirectoryScanner CLoader::GtaDirectory = CDirectoryScanner();
 int CLoader::isElevated = false;
 bool CLoader::isLoaded = false;
+BOOL CLoader::isGameLoaded = false;
 HMODULE CLoader::ThishMod = NULL;
 
-bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2);
+// #define DISABLE_EXCEPTION_HANDLER
+// #define DISABLE_WINAPI_PROTECTIONS
 
+#ifndef DISABLE_EXCEPTION_HANDLER
+bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2);
 MiniDmpSender *mpSender;
+#endif
 
 void CLoader::Initialize(HMODULE hMod)
 {
 	boost::this_thread::yield();
+
+	VersionHelper::Initialize();
 	CHookManager::Load();
 
-	wchar_t version[50];
-	swprintf_s(version, TEXT("%f"), CURRENT_VERSION);
-	mpSender = new MiniDmpSender(L"whitetigerswt_gmail_com", L"ACv2_Client", version, NULL);
+#ifndef DISABLE_EXCEPTION_HANDLER
+	mpSender = new MiniDmpSender(L"whitetigerswt_gmail_com", L"ACv2_Client", VersionHelper::AC_CLIENT_VERSION_STRING, NULL);
 	mpSender->setDefaultUserName(GetCommandLine());
+#endif
 
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
@@ -67,6 +76,7 @@ void CLoader::Initialize(HMODULE hMod)
 			Check https://github.com/Whitetigerswt/SAMP_AC_v2/issues/133 if you wonder why this is necessary!
 		*/
 
+#ifndef DISABLE_WINAPI_PROTECTIONS
 		// Check if Windows version is vista or greater...
 		if (IsWindowsVistaOrGreater())
 		{
@@ -78,6 +88,7 @@ void CLoader::Initialize(HMODULE hMod)
 				return;
 			}
 		}
+#endif
 
 		// Make sure samp.dll is loaded BEFORE we go ANY further!!
 		HMODULE L;
@@ -94,12 +105,14 @@ void CLoader::Initialize(HMODULE hMod)
 		setSampBaseAddress((DWORD)mInfo.lpBaseOfDll);
 		setSampSize((DWORD)mInfo.SizeOfImage);
 
+#ifndef DISABLE_WINAPI_PROTECTIONS
 		// Hide samp.dll and this .asi from the loaded module list.
 		PELPEB peb = EL_GetPeb();
 		EL_HideModule(peb, TEXT("samp.dll"));
 		wchar_t path[MAX_PATH];
 		GetModuleFileName(hMod, path, sizeof(path));
 		EL_HideModule(peb, path);
+#endif
 
 		CHookManager::Load();
 
@@ -123,20 +136,37 @@ void CLoader::Initialize(HMODULE hMod)
 		CPacketIntegrity::GlobalInitialize();
 
 		// Make sure we're using the latest version of this mod.
-		CClientUpdater::CheckForUpdate(hMod);
+		VersionHelper::CheckForUpdate();
 	}
 
 	while (true)
 	{
+		// http://ugbase.eu/Thread-Checking-is-game-fully-loaded-or-not
+		if (!isGameLoaded && *(bool*)0xA444A0)
+		{
+			isGameLoaded = 1;
+		}
+		
 		// Scan for new processes.
 		Processes.Scan();
 
 		// Scan for new injected modules.
 		Modules.Scan();
 
+		// Scan for changes in memory.
+		CMemProtect::Process();
+
+		// Process queued packets.
+		CPacketQueue::Process();
+
 		// Sleep
 		Sleep(1000);
 	}
+}
+
+BOOL CLoader::IsGameLoaded()
+{
+	return isGameLoaded;
 }
 
 std::wstring CLoader::GetProcessFileName(DWORD processID)
@@ -192,7 +222,6 @@ void CLoader::TerminateOtherProcesses()
 	}
 	CloseHandle(hSnapShot);
 }
-
 
 void CLoader::CheckElevation()
 {
@@ -446,6 +475,10 @@ void CLoader::RunElevated()
 
 BOOL CLoader::IsProcessElevated()
 {
+#ifdef DISABLE_WINAPI_PROTECTIONS
+	return 1;
+#endif
+
 	if (isElevated) return 1;
 
 	BOOL fIsRunAsAdmin = FALSE;
@@ -499,6 +532,7 @@ bool CLoader::IsLoaded()
 }
 
 // BugSplat exception callback
+#ifndef DISABLE_EXCEPTION_HANDLER
 bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2)
 {
 
@@ -535,3 +569,4 @@ bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2)
 
 	return false;
 }
+#endif

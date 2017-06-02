@@ -263,7 +263,37 @@ public AC_OnImgFileModifed(playerid, filename[], md5[])
 	printf("PAWN - OnImgFileModifed(%d, %s, %s)", playerid, filename, md5);
 }
 
-public AC_OnFileCalculated(playerid, filename[], md5[])
+public AC_OnFileCalculated(playerid, filename[], md5[], bool:isModified)
 {
-	printf("PAWN - OnFileCalculated(%d, %s, %s)", playerid, filename, md5);
+	printf("PAWN - OnFileCalculated(%d, %s, %s, %d)", playerid, filename, md5, isModified);
+}
+
+public AC_OnPacketTampering(playerid)
+{
+    printf("PAWN - OnPacketTampering(%d)", playerid);
+}
+
+public AC_OnBanStatusRetrieved(playerid, status)
+{
+    printf("PAWN - OnBanStatusRetrieved(%d, %d)", playerid, status);
+}
+
+public AC_OnVerificationFail(playerid)
+{
+    printf("PAWN - OnVerificationFail(%d)", playerid);
+}
+
+public AC_OnHardwareIDCalculated(playerid, hwid[], len)
+{
+    printf("PAWN - OnHardwareIDCalculated(%d, %s, %d)", playerid, hwid, len);
+}
+
+public AC_OnScreenshotTaken(playerid)
+{
+    printf("PAWN - OnScreenshotTaken(%d)", playerid);
+}
+
+public AC_OnPlayerPause(playerid, type, bool:pause)
+{
+    printf("PAWN - OnPlayerPause(%d, %d, %d)", playerid, type, pause);
 }

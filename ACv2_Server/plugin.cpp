@@ -8,7 +8,7 @@
 #include "GDK/sampgdk.h"
 #include "Callback.h"
 #include "SDK/samp-sdk/amx/amx.h"
-#include "CServerUpdater.h"
+#include "VersionHelper.h"
 #include "CAntiCheatHandler.h"
 #include "Hooks.h"
 #include <curl/curl.h>
@@ -434,6 +434,9 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	// Load SampGDK
 	bool load = sampgdk::Load(ppData);
 
+	// Initialize some version related strings
+	VersionHelper::Initialize();
+
 	// Initialize
 	Utility::Initialize(ppData);
 
@@ -458,7 +461,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	PluginData = ppData;
 
 	// Print out that we've loaded successfully.
-	Utility::Printf("SA-MP Anti-Cheat v%0.2f has loaded successfully.", CURRENT_VERSION);
+	Utility::Printf("SA-MP Anti-Cheat v%s has loaded successfully.", VersionHelper::AC_SERVER_VERSION_STRING);
 
 	// return SampGDK load value
 	return load;
@@ -467,7 +470,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
 	// The plugin has been unloaded, let them know we're leaving :(
-	Utility::Printf("Unloaded SA-MP Anti-Cheat v%0.2f", CURRENT_VERSION);
+	Utility::Printf("Unloaded SA-MP Anti-Cheat v%s", VersionHelper::AC_SERVER_VERSION_STRING);
 
 	// Clean up
 	// Not really necessary
@@ -521,7 +524,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *pAmx)
 	if (!bFirst)
 	{	
 		// Check for an update to this plugin version.
-		CServerUpdater::CheckForUpdate();
+		VersionHelper::CheckForUpdate();
 
 		InstallHooks();
 		Network::Initialize(PluginData);

@@ -6,12 +6,12 @@
 #include "Callback.h"
 #include "../Shared/MD5_Info/Cmd5Info.h"
 #include "../Shared/Network/CRPC.h"
-#include "CServerUpdater.h"
 #include "PacketPriority.h"
 #include "BanHandler.h"
 #include "VerifiedPacketChecker.h"
 #include <ctime>
 #include <cstring>
+#include <stdio.h>
 #include <boost/thread.hpp>
 
 std::vector<int> CAntiCheat::m_Admins;
@@ -34,7 +34,7 @@ CAntiCheat::CAntiCheat(unsigned int playerid) : ID(playerid)
 	m_MacroLimits = true;
 	m_SprintOnAllSurfaces = false;
 	m_VehicleBlips = true;
-	m_SprintLimit = 8.5f;
+	m_SprintLimit = 0.0f;
 	m_BanStatus = -1;
 	m_CreationTick = Utility::getTickCount();
 	m_CheckGTAFilesTimerId = 0;
@@ -44,28 +44,6 @@ CAntiCheat::~CAntiCheat()
 {
 	// Kill check timer (if exists)
 	Cleanup_CheckGTAFiles();
-
-	// Loop through the list of admins
-	for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); )
-	{
-		// If that iteration is the playerid. If this player is able to toggle AC. If he's an admin.
-		if ((*it) == ID)
-		{
-			/*
-				This is important as it fixes a bug that if this player leaves the server while having
-				admin power and another player joins afterwards and takes the same ID, they will get
-				admin power too without rcon login.
-
-				Remove him from the admin list. Get the next element and store it into 'it'.
-			*/
-			it = m_Admins.erase(it);
-		}
-		else
-		{
-			// If it is not the player we're looking for, iterate!
-			++it;
-		}
-	}
 }
 
 void CAntiCheat::OnFileExecuted(char* processpath, char* md5)
@@ -186,35 +164,33 @@ void CAntiCheat::OnFileCalculated(char* path, char* md5)
 	Callback::Execute("AC_OnFileCalculated", "issi", isModified, md5, path, ID);
 }
 
-void CAntiCheat::OnUnknownSendPacketCallerFound(char* path, char* md5)
+void CAntiCheat::OnUnknownSendPacketCallerFound(unsigned int base, unsigned int addr, unsigned char frame, char* path, char* md5)
 {
 	// If AC Main checks are enabled
 	if (Callback::GetACEnabled() == true)
 	{
-		// Create a new variable holding a string that will be formatted to let the player know he's been kicked.
-		char msg[160];
-
-		// Send the formatted message to the player.
-		sampgdk::SendClientMessage(ID, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for packet tampering.");
-
-		// Now, we need to send a message to the whole server saying someone was kicked, and we need to include their name
-		// So create a variable that can hold their name.
 		char name[MAX_PLAYER_NAME];
-
-		// Find their name.
 		sampgdk::GetPlayerName(ID, name, sizeof(name));
 
-		// Format the string telling all the users this player has been kicked.
-		snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for packet tampering.", name);
+		Utility::Printf("%s - packet tampering, frame: %d, base: %x, addr: %x, path: %s, md5: %s.", name, frame, base, addr, path, md5);
 
-		// Send it to everyone
-		sampgdk::SendClientMessageToAll(-1, msg);
+		if (Callback::Default_KickPacketTampering)
+		{
+			// Create a new variable holding a string that will be formatted to let the player know he's been kicked.
+			char msg[160];
 
-		// Finally, print our a message to the console so we can log the result.
-		Utility::Printf("%s has been kicked for packet tampering, path: %s, md5: %s.", name, path, md5);
+			// Send the formatted message to the player.
+			sampgdk::SendClientMessage(ID, -1, "{FF0000}Error: {FFFFFF}You've been kicked from this server for packet tampering.");
 
-		// And kick the player.
-		sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+			// Format the string telling all the users this player has been kicked.
+			snprintf(msg, sizeof(msg), "{FF0000}%s{FFFFFF} has been kicked from the server for packet tampering.", name);
+
+			// Send it to everyone
+			sampgdk::SendClientMessageToAll(-1, msg);
+
+			// And kick the player.
+			sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);
+		}
 	}
 
 	// Execute PAWN callback.
@@ -247,49 +223,22 @@ void CAntiCheat::OnImgFileModified(char* filename, char* md5)
 	Callback::Execute("AC_OnImgFileModifed", "ssi", md5, filename, ID);
 }
 
-bool CAntiCheat::CanEnableAC(int playerid)
-{
-	// Loop through the list of admins that we added with ToggleCanEnableAC.
-	for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); ++it)
-	{
-		// If it matches the current playerid passed in the parameter, return true.
-		if ((*it) == playerid) return true;
-	}
-
-	// Else, return false.
-	return false;
-}
-
 void CAntiCheat::ToggleCanEnableAC(int playerid, bool toggle)
 {
-	// If toggle is true
 	if (toggle)
 	{
-		// Add that user to the admin list.
 		m_Admins.push_back(playerid);
-
-		return;
 	}
 	else
 	{
-		// If toggle is false
-		// Loop through the list of admins
-		for (std::vector<int>::iterator it = m_Admins.begin(); it != m_Admins.end(); )
-		{
-			// if that iteration is the playerid.
-			if ((*it) == playerid)
-			{
-				// Remove him from the admin list. Get the next element and store it into 'it'.
-				it = m_Admins.erase(it);
-			}
-			else
-			{
-				// If it is not the player we're looking for, iterate!
-				++it;
-			}
-		}
-		return;
+		m_Admins.erase(std::remove(m_Admins.begin(), m_Admins.end(), playerid), m_Admins.end());
 	}
+}
+
+
+bool CAntiCheat::CanEnableAC(int playerid)
+{
+	return (sampgdk::IsPlayerAdmin(playerid) || m_Admins.end() != std::find(m_Admins.begin(), m_Admins.end(), playerid));
 }
 
 void SAMPGDK_CALL CAntiCheat::Timer_CheckGTAFiles(int timerid, void *params)
@@ -422,44 +371,20 @@ void CAntiCheat::OnBanChecked(bool status)
 			// Kick the player from the server
 			sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)this->GetID());
 		}
-		else
-		{
-			// AC is not enabled. A quick informing should sufficie.
-			char msg[144];
-
-			// Tell the player
-			snprintf(msg, sizeof msg, "{FF0000}Anti-Cheat (v2): {FFFFFF}You're banned. Know more: %s", AC_WEBSITE);
-			sampgdk::SendClientMessage(this->GetID(), -1, msg);
-			char name[MAX_PLAYER_NAME];
-			sampgdk::GetPlayerName(this->GetID(), name, sizeof name);
-
-			// Tell other players connected
-			snprintf(msg, sizeof msg, "{FF0000}Warning: {FFFFFF}%s is banned from AC servers. Know more: %s", name, AC_WEBSITE);
-			sampgdk::SendClientMessageToAll(-1, msg);
-		}
 	}
 }
 
-void CAntiCheat::CheckVersionCompatible(float version)
+void CAntiCheat::CheckVersionCompatible(CSelfUpdater::stVersion version)
 {
 	// Check if the version is incompatible with the server version.
-	if (version != CURRENT_MAJOR_VERSION)
+	if (!VersionHelper::IsClientCompatible(version))
 	{
 		// Inform the player there version of AC is not compatible with the server.
-		char msg[150];
+		char msg[144];
 
-		// Format the message letting the user know their AC version will not work on this server.
-		snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
-
-		// Send the message to the user.
-		sampgdk::SendClientMessage(ID, -1, msg);
-
-		RakNet::BitStream bsData;
-		bsData.Write((unsigned char)PACKET_RPC);
-		bsData.Write(VERSION_NOT_COMPATIBLE);
-
-		// And send an RPC telling the client's AC not to continue to monitor things.
-		Network::PlayerSend(ID, &bsData, HIGH_PRIORITY, RELIABLE_ORDERED);
+		sampgdk::SendClientMessage(ID, 0xFF0000FF, "Fatal Error:{FFFFFF} The server's anti-cheat plugin is not compatible with your version.");
+		snprintf(msg, sizeof(msg), "Fatal Error:{FFFFFF} Server version: v%d.%02d, your client version: v%d.%02d. You must update your anti-cheat at samp-ac.com", VersionHelper::AC_SERVER_VERSION.major, VersionHelper::AC_SERVER_VERSION.minor, version.major, version.minor);
+		sampgdk::SendClientMessage(ID, 0xFF0000FF, msg);
 
 		// Close the connection.
 		sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)ID);

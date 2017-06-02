@@ -14,6 +14,8 @@
 #include "s0beit\samp.h"
 #include "ManualInjection.h"
 #include "CPacketIntegrity.h"
+#include "CLog.h"
+#include "CMemProtect.h"
 #include "Detours\detours.h"
 
 // Small children look away, this is gonna get ugly...
@@ -169,32 +171,16 @@ static boolean hooks_install_once = false;
 float CHookManager::CameraXPos = 0.0f;
 float CHookManager::CameraYPos = 0.0f;
 
-DWORD NameTag_je1;
-DWORD NameTag_je2;
-DWORD NameTagHookJmpBack;
+int CHookManager::FireKeyState;
 
 void CHookManager::Load()
 {
 	DWORD dwOldProt;
-
-	// Fix nametag hack (Show player nametags through walls) - unfortunetly, this has to edit sa-mp memory.
 	DWORD samp_base_addr = getSampBaseAddress();
+	DWORD samp;
 
 	if (samp_base_addr)
 	{
-		setSampBaseAddress(samp_base_addr);
-
-		// Add address offset
-		DWORD samp = samp_base_addr + 0x6FCF1;
-
-		NameTagHookJmpBack = samp + 0x8;
-
-		// Unprotect memory.
-		VirtualProtect((void*)samp, 7, PAGE_EXECUTE_READWRITE, &dwOldProt);
-
-		// Install hook
-		CMem::ApplyJmp((BYTE*)samp, (DWORD)NameTagHook, 7);
-
 		if (!hooks_install_once)
 		{
 			samp = FindPattern("\x8B\x86\xCD\x03\x00\x00\x8B\x40\x18\x85\xC0", "xxxxxxxxxxx", getSampBaseAddress(), getSampSize());
@@ -215,6 +201,8 @@ void CHookManager::Load()
 
 			samp = samp_base_addr + FUNC_OFFSET_RAKPEER__SENDBUFFERED;
 		    m_pfnRakPeer__SendBuffered = (RakPeer__SendBuffered_t)DetourFunction((PBYTE)samp, (PBYTE)CHookManager::RakPeer__SendBufferedHook);
+
+			FindProtectedMemoryAddresses();
 		}
 	}
 
@@ -258,6 +246,11 @@ void CHookManager::Load()
 		CMem::ApplyJmp(FUNC_MainLoadAlt, (DWORD)MainLoading, 5);
 		MainLoadingJmpBack = 0x7F9B52;
 	}
+
+	// Triggerbot hooks
+	CMem::ApplyJmp(FUNC_CPad__ProcessKeyboard1_Hook, (DWORD)ProcessKeyboard1_Hook, 0x9);
+	CMem::ApplyJmp(FUNC_CPad__ProcessKeyboard2_Hook, (DWORD)ProcessKeyboard2_Hook, 0x9);
+	CMem::ApplyJmp(FUNC_CPad__Clear_Hook, (DWORD)ClearKeyState_Hook, 0xE2 - 0x80);
 
 	// -------------------------------------------------------------------------
 	// Hook camera position patches below, so aimbots cannot edit the camera position.
@@ -427,6 +420,45 @@ void CHookManager::Load()
 
 	// Check data file integrity.
 	VerifyFilePaths();
+}
+
+void CHookManager::FindProtectedMemoryAddresses()
+{
+	DWORD dwSAMPBase = getSampBaseAddress();
+	BYTE *addr;
+
+	// these addresses are NOPped in order to disable LOS and other checks for nametags
+	// many thanks to springfield: http://ugbase.eu/Thread-NameTagHack-0-3-7-CLEO-EXE-ASI
+	
+	addr = (BYTE*)(dwSAMPBase + 0x6FCF3);
+	if (memcmp(addr, "\x0F\x84", 2) != 0)
+		ExitProcess(0);
+	else
+		CMemProtect::Add(addr, NULL, 6);
+
+	addr = (BYTE*)(dwSAMPBase + 0x6FD14);
+	if (memcmp(addr, "\x0F\x8A", 2) != 0)
+		ExitProcess(0);
+	else
+		CMemProtect::Add(addr, NULL, 6);
+	
+	addr = (BYTE*)(dwSAMPBase + 0x70E24);
+	if (memcmp(addr, "\x0F\x8A", 2) != 0)
+		ExitProcess(0);
+	else
+		CMemProtect::Add(addr, NULL, 6);
+
+	addr = (BYTE*)(dwSAMPBase + 0x70F38);
+	if (memcmp(addr, "\x74", 1) != 0)
+		ExitProcess(0);
+	else
+		CMemProtect::Add(addr, NULL, 2);
+
+	addr = (BYTE*)(dwSAMPBase + 0x6FE28);
+	if (memcmp(addr, "\x74", 1) != 0)
+		ExitProcess(0);
+	else
+		CMemProtect::Add(addr, NULL, 2);
 }
 
 void CHookManager::SetConnectPatches()
@@ -675,23 +707,6 @@ void CHookManager::OnPause()
 		pop ebx
 		pop ebp
 		jmp[PauseJmpBack]
-	}
-}
-
-HOOK CHookManager::NameTagHook()
-{
-	__asm
-	{
-		test eax, eax
-		mov eax, 03C0FE6Ah
-		je je_label
-		jmp jmp_label
-
-	je_label:
-			jmp eax
-
-	jmp_label:
-		jmp[NameTagHookJmpBack]
 	}
 }
 
@@ -1092,6 +1107,100 @@ HOOK CHookManager::LoadBullet()
 		fld[fDefaultBulletOffset]
 		mov[esp+24h], edx
 		jmp[LoadBulletJmpBack]
+	}
+}
+
+void CHookManager::CheckFireKeyState(const char *funcname)
+{
+	if (FireKeyState != FIRE_KEY && FireKeyState == 0)
+	{
+		CLog("trigger.log").Write("%s: expected: %d, found: %d", funcname, FireKeyState, (DWORD)FIRE_KEY);
+	}
+}
+
+void CHookManager::SaveFireKeyState()
+{
+	FireKeyState = FIRE_KEY;
+}
+
+__declspec(naked) void CHookManager::ClearKeyState_Hook() // this function has been entirely moved inside AC module
+{
+	__asm {
+		push ecx // save _this pointer
+	}
+
+	CheckFireKeyState(__FUNCTION__);
+
+	__asm {
+		pop ecx // restore _this pointer
+
+		xor eax, eax
+		mov[ecx + 0x06], ax
+		mov[ecx + 0x04], ax
+		mov[ecx + 0x02], ax
+		mov[ecx + 0x00], ax
+		mov[ecx + 0x0E], ax
+		mov[ecx + 0x0C], ax
+		mov[ecx + 0x0A], ax
+		mov[ecx + 0x08], ax
+		mov[ecx + 0x16], ax
+		mov[ecx + 0x14], ax
+		mov[ecx + 0x12], ax
+		mov[ecx + 0x10], ax
+		mov[ecx + 0x1A], ax
+		mov[ecx + 0x18], ax
+		mov[ecx + 0x22], ax
+		mov[ecx + 0x20], ax
+		mov[ecx + 0x1E], ax
+		mov[ecx + 0x1C], ax
+		mov[ecx + 0x26], ax
+		mov[ecx + 0x24], ax
+		mov[ecx + 0x28], ax
+		mov[ecx + 0x2A], ax
+		mov[ecx + 0x2C], ax
+		mov[ecx + 0x2E], ax
+	}
+
+	SaveFireKeyState();
+
+	__asm {
+		ret
+	}
+}
+
+DWORD ProcessKeyboard1_JumpBack = 0x541C78;
+__declspec(naked) void CHookManager::ProcessKeyboard1_Hook()
+{
+	CheckFireKeyState(__FUNCTION__);
+
+	__asm {
+		mov ecx, 0xC
+		mov edi, ebx
+		repe movsd
+	}
+
+	SaveFireKeyState();
+
+	__asm {
+		jmp[ProcessKeyboard1_JumpBack]
+	}
+}
+
+DWORD ProcessKeyboard2_JumpBack = 0x541C96;
+__declspec(naked) void CHookManager::ProcessKeyboard2_Hook()
+{
+	CheckFireKeyState(__FUNCTION__);
+
+	__asm {
+		mov ecx, 0xC
+		mov edi, ebx
+		repe movsd
+	}
+
+	SaveFireKeyState();
+
+	__asm {
+		jmp[ProcessKeyboard2_JumpBack]
 	}
 }
 

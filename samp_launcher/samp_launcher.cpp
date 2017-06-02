@@ -3,11 +3,68 @@
 // The purpose of this program is just to show the basics of a custom launcher that people can make in SA-MP.
 
 #include <iostream>
+#include <process.h>
+#include <Tlhelp32.h>
+#include <winbase.h>
+#include <string.h>
+#include <Shlwapi.h>
 #include <tchar.h>
+
+BOOL SetDebugPrivilege()
+{
+	BOOL bRet = FALSE;
+	HANDLE hToken = NULL;
+	LUID luid = { 0 };
+
+	if (OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES, &hToken))
+	{
+		if (LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &luid))
+		{
+			TOKEN_PRIVILEGES tokenPriv = { 0 };
+			tokenPriv.PrivilegeCount = 1;
+			tokenPriv.Privileges[0].Luid = luid;
+			tokenPriv.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+
+			bRet = AdjustTokenPrivileges(hToken, FALSE, &tokenPriv, sizeof(TOKEN_PRIVILEGES), NULL, NULL);
+		}
+	}
+
+	return bRet;
+}
+
+void KillProcessByName(TCHAR *filename)
+{
+	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+	PROCESSENTRY32 pEntry;
+	pEntry.dwSize = sizeof(pEntry);
+	BOOL hRes = Process32First(hSnapShot, &pEntry);
+	while (hRes)
+	{
+		if (StrCmpI(pEntry.szExeFile, filename) == 0)
+		{
+			HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0,
+				(DWORD)pEntry.th32ProcessID);
+			if (hProcess != NULL)
+			{
+				TerminateProcess(hProcess, 9);
+				WaitForSingleObject(hProcess, INFINITE);
+				CloseHandle(hProcess);
+			}
+		}
+		hRes = Process32Next(hSnapShot, &pEntry);
+	}
+	CloseHandle(hSnapShot);
+}
 
 // entry point
 int main(int argc, char* argv[])
 {
+	// Set debug privilege (so we can close other processes)
+	SetDebugPrivilege();
+
+	// Kill all gta_sa.exe processes
+	KillProcessByName(TEXT("gta_sa.exe"));
+
 	// Prepare to create a new process.
 	PROCESS_INFORMATION ProcessInfo;
 	STARTUPINFO StartupInfo;

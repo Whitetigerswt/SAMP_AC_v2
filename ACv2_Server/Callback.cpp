@@ -4,7 +4,7 @@
 #include "GDK/sampgdk.h"
 #include "CAntiCheat.h"
 #include "../Shared/Network/CRPC.h"
-#include "CServerUpdater.h"
+#include "VersionHelper.h"
 #include "CAntiCheatHandler.h"
 #include "PacketPriority.h"
 #include "BanHandler.h"
@@ -167,6 +167,9 @@ namespace Callback
 
 	PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 	{
+		// Reset this variable at connect
+		CAntiCheat::ToggleCanEnableAC(playerid, false);
+
 		// Make sure the new connected user isn't an NPC.
 		if (sampgdk::IsPlayerNPC(playerid))
 		{
@@ -281,10 +284,11 @@ namespace Callback
 		Default_MacroLimits = true;
 		Default_VehicleBlips = true;
 		Default_SwitchReload = true;
+		Default_KickPacketTampering = false;
 
 		Default_CrouchBug = 9999;
 		Default_FrameLimit = 9999;
-		Default_SprintLimit = 8.5f;
+		Default_SprintLimit = 0.0f;
 
 		ac_config_ptree.put("defaults.main_ac_checks", (ACToggle == true) ? 1 : 0);
 		ac_config_ptree.put("defaults.inf_sprint", (Default_InfSprint == true) ? 1 : 0);
@@ -295,6 +299,7 @@ namespace Callback
 		ac_config_ptree.put("defaults.crouch_bug", Default_CrouchBug);
 		ac_config_ptree.put("defaults.frame_limit", Default_FrameLimit);
 		ac_config_ptree.put("defaults.sprint_speed_limit", static_cast<int>(Default_SprintLimit * 10.0f));
+		ac_config_ptree.put("defaults.kick_for_packet_tampering", (Default_KickPacketTampering == true) ? 1 : 0);
 
 		boost::property_tree::ini_parser::write_ini("ac_config.ini", ac_config_ptree);
 	}
@@ -339,6 +344,7 @@ namespace Callback
 				Default_CrouchBug = ac_config_ptree.get<int>("defaults.crouch_bug");
 				Default_FrameLimit = ac_config_ptree.get<int>("defaults.frame_limit");
 				Default_VehicleBlips = ac_config_ptree.get<bool>("defaults.vehicle_blips");
+				Default_KickPacketTampering = ac_config_ptree.get<bool>("defaults.kick_for_packet_tampering");
 			}
 			catch (const boost::property_tree::ptree_error &e)
 			{
@@ -421,33 +427,5 @@ namespace Callback
 			return true;
 		}
 		return false;
-	}
-
-	PLUGIN_EXPORT bool PLUGIN_CALL OnRconLoginAttempt(const char* ip, const char* port, bool success)
-	{
-		// If the rcon login attempt wasn't successful, we don't really care...
-		if (!success) return true;
-
-		// Loop through the maximum amount of players.
-		for (int i = 0; i < MAX_PLAYERS; ++i)
-		{
-			// If the player is connected.
-			if (sampgdk::IsPlayerConnected(i))
-			{
-				// Create a variable to store the player's IP.
-				char IP[MAX_PLAYER_NAME];
-
-				// Get the player's IP and store it in the variable we just created.
-				sampgdk::GetPlayerIp(i, IP, sizeof(IP));
-
-				// Compare the IP to the IP that tried to do that rcon login
-				if (!strcmp(ip, IP))
-				{
-					// If it was them, we just found the playerid who logged into rcon, therfore he's allowed to use the /actoggle command.
-					CAntiCheat::ToggleCanEnableAC(i, true);
-				}
-			}
-		}
-		return true;
 	}
 }

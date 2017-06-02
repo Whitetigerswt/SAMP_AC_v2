@@ -6,20 +6,14 @@
 #include "../GDK/sampgdk.h"
 #include "../BanHandler.h"
 #include "../VerifiedPacketChecker.h"
+#include "../Types.h"
+#include "../VersionHelper.h"
 
 #include <stdio.h>
 #include <cstring>
 
 #include <boost/thread.hpp>
 #include <boost/algorithm/string.hpp>
-
-#ifndef MAX_PATH
-#define MAX_PATH 260
-#endif
-
-#ifndef WIN32
-typedef unsigned char BYTE;
-#endif
 
 
 void CRPCCallback::Initialize()
@@ -39,16 +33,11 @@ void CRPCCallback::Initialize()
 	CRPC::Add(ON_UNKNOWN_SENDPACKET_CALLER_FOUND, OnUnknownSendPacketCallerFound);
 }
 
+// This RPC is for old AC builds.
 RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra)
 {
 	// Inform the player there version of AC is not compatible with the server.
-	char msg[150];
-
-	// Format the message letting the user know their AC version will not work on this server.
-	snprintf(msg, sizeof(msg), "{FF0000}Fatal Error:{FFFFFF} The servers Anti-Cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
-
-	// Send the message to the user.
-	sampgdk::SendClientMessage(iExtra, -1, msg);
+	sampgdk::SendClientMessage(iExtra, 0xFF0000FF, "Fatal Error:{FFFFFF} The server's anti-cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
 
 	// Close the connection.
 	sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);
@@ -227,7 +216,7 @@ RPC_CALLBACK CRPCCallback::OnMacroDetected(RakNet::BitStream &bsData, int iExtra
 RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iExtra)
 {
 	// Create a big variable to hold hardware ID.
-	float version;
+	CSelfUpdater::stVersion version;
 
 	// Convert the md5 from bytes to char
 	char digestChars[33];
@@ -242,7 +231,7 @@ RPC_CALLBACK CRPCCallback::OnIntialInfoGotten(RakNet::BitStream &bsData, int iEx
 	boost::algorithm::to_lower(digestChars);
 
 	// Read the hardware ID from the client.
-	if (bsData.Read(version))
+	if (bsData.Read((char*)&version, sizeof(CSelfUpdater::stVersion)))
 	{
 		CAntiCheatHandler::Init(iExtra);
 		// Make sure AC pointer is valid
@@ -310,12 +299,17 @@ RPC_CALLBACK CRPCCallback::OnTakeScreenshot(RakNet::BitStream &bsData, int iExtr
 
 RPC_CALLBACK CRPCCallback::OnUnknownSendPacketCallerFound(RakNet::BitStream &bsData, int iExtra)
 {
-	unsigned char path[MAX_PATH + 1];
+	unsigned char path[MAX_PATH + 1], frame;
 	BYTE md5[16];
+	DWORD baseaddr, addr;
 
 	// Reset memory.
 	memset(path, 0, sizeof(path));
 	memset(md5, 0, sizeof(md5));
+
+	bsData.Read(baseaddr);
+	bsData.Read(addr);
+	bsData.Read(frame);
 
 	// Read the data the client sent us.
 	if (bsData.ReadString(path))
@@ -335,7 +329,7 @@ RPC_CALLBACK CRPCCallback::OnUnknownSendPacketCallerFound(RakNet::BitStream &bsD
 		CAntiCheat *ac = CAntiCheatHandler::GetAntiCheat(iExtra);
 		if (ac)
 		{
-			ac->OnUnknownSendPacketCallerFound((char*)path, digestChars);
+			ac->OnUnknownSendPacketCallerFound(baseaddr, addr, frame, (char*)path, digestChars);
 		}
 	}
 }

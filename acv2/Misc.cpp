@@ -1,5 +1,5 @@
 #include "Misc.h"
-#include "md5.h"
+#include "../Shared/MD5_Info/md5.h"
 #include "Addresses.h"
 
 #include <winternl.h>
@@ -83,7 +83,7 @@ namespace Misc
 		return MacroLocks;
 	}
 
-	float SprintSpeed = 8.5f;
+	float SprintSpeed = 0.0f;
 
 	void SetSprintLimit(float speed)
 	{
