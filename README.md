@@ -22,7 +22,8 @@ Features
 - Easy-to-install server with vast documentation on new functions and callbacks.
 - Many example Filterscripts showing functionality, easy to extend and implement in current gamemodes.
 - Debugging counter-measures and advanced protection against software decompilation via the [Enigma Protector](https://www.enigmaprotector.com/en/about.html).
-- Advanced configuration to prevent sync bugs, control c-bug speed, switch reload, vehicle blips
+- Advanced configuration to prevent sync bugs, control c-bug speed, switch reload, vehicle blips.
+- Was run and supported on many public servers such as uL DayZ, GTA:T, Public Autoarena as well as countless Attack and Defend servers and gamemodes.
 - Much much more...
 
 Compiling
