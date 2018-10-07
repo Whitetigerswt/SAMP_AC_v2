@@ -5,8 +5,7 @@ Version 2.0 of SAMP Anti-Cheat. This is a full re-code from the ground up.
 
 Use
 ========== 
-This program was used by thousands of players for [SA-MP (San Andreas Multiplayer)](http://www.sa-mp.com). It was usually used in conjunction with [attdef](https://github.com/Whitetigerswt/attdef). This program protected against various common cheats that were highly popular between the years 2014-2017. I would not recommend using this today for anti-cheat purposes as it is fairly dated. I believe it could be updated. 
-
+This program was used by thousands of players for [SA-MP (San Andreas Multiplayer)](http://www.sa-mp.com). It was usually used in conjunction with [attdef](https://github.com/Whitetigerswt/attdef). This program protected against various common cheats that were highly popular between the years 2014-2017. I would not recommend using this today for anti-cheat purposes as it is fairly dated. I believe it could be updated.
 
 Features
 ==========
