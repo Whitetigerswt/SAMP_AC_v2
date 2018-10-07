@@ -5,7 +5,7 @@ Version 2.0 of SAMP Anti-Cheat. This is a full re-code from the ground up.
 
 Use
 ========== 
-This program was used by thousands of players for [SA-MP (San Andreas Multiplayer)](http://www.sa-mp.com). It was usually used in conjunction with [attdef](https://github.com/Whitetigerswt/attdef). This program protected against various common cheats that were highly popular between the years 2014-2017. I would not recommend using this today as it is fairly dated.
+This program was used by thousands of players for [SA-MP (San Andreas Multiplayer)](http://www.sa-mp.com). It was usually used in conjunction with [attdef](https://github.com/Whitetigerswt/attdef). This program protected against various common cheats that were highly popular between the years 2014-2017. I would not recommend using this today for anti-cheat purposes as it is fairly dated. I believe it could be updated. 
 
 
 Features
@@ -65,11 +65,11 @@ Fully compiled release builds are available [here](https://whitetigerswt.github.
 
 Gameplay
 ==========
-https://www.youtube.com/watch?v=s4iZh54WLR4
-https://www.youtube.com/watch?v=f9ZTRq6rtTU
-https://www.youtube.com/watch?v=Bso6Fe4ymPs
-https://www.youtube.com/watch?v=H4mXAnNt2FQ
-https://www.youtube.com/watch?v=nndvDC-y2i0
+- [vR in ACv2](https://www.youtube.com/watch?v=s4iZh54WLR4)
+- [ROU vs UK - World Cup 10](https://www.youtube.com/watch?v=f9ZTRq6rtTU)
+- [some tcws](https://www.youtube.com/watch?v=Bso6Fe4ymPs)
+- [tcws](https://www.youtube.com/watch?v=H4mXAnNt2FQ)
+- [57 vs sMb](https://www.youtube.com/watch?v=nndvDC-y2i0)
 
 
 Questions, comments, suggestions, future development?
