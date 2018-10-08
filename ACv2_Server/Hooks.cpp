@@ -133,6 +133,16 @@ static BYTE HOOK_GetPacketID(Packet *p)
 	{
 		CSyncData *pSyncData = (CSyncData*)(&p->data[1]);
 
+		// Crash fix
+		if (isnan(pSyncData->fQuaternion[0]) || isnan(pSyncData->fQuaternion[1]) || isnan(pSyncData->fQuaternion[2]) || isnan(pSyncData->fQuaternion[3]) ||
+			isnan(pSyncData->vecPosition.fX) || isnan(pSyncData->vecPosition.fY) || isnan(pSyncData->vecPosition.fZ) ||
+			isnan(pSyncData->vecSurfing.fX) || isnan(pSyncData->vecSurfing.fY) || isnan(pSyncData->vecSurfing.fZ) || 
+			isnan(pSyncData->vecVelocity.fX) || isnan(pSyncData->vecVelocity.fY) || isnan(pSyncData->vecVelocity.fZ))
+		{
+			return packetId;
+		}
+
+
 		// Fix, yet another, slide issue (punch, switch to any bullet weapon). might be temporary,
 		// though it's sooo much easier to just leave this here than look for an asm hook
 		if (pSyncData->wKeys & KEY_FIRE && pSyncData->byteWeapon < 15)
