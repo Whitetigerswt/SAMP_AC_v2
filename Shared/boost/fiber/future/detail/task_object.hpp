@@ -16,6 +16,7 @@
 #if defined(BOOST_NO_CXX17_STD_APPLY)
 #include <boost/context/detail/apply.hpp>
 #endif
+#include <boost/core/pointer_traits.hpp>
 
 #include <boost/fiber/detail/config.hpp>
 #include <boost/fiber/future/detail/task_base.hpp>
@@ -32,9 +33,10 @@ template< typename Fn, typename Allocator, typename R, typename ... Args >
 class task_object : public task_base< R, Args ... > {
 private:
     typedef task_base< R, Args ... >    base_type;
+    typedef std::allocator_traits< Allocator >  allocator_traits;
 
 public:
-    typedef typename std::allocator_traits< Allocator >::template rebind_alloc< 
+    typedef typename allocator_traits::template rebind_alloc<
         task_object
     >                                           allocator_type;
 
@@ -68,15 +70,17 @@ public:
 
     typename base_type::ptr_type reset() override final {
         typedef std::allocator_traits< allocator_type >    traity_type;
+        typedef pointer_traits< typename traity_type::pointer> ptrait_type;
 
         typename traity_type::pointer ptr{ traity_type::allocate( alloc_, 1) };
+        typename ptrait_type::element_type* p = boost::to_address(ptr);
         try {
-            traity_type::construct( alloc_, ptr, alloc_, std::move( fn_) );
+            traity_type::construct( alloc_, p, alloc_, std::move( fn_) );
         } catch (...) {
             traity_type::deallocate( alloc_, ptr, 1);
             throw;
         }
-        return { convert( ptr) };
+        return { p };
     }
 
 protected:
@@ -90,8 +94,9 @@ private:
 
     static void destroy_( allocator_type const& alloc, task_object * p) noexcept {
         allocator_type a{ alloc };
-        a.destroy( p);
-        a.deallocate( p, 1);
+        typedef std::allocator_traits< allocator_type >    traity_type;
+        traity_type::destroy( a, p);
+        traity_type::deallocate( a, p, 1);
     }
 };
 
@@ -99,11 +104,12 @@ template< typename Fn, typename Allocator, typename ... Args >
 class task_object< Fn, Allocator, void, Args ... > : public task_base< void, Args ... > {
 private:
     typedef task_base< void, Args ... >    base_type;
+    typedef std::allocator_traits< Allocator >    allocator_traits;
 
 public:
-    typedef typename Allocator::template rebind<
+    typedef typename allocator_traits::template rebind_alloc<
         task_object< Fn, Allocator, void, Args ... >
-    >::other                                      allocator_type;
+    >                                             allocator_type;
 
     task_object( allocator_type const& alloc, Fn const& fn) :
         base_type{},
@@ -134,15 +140,17 @@ public:
 
     typename base_type::ptr_type reset() override final {
         typedef std::allocator_traits< allocator_type >    traity_type;
+        typedef pointer_traits< typename traity_type::pointer> ptrait_type;
 
         typename traity_type::pointer ptr{ traity_type::allocate( alloc_, 1) };
+        typename ptrait_type::element_type* p = boost::to_address(ptr);
         try {
-            traity_type::construct( alloc_, ptr, alloc_, std::move( fn_) );
+            traity_type::construct( alloc_, p, alloc_, std::move( fn_) );
         } catch (...) {
             traity_type::deallocate( alloc_, ptr, 1);
             throw;
         }
-        return { convert( ptr) };
+        return { p };
     }
 
 protected:
@@ -156,8 +164,9 @@ private:
 
     static void destroy_( allocator_type const& alloc, task_object * p) noexcept {
         allocator_type a{ alloc };
-        a.destroy( p);
-        a.deallocate( p, 1);
+        typedef std::allocator_traits< allocator_type >    traity_type;
+        traity_type::destroy( a, p);
+        traity_type::deallocate( a, p, 1);
     }
 };
 

@@ -98,7 +98,7 @@ FunctionEnd
 
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)"
-!define PRODUCT_WEBSITE "http://samp-ac.com"
+!define PRODUCT_WEBSITE "https://whitetigerswt.github.io/SAMP_AC_v2"
 
 Section "Main Components" SecMain
 
@@ -107,9 +107,6 @@ Section "Main Components" SecMain
   SetOutPath "$INSTDIR"
   
   File "ACv2_Client.asi"
-  File "BsSndRpt.exe"
-  File "BugSplat.dll"
-  File "BugSplatRc.dll"
   File "samp_launcher.exe"
 
   Delete "$INSTDIR\d3d9.dll"

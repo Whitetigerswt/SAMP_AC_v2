@@ -14,7 +14,6 @@
 #include "VersionHelpers.h"
 #include "ManualInjection.h"
 #include "s0beit\samp.h"
-#include "BugSplat.h"
 #include "CPacketIntegrity.h"
 #include "CMemProtect.h"
 #include "Network\CPacketQueue.h"
@@ -40,13 +39,6 @@ bool CLoader::isLoaded = false;
 BOOL CLoader::isGameLoaded = false;
 HMODULE CLoader::ThishMod = NULL;
 
-// #define DISABLE_EXCEPTION_HANDLER
-// #define DISABLE_WINAPI_PROTECTIONS
-
-#ifndef DISABLE_EXCEPTION_HANDLER
-bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2);
-MiniDmpSender *mpSender;
-#endif
 
 void CLoader::Initialize(HMODULE hMod)
 {
@@ -54,11 +46,6 @@ void CLoader::Initialize(HMODULE hMod)
 
 	VersionHelper::Initialize();
 	CHookManager::Load();
-
-#ifndef DISABLE_EXCEPTION_HANDLER
-	mpSender = new MiniDmpSender(L"whitetigerswt_gmail_com", L"ACv2_Client", VersionHelper::AC_CLIENT_VERSION_STRING, NULL);
-	mpSender->setDefaultUserName(GetCommandLine());
-#endif
 
 	if (EP_CheckupIsEnigmaOk() || !EP_CheckupIsProtected())
 	{
@@ -530,43 +517,3 @@ bool CLoader::IsLoaded()
 {
 	return isLoaded;
 }
-
-// BugSplat exception callback
-#ifndef DISABLE_EXCEPTION_HANDLER
-bool ExceptionCallback(UINT nCode, LPVOID lpVal1, LPVOID lpVal2)
-{
-
-	switch (nCode)
-	{
-	case MDSCB_EXCEPTIONCODE:
-	{
-		EXCEPTION_RECORD *p = (EXCEPTION_RECORD *)lpVal1;
-		DWORD code = p ? p->ExceptionCode : 0;
-
-		// create some files in the %temp% directory and attach them
-		wchar_t cmdString[2 * MAX_PATH];
-		wchar_t filePath[MAX_PATH];
-		wchar_t tempPath[MAX_PATH];
-		GetTempPathW(MAX_PATH, tempPath);
-
-		wsprintf(filePath, L"%sException.txt", tempPath);
-		wsprintf(cmdString, L"echo Exception Code = 0x%08x > %s", code, filePath);
-		_wsystem(cmdString);
-		mpSender->sendAdditionalFile(filePath);
-
-		wsprintf(filePath, L"%sfile2.txt", tempPath);
-
-		wchar_t buf[_MAX_PATH];
-		mpSender->getMinidumpPath(buf, _MAX_PATH);
-
-		wsprintf(cmdString, L"echo Crash reporting is so clutch!  minidump path = %s > %s", buf, filePath);
-		_wsystem(cmdString);
-		mpSender->sendAdditionalFile(filePath);
-
-	}
-	break;
-	}
-
-	return false;
-}
-#endif

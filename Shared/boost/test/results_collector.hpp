@@ -79,6 +79,15 @@ public:
     /// Returns true if test unit passed
     bool            passed() const;
 
+    /// Returns true if test unit skipped
+    ///
+    /// For test suites, this indicates if the test suite itself has been marked as
+    /// skipped, and not if the test suite contains any skipped test.
+    bool            skipped() const;
+  
+    /// Returns true if the test unit was aborted (hard failure)
+    bool            aborted() const;
+
     /// Produces result code for the test unit execution
     ///
     /// This methhod return one of the result codes defined in @c boost/cstdlib.hpp
@@ -119,7 +128,7 @@ public:
     virtual void        assertion_result( unit_test::assertion_result );
     virtual void        exception_caught( execution_exception const& );
 
-    virtual int         priority() { return 2; }
+    virtual int         priority() { return 3; }
 
     /// Results access per test unit
     ///

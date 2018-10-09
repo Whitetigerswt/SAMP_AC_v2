@@ -50,6 +50,7 @@
     <TargetExt>.asi</TargetExt>
     <IncludePath>$(ProjectDir)DirectX;$(ProjectDir);$(SolutionDir)Shared;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)acv2\libs\;$(SolutionDir)Shared\Boost\libs\;$(LibraryPath)</LibraryPath>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -71,7 +72,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ACV2_EXPORTS;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NO_BOOST_DATE_TIME_INLINE;CURL_STATICLIB;DIRECTINPUT_VERSION#0x0900;_WIN32_WINNT#0x0500;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ACV2_EXPORTS;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;DATE_TIME_INLINE;_REMOVE_FPOS_SEEKPOS;CURL_STATICLIB;DIRECTINPUT_VERSION#0x0900;_WIN32_WINNT#0x0500;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -82,7 +83,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>crypt32.lib;BugSplat.lib;ws2_32.lib;psapi.lib;wldap32.lib;Wininet.lib;Urlmon.lib;libboost_thread-vc141-mt-s-1_64.lib;libboost_filesystem-vc141-mt-s-1_64.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\enigma_ide.lib;$(ProjectDir)libs\d3d9.lib;$(ProjectDir)libs\d3dx9.lib;$(SolutionDir)\Shared\libs\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>crypt32.lib;BugSplat.lib;ws2_32.lib;psapi.lib;wldap32.lib;Wininet.lib;Urlmon.lib;$(ProjectDir)libs\detours.lib;$(ProjectDir)libs\enigma_ide.lib;$(ProjectDir)libs\d3d9.lib;$(ProjectDir)libs\d3dx9.lib;$(SolutionDir)\Shared\libs\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -287,7 +288,6 @@ del $(TargetFileName)</Command>
     <ClInclude Include="..\Shared\Network\Network.h" />
     <ClInclude Include="..\Shared\SelfUpdater\CSelfUpdater.h" />
     <ClInclude Include="Addresses.h" />
-    <ClInclude Include="BugSplat.h" />
     <ClInclude Include="CFileCheck.h" />
     <ClInclude Include="CHookManager.h" />
     <ClInclude Include="CDirectoryScanner.h" />

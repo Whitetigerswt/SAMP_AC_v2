@@ -17,7 +17,7 @@ namespace Network
 
 		if (pRakServer == NULL)
 		{
-			Utility::Printf("This SA-MP server version is not supported! Let us know of this problem at www.samp-ac.com");
+			Utility::Printf("This SA-MP server version is not supported! Let us know of this problem at https://forum.sa-mp.com/showthread.php?t=659581");
 		}
 	}
 

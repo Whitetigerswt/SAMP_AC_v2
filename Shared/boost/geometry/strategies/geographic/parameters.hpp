@@ -10,9 +10,10 @@
 #ifndef BOOST_GEOMETRY_STRATEGIES_GEOGRAPHIC_PARAMETERS_HPP
 #define BOOST_GEOMETRY_STRATEGIES_GEOGRAPHIC_PARAMETERS_HPP
 
-
 #include <boost/geometry/formulas/andoyer_inverse.hpp>
+#include <boost/geometry/formulas/thomas_direct.hpp>
 #include <boost/geometry/formulas/thomas_inverse.hpp>
+#include <boost/geometry/formulas/vincenty_direct.hpp>
 #include <boost/geometry/formulas/vincenty_inverse.hpp>
 
 #include <boost/mpl/assert.hpp>
@@ -24,6 +25,23 @@ namespace boost { namespace geometry { namespace strategy
 
 struct andoyer
 {
+    template
+    <
+        typename CT,
+        bool EnableCoordinates = true,
+        bool EnableReverseAzimuth = false,
+        bool EnableReducedLength = false,
+        bool EnableGeodesicScale = false
+    >
+    struct direct
+            : formula::thomas_direct
+              <
+                  CT, false,
+                  EnableCoordinates, EnableReverseAzimuth,
+                  EnableReducedLength, EnableGeodesicScale
+              >
+    {};
+
     template
     <
         typename CT,
@@ -48,6 +66,23 @@ struct thomas
     template
     <
         typename CT,
+        bool EnableCoordinates = true,
+        bool EnableReverseAzimuth = false,
+        bool EnableReducedLength = false,
+        bool EnableGeodesicScale = false
+    >
+    struct direct
+            : formula::thomas_direct
+              <
+                  CT, true,
+                  EnableCoordinates, EnableReverseAzimuth,
+                  EnableReducedLength, EnableGeodesicScale
+              >
+    {};
+
+    template
+    <
+        typename CT,
         bool EnableDistance,
         bool EnableAzimuth,
         bool EnableReverseAzimuth = false,
@@ -66,6 +101,22 @@ struct thomas
 
 struct vincenty
 {
+    template
+    <
+        typename CT,
+        bool EnableCoordinates = true,
+        bool EnableReverseAzimuth = false,
+        bool EnableReducedLength = false,
+        bool EnableGeodesicScale = false
+    >
+    struct direct
+            : formula::vincenty_direct
+              <
+                  CT, EnableCoordinates, EnableReverseAzimuth,
+                  EnableReducedLength, EnableGeodesicScale
+              >
+    {};
+
     template
     <
         typename CT,

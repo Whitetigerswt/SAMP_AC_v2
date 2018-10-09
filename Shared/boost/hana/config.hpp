@@ -124,24 +124,24 @@ Distributed under the Boost Software License, Version 1.0.
 // Caveats and other compiler-dependent options
 //////////////////////////////////////////////////////////////////////////////
 
-// BOOST_HANA_CONFIG_HAS_CONSTEXPR_LAMBDA enables some constructs requiring
-// `constexpr` lambdas, which are not in the language (yet).
-// Currently always disabled.
+// `BOOST_HANA_CONFIG_HAS_CONSTEXPR_LAMBDA` enables some constructs requiring
+// `constexpr` lambdas, which are in the language starting with C++17.
 //
-// BOOST_HANA_CONSTEXPR_LAMBDA expands to `constexpr` if constexpr lambdas
+// Always disabled for now because Clang only has partial support for them
+// (captureless lambdas only).
+#if defined(__cplusplus) && __cplusplus > 201402L
+#   define BOOST_HANA_CONSTEXPR_STATELESS_LAMBDA constexpr
+// #   define BOOST_HANA_CONFIG_HAS_CONSTEXPR_LAMBDA
+#else
+#   define BOOST_HANA_CONSTEXPR_STATELESS_LAMBDA /* nothing */
+#endif
+
+// `BOOST_HANA_CONSTEXPR_LAMBDA` expands to `constexpr` if constexpr lambdas
 // are supported and to nothing otherwise.
-#if 0
-#   define BOOST_HANA_CONFIG_HAS_CONSTEXPR_LAMBDA
+#if defined(BOOST_HANA_CONFIG_HAS_CONSTEXPR_LAMBDA)
 #   define BOOST_HANA_CONSTEXPR_LAMBDA constexpr
 #else
 #   define BOOST_HANA_CONSTEXPR_LAMBDA /* nothing */
-#endif
-
-// The std::tuple adapter is broken on libc++ prior to the one shipped
-// with Clang 3.7.0.
-#if defined(BOOST_HANA_CONFIG_LIBCPP) &&                                    \
-        BOOST_HANA_CONFIG_LIBCPP < BOOST_HANA_CONFIG_VERSION(1, 0, 101)
-#   define BOOST_HANA_CONFIG_HAS_NO_STD_TUPLE_ADAPTER
 #endif
 
 // There's a bug in std::tuple_cat in libc++ right now.

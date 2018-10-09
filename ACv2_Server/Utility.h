@@ -1,6 +1,6 @@
 #pragma once
 
-#define AC_WEBSITE "http://samp-ac.com"
+#define AC_WEBSITE "https://whitetigerswt.github.io/SAMP_AC_v2"
 
 #define MAX_CHEAT_PATH	20
 

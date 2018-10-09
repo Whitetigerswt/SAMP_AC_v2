@@ -2373,7 +2373,7 @@ The expiration date is %TrialExpDay%/%TrialExpMonth%/%TrialExpYear% (dd/mm/yyyy)
 Please, download the latest version from the following link!</Text>
         <UseHL>True</UseHL>
         <HLSentence>Click here to download the latest version</HLSentence>
-        <HLURL>http://www.samp-ac.com/</HLURL>
+        <HLURL>https://whitetigerswt.github.io/SAMP_AC_v2</HLURL>
         <Icon>3</Icon>
         <AutoClose>False</AutoClose>
         <CloseDelay>0</CloseDelay>

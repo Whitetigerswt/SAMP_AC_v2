@@ -37,7 +37,7 @@ void CRPCCallback::Initialize()
 RPC_CALLBACK CRPCCallback::VersionIncompat(RakNet::BitStream &bsData, int iExtra)
 {
 	// Inform the player there version of AC is not compatible with the server.
-	sampgdk::SendClientMessage(iExtra, 0xFF0000FF, "Fatal Error:{FFFFFF} The server's anti-cheat plugin is not compatible with your version. You must update your anti-cheat at samp-ac.com");
+	sampgdk::SendClientMessage(iExtra, 0xFF0000FF, "Fatal Error:{FFFFFF} The server's anti-cheat plugin is not compatible with your version. You must update your anti-cheat at https://whitetigerswt.github.io/SAMP_AC_v2");
 
 	// Close the connection.
 	sampgdk::SetTimer(1000, 0, Callback::KickPlayer, (void*)iExtra);

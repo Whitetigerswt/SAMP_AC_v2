@@ -4,7 +4,7 @@
 
 namespace VersionHelper
 {
-	const char* AC_UPDATE_URL = "http://samp-ac.com/API/SelfUpdater/Client.html";
+	const char* AC_UPDATE_URL = "https://whitetigerswt.github.io/SAMP_AC_v2/API/SelfUpdater/Client.html";
 	wchar_t AC_CLIENT_VERSION_STRING[16];
 	CSelfUpdater::stVersion AC_CLIENT_VERSION{ 2, 83, 0 };
 	// Incrementing the version will force the client to update when they run it next.
@@ -41,7 +41,7 @@ namespace VersionHelper
 
 	UPDATE_FAIL:
 		MessageBox(NULL,
-			TEXT("SAMP-AC has failed at installing an update. You will need to update manually to keep using this mod.\n\nYou can download the latest version here: www.samp-ac.com"),
+			TEXT("SAMP-AC has failed at installing an update. You will need to update manually to keep using this mod.\n\nYou can download the latest version here: https://whitetigerswt.github.io/SAMP_AC_v2"),
 			TEXT("An error occured while updating"),
 			MB_OK | MB_ICONEXCLAMATION);
 		ExitProcess(0);

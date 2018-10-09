@@ -270,6 +270,7 @@ public:
     /// Simple model for the location of failure in a source code
     struct BOOST_TEST_DECL location {
         explicit    location( char const* file_name = 0, size_t line_num = 0, char const* func = 0 );
+        explicit    location( const_string file_name, size_t line_num = 0, char const* func = 0 );
 
         const_string    m_file_name;    ///< File name
         size_t          m_line_num;     ///< Line number
@@ -514,8 +515,12 @@ enum masks {
     BOOST_FPE_ALL       = MCW_EM,
 
 #elif !defined(BOOST_TEST_FPE_SUPPORT_WITH_GLIBC_EXTENSIONS__)/* *** */
+    BOOST_FPE_DIVBYZERO = BOOST_FPE_OFF,
+    BOOST_FPE_INEXACT   = BOOST_FPE_OFF,
+    BOOST_FPE_INVALID   = BOOST_FPE_OFF,
+    BOOST_FPE_OVERFLOW  = BOOST_FPE_OFF,
+    BOOST_FPE_UNDERFLOW = BOOST_FPE_OFF,
     BOOST_FPE_ALL       = BOOST_FPE_OFF,
-
 #else /* *** */
 
 #if defined(FE_DIVBYZERO)

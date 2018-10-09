@@ -6,8 +6,6 @@
 #include <curl/curl.h>
 
 #include <ostream>
-#include <boost/iostreams/device/file.hpp>
-#include <boost/iostreams/stream.hpp>
 #include <boost/algorithm/string.hpp>
 
 #ifndef WIN32

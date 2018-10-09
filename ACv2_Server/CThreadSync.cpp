@@ -3,6 +3,8 @@
 #include "CAntiCheatHandler.h"
 #include "Utility.h"
 
+
+
 CThreadSync::CThreadSync(unsigned int waitTimeForLock, unsigned int waitTimeTotal)
 {
 	_waitTimeForLock = waitTimeForLock;

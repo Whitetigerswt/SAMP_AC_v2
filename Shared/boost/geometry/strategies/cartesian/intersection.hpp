@@ -1,7 +1,7 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
 
 // Copyright (c) 2007-2014 Barend Gehrels, Amsterdam, the Netherlands.
-// Copyright (c) 2013-2014 Adam Wulkiewicz, Lodz, Poland.
+// Copyright (c) 2013-2017 Adam Wulkiewicz, Lodz, Poland.
 
 // This file was modified by Oracle on 2014, 2016, 2017.
 // Modifications copyright (c) 2014-2017, Oracle and/or its affiliates.
@@ -33,9 +33,10 @@
 #include <boost/geometry/util/promote_integral.hpp>
 #include <boost/geometry/util/select_calculation_type.hpp>
 
-#include <boost/geometry/strategies/agnostic/point_in_poly_winding.hpp>
-#include <boost/geometry/strategies/cartesian/area_surveyor.hpp>
+#include <boost/geometry/strategies/cartesian/area.hpp>
 #include <boost/geometry/strategies/cartesian/distance_pythagoras.hpp>
+#include <boost/geometry/strategies/cartesian/envelope_segment.hpp>
+#include <boost/geometry/strategies/cartesian/point_in_poly_winding.hpp>
 #include <boost/geometry/strategies/cartesian/side_by_triangle.hpp>
 #include <boost/geometry/strategies/covered_by.hpp>
 #include <boost/geometry/strategies/intersection.hpp>
@@ -80,11 +81,10 @@ struct cartesian_segments
     template <typename Geometry1, typename Geometry2>
     struct point_in_geometry_strategy
     {
-        typedef strategy::within::winding
+        typedef strategy::within::cartesian_winding
             <
                 typename point_type<Geometry1>::type,
                 typename point_type<Geometry2>::type,
-                side_strategy_type,
                 CalculationType
             > type;
     };
@@ -103,9 +103,8 @@ struct cartesian_segments
     template <typename Geometry>
     struct area_strategy
     {
-        typedef area::surveyor
+        typedef area::cartesian
             <
-                typename point_type<Geometry>::type,
                 CalculationType
             > type;
     };
@@ -133,9 +132,18 @@ struct cartesian_segments
         return strategy_type();
     }
 
+    typedef envelope::cartesian_segment<CalculationType>
+        envelope_strategy_type;
+
+    static inline envelope_strategy_type get_envelope_strategy()
+    {
+        return envelope_strategy_type();
+    }
+
     template <typename CoordinateType, typename SegmentRatio>
     struct segment_intersection_info
     {
+    private :
         typedef typename select_most_precise
             <
                 CoordinateType, double
@@ -188,6 +196,45 @@ struct cartesian_segments
                 <
                     CoordinateType
                 >(numerator * dy_promoted / denominator));
+        }
+
+    public :
+        template <typename Point, typename Segment1, typename Segment2>
+        void calculate(Point& point, Segment1 const& a, Segment2 const& b) const
+        {
+            bool use_a = true;
+
+            // Prefer one segment if one is on or near an endpoint
+            bool const a_near_end = robust_ra.near_end();
+            bool const b_near_end = robust_rb.near_end();
+            if (a_near_end && ! b_near_end)
+            {
+                use_a = true;
+            }
+            else if (b_near_end && ! a_near_end)
+            {
+                use_a = false;
+            }
+            else
+            {
+                // Prefer shorter segment
+                promoted_type const len_a = comparable_length_a();
+                promoted_type const len_b = comparable_length_b();
+                if (len_b < len_a)
+                {
+                    use_a = false;
+                }
+                // else use_a is true but was already assigned like that
+            }
+
+            if (use_a)
+            {
+                assign_a(point, a, b);
+            }
+            else
+            {
+                assign_b(point, a, b);
+            }
         }
 
         CoordinateType dx_a, dy_a;

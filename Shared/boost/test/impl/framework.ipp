@@ -27,6 +27,7 @@
 #include <boost/test/results_collector.hpp>
 #include <boost/test/progress_monitor.hpp>
 #include <boost/test/results_reporter.hpp>
+#include <boost/test/test_framework_init_observer.hpp>
 
 #include <boost/test/tree/observer.hpp>
 #include <boost/test/tree/test_unit.hpp>
@@ -56,6 +57,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <numeric>
+#ifdef BOOST_NO_CXX98_RANDOM_SHUFFLE
+#include <iterator>
+#endif
 
 #ifdef BOOST_NO_STDC_NAMESPACE
 namespace std { using ::time; using ::srand; }
@@ -68,6 +72,7 @@ namespace std { using ::time; using ::srand; }
 namespace boost {
 namespace unit_test {
 namespace framework {
+
 namespace impl {
 
 // ************************************************************************** //
@@ -342,12 +347,10 @@ public:
     , m_dep_collector( dep_collector )
     {}
 
-private:
     // test_tree_visitor interface
     virtual bool    visit( test_unit const& tu )
     {
         const_cast<test_unit&>(tu).p_run_status.value = m_new_status == test_unit::RS_INVALID ? tu.p_default_status : m_new_status;
-
         if( m_dep_collector ) {
             BOOST_TEST_FOREACH( test_unit_id, dep_id, tu.p_dependencies.get() ) {
                 test_unit const& dep = framework::get( dep_id, TUT_ANY );
@@ -364,6 +367,7 @@ private:
         return true;
     }
 
+private:
     // Data members
     test_unit::run_status   m_new_status;
     test_unit_id_list*      m_dep_collector;
@@ -435,6 +439,46 @@ parse_filters( test_unit_id master_tu_id, test_unit_id_list& tu_to_enable, test_
 
 //____________________________________________________________________________//
 
+#ifdef BOOST_NO_CXX98_RANDOM_SHUFFLE
+
+// a poor man's implementation of random_shuffle
+template< class RandomIt, class RandomFunc >
+void random_shuffle( RandomIt first, RandomIt last, RandomFunc &r )
+{
+    typedef typename std::iterator_traits<RandomIt>::difference_type difference_type;
+    difference_type n = last - first;
+    for (difference_type i = n-1; i > 0; --i) {
+        difference_type j = r(i+1);
+        if (j != i) {
+            using std::swap;
+            swap(first[i], first[j]);
+        }
+    }
+}
+
+#endif
+
+
+// A simple handle for registering the global fixtures to the master test suite
+// without deleting an existing static object (the global fixture itself) when the program
+// terminates (shared_ptr).
+class global_fixture_handle : public test_unit_fixture {
+public:
+    global_fixture_handle(test_unit_fixture* fixture) : m_global_fixture(fixture) {}
+    ~global_fixture_handle() {}
+
+    virtual void    setup() {
+        m_global_fixture->setup();
+    }
+    virtual void    teardown() {
+        m_global_fixture->teardown();
+    }
+
+private:
+    test_unit_fixture* m_global_fixture;
+};
+
+
 } // namespace impl
 
 // ************************************************************************** //
@@ -446,7 +490,8 @@ unsigned const TIMEOUT_EXCEEDED = static_cast<unsigned>( -1 );
 class state {
 public:
     state()
-    : m_curr_test_case( INV_TEST_UNIT_ID )
+    : m_master_test_suite( 0 )
+    , m_curr_test_unit( INV_TEST_UNIT_ID )
     , m_next_test_case_id( MIN_TEST_CASE_ID )
     , m_next_test_suite_id( MIN_TEST_SUITE_ID )
     , m_test_in_progress( false )
@@ -565,13 +610,27 @@ public:
 
             tu_to_enable.pop_back();
 
-            // 35. Ignore test units which already enabled
+            // 35. Ignore test units which are already enabled
             if( tu.is_enabled() )
                 continue;
 
             // set new status and add all dependencies into tu_to_enable
             set_run_status enabler( test_unit::RS_ENABLED, &tu_to_enable );
             traverse_test_tree( tu.p_id, enabler, true );
+
+            // Add the dependencies of the parent suites, see trac #13149
+            test_unit_id parent_id = tu.p_parent_id;
+            while(   parent_id != INV_TEST_UNIT_ID
+                  && parent_id != master_tu_id )
+            {
+                // we do not use the traverse_test_tree as otherwise it would enable the sibblings and subtree
+                // of the test case we want to enable (we need to enable the parent suites and their dependencies only)
+                // the parent_id needs to be enabled in order to be properly parsed by finalize_run_status, the visit
+                // does the job
+                test_unit& tu_parent = framework::get( parent_id, TUT_ANY );
+                enabler.visit( tu_parent );
+                parent_id = tu_parent.p_parent_id;
+            }
         }
 
         // 40. Apply all disablers
@@ -603,7 +662,7 @@ public:
       }
     };
 
-      // Executed the test tree with the root at specified test unit
+    // Executes the test tree with the root at specified test unit
     execution_result execute_test_tree( test_unit_id tu_id,
                                         unsigned timeout = 0,
                                         random_generator_helper const * const p_random_generator = 0)
@@ -633,7 +692,10 @@ public:
             BOOST_TEST_FOREACH( test_observer*, to, m_observers )
                 to->test_unit_skipped( tu, precondition_res.message() );
 
-            return unit_test_monitor_t::precondition_failure;
+            // It is not an error to skip the test if any of the parent tests
+            // have failed. This one should be reported as skipped as if it was
+            // disabled
+            return unit_test_monitor_t::test_ok;
         }
 
         // 20. Notify all observers about the start of the test unit
@@ -642,9 +704,15 @@ public:
 
         // 30. Execute setup fixtures if any; any failure here leads to test unit abortion
         BOOST_TEST_FOREACH( test_unit_fixture_ptr, F, tu.p_fixtures.get() ) {
+            ut_detail::test_unit_id_restore restore_current_test_unit(m_curr_test_unit, tu.p_id);
             result = unit_test_monitor.execute_and_translate( boost::bind( &test_unit_fixture::setup, F ) );
             if( result != unit_test_monitor_t::test_ok )
                 break;
+            test_results const& test_rslt = unit_test::results_collector.results( m_curr_test_unit );
+            if( test_rslt.aborted() ) {
+                result = unit_test_monitor_t::test_setup_failure;
+                break;
+            }
         }
 
         // This is the time we are going to spend executing the test unit
@@ -653,6 +721,9 @@ public:
         if( result == unit_test_monitor_t::test_ok ) {
             // 40. We are going to time the execution
             boost::timer tu_timer;
+
+            // we pass the random generator
+            const random_generator_helper& rand_gen = p_random_generator ? *p_random_generator : random_generator_helper();
 
             if( tu.p_type == TUT_SUITE ) {
                 test_suite const& ts = static_cast<test_suite const&>( tu );
@@ -663,14 +734,14 @@ public:
                     BOOST_TEST_FOREACH( value_type, chld, ts.m_ranked_children ) {
                         unsigned chld_timeout = child_timeout( timeout, tu_timer.elapsed() );
 
-                        result = (std::min)( result, execute_test_tree( chld.second, chld_timeout ) );
+                        result = (std::min)( result, execute_test_tree( chld.second, chld_timeout, &rand_gen ) );
 
                         if( unit_test_monitor.is_critical_error( result ) )
                             break;
                     }
                 }
                 else {
-                    // Go through ranges of chldren with the same dependency rank and shuffle them
+                    // Go through ranges of children with the same dependency rank and shuffle them
                     // independently. Execute each subtree in this order
                     test_unit_id_list children_with_the_same_rank;
 
@@ -686,9 +757,11 @@ public:
                             it++;
                         }
 
-                        const random_generator_helper& rand_gen = p_random_generator ? *p_random_generator : random_generator_helper();
-
+#ifdef BOOST_NO_CXX98_RANDOM_SHUFFLE
+                        impl::random_shuffle( children_with_the_same_rank.begin(), children_with_the_same_rank.end(), rand_gen );
+#else
                         std::random_shuffle( children_with_the_same_rank.begin(), children_with_the_same_rank.end(), rand_gen );
+#endif
 
                         BOOST_TEST_FOREACH( test_unit_id, chld, children_with_the_same_rank ) {
                             unsigned chld_timeout = child_timeout( timeout, tu_timer.elapsed() );
@@ -710,8 +783,7 @@ public:
                 m_context_idx = 0;
 
                 // setup current test case
-                test_unit_id bkup = m_curr_test_case;
-                m_curr_test_case = tc.p_id;
+                ut_detail::test_unit_id_restore restore_current_test_unit(m_curr_test_unit, tc.p_id);
 
                 // execute the test case body
                 result = unit_test_monitor.execute_and_translate( tc.p_test_func, timeout );
@@ -720,8 +792,7 @@ public:
                 // cleanup leftover context
                 m_context.clear();
 
-                // restore state and abort if necessary
-                m_curr_test_case = bkup;
+                // restore state (scope exit) and abort if necessary
             }
         }
 
@@ -729,6 +800,7 @@ public:
         if( !unit_test_monitor.is_critical_error( result ) ) {
             // execute teardown fixtures if any in reverse order
             BOOST_TEST_REVERSE_FOREACH( test_unit_fixture_ptr, F, tu.p_fixtures.get() ) {
+                ut_detail::test_unit_id_restore restore_current_test_unit(m_curr_test_unit, tu.p_id);
                 result = (std::min)( result, unit_test_monitor.execute_and_translate( boost::bind( &test_unit_fixture::teardown, F ), 0 ) );
 
                 if( unit_test_monitor.is_critical_error( result ) )
@@ -787,7 +859,7 @@ public:
     master_test_suite_t* m_master_test_suite;
     std::vector<test_suite*> m_auto_test_suites;
 
-    test_unit_id    m_curr_test_case;
+    test_unit_id    m_curr_test_unit;
     test_unit_store m_test_units;
 
     test_unit_id    m_next_test_case_id;
@@ -798,6 +870,8 @@ public:
     observer_store  m_observers;
     context_data    m_context;
     int             m_context_idx;
+
+    std::set<test_unit_fixture*>  m_global_fixtures;
 
     boost::execution_monitor m_aux_em;
 
@@ -839,6 +913,13 @@ struct sum_to_first_only {
 };
 
 void
+shutdown_loggers_and_reports()
+{
+    s_frk_state().m_log_sinks.clear();
+    s_frk_state().m_report_sink.setup( "stderr" );
+}
+
+void
 setup_loggers()
 {
 
@@ -857,8 +938,15 @@ setup_loggers()
             unit_test_log.set_format( format );
 
             runtime_config::stream_holder& stream_logger = s_frk_state().m_log_sinks[format];
-            if( runtime_config::has( runtime_config::btrt_log_sink ) )
-                stream_logger.setup( runtime_config::get<std::string>( runtime_config::btrt_log_sink ) );
+            if( runtime_config::has( runtime_config::btrt_log_sink ) ) {
+                // we remove all streams in this case, so we do not specify the format
+                boost::function< void () > log_cleaner = boost::bind( &unit_test_log_t::set_stream,
+                                                                      &unit_test_log,
+                                                                      boost::ref(std::cout)
+                                                                      );
+                stream_logger.setup( runtime_config::get<std::string>( runtime_config::btrt_log_sink ),
+                                     log_cleaner );
+            }
             unit_test_log.set_stream( stream_logger.ref() );
         }
         else
@@ -970,7 +1058,6 @@ setup_loggers()
                         }
                     }
 
-
                     BOOST_TEST_I_ASSRT( formatter_log_level != invalid_log_level,
                                         boost::runtime::access_to_missing_argument()
                                             << "Unable to determine the log level from '"
@@ -985,12 +1072,18 @@ setup_loggers()
                     unit_test_log.set_threshold_level( format, formatter_log_level );
 
                     runtime_config::stream_holder& stream_logger = s_frk_state().m_log_sinks[format];
+                    boost::function< void () > log_cleaner = boost::bind( &unit_test_log_t::set_stream,
+                                                                          &unit_test_log,
+                                                                          format,
+                                                                          boost::ref(std::cout) );
                     if( ++current_format_specs != utils::string_token_iterator() &&
                         current_format_specs->size() ) {
-                        stream_logger.setup( *current_format_specs );
+                        stream_logger.setup( *current_format_specs, 
+                                             log_cleaner );
                     }
                     else {
-                        stream_logger.setup( formatter->get_default_stream_description() );
+                        stream_logger.setup( formatter->get_default_stream_description(),
+                                             log_cleaner );
                     }
                     unit_test_log.set_stream( format, stream_logger.ref() );
                 }
@@ -1036,13 +1129,20 @@ init( init_unit_test_func init_func, int argc, char* argv[] )
     results_reporter::set_level( runtime_config::get<report_level>( runtime_config::btrt_report_level ) );
     results_reporter::set_format( runtime_config::get<output_format>( runtime_config::btrt_report_format ) );
 
-    if( runtime_config::has( runtime_config::btrt_report_sink ) )
-        s_frk_state().m_report_sink.setup( runtime_config::get<std::string>( runtime_config::btrt_report_sink ) );
+    if( runtime_config::has( runtime_config::btrt_report_sink ) ) {
+        boost::function< void () > report_cleaner = boost::bind( &results_reporter::set_stream,
+                                                                 boost::ref(std::cerr)
+                                                                );
+        s_frk_state().m_report_sink.setup( runtime_config::get<std::string>( runtime_config::btrt_report_sink ),
+                                           report_cleaner );
+    }
+    
     results_reporter::set_stream( s_frk_state().m_report_sink.ref() );
 
     // 40. Register default test observers
     register_observer( results_collector );
     register_observer( unit_test_log );
+    register_observer( framework_init_observer );
 
     if( runtime_config::get<bool>( runtime_config::btrt_show_progress ) ) {
         progress_monitor.set_stream( std::cout ); // defaults to stdout
@@ -1081,6 +1181,13 @@ finalize_setup_phase( test_unit_id master_tu_id )
     class apply_decorators : public test_tree_visitor {
     private:
         // test_tree_visitor interface
+      
+        virtual bool    test_suite_start( test_suite const& ts)
+        {
+            const_cast<test_suite&>(ts).generate();
+            return test_tree_visitor::test_suite_start(ts);
+        }
+      
         virtual bool    visit( test_unit const& tu )
         {
             BOOST_TEST_FOREACH( decorator::base_ptr, d, tu.p_decorators.get() )
@@ -1116,6 +1223,7 @@ test_in_progress()
 void
 shutdown()
 {
+    impl::shutdown_loggers_and_reports();
     // eliminating some fake memory leak reports. See for more details:
     // http://connect.microsoft.com/VisualStudio/feedback/details/106937/memory-leaks-reported-by-debug-crt-inside-typeinfo-name
 
@@ -1231,6 +1339,30 @@ void
 deregister_observer( test_observer& to )
 {
     impl::s_frk_state().m_observers.erase( &to );
+}
+
+//____________________________________________________________________________//
+
+// ************************************************************************** //
+// **************           register_global_fixture            ************** //
+// ************************************************************************** //
+
+void
+register_global_fixture( test_unit_fixture& tuf )
+{
+    impl::s_frk_state().m_global_fixtures.insert( &tuf );
+}
+
+//____________________________________________________________________________//
+
+// ************************************************************************** //
+// **************           deregister_global_fixture          ************** //
+// ************************************************************************** //
+
+void
+deregister_global_fixture( test_unit_fixture &tuf )
+{
+    impl::s_frk_state().m_global_fixtures.erase( &tuf );
 }
 
 //____________________________________________________________________________//
@@ -1363,7 +1495,14 @@ current_auto_test_suite( test_suite* ts, bool push_or_pop )
 test_case const&
 current_test_case()
 {
-    return get<test_case>( impl::s_frk_state().m_curr_test_case );
+    return get<test_case>( impl::s_frk_state().m_curr_test_unit );
+}
+
+
+test_unit const&
+current_test_unit()
+{
+    return *impl::s_frk_state().m_test_units[impl::s_frk_state().m_curr_test_unit];
 }
 
 //____________________________________________________________________________//
@@ -1371,7 +1510,7 @@ current_test_case()
 test_unit_id
 current_test_case_id()
 {
-    return impl::s_frk_state().m_curr_test_case;
+    return impl::s_frk_state().m_curr_test_unit;
 }
 
 //____________________________________________________________________________//
@@ -1396,6 +1535,17 @@ get( test_unit_id id, test_unit_type t )
 // **************                framework::run                ************** //
 // ************************************************************************** //
 
+template <class Cont>
+struct swap_on_delete {
+    swap_on_delete(Cont& c1, Cont& c2) : m_c1(c1), m_c2(c2){}
+    ~swap_on_delete() {
+        m_c1.swap(m_c2);
+    }
+
+    Cont& m_c1;
+    Cont& m_c2;
+};
+
 void
 run( test_unit_id id, bool continue_test )
 {
@@ -1414,39 +1564,93 @@ run( test_unit_id id, bool continue_test )
 
     bool    was_in_progress     = framework::test_in_progress();
     bool    call_start_finish   = !continue_test || !was_in_progress;
-
-    impl::s_frk_state().m_test_in_progress = true;
+    bool    init_ok             = true;
+    const_string setup_error;
 
     if( call_start_finish ) {
+        // indicates the framework that no test is in progress now if observers need to be notified
+        impl::s_frk_state().m_test_in_progress = false;
+        // unit_test::framework_init_observer will get cleared first
         BOOST_TEST_FOREACH( test_observer*, to, impl::s_frk_state().m_observers ) {
             BOOST_TEST_I_TRY {
-                impl::s_frk_state().m_aux_em.vexecute( boost::bind( &test_observer::test_start, to, tcc.p_count ) );
+                ut_detail::test_unit_id_restore restore_current_test_unit(impl::s_frk_state().m_curr_test_unit, id);
+                unit_test_monitor_t::error_level result = unit_test_monitor.execute_and_translate( boost::bind( &test_observer::test_start, to, tcc.p_count ) );
+                if( init_ok ) {
+                    if( result != unit_test_monitor_t::test_ok ) {
+                        init_ok = false;
+                    }
+                    else {
+                        if( unit_test::framework_init_observer.has_failed() ) {
+                            init_ok = false;
+                        }
+                    }
+                }
             }
             BOOST_TEST_I_CATCH( execution_exception, ex ) {
-                BOOST_TEST_SETUP_ASSERT( false, ex.what() );
+                if( init_ok ) {
+                    // log only the first error
+                    init_ok = false;
+                    setup_error = ex.what();
+                }
+                // break; // we should continue otherwise loggers may have improper structure (XML start missing for instance)
             }
         }
     }
 
-    unsigned seed = runtime_config::get<unsigned>( runtime_config::btrt_random_seed );
-    switch( seed ) {
-    case 0:
-        break;
-    case 1:
-        seed = static_cast<unsigned>( std::rand() ^ std::time( 0 ) ); // better init using std::rand() ^ ...
-    default:
-        BOOST_TEST_FRAMEWORK_MESSAGE( "Test cases order is shuffled using seed: " << seed );
-        std::srand( seed );
+    if( init_ok ) {
+
+        // attaching the global fixtures to the main entry point
+        test_unit& entry_test_unit = framework::get( id, TUT_ANY );
+        std::vector<test_unit_fixture_ptr> v_saved_fixture(entry_test_unit.p_fixtures.value.begin(),
+                                                           entry_test_unit.p_fixtures.value.end());
+
+        BOOST_TEST_FOREACH( test_unit_fixture*, tuf, impl::s_frk_state().m_global_fixtures ) {
+            entry_test_unit.p_fixtures.value.insert( entry_test_unit.p_fixtures.value.begin(),
+                                                     test_unit_fixture_ptr(new impl::global_fixture_handle(tuf)) );
+        }
+
+        swap_on_delete< std::vector<test_unit_fixture_ptr> > raii_fixture(v_saved_fixture, entry_test_unit.p_fixtures.value);
+
+        // now work in progress
+        impl::s_frk_state().m_test_in_progress = true;
+        unsigned seed = runtime_config::get<unsigned>( runtime_config::btrt_random_seed );
+        switch( seed ) {
+        case 0:
+            break;
+        case 1:
+            seed = static_cast<unsigned>( std::rand() ^ std::time( 0 ) ); // better init using std::rand() ^ ...
+            BOOST_FALLTHROUGH;
+        default:
+            BOOST_TEST_FRAMEWORK_MESSAGE( "Test cases order is shuffled using seed: " << seed );
+            std::srand( seed );
+        }
+
+        // executing the test tree
+        impl::s_frk_state().execute_test_tree( id );
+
+        // removing previously added global fixtures: dtor raii_fixture
     }
 
-    impl::s_frk_state().execute_test_tree( id );
+    impl::s_frk_state().m_test_in_progress = false;
 
+    results_reporter::make_report( INV_REPORT_LEVEL, id );
+
+    unit_test::framework_init_observer.clear();
     if( call_start_finish ) {
-        BOOST_TEST_REVERSE_FOREACH( test_observer*, to, impl::s_frk_state().m_observers )
+        // indicates the framework that no test is in progress anymore if observers need to be notified
+        // and this is a teardown, so assertions should not raise any exception otherwise an exception
+        // might be raised in a dtor of a global fixture
+        impl::s_frk_state().m_test_in_progress = false;
+        BOOST_TEST_REVERSE_FOREACH( test_observer*, to, impl::s_frk_state().m_observers ) {
+            ut_detail::test_unit_id_restore restore_current_test_unit(impl::s_frk_state().m_curr_test_unit, id);
             to->test_finish();
+        }
     }
 
     impl::s_frk_state().m_test_in_progress = was_in_progress;
+
+    // propagates the init/teardown error if any
+    BOOST_TEST_SETUP_ASSERT( init_ok && !unit_test::framework_init_observer.has_failed(), setup_error );
 }
 
 //____________________________________________________________________________//
@@ -1495,6 +1699,18 @@ test_unit_aborted( test_unit const& tu )
     BOOST_TEST_FOREACH( test_observer*, to, impl::s_frk_state().m_observers )
         to->test_unit_aborted( tu );
 }
+
+// ************************************************************************** //
+// **************               test_aborted                   ************** //
+// ************************************************************************** //
+
+void
+test_aborted( )
+{
+    BOOST_TEST_FOREACH( test_observer*, to, impl::s_frk_state().m_observers )
+        to->test_aborted( );
+}
+
 
 //____________________________________________________________________________//
 

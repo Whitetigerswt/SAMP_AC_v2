@@ -383,7 +383,7 @@ void CAntiCheat::CheckVersionCompatible(CSelfUpdater::stVersion version)
 		char msg[144];
 
 		sampgdk::SendClientMessage(ID, 0xFF0000FF, "Fatal Error:{FFFFFF} The server's anti-cheat plugin is not compatible with your version.");
-		snprintf(msg, sizeof(msg), "Fatal Error:{FFFFFF} Server version: v%d.%02d, your client version: v%d.%02d. You must update your anti-cheat at samp-ac.com", VersionHelper::AC_SERVER_VERSION.major, VersionHelper::AC_SERVER_VERSION.minor, version.major, version.minor);
+		snprintf(msg, sizeof(msg), "Fatal Error:{FFFFFF} Server version: v%d.%02d, your client version: v%d.%02d. You must update your anti-cheat at https://whitetigerswt.github.io/SAMP_AC_v2", VersionHelper::AC_SERVER_VERSION.major, VersionHelper::AC_SERVER_VERSION.minor, version.major, version.minor);
 		sampgdk::SendClientMessage(ID, 0xFF0000FF, msg);
 
 		// Close the connection.

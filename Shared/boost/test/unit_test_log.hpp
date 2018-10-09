@@ -123,7 +123,7 @@ public:
 
     virtual void        exception_caught( execution_exception const& ex );
 
-    virtual int         priority() { return 1; }
+    virtual int         priority() { return 2; }
 
     // log configuration methods
     //! Sets the stream for all loggers
@@ -136,6 +136,13 @@ public:
     //! @note Has no effect if the specified format is not found
     //! @par Since Boost 1.62
     void                set_stream( output_format, std::ostream& );
+
+    //! Returns a pointer to the stream associated to specific logger
+    //!
+    //! @note Returns a null pointer if the format is not found
+    //! @par Since Boost 1.67
+    std::ostream*       get_stream( output_format ) const;
+
 
     //! Sets the threshold level for all loggers/formatters.
     //!
