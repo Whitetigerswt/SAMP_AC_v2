@@ -32,11 +32,12 @@ Compiling
 Windows
 ----------
 ```
-1) Download Visual Studio 2015 Community Edition - https://www.visualstudio.com/en-us/visual-studio-homepage-vs.aspx
-2) Download Visual Studio 2013 SDK - https://www.microsoft.com/en-us/download/details.aspx?id=40758
-3) Open acv2.sln with Visual Studio 2015
-4) Switch to release mode
-5) Compile
+1) Download Visual Studio 2017 Community Edition - https://www.visualstudio.com/en-us/visual-studio-homepage-vs.aspx
+2) In the Visual Studio Installer, check "Desktop Development with C++"
+3) Under "Desktop Development with C++" Check "Windows XP Support for C++" and do not modify any other optional components
+4) After installation, Open acv2.sln with Visual Studio 2017
+5) Switch to release mode
+6) Compile
 ```
 
 Client Specific
@@ -52,12 +53,21 @@ Linux
 2) sudo apt-get update
 3) sudo apt-get upgrade 
 4) sudo apt-get install build-essential git g++-4.4 (Old version of g++ to allow compatability with older Linux distros)
-5) Follow steps here to generate an ssh key and add to github: https://help.github.com/articles/generating-ssh-keys/
-6) git clone git@github.com:Whitetigerswt/SAMP_AC_v2.git
+6) git clone https://github.com/Whitetigerswt/SAMP_AC_v2.git
 7) cd to "ACv2_Server"
 8) "make"
 9) sampac.so should be located in ACv2_Server/bin/
 ```
+
+Docker
+---------
+```
+1) git clone https://github.com/Whitetigerswt/SAMP_AC_v2.git
+2) docker build --rm -f Dockerfile . samp_ac_v2:latest .
+```
+
+Notes for Docker:
+Docker automates some dependency building, this will *hopefully* make the binaries more compatible with future Linux distros 
 
 Release builds
 ==========
