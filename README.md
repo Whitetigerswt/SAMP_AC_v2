@@ -1,6 +1,8 @@
 SAMP_AC_v2
 ==========
 [![Linux Build Status](https://travis-ci.com/Whitetigerswt/SAMP_AC_v2.svg?token=ENM294yxGXvxxZbK9fRC&branch=master)](https://travis-ci.com/Whitetigerswt/SAMP_AC_v2)
+[![Windows Client & Server Build status](https://ci.appveyor.com/api/projects/status/5r4js85l3k1m5gl0?svg=true)](https://ci.appveyor.com/project/Whitetigerswt/samp-ac-v2)
+
 Version 2.0 of SAMP Anti-Cheat. This is a full re-code from the ground up.
 
 Use
