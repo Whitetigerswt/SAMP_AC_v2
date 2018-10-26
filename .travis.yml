@@ -5,4 +5,6 @@ services:
   - docker
 os:
 - linux
-script: sudo docker build -f ACv2_Server/Dockerfile -t samp_ac_v2:latest
+script: 
+- cd ACv2_Server
+- sudo docker build -f Dockerfile -t samp_ac_v2:latest .
