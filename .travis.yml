@@ -1,16 +1,8 @@
 language: cpp
 sudo: required
 dist: trusty
-compiler:
-- g++
+services:
+  - docker
 os:
 - linux
-before_install:
-- sudo apt-get -qq update
-- sudo apt-get install -y build-essential g++-multilib
-- cd ACv2_Server
-script: make -j8
-after_script:
-- cd bin
-- ldd sampac.so
-- ld sampac.so
+script: sudo docker build -f ACv2_Server/Dockerfile -t samp_ac_v2:latest
